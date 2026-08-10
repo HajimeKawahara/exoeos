@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68", "setuptools-scm>=8"]
+requires = ["setuptools>=77", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,14 +8,18 @@ dynamic = ["version"]
 description = "Differentiable equations of state for planetary atmospheres and fluids"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.9"
+keywords = ["exoplanets", "equations of state", "jax", "thermodynamics"]
 authors = [
   { name = "Hajime Kawahara", email = "divrot@gmail.com" },
 ]
 maintainers = [
   { name = "Hajime Kawahara", email = "divrot@gmail.com" },
 ]
-license = { text = "GPL-3.0-or-later" }
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
 classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
@@ -23,6 +27,8 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Operating System :: OS Independent",
+  "Topic :: Scientific/Engineering :: Atmospheric Science",
+  "Topic :: Scientific/Engineering :: Physics",
 ]
 dependencies = [
   "jax>=0.4.30",
@@ -37,6 +43,7 @@ test = [
 Homepage = "https://github.com/HajimeKawahara/exoeos"
 Repository = "https://github.com/HajimeKawahara/exoeos"
 Issues = "https://github.com/HajimeKawahara/exoeos/issues"
+Changelog = "https://github.com/HajimeKawahara/exoeos/releases"
 
 [tool.setuptools]
 package-dir = { "" = "src" }
@@ -45,7 +52,6 @@ package-dir = { "" = "src" }
 where = ["src"]
 
 [tool.setuptools_scm]
-fallback_version = "0.0.0"
 
 [tool.pytest.ini_options]
 testpaths = ["tests/unittests"]

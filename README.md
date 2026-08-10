@@ -10,7 +10,7 @@ real-gas models.
 ## Installation
 
 ```bash
-python -m pip install -e ".[test]"
+python -m pip install exoeos
 ```
 
 ## Quick start
@@ -58,11 +58,12 @@ caloric properties. Reference enthalpies and entropies default to zero; pass
 physical reference data when absolute values are needed.
 
 The complete units, shape, reference-state, and transformation contract is in
-[the thermodynamic-state contract](documents/thermodynamic_state_contract.md).
+[the thermodynamic-state contract](https://github.com/HajimeKawahara/exoeos/blob/main/documents/thermodynamic_state_contract.md).
 
 ## Development
 
 ```bash
+python -m pip install -e ".[test]"
 pytest tests/unittests
 ```
 
