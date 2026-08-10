@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "exoeos"
+dynamic = ["version"]
+description = "Differentiable equations of state for planetary atmospheres and fluids"
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.9"
+authors = [
+  { name = "Hajime Kawahara", email = "divrot@gmail.com" },
+]
+maintainers = [
+  { name = "Hajime Kawahara", email = "divrot@gmail.com" },
+]
+license = { text = "GPL-3.0-or-later" }
+classifiers = [
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  "jax>=0.4.30",
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest>=7",
+]
+
+[project.urls]
+Homepage = "https://github.com/HajimeKawahara/exoeos"
+Repository = "https://github.com/HajimeKawahara/exoeos"
+Issues = "https://github.com/HajimeKawahara/exoeos/issues"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools_scm]
+fallback_version = "0.0.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests/unittests"]

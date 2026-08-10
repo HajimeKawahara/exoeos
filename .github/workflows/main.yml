@@ -1,0 +1,43 @@
+name: Run pytest
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - python-version: "3.9"
+            jax-version: "0.4.30"
+          - python-version: "3.13"
+            jax-version: "latest"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install package and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ "${{ matrix.jax-version }}" != "latest" ]; then
+            python -m pip install "jax==${{ matrix.jax-version }}"
+          fi
+          python -m pip install -e ".[test]"
+
+      - name: Run unit tests
+        run: pytest tests/unittests
