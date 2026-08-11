@@ -58,3 +58,57 @@ class ThermodynamicState(NamedTuple):
         """Constant-volume molar heat capacity in J mol^-1 K^-1."""
 
         return self.molar_heat_capacity_cv
+
+
+class TRhoState(NamedTuple):
+    """Residual state evaluated at temperature and molar density."""
+
+    molar_density: Array
+    pressure: Array
+    compressibility_factor: Array
+    reduced_residual_helmholtz: Array
+    reduced_residual_chemical_potentials: Array
+    log_fugacity_coefficients: Array
+    reduced_residual_gibbs: Array
+
+    @property
+    def rho(self) -> Array:
+        """Total molar density in mol m^-3."""
+
+        return self.molar_density
+
+    @property
+    def P(self) -> Array:
+        """Pressure in Pa."""
+
+        return self.pressure
+
+    @property
+    def Z(self) -> Array:
+        """Compressibility factor."""
+
+        return self.compressibility_factor
+
+    @property
+    def alphar(self) -> Array:
+        """Reduced residual molar Helmholtz energy."""
+
+        return self.reduced_residual_helmholtz
+
+    @property
+    def mu_res_RT(self) -> Array:
+        """Reduced residual chemical potentials."""
+
+        return self.reduced_residual_chemical_potentials
+
+    @property
+    def lnphi(self) -> Array:
+        """Logarithmic fugacity coefficients."""
+
+        return self.log_fugacity_coefficients
+
+    @property
+    def gres_RT(self) -> Array:
+        """Reduced residual molar Gibbs energy."""
+
+        return self.reduced_residual_gibbs

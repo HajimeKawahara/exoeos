@@ -1,13 +1,101 @@
 # Thermodynamic-state contract
 
-This document defines the initial ExoEOS public contract. The contract keeps
-units, shapes, and thermodynamic reference choices explicit so that an ideal
-gas and later real-gas models can share the same call site.
+This document defines the initial ExoEOS public contracts. The residual layer
+uses reduced residual Helmholtz energy as its source of truth. The existing
+temperature-pressure state layer remains the caloric, user-facing interface.
 
 ## Public interface
 
-The top-level package exports `IdealGas`, `ThermodynamicState`,
-`EquationOfState`, and `__version__`.
+The top-level package exports `HelmholtzEOS`, `IdealEOS`, `TRhoState`, `psir`,
+`state_trho`, `IdealGas`, `ThermodynamicState`, `EquationOfState`, and
+`__version__`.
+
+## Residual Helmholtz interface
+
+`HelmholtzEOS` is a structural protocol additive to the existing
+`EquationOfState` temperature-pressure protocol. A residual model implements
+
+```python
+alphar(T, rho, x)
+```
+
+with the definition
+
+```text
+alphar = A_res / (n R T).
+```
+
+`A_res` excludes the complete ideal-gas Helmholtz contribution, including
+ideal mixing. The inputs describe one state: `T` is a scalar temperature in K,
+`rho` is a scalar total molar density in `mol m-3`, and `x` is a mole-fraction
+vector with shape `(K,)`. The result is a scalar. `IdealEOS()` implements this
+interface with `alphar = 0`.
+
+The component molar density vector is
+
+```text
+rho_vec_i = rho x_i,
+rho = sum_i rho_vec_i,
+x_i = rho_vec_i / rho.
+```
+
+The free-energy density helper is
+
+```python
+psi_r = psir(eos, T, rho_vec)
+```
+
+and is defined by
+
+```text
+psi_r = A_res / (R T V) = rho alphar.
+```
+
+Although `alphar` is dimensionless, `psi_r` has units of `mol m-3`.
+Differentiation with respect to partial molar densities gives
+
+```text
+mu_res_i / (R T) = partial psi_r / partial rho_vec_i,
+P_res / (R T) = -psi_r + sum_i rho_vec_i mu_res_i / (R T),
+P = rho R T + P_res,
+Z = P / (rho R T),
+ln(phi_i) = mu_res_i / (R T) - ln(Z),
+g_res / (R T) = sum_i x_i ln(phi_i)
+                = alphar + Z - 1 - ln(Z).
+```
+
+`state_trho(eos, T, rho, x)` evaluates these derivatives and returns the
+immutable JAX PyTree `TRhoState`:
+
+| Field | Alias | Meaning | Unit |
+| --- | --- | --- | --- |
+| `molar_density` | `rho` | Total molar density | `mol m-3` |
+| `pressure` | `P` | Absolute pressure | `Pa` |
+| `compressibility_factor` | `Z` | Compressibility factor | 1 |
+| `reduced_residual_helmholtz` | `alphar` | `A_res / (n R T)` | 1 |
+| `reduced_residual_chemical_potentials` | `mu_res_RT` | Component `mu_res_i / (R T)` | 1 |
+| `log_fugacity_coefficients` | `lnphi` | Component `ln(phi_i)` | 1 |
+| `reduced_residual_gibbs` | `gres_RT` | `g_res / (R T)` | 1 |
+
+The numerical domain is `T > 0`, `rho > 0`, `x_i >= 0`,
+`sum_i x_i = 1`, and `Z > 0`. ExoEOS performs static shape checks but does not
+clip or normalize numerical inputs. `alphar`, `psir`, and `state_trho` operate
+on one state; use `jax.vmap` for batches. This explicit scalar-state contract
+keeps partial-density differentiation unambiguous.
+
+The residual kernel supports `jax.jit` and first- and higher-order automatic
+differentiation when the model does. Exact vacuum is outside the contract
+because `rho_vec / sum(rho_vec)` has no defined composition there. A zero mole
+fraction is allowed when the model is differentiable at that boundary.
+Calculations use at least `float32` and include numerical model PyTree leaves
+in dtype promotion. Model parameters must be registered as PyTree leaves to
+participate in JAX transformations and this promotion rule.
+
+`TRhoState.reduced_residual_gibbs` is dimensionless. It must not be confused
+with `ThermodynamicState.residual_gibbs`, which is the dimensional molar
+quantity `g_res` in `J mol-1`.
+
+## Temperature-pressure ideal-gas interface
 
 The ideal-gas constructor is
 
@@ -29,7 +117,7 @@ entropies default to zero arrays. The heat capacities are component molar
 constant-pressure heat capacities and are constant with temperature in this
 first caloric closure.
 
-Every equation of state exposes
+The caloric `IdealGas` model exposes
 
 ```python
 state = eos.state(T, P, x)
@@ -102,7 +190,7 @@ The ideal-gas state is
 
 ```text
 Z = 1
-rho = P M / (R T)
+rho_mass = P M / (R T)
 number_density = P / (k_B T)
 cv = cp - R
 adiabatic_gradient = R / cp
