@@ -1,14 +1,16 @@
 # Thermodynamic-state contract
 
-This document defines the initial ExoEOS public contracts. The residual layer
-uses reduced residual Helmholtz energy as its source of truth. The existing
-temperature-pressure state layer remains the caloric, user-facing interface.
+This document defines the initial ExoEOS public contracts. The fluid residual
+layer uses reduced residual Helmholtz energy as its source of truth. The
+solution layer uses reduced molar excess Gibbs energy. The existing
+temperature-pressure state layer remains the caloric ideal-gas interface.
 
 ## Public interface
 
 The top-level package exports `HelmholtzEOS`, `IdealEOS`, `TRhoState`, `psir`,
-`state_trho`, `IdealGas`, `ThermodynamicState`, `EquationOfState`, and
-`__version__`.
+`state_trho`, `GibbsExcessModel`, `IdealSolution`, `SolutionState`,
+`total_gex_RT`, `solution_state`, `IdealGas`, `ThermodynamicState`,
+`EquationOfState`, and `__version__`.
 
 ## Residual Helmholtz interface
 
@@ -95,6 +97,76 @@ participate in JAX transformations and this promotion rule.
 with `ThermodynamicState.residual_gibbs`, which is the dimensional molar
 quantity `g_res` in `J mol-1`.
 
+## Excess Gibbs interface
+
+`GibbsExcessModel` is a structural protocol separate from `HelmholtzEOS` and
+`EquationOfState`. A solution backend implements
+
+```python
+gex_RT(T, P, x)
+```
+
+with the molar definition
+
+```text
+gex_RT = g_ex / (R T).
+```
+
+The inputs describe one state: `T` is a scalar temperature in K, `P` is a
+scalar absolute pressure in Pa, and `x` is a normalized mole-fraction vector
+with shape `(K,)`. The result is a dimensionless scalar. `IdealSolution()` is
+the zero-excess placeholder. It supplies neither the ideal-mixing contribution
+nor standard/endmember Gibbs energies.
+
+For a component amount vector `n`, define
+
+```text
+n_total = sum_i n_i,
+x_i = n_i / n_total,
+G_ex / (R T) = n_total gex_RT(T, P, x),
+ln(gamma_i) = partial [G_ex / (R T)] / partial n_i.
+```
+
+`total_gex_RT(model, T, P, n)` evaluates the third line. Its result scales in
+the same amount unit as `n`; unlike molar `gex_RT`, it is not dimensionless
+when `n` carries physical amount units. `solution_state(model, T, P, x)` treats
+normalized `x` as the amounts of a one-mole system and obtains all
+`ln(gamma_i)` values with `jax.value_and_grad`. The extensive value is divided
+by the supplied total amount for the molar state field. It returns the
+immutable JAX PyTree `SolutionState`:
+
+| Field | Alias | Meaning | Unit |
+| --- | --- | --- | --- |
+| `reduced_excess_gibbs` | `gex_RT` | `g_ex / (R T)` | 1 |
+| `log_activity_coefficients` | `lngamma` | Component `ln(gamma_i)` | 1 |
+
+Because both values come from the same extensive scalar potential, a
+normalized composition satisfies
+
+```text
+gex_RT = sum_i x_i ln(gamma_i).
+```
+
+This first contract uses only the symmetric mole-fraction standard-state
+convention, `a_i = x_i gamma_i`, referenced to the pure component or specified
+pure endmember at the same `T` and `P`. It does not cover unsymmetric
+Henry-law, molality, electrolyte, site-fraction, or sublattice conventions.
+Component ordering is a model/caller contract; the placeholder protocol does
+not yet require component identifiers. A valid symmetric model has
+`gex_RT(T, P, e_i) = 0` at every pure-component or pure-endmember composition
+`e_i`.
+
+The numerical domain is `T > 0`, `P > 0`, `n_i >= 0`, `sum_i n_i > 0`, and,
+for `solution_state`, `sum_i x_i = 1`. ExoEOS performs static shape checks but
+does not clip or perform traced value validation. The extensive construction
+forms `n / sum(n)` by definition; a claimed `solution_state` mole-fraction
+input that is not normalized remains outside the public contract. Exact zero
+total amount is outside the contract. A zero component amount is allowed only
+where the selected model is differentiable.
+The operations support `jax.jit`, external `jax.vmap`, and higher amount
+derivatives when `gex_RT` does. Calculations use at least `float32`, and
+floating numerical model PyTree leaves participate in dtype promotion.
+
 ## Temperature-pressure ideal-gas interface
 
 The ideal-gas constructor is
@@ -151,7 +223,11 @@ operation; callers do not need to inherit from a package base class.
 For a future cubic backend, phase and root selection must be bound as a static
 model policy so that `state(T, P, x)` remains single-valued.
 
-## Input and shape convention
+## Temperature-pressure ideal-gas input and shape convention
+
+The following broadcasting contract applies specifically to
+`IdealGas.state`. The residual Helmholtz and excess Gibbs scalar-state rules
+are defined in their respective sections above.
 
 Inputs use SI units:
 
@@ -216,9 +292,10 @@ thermochemical database.
 
 ## JAX behavior
 
-The state computation and returned PyTree support `jax.jit`, `jax.vmap`, and
-JAX automatic differentiation with respect to valid floating `T` and `P`
-inputs, and with respect to compositions in the simplex interior (`x_i > 0`).
+The ideal-gas state computation and returned PyTree support `jax.jit`,
+`jax.vmap`, and JAX automatic differentiation with respect to valid floating
+`T` and `P` inputs, and with respect to compositions in the simplex interior
+(`x_i > 0`).
 The entropy value uses the finite `x_i ln(x_i)` limit at `x_i = 0`, but its
 composition derivative is physically singular there. Use a differentiable
 simplex parameterization such as `softmax` when optimizing composition.
@@ -246,3 +323,11 @@ Its equilibrium result `x` is a mole-fraction input, while its elemental
 inventory `b` is not. ExoJAX commonly uses pressure in bar, number density in
 `cm-3`, mass density in `g cm-3`, and molar-mass numbers in `g mol-1`; use all
 four conversions as applicable. Temperature is in K in all three packages.
+
+For a condensed solution, ExoEOS supplies the scalar departure
+`total_gex_RT(model, T, P, n)` and its amount derivatives. ExoGibbs remains
+responsible for standard/endmember Gibbs energies, ideal mixing, mapping an
+element inventory into model component order, phase amounts, and total-Gibbs
+minimization. Passing only `lngamma` while retaining an ideal-mixture Hessian
+would omit the derivatives of the activity coefficients; differentiating the
+scalar departure preserves those terms.
