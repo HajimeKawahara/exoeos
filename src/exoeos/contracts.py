@@ -1,4 +1,4 @@
-"""Public contracts shared by equation-of-state backends."""
+"""Public contracts shared by thermodynamic model backends."""
 
 from typing import Protocol
 
@@ -26,6 +26,35 @@ class HelmholtzEOS(Protocol):
 
         Returns:
             The dimensionless value ``A^r / (n R T)``.
+        """
+
+        ...
+
+
+class GibbsExcessModel(Protocol):
+    """Symmetric mole-fraction excess Gibbs-energy model.
+
+    A valid model has zero excess Gibbs energy at each pure-component or
+    pure-endmember composition.
+    """
+
+    def gex_RT(
+        self,
+        T: ArrayLike,
+        P: ArrayLike,
+        x: ArrayLike,
+    ) -> jax.Array:
+        """Return the reduced molar excess Gibbs energy.
+
+        Args:
+            T: Temperature in K.
+            P: Absolute pressure in Pa.
+            x: Mole fractions with shape ``(K,)``.
+
+        Returns:
+            The dimensionless value ``g^E / (R T)`` under the symmetric
+            mole-fraction convention, referenced to pure components or
+            specified pure endmembers at the same ``T`` and ``P``.
         """
 
         ...

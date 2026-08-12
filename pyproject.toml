@@ -5,10 +5,17 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "exoeos"
 dynamic = ["version"]
-description = "Differentiable equations of state for planetary atmospheres and fluids"
+description = "Differentiable equations of state and excess free-energy models for planetary atmospheres, fluids, and melts"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.9"
-keywords = ["exoplanets", "equations of state", "jax", "thermodynamics"]
+keywords = [
+  "activity coefficients",
+  "equations of state",
+  "excess Gibbs energy",
+  "exoplanets",
+  "jax",
+  "thermodynamics",
+]
 authors = [
   { name = "Hajime Kawahara", email = "divrot@gmail.com" },
 ]

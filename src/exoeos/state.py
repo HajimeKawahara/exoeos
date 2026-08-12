@@ -1,4 +1,4 @@
-"""Thermodynamic state returned by equation-of-state backends."""
+"""Thermodynamic states returned by ExoEOS evaluators."""
 
 from typing import NamedTuple
 
@@ -112,3 +112,22 @@ class TRhoState(NamedTuple):
         """Reduced residual molar Gibbs energy."""
 
         return self.reduced_residual_gibbs
+
+
+class SolutionState(NamedTuple):
+    """Excess state evaluated at temperature, pressure, and composition."""
+
+    reduced_excess_gibbs: Array
+    log_activity_coefficients: Array
+
+    @property
+    def gex_RT(self) -> Array:
+        """Reduced molar excess Gibbs energy."""
+
+        return self.reduced_excess_gibbs
+
+    @property
+    def lngamma(self) -> Array:
+        """Logarithmic activity coefficients."""
+
+        return self.log_activity_coefficients
