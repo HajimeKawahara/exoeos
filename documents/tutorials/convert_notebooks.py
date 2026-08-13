@@ -31,10 +31,8 @@ GENERATED_HEADER = (
 
 
 def _ensure_pandoc() -> None:
-    """Expose the docs-extra Pandoc binary to nbconvert when needed."""
+    """Expose the pinned docs-extra Pandoc binary to nbconvert."""
 
-    if shutil.which("pandoc"):
-        return
     try:
         import pypandoc
     except ImportError as exc:  # pragma: no cover - depends on docs environment
@@ -43,6 +41,8 @@ def _ensure_pandoc() -> None:
             "with `python -m pip install -e '.[docs]'`."
         ) from exc
     pandoc_path = Path(pypandoc.get_pandoc_path()).resolve()
+    # Always put the docs-extra binary first.  Using an arbitrary system
+    # Pandoc makes the committed RST depend on the developer's environment.
     os.environ["PATH"] = os.pathsep.join(
         (str(pandoc_path.parent), os.environ.get("PATH", ""))
     )
