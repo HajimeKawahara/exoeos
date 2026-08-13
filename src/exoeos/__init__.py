@@ -21,6 +21,7 @@ from exoeos.ideal_solution import IdealSolution
 from exoeos.peng_robinson import PengRobinsonEOS
 from exoeos.second_virial import SecondVirialEOS
 from exoeos.state import SolutionState, TRhoState, ThermodynamicState
+from exoeos.zhang_duan import ZhangDuanEOS
 
 
 try:
@@ -43,6 +44,7 @@ __all__ = [
     "TPHelmholtzEOS",
     "TRhoState",
     "ThermodynamicState",
+    "ZhangDuanEOS",
     "__version__",
     "available_critical_properties",
     "get_critical_properties",
