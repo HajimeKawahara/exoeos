@@ -237,11 +237,7 @@ class PengRobinsonEOS:
             mole_fractions.astype(dtype),
         )
 
-    def _mixture_parameters(
-        self,
-        temperature: Array,
-        mole_fractions: Array,
-    ) -> tuple[Array, Array]:
+    def _component_parameters(self, temperature: Array) -> tuple[Array, Array]:
         dtype = temperature.dtype
         critical_temperatures = self.critical_temperatures.astype(dtype)
         critical_pressures = self.critical_pressures.astype(dtype)
@@ -268,6 +264,14 @@ class PengRobinsonEOS:
         pair_attraction = (1.0 - interactions) * jnp.sqrt(
             component_attraction[:, None] * component_attraction[None, :]
         )
+        return pair_attraction, component_covolume
+
+    def _mixture_parameters(
+        self,
+        temperature: Array,
+        mole_fractions: Array,
+    ) -> tuple[Array, Array]:
+        pair_attraction, component_covolume = self._component_parameters(temperature)
         mixture_attraction = jnp.einsum(
             "i,ij,j->",
             mole_fractions,
@@ -276,6 +280,31 @@ class PengRobinsonEOS:
         )
         mixture_covolume = jnp.dot(mole_fractions, component_covolume)
         return mixture_attraction, mixture_covolume
+
+    def second_virial_coefficients(self, T: ArrayLike) -> Array:
+        """Return the density-form second-virial matrix at temperature ``T``.
+
+        The returned coefficients are in m^3 mol^-1 and are the exact
+        low-density expansion of this Peng-Robinson model:
+
+        ``B_ij = (b_i + b_j) / 2 - a_ij(T) / (R T)``.
+        """
+
+        temperature = _scalar_array(T, "T")
+        dtype = jnp.result_type(
+            temperature,
+            self.critical_temperatures,
+            self.critical_pressures,
+            self.acentric_factors,
+            self.binary_interaction_parameters,
+            jnp.float32,
+        )
+        temperature = temperature.astype(dtype)
+        pair_attraction, component_covolume = self._component_parameters(temperature)
+        return (
+            0.5 * (component_covolume[:, None] + component_covolume[None, :])
+            - pair_attraction / (MOLAR_GAS_CONSTANT * temperature)
+        )
 
     def alphar(
         self,

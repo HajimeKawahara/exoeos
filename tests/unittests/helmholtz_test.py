@@ -8,7 +8,7 @@ import jax
 import jax.numpy as jnp
 import pytest
 
-from exoeos import IdealEOS, TRhoState, psir, state_trho
+from exoeos import IdealEOS, TRhoState, psir, state_tp, state_trho
 
 
 GAS_CONSTANT = 8.31446261815324
@@ -59,6 +59,36 @@ def test_ideal_eos_has_zero_residual_helmholtz_state() -> None:
     assert jnp.allclose(state.reduced_residual_chemical_potentials, jnp.zeros(2))
     assert jnp.allclose(state.log_fugacity_coefficients, jnp.zeros(2))
     assert jnp.allclose(state.reduced_residual_gibbs, 0.0)
+
+
+def test_ideal_eos_supports_temperature_pressure_states() -> None:
+    model = IdealEOS()
+    temperature = 600.0
+    pressure = 2.0e5
+    composition = jnp.asarray([0.25, 0.75])
+
+    state = state_tp(model, temperature, pressure, composition)
+    batched = jax.vmap(
+        lambda value: state_tp(model, temperature, value, composition)
+    )(jnp.asarray([1.0e5, 2.0e5]))
+
+    assert jnp.allclose(state.rho, pressure / (GAS_CONSTANT * temperature))
+    assert jnp.allclose(state.P, pressure)
+    assert jnp.allclose(state.Z, 1.0)
+    assert jnp.allclose(state.lnphi, jnp.zeros(2))
+    assert jnp.allclose(state.gres_RT, 0.0)
+    assert batched.rho.shape == (2,)
+    assert jnp.allclose(
+        jax.grad(lambda value: state_tp(model, temperature, value, composition).rho)(
+            pressure
+        ),
+        1.0 / (GAS_CONSTANT * temperature),
+    )
+
+
+def test_ideal_eos_rejects_non_vapor_phase() -> None:
+    with pytest.raises(ValueError, match="phase"):
+        state_tp(IdealEOS(), 600.0, 2.0e5, jnp.asarray([1.0]), phase="liquid")
 
 
 def test_ideal_eos_is_a_pytree_and_supports_state_derivatives() -> None:

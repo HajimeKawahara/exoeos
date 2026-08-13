@@ -8,6 +8,11 @@ from exoeos.contracts import (
     HelmholtzEOS,
     TPHelmholtzEOS,
 )
+from exoeos.critical_properties import (
+    FluidCriticalProperties,
+    available_critical_properties,
+    get_critical_properties,
+)
 from exoeos.gibbs_excess import solution_state, total_gex_RT
 from exoeos.helmholtz import psir, state_tp, state_trho
 from exoeos.ideal import IdealEOS
@@ -26,6 +31,7 @@ except PackageNotFoundError:
 
 __all__ = [
     "EquationOfState",
+    "FluidCriticalProperties",
     "GibbsExcessModel",
     "HelmholtzEOS",
     "IdealEOS",
@@ -38,6 +44,8 @@ __all__ = [
     "TRhoState",
     "ThermodynamicState",
     "__version__",
+    "available_critical_properties",
+    "get_critical_properties",
     "psir",
     "solution_state",
     "state_tp",

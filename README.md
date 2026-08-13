@@ -24,6 +24,21 @@ below:
 python -m pip install .
 ```
 
+## Documentation
+
+Install the documentation dependencies and build the committed notebook-based
+tutorials with:
+
+```bash
+python -m pip install -e ".[docs]"
+./update_doc.sh
+```
+
+The executable notebooks are the editable sources. After changing one, run it
+with `jupyter nbconvert --to notebook --execute --inplace <notebook>`, then run
+`python documents/tutorials/convert_notebooks.py` to refresh its committed RST
+and image assets.
+
 ## Residual Helmholtz API
 
 Models implement
@@ -65,6 +80,15 @@ batched_Z = jax.vmap(state_trho, in_axes=(None, 0, 0, 0))(
     jnp.array([10.0, 12.0]),
     jnp.array([[0.9, 0.1], [0.85, 0.15]]),
 ).Z
+```
+
+`IdealEOS` also implements pressure inversion, so it can be compared with
+other TP-capable residual models through the same entry point:
+
+```python
+from exoeos import state_tp
+
+ideal_state = state_tp(IdealEOS(), T=1000.0, P=1.0e5, x=x)
 ```
 
 `alphar` and `state_trho` accept one state at a time: scalar `T`, scalar
@@ -136,6 +160,15 @@ liquid = state_tp(
     phase="liquid",
 )
 ```
+
+`PengRobinsonEOS.second_virial_coefficients(T)` returns the exact
+low-density, density-form coefficient matrix of that PR model at `T`. It can
+be passed directly to `SecondVirialEOS` when comparing PR with its consistent
+second-virial truncation.
+
+A small curated critical-property table is available through
+`get_critical_properties(formula)`. It currently contains `CO`, `H2O`, `CO2`,
+and `H2`, with source URLs retained in every record.
 
 The optional `binary_interaction_parameters` matrix defaults to zero and uses
 `a_ij = (1 - k_ij) sqrt(a_i a_j)`. `phase="vapor"` selects the largest
