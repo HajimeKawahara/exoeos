@@ -11,6 +11,8 @@ temperature-pressure inversion layer.
 The top-level package exports `HelmholtzEOS`, `TPHelmholtzEOS`, `IdealEOS`,
 `SecondVirialEOS`, `PengRobinsonEOS`, `TRhoState`, `psir`, `state_trho`,
 `state_tp`,
+`FluidCriticalProperties`, `available_critical_properties`,
+`get_critical_properties`,
 `GibbsExcessModel`, `IdealSolution`, `SolutionState`, `total_gex_RT`,
 `solution_state`, `IdealGas`, `ThermodynamicState`, `EquationOfState`, and
 `__version__`.
@@ -34,7 +36,7 @@ alphar = A_res / (n R T).
 ideal mixing. The inputs describe one state: `T` is a scalar temperature in K,
 `rho` is a scalar total molar density in `mol m-3`, and `x` is a mole-fraction
 vector with shape `(K,)`. The result is a scalar. `IdealEOS()` implements this
-interface with `alphar = 0`.
+interface with `alphar = 0` and the TP density hook with `rho = P / (R T)`.
 
 `TPHelmholtzEOS` extends this structural protocol with the density hook
 
@@ -206,6 +208,16 @@ states are not differentiable, and numerical state validity remains a caller
 contract. Very-low-pressure dense-liquid states should use `float64`; their
 small pressure is reconstructed from much larger Helmholtz terms and is poorly
 conditioned in `float32` even when density inversion selects the correct root.
+
+`PengRobinsonEOS.second_virial_coefficients(T)` returns the exact
+density-form low-density expansion of the same model,
+
+```text
+B_ij(T) = (b_i + b_j) / 2 - a_ij(T) / (R T),
+```
+
+in `m3 mol-1`. Passing this matrix to `SecondVirialEOS` provides a controlled
+comparison between PR and its consistent second-virial truncation.
 
 ## Excess Gibbs interface
 

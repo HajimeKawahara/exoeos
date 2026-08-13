@@ -7,6 +7,8 @@ import jax.numpy as jnp
 from jax import tree_util
 from jax.typing import ArrayLike
 
+from exoeos.constants import MOLAR_GAS_CONSTANT
+
 
 Array = jax.Array
 
@@ -47,6 +49,34 @@ class IdealEOS:
             jnp.float32,
         )
         return jnp.zeros((), dtype=dtype)
+
+    def molar_density(
+        self,
+        T: ArrayLike,
+        P: ArrayLike,
+        x: ArrayLike,
+        phase: str = "vapor",
+    ) -> Array:
+        """Return the ideal-gas molar density in mol m^-3."""
+
+        if phase != "vapor":
+            raise ValueError("IdealEOS supports only phase='vapor'.")
+        temperature = jnp.asarray(T)
+        pressure = jnp.asarray(P)
+        mole_fractions = jnp.asarray(x)
+        if temperature.ndim != 0 or pressure.ndim != 0:
+            raise ValueError("T and P must be scalars; use jax.vmap for batches.")
+        if mole_fractions.ndim != 1 or mole_fractions.shape[0] == 0:
+            raise ValueError("x must be a non-empty one-dimensional array.")
+        dtype = jnp.result_type(
+            temperature,
+            pressure,
+            mole_fractions,
+            jnp.float32,
+        )
+        return pressure.astype(dtype) / (
+            MOLAR_GAS_CONSTANT * temperature.astype(dtype)
+        )
 
     def tree_flatten(self):
         """Return the empty JAX PyTree representation."""

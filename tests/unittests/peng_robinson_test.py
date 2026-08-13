@@ -6,7 +6,7 @@ import jax
 import jax.numpy as jnp
 import pytest
 
-from exoeos import PengRobinsonEOS, TRhoState, state_tp, state_trho
+from exoeos import PengRobinsonEOS, SecondVirialEOS, TRhoState, state_tp, state_trho
 
 
 GAS_CONSTANT = 8.31446261815324
@@ -139,6 +139,38 @@ def test_mixture_helmholtz_state_matches_explicit_pr_pressure() -> None:
         expected_pressure / (molar_density * GAS_CONSTANT * temperature),
     )
     assert jnp.allclose(state.gres_RT, composition @ state.lnphi)
+
+
+def test_second_virial_coefficients_match_peng_robinson_low_density_limit() -> None:
+    eos = PengRobinsonEOS(
+        jnp.asarray([190.564, 305.322]),
+        jnp.asarray([4_599_200.0, 4_872_200.0]),
+        jnp.asarray([0.01142, 0.0995]),
+        jnp.asarray([[0.0, 0.035], [0.035, 0.0]]),
+    )
+    temperature = 700.0
+    composition = jnp.asarray([0.35, 0.65])
+    coefficients = eos.second_virial_coefficients(temperature)
+    virial_eos = SecondVirialEOS(coefficients)
+    molar_density = 1.0e-3
+
+    pr_state = state_trho(eos, temperature, molar_density, composition)
+    virial_state = state_trho(
+        virial_eos,
+        temperature,
+        molar_density,
+        composition,
+    )
+
+    assert coefficients.shape == (2, 2)
+    assert jnp.allclose(coefficients, coefficients.T)
+    assert jnp.allclose(pr_state.Z, virial_state.Z, rtol=1.0e-12, atol=1.0e-14)
+    assert jnp.allclose(
+        pr_state.gres_RT,
+        virial_state.gres_RT,
+        rtol=1.0e-7,
+        atol=1.0e-14,
+    )
 
 
 def test_state_tp_selects_reference_vapor_and_liquid_roots(
