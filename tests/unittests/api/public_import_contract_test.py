@@ -13,6 +13,7 @@ from exoeos import (
     TPHelmholtzEOS,
     ThermodynamicState,
     TRhoState,
+    ZhangDuanEOS,
     __version__,
     psir,
     solution_state,
@@ -30,6 +31,7 @@ def test_top_level_exports_construct_the_public_state() -> None:
         [4_599_200.0],
         [0.01142],
     )
+    zhang_duan_model = ZhangDuanEOS.from_species(("H2O",))
     solution_model = IdealSolution()
     model = IdealGas([2.0e-3], [29.0])
     state = model.state(300.0, 1.0e5, [1.0])
@@ -41,12 +43,19 @@ def test_top_level_exports_construct_the_public_state() -> None:
         1.0e5,
         [1.0],
     )
+    zhang_duan_state = state_tp(
+        zhang_duan_model,
+        1203.15,
+        950.0e6,
+        [1.0],
+    )
     solution = solution_state(solution_model, 300.0, 1.0e5, [1.0])
 
     assert isinstance(state, ThermodynamicState)
     assert isinstance(trho_state, TRhoState)
     assert isinstance(tp_state, TRhoState)
     assert isinstance(peng_robinson_state, TRhoState)
+    assert isinstance(zhang_duan_state, TRhoState)
     assert isinstance(solution, SolutionState)
     assert EquationOfState is not None
     assert GibbsExcessModel is not None

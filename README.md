@@ -188,6 +188,7 @@ physical real root of the Peng-Robinson cubic, while `phase="liquid"`
 selects the smallest. Both selectors return the same root in a one-root
 region. Density derivatives are defined away from multiple roots; exact
 critical and spinodal states are not differentiable root-selection points.
+
 Use `float64` when evaluating very-low-pressure liquid roots: reconstructing a
 small pressure from dense-liquid Helmholtz terms is ill-conditioned in
 `float32` even when the selected density root is accurate.
@@ -199,6 +200,36 @@ the transformed function or mark it static rather than mapping it.
 The reduced fields `alphar`, `mu_res_RT`, and `gres_RT` are dimensionless.
 `psir = A_res / (R T V)` has units of `mol m-3`. This differs from
 `ThermodynamicState.residual_gibbs`, which is a molar energy in `J mol-1`.
+
+`ZhangDuanEOS` implements the Zhang-Duan (2009) corresponding-states EOS for
+C-O-H fluids. The published species parameters and the fitted H2O-CO2 and
+H2O-CH4 interactions are available through `from_species`:
+
+```python
+from exoeos import ZhangDuanEOS
+
+
+species = ("CO", "H2O", "CO2", "H2")
+eos = ZhangDuanEOS.from_species(species)
+state = state_tp(
+    eos,
+    T=1000.0,
+    P=1.0e9,
+    x=jnp.array([0.4, 0.4, 0.1, 0.1]),
+)
+```
+
+The model also supports `CH4`, `O2`, and `C2H6`. It is intended for the
+homogeneous-fluid calibration ranges reported in
+[Zhang and Duan (2009)](https://doi.org/10.1016/j.gca.2009.01.021).
+The principal mixture range is 673--2573 K and 1 MPa--10 GPa; H2O-CH4 starts
+at 10 MPa, and the pure-species data ranges differ.
+Pressure inversion selects the mechanically stable root connected to the
+low-density branch and supports only `phase="vapor"`. Fugacity coefficients
+are obtained by differentiating the residual Helmholtz energy rather than by
+transcribing the paper's mixture fugacity equation. The implementation uses
+the physical `P V / (R T)` compressibility; the scaled left-hand side printed
+in Equation 8 does not reproduce the paper's Table 6 values.
 
 ## Excess Gibbs API
 
