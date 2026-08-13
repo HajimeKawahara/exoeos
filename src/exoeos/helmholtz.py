@@ -5,7 +5,7 @@ import jax.numpy as jnp
 from jax.typing import ArrayLike
 
 from exoeos.constants import MOLAR_GAS_CONSTANT
-from exoeos.contracts import HelmholtzEOS
+from exoeos.contracts import HelmholtzEOS, TPHelmholtzEOS
 from exoeos.state import TRhoState
 
 
@@ -129,3 +129,49 @@ def state_trho(
             reduced_helmholtz + z_minus_one - log_compressibility
         ),
     )
+
+
+def state_tp(
+    eos: TPHelmholtzEOS,
+    T: ArrayLike,
+    P: ArrayLike,
+    x: ArrayLike,
+    phase: str = "vapor",
+) -> TRhoState:
+    """Evaluate a residual state at temperature and pressure.
+
+    Density inversion and phase/root selection are delegated to the EOS. The
+    resulting density is evaluated through :func:`state_trho`, so both entry
+    points share the same thermodynamic derivatives and state type.
+
+    Args:
+        eos: Residual Helmholtz model with temperature-pressure inversion.
+        T: Temperature in K.
+        P: Absolute pressure in Pa.
+        x: Mole fractions with shape ``(K,)``.
+        phase: Static phase/root selector understood by the EOS.
+
+    Returns:
+        Residual state including ``rho``, ``Z``, ``lnphi``, and ``gres_RT``.
+    """
+
+    temperature = _scalar_array(T, "T")
+    pressure = _scalar_array(P, "P")
+    mole_fractions = _vector_array(x, "x")
+    dtype = _common_dtype(eos, temperature, pressure, mole_fractions)
+    temperature = temperature.astype(dtype)
+    pressure = pressure.astype(dtype)
+    mole_fractions = mole_fractions.astype(dtype)
+
+    molar_density = jnp.asarray(
+        eos.molar_density(
+            temperature,
+            pressure,
+            mole_fractions,
+            phase=phase,
+        )
+    )
+    if molar_density.ndim != 0:
+        raise ValueError("eos.molar_density must return a scalar for a single state.")
+
+    return state_trho(eos, temperature, molar_density, mole_fractions)

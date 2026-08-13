@@ -2,12 +2,18 @@
 
 from importlib.metadata import PackageNotFoundError, version
 
-from exoeos.contracts import EquationOfState, GibbsExcessModel, HelmholtzEOS
+from exoeos.contracts import (
+    EquationOfState,
+    GibbsExcessModel,
+    HelmholtzEOS,
+    TPHelmholtzEOS,
+)
 from exoeos.gibbs_excess import solution_state, total_gex_RT
-from exoeos.helmholtz import psir, state_trho
+from exoeos.helmholtz import psir, state_tp, state_trho
 from exoeos.ideal import IdealEOS
 from exoeos.ideal_gas import IdealGas
 from exoeos.ideal_solution import IdealSolution
+from exoeos.second_virial import SecondVirialEOS
 from exoeos.state import SolutionState, TRhoState, ThermodynamicState
 
 
@@ -25,11 +31,14 @@ __all__ = [
     "IdealGas",
     "IdealSolution",
     "SolutionState",
+    "SecondVirialEOS",
+    "TPHelmholtzEOS",
     "TRhoState",
     "ThermodynamicState",
     "__version__",
     "psir",
     "solution_state",
+    "state_tp",
     "state_trho",
     "total_gex_RT",
 ]

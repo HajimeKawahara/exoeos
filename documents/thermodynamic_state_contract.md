@@ -3,14 +3,16 @@
 This document defines the initial ExoEOS public contracts. The fluid residual
 layer uses reduced residual Helmholtz energy as its source of truth. The
 solution layer uses reduced molar excess Gibbs energy. The existing
-temperature-pressure state layer remains the caloric ideal-gas interface.
+caloric ideal-gas interface remains separate from the residual
+temperature-pressure inversion layer.
 
 ## Public interface
 
-The top-level package exports `HelmholtzEOS`, `IdealEOS`, `TRhoState`, `psir`,
-`state_trho`, `GibbsExcessModel`, `IdealSolution`, `SolutionState`,
-`total_gex_RT`, `solution_state`, `IdealGas`, `ThermodynamicState`,
-`EquationOfState`, and `__version__`.
+The top-level package exports `HelmholtzEOS`, `TPHelmholtzEOS`, `IdealEOS`,
+`SecondVirialEOS`, `TRhoState`, `psir`, `state_trho`, `state_tp`,
+`GibbsExcessModel`, `IdealSolution`, `SolutionState`, `total_gex_RT`,
+`solution_state`, `IdealGas`, `ThermodynamicState`, `EquationOfState`, and
+`__version__`.
 
 ## Residual Helmholtz interface
 
@@ -32,6 +34,21 @@ ideal mixing. The inputs describe one state: `T` is a scalar temperature in K,
 `rho` is a scalar total molar density in `mol m-3`, and `x` is a mole-fraction
 vector with shape `(K,)`. The result is a scalar. `IdealEOS()` implements this
 interface with `alphar = 0`.
+
+`TPHelmholtzEOS` extends this structural protocol with the density hook
+
+```python
+molar_density(T, P, x, phase="vapor")
+```
+
+where `P` is absolute pressure in Pa and `phase` is a static phase/root
+selector interpreted by the concrete EOS. The common
+`state_tp(eos, T, P, x, phase="vapor")` function calls this hook and evaluates
+the returned density through `state_trho`. Consequently both entry points use
+the same residual derivatives and return the same `TRhoState` type. This is
+the ExoGibbs-facing temperature-pressure layer: equilibrium calculations
+typically require `rho` together with `lnphi`, rather than pressure and
+`lnphi` computed from an already supplied density.
 
 The component molar density vector is
 
@@ -79,11 +96,19 @@ immutable JAX PyTree `TRhoState`:
 | `log_fugacity_coefficients` | `lnphi` | Component `ln(phi_i)` | 1 |
 | `reduced_residual_gibbs` | `gres_RT` | `g_res / (R T)` | 1 |
 
+In particular, `state_tp` returns `state.rho`, `state.Z`, `state.lnphi`, and
+`state.gres_RT` along with the other fields in this table. Density inversion
+and phase/root selection remain EOS responsibilities; the shared layer does
+not impose a generic numerical root solver.
+
 The numerical domain is `T > 0`, `rho > 0`, `x_i >= 0`,
 `sum_i x_i = 1`, and `Z > 0`. ExoEOS performs static shape checks but does not
 clip or normalize numerical inputs. `alphar`, `psir`, and `state_trho` operate
-on one state; use `jax.vmap` for batches. This explicit scalar-state contract
-keeps partial-density differentiation unambiguous.
+on one state; `state_tp` likewise requires scalar `T` and `P` and a vector
+`x`. Use `jax.vmap` for batches. The `phase` string is static: capture it in a
+transformed function or mark it static, and do not map it as an array. This
+explicit scalar-state contract keeps partial-density differentiation
+unambiguous.
 
 The residual kernel supports `jax.jit` and first- and higher-order automatic
 differentiation when the model does. Exact vacuum is outside the contract
@@ -96,6 +121,51 @@ participate in JAX transformations and this promotion rule.
 `TRhoState.reduced_residual_gibbs` is dimensionless. It must not be confused
 with `ThermodynamicState.residual_gibbs`, which is the dimensional molar
 quantity `g_res` in `J mol-1`.
+
+## Second-virial equation of state
+
+`SecondVirialEOS(coefficients)` is the initial non-ideal Helmholtz backend.
+`coefficients[i, j]` is a constant symmetric pair coefficient `B_ij` in
+`m3 mol-1`; the constructor requires a nonempty square matrix, while symmetry
+is a caller contract. For
+
+```text
+B_mix = sum_i sum_j x_i x_j B_ij,
+```
+
+the model and its derived state are
+
+```text
+alphar = rho B_mix,
+Z = 1 + rho B_mix,
+P = rho R T (1 + rho B_mix),
+mu_res_i / (R T) = 2 rho sum_j B_ij x_j,
+ln(phi_i) = 2 rho sum_j B_ij x_j - ln(Z),
+g_res / (R T) = 2 rho B_mix - ln(Z).
+```
+
+For a temperature-pressure state, define the ideal-gas density
+`rho_0 = P / (R T)` and discriminant
+
+```text
+D = 1 + 4 B_mix rho_0.
+```
+
+`SecondVirialEOS.molar_density` returns the mechanically stable low-density
+root in cancellation-resistant form,
+
+```text
+rho = 2 rho_0 / (1 + sqrt(D)).
+```
+
+Its numerical domain is `T > 0`, `P > 0`, `x_i >= 0`,
+`sum_i x_i = 1`, `D > 0`, and `Z > 0`. Only the static selector
+`phase="vapor"` is supported. Numerical values, coefficient symmetry, and the
+discriminant domain are caller contracts rather than traced runtime checks.
+The second-virial expansion is a low-density truncation: results are credible
+only where omitted third and higher virial terms are negligible. This first
+model also treats `B_ij` as constants, so users must select coefficients
+appropriate to the temperature range of interest.
 
 ## Excess Gibbs interface
 
@@ -220,8 +290,8 @@ no separate unit conversion or change of thermodynamic basis in an alias.
 
 `EquationOfState` is a structural protocol for objects with this `state`
 operation; callers do not need to inherit from a package base class.
-For a future cubic backend, phase and root selection must be bound as a static
-model policy so that `state(T, P, x)` remains single-valued.
+This caloric interface is separate from the residual Helmholtz `state_tp`
+interface and its explicit static `phase` selector.
 
 ## Temperature-pressure ideal-gas input and shape convention
 

@@ -31,6 +31,21 @@ class HelmholtzEOS(Protocol):
         ...
 
 
+class TPHelmholtzEOS(HelmholtzEOS, Protocol):
+    """Residual Helmholtz model with temperature-pressure inversion."""
+
+    def molar_density(
+        self,
+        T: ArrayLike,
+        P: ArrayLike,
+        x: ArrayLike,
+        phase: str = "vapor",
+    ) -> jax.Array:
+        """Return molar density in mol m^-3 for a selected phase/root."""
+
+        ...
+
+
 class GibbsExcessModel(Protocol):
     """Symmetric mole-fraction excess Gibbs-energy model.
 

@@ -17,7 +17,8 @@ python -m pip install exoeos
 
 PyPI version `0.1.0` provides the caloric ideal-gas API only. Until a newer
 release is published, install a repository checkout containing these changes
-to use the residual Helmholtz and excess Gibbs APIs documented below:
+to use the residual Helmholtz, TP inversion, and excess Gibbs APIs documented
+below:
 
 ```bash
 python -m pip install .
@@ -70,6 +71,53 @@ batched_Z = jax.vmap(state_trho, in_axes=(None, 0, 0, 0))(
 `rho`, and `x` with shape `(K,)`. `psir` instead accepts the component molar
 density vector `rho_vec` with shape `(K,)`. Use `jax.vmap` for batches.
 Compositions are neither clipped nor normalized.
+
+Models that can invert pressure additionally implement `TPHelmholtzEOS` by
+providing `molar_density(T, P, x, phase="vapor")`. The common
+`state_tp(eos, T, P, x, phase="vapor")` entry point delegates density and
+root selection to that hook, then evaluates `state_trho` and returns the same
+`TRhoState`. This gives ExoGibbs both molar density and fugacity coefficients
+from its natural `T`, `P`, and `x` inputs.
+
+```python
+from exoeos import SecondVirialEOS, state_tp
+
+
+eos = SecondVirialEOS(
+    jnp.array([[1.0e-4, 2.0e-5], [2.0e-5, 8.0e-5]])  # B_ij, m3 mol-1
+)
+state = state_tp(eos, T=700.0, P=2.0e5, x=jnp.array([0.4, 0.6]))
+
+state.rho
+state.Z
+state.lnphi
+state.gres_RT
+```
+
+`SecondVirialEOS` is the first non-ideal fluid model. It uses a constant,
+symmetric pair-coefficient matrix and
+
+```text
+B_mix = sum_i sum_j x_i x_j B_ij,
+alphar = rho B_mix,
+Z = 1 + rho B_mix,
+P = rho R T (1 + rho B_mix),
+mu_res_i / (R T) = 2 rho sum_j B_ij x_j,
+ln(phi_i) = mu_res_i / (R T) - ln(Z),
+g_res / (R T) = 2 rho B_mix - ln(Z).
+```
+
+For `state_tp`, let `rho_0 = P / (R T)` and
+`D = 1 + 4 B_mix rho_0`. The vapor root is evaluated as
+`rho = 2 rho_0 / (1 + sqrt(D))`. Its domain requires `T > 0`, `P > 0`,
+normalized nonnegative `x`, `Z > 0`, and `D > 0`. Only
+`phase="vapor"` is supported. The second-virial truncation is a low-density
+model and should be used only where neglected higher virial terms are small;
+the constant coefficients also omit real temperature dependence.
+
+Like `state_trho`, `state_tp` accepts one scalar state at a time. Use
+`jax.vmap` for batches. The `phase` string is a static selector: capture it in
+the transformed function or mark it static rather than mapping it.
 
 The reduced fields `alphar`, `mu_res_RT`, and `gres_RT` are dimensionless.
 `psir = A_res / (R T V)` has units of `mol m-3`. This differs from
@@ -188,6 +236,6 @@ python -m pip install -e ".[test]"
 pytest tests/unittests
 ```
 
-The current concrete models are ideal placeholders. Non-ideal fluid EOS
-backends and nonzero Gibbs-excess models are reserved for later implementations
-behind the separate `HelmholtzEOS` and `GibbsExcessModel` contracts.
+`SecondVirialEOS` is the initial non-ideal fluid backend. Additional fluid EOS
+and nonzero Gibbs-excess models can be added behind the separate
+`TPHelmholtzEOS` and `GibbsExcessModel` contracts.
