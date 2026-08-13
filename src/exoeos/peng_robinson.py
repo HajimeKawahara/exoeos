@@ -14,8 +14,9 @@ from exoeos.constants import MOLAR_GAS_CONSTANT
 
 Array = jax.Array
 
-_ATTRACTION_CONSTANT = 0.45724
-_COVOLUME_CONSTANT = 0.07780
+# Exact roots of the Peng-Robinson critical-point constraints.
+_ATTRACTION_CONSTANT = 0.45723552892138218938
+_COVOLUME_CONSTANT = 0.077796073903888455972
 _SQRT_TWO = 2.0**0.5
 
 
@@ -151,10 +152,12 @@ def _compressibility_factor_jvp(
 @tree_util.register_pytree_node_class
 @dataclass(frozen=True, init=False)
 class PengRobinsonEOS:
-    """Classical Peng-Robinson EOS with quadratic mixture parameters.
+    """PR76 EOS with quadratic attraction and linear covolume mixing.
 
     Critical temperatures are in K and critical pressures are in Pa. Binary
     interaction parameters use ``k_ij`` in ``a_ij = (1 - k_ij) sqrt(a_i a_j)``.
+    The alpha function uses the original 1976 acentric-factor correlation for
+    every component rather than the high-acentric-factor PR78 branch.
     Numerical validity, normalized compositions, and matrix symmetry are caller
     contracts; static shapes are checked by the implementation.
     """
