@@ -11,6 +11,6 @@ python -m sphinx \
   -M html \
   documents \
   documents/_build \
-  --fresh-env \
-  --write-all \
+  -E \
+  -a \
   "$@"
