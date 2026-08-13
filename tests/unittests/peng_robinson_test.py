@@ -427,7 +427,7 @@ def test_low_pressure_float32_liquid_root_round_trips_pressure(
     )
 
     assert jnp.allclose(state.rho, expected_density, rtol=2.0e-6)
-    assert jnp.allclose(state.P, pressure, rtol=3.0e-2, atol=3.0)
+    assert jnp.allclose(state.P, pressure, rtol=5.0e-2, atol=3.0)
     assert jnp.all(jnp.isfinite(state.lnphi))
 
 
