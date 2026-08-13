@@ -120,7 +120,7 @@ correction isolates the effect of terms beyond second virial.
         CO2   0.100   304.128200    73.772984     0.223940
          H2   0.100    33.144333    12.963576    -0.219000
 
-    B_mix(1000 K) = 9.448576 cm^3 mol^-1
+    B_mix(1000 K) = 9.447599 cm^3 mol^-1
 
 
 Evaluation and numerical checks
@@ -221,8 +221,8 @@ The ideal state must also give :math:`Z=1`, :math:`\ln\phi_i=0`, and
 
     Values at 1000 bar:
               Ideal: rho =  12027.236 mol m^-3, Z = 1.000000, g^r/RT = 0.000000
-      Second virial: rho =  10903.856 mol m^-3, Z = 1.103026, g^r/RT = 0.107995
-      Peng-Robinson: rho =  10091.534 mol m^-3, Z = 1.191814, g^r/RT = 0.159990
+      Second virial: rho =  10903.952 mol m^-3, Z = 1.103016, g^r/RT = 0.107984
+      Peng-Robinson: rho =  10091.659 mol m^-3, Z = 1.191800, g^r/RT = 0.159976
 
 
 EOS observables

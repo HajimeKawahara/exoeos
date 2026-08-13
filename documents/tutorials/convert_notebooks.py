@@ -20,7 +20,10 @@ except ImportError as exc:  # pragma: no cover - depends on the docs environment
 
 
 NOTEBOOK_DIRECTORY = Path(__file__).resolve().parent
-NOTEBOOK_STEMS = ("fixed_composition_cho_eos_comparison",)
+NOTEBOOK_STEMS = (
+    "fixed_composition_cho_eos_comparison",
+    "peng_robinson_fixed_state_reference",
+)
 GENERATED_HEADER = (
     ".. This file is generated from the sibling .ipynb by convert_notebooks.py.\n"
     ".. Do not edit this RST file directly.\n\n"

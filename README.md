@@ -34,6 +34,13 @@ python -m pip install -e ".[docs]"
 ./update_doc.sh
 ```
 
+The independent-reference notebooks additionally require the pinned reference
+backend:
+
+```bash
+python -m pip install -e ".[docs,reference]"
+```
+
 The executable notebooks are the editable sources. After changing one, run it
 with `jupyter nbconvert --to notebook --execute --inplace <notebook>`, then run
 `python documents/tutorials/convert_notebooks.py` to refresh its committed RST
@@ -160,6 +167,11 @@ liquid = state_tp(
     phase="liquid",
 )
 ```
+
+The implementation uses the original PR76 alpha correlation for every
+component and the exact critical-condition coefficients
+`Omega_a = 0.45723552892138218938` and
+`Omega_b = 0.077796073903888455972`.
 
 `PengRobinsonEOS.second_virial_coefficients(T)` returns the exact
 low-density, density-form coefficient matrix of that PR model at `T`. It can

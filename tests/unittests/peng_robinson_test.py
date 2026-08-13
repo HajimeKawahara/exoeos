@@ -6,12 +6,19 @@ import jax
 import jax.numpy as jnp
 import pytest
 
-from exoeos import PengRobinsonEOS, SecondVirialEOS, TRhoState, state_tp, state_trho
+from exoeos import (
+    PengRobinsonEOS,
+    SecondVirialEOS,
+    TRhoState,
+    get_critical_properties,
+    state_tp,
+    state_trho,
+)
 
 
 GAS_CONSTANT = 8.31446261815324
-PR_ATTRACTION_CONSTANT = 0.45724
-PR_COVOLUME_CONSTANT = 0.07780
+PR_ATTRACTION_CONSTANT = 0.45723552892138218938
+PR_COVOLUME_CONSTANT = 0.077796073903888455972
 
 
 def _component_parameters(
@@ -141,6 +148,98 @@ def test_mixture_helmholtz_state_matches_explicit_pr_pressure() -> None:
     assert jnp.allclose(state.gres_RT, composition @ state.lnphi)
 
 
+def test_cho_fixed_state_matches_frozen_teqp_reference() -> None:
+    formulas = ("CO", "H2O", "CO2", "H2")
+    properties = tuple(get_critical_properties(formula) for formula in formulas)
+    eos = PengRobinsonEOS(
+        jnp.asarray([item.critical_temperature for item in properties]),
+        jnp.asarray([item.critical_pressure for item in properties]),
+        jnp.asarray([item.acentric_factor for item in properties]),
+        jnp.zeros((4, 4)),
+    )
+
+    # teqp v0.23.2 (5f62a6f515d517e39c3fb035c11a03524ffa3ad6): PR76
+    # generalized cubic with Mathias-Copeman alpha, exact critical-condition
+    # OmegaA=0.45723552892138218938, OmegaB=0.077796073903888455972,
+    # R=8.31446261815324 J mol^-1 K^-1, zero kij, and the vapor root.
+    state = state_tp(
+        eos,
+        300.0,
+        4.0e6,
+        jnp.asarray([0.4, 0.4, 0.1, 0.1]),
+        phase="vapor",
+    )
+
+    assert jnp.allclose(
+        state.rho,
+        2_073.221567707672,
+        rtol=2.0e-10,
+        atol=2.0e-12,
+    )
+    assert jnp.allclose(
+        state.P,
+        3_999_999.9999999953,
+        rtol=2.0e-10,
+        atol=2.0e-12,
+    )
+    assert jnp.allclose(
+        state.Z,
+        0.7734973557808338,
+        rtol=2.0e-10,
+        atol=2.0e-12,
+    )
+    assert jnp.allclose(
+        state.lnphi,
+        jnp.asarray(
+            [
+                0.07492890545020213,
+                -0.5899275983086101,
+                -0.22792636343163442,
+                0.19916964221154948,
+            ]
+        ),
+        rtol=2.0e-10,
+        atol=2.0e-12,
+    )
+    assert jnp.allclose(
+        state.gres_RT,
+        -0.2088751492653717,
+        rtol=2.0e-10,
+        atol=2.0e-12,
+    )
+
+
+def test_alpha_uses_pr76_high_acentric_factor_branch() -> None:
+    eos = PengRobinsonEOS(
+        jnp.asarray([500.0]),
+        jnp.asarray([5.0e6]),
+        jnp.asarray([0.75]),
+    )
+    temperature = jnp.asarray(350.0)
+    molar_density = jnp.asarray(2_500.0)
+    kappa_pr76 = 0.37464 + 1.54226 * 0.75 - 0.26992 * 0.75**2
+    alpha_pr76 = (1.0 + kappa_pr76 * (1.0 - jnp.sqrt(350.0 / 500.0))) ** 2
+    expected_attraction = (
+        PR_ATTRACTION_CONSTANT
+        * GAS_CONSTANT**2
+        * 500.0**2
+        * alpha_pr76
+        / 5.0e6
+    )
+    expected_covolume = PR_COVOLUME_CONSTANT * GAS_CONSTANT * 500.0 / 5.0e6
+    expected_alphar = _reference_alphar(
+        temperature,
+        molar_density,
+        expected_attraction,
+        expected_covolume,
+    )
+
+    assert jnp.allclose(
+        eos.alphar(temperature, molar_density, jnp.asarray([1.0])),
+        expected_alphar,
+    )
+
+
 def test_second_virial_coefficients_match_peng_robinson_low_density_limit() -> None:
     eos = PengRobinsonEOS(
         jnp.asarray([190.564, 305.322]),
@@ -197,20 +296,20 @@ def test_state_tp_selects_reference_vapor_and_liquid_roots(
 
     assert isinstance(vapor, TRhoState)
     assert isinstance(liquid, TRhoState)
-    assert jnp.allclose(vapor.Z, 0.8250426402060995, rtol=2.0e-10)
-    assert jnp.allclose(liquid.Z, 0.0331183299264132, rtol=2.0e-10)
-    assert jnp.allclose(vapor.rho, 971.847588488933, rtol=2.0e-10)
-    assert jnp.allclose(liquid.rho, 24_210.6320598419, rtol=2.0e-10)
+    assert jnp.allclose(vapor.Z, 0.8250427593763904, rtol=2.0e-10)
+    assert jnp.allclose(liquid.Z, 0.03311547801117998, rtol=2.0e-10)
+    assert jnp.allclose(vapor.rho, 971.8474481139544, rtol=2.0e-10)
+    assert jnp.allclose(liquid.rho, 24_212.71708698018, rtol=2.0e-10)
     assert jnp.allclose(vapor.P, pressure, rtol=2.0e-10)
     assert jnp.allclose(liquid.P, pressure, rtol=2.0e-10)
     assert jnp.allclose(
         vapor.lnphi,
-        jnp.asarray([-0.163021888735602]),
+        jnp.asarray([-0.16302147255901314]),
         rtol=2.0e-10,
     )
     assert jnp.allclose(
         liquid.lnphi,
-        jnp.asarray([-0.126859724193990]),
+        jnp.asarray([-0.12695799083968184]),
         rtol=2.0e-10,
     )
     assert liquid.rho > vapor.rho
@@ -258,7 +357,7 @@ def test_state_tp_supports_jit_vmap_and_pressure_gradient(
     )
 
     assert isinstance(compiled, TRhoState)
-    assert jnp.allclose(compiled.Z, 0.901830710952881, rtol=2.0e-10)
+    assert jnp.allclose(compiled.Z, 0.9018278227398956, rtol=2.0e-10)
     assert jnp.allclose(unique_liquid.rho, compiled.rho)
     assert batched.rho.shape == (2,)
     assert batched.lnphi.shape == (2, 1)
@@ -304,9 +403,8 @@ def test_low_pressure_float32_gradient_recovers_ideal_limit() -> None:
 @pytest.mark.parametrize(
     "pressure,expected_density",
     [
-        (1.0, 23_945.952706161217),
-        (1.0e3, 23_946.22925603225),
-        (1.0e5, 23_973.507321528363),
+        (1.0e3, 23_948.37675939591),
+        (1.0e5, 23_975.648053861143),
     ],
 )
 def test_low_pressure_float32_liquid_root_round_trips_pressure(

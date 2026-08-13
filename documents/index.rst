@@ -11,6 +11,7 @@ Demonstrations
    :maxdepth: 1
 
    tutorials/fixed_composition_cho_eos_comparison
+   tutorials/peng_robinson_fixed_state_reference
 
 API overview
 ------------
