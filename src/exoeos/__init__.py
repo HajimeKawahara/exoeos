@@ -13,6 +13,7 @@ from exoeos.helmholtz import psir, state_tp, state_trho
 from exoeos.ideal import IdealEOS
 from exoeos.ideal_gas import IdealGas
 from exoeos.ideal_solution import IdealSolution
+from exoeos.peng_robinson import PengRobinsonEOS
 from exoeos.second_virial import SecondVirialEOS
 from exoeos.state import SolutionState, TRhoState, ThermodynamicState
 
@@ -30,6 +31,7 @@ __all__ = [
     "IdealEOS",
     "IdealGas",
     "IdealSolution",
+    "PengRobinsonEOS",
     "SolutionState",
     "SecondVirialEOS",
     "TPHelmholtzEOS",

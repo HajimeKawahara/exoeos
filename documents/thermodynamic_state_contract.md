@@ -9,7 +9,8 @@ temperature-pressure inversion layer.
 ## Public interface
 
 The top-level package exports `HelmholtzEOS`, `TPHelmholtzEOS`, `IdealEOS`,
-`SecondVirialEOS`, `TRhoState`, `psir`, `state_trho`, `state_tp`,
+`SecondVirialEOS`, `PengRobinsonEOS`, `TRhoState`, `psir`, `state_trho`,
+`state_tp`,
 `GibbsExcessModel`, `IdealSolution`, `SolutionState`, `total_gex_RT`,
 `solution_state`, `IdealGas`, `ThermodynamicState`, `EquationOfState`, and
 `__version__`.
@@ -166,6 +167,45 @@ The second-virial expansion is a low-density truncation: results are credible
 only where omitted third and higher virial terms are negligible. This first
 model also treats `B_ij` as constants, so users must select coefficients
 appropriate to the temperature range of interest.
+
+## Peng-Robinson equation of state
+
+`PengRobinsonEOS(critical_temperatures, critical_pressures,
+acentric_factors, binary_interaction_parameters=None)` implements the
+classical Peng-Robinson EOS. Critical temperatures use K, critical pressures
+use Pa, and all component inputs have shape `(K,)`. The optional `k_ij` matrix
+has shape `(K, K)`, defaults to zero, and enters the quadratic mixing rule as
+
+```text
+a_ij(T) = (1 - k_ij) sqrt(a_i(T) a_j(T)),
+a_mix(T, x) = sum_i sum_j x_i x_j a_ij(T),
+b_mix(x) = sum_i x_i b_i.
+```
+
+With `y = b_mix rho`, the residual Helmholtz kernel is
+
+```text
+alphar = -log(1 - y)
+         - a_mix / (2 sqrt(2) b_mix R T)
+           log((1 + (1 + sqrt(2)) y) / (1 + (1 - sqrt(2)) y)).
+```
+
+For TP inversion, define `A = a_mix P / (R T)^2` and
+`B = b_mix P / (R T)`. The compressibility roots satisfy
+
+```text
+Z^3 - (1 - B) Z^2 + (A - 3 B^2 - 2 B) Z
+    - (A B - B^2 - B^3) = 0.
+```
+
+The static selector `phase="vapor"` chooses the largest physical real root
+with `Z > B`; `phase="liquid"` chooses the smallest. A one-root state gives
+the same result for both selectors. The analytic root evaluation supports JAX
+transformations at simple roots. Multiple roots at critical or spinodal
+states are not differentiable, and numerical state validity remains a caller
+contract. Very-low-pressure dense-liquid states should use `float64`; their
+small pressure is reconstructed from much larger Helmholtz terms and is poorly
+conditioned in `float32` even when density inversion selects the correct root.
 
 ## Excess Gibbs interface
 
