@@ -115,6 +115,38 @@ normalized nonnegative `x`, `Z > 0`, and `D > 0`. Only
 model and should be used only where neglected higher virial terms are small;
 the constant coefficients also omit real temperature dependence.
 
+`PengRobinsonEOS` adds a cubic EOS using critical temperatures in K, critical
+pressures in Pa, acentric factors, and optional binary interaction parameters:
+
+```python
+from exoeos import PengRobinsonEOS
+
+
+eos = PengRobinsonEOS(
+    critical_temperatures=jnp.array([190.564]),
+    critical_pressures=jnp.array([4_599_200.0]),
+    acentric_factors=jnp.array([0.01142]),
+)
+vapor = state_tp(eos, T=150.0, P=1.0e6, x=jnp.array([1.0]))
+liquid = state_tp(
+    eos,
+    T=150.0,
+    P=1.0e6,
+    x=jnp.array([1.0]),
+    phase="liquid",
+)
+```
+
+The optional `binary_interaction_parameters` matrix defaults to zero and uses
+`a_ij = (1 - k_ij) sqrt(a_i a_j)`. `phase="vapor"` selects the largest
+physical real root of the Peng-Robinson cubic, while `phase="liquid"`
+selects the smallest. Both selectors return the same root in a one-root
+region. Density derivatives are defined away from multiple roots; exact
+critical and spinodal states are not differentiable root-selection points.
+Use `float64` when evaluating very-low-pressure liquid roots: reconstructing a
+small pressure from dense-liquid Helmholtz terms is ill-conditioned in
+`float32` even when the selected density root is accurate.
+
 Like `state_trho`, `state_tp` accepts one scalar state at a time. Use
 `jax.vmap` for batches. The `phase` string is a static selector: capture it in
 the transformed function or mark it static rather than mapping it.
@@ -236,6 +268,6 @@ python -m pip install -e ".[test]"
 pytest tests/unittests
 ```
 
-`SecondVirialEOS` is the initial non-ideal fluid backend. Additional fluid EOS
-and nonzero Gibbs-excess models can be added behind the separate
-`TPHelmholtzEOS` and `GibbsExcessModel` contracts.
+`SecondVirialEOS` and `PengRobinsonEOS` are the non-ideal fluid backends.
+Additional fluid EOS and nonzero Gibbs-excess models can be added behind the
+separate `TPHelmholtzEOS` and `GibbsExcessModel` contracts.
