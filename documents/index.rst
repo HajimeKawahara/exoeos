@@ -4,12 +4,13 @@ ExoEOS
 ExoEOS provides differentiable equations of state and excess free-energy
 models for planetary atmospheres, fluids, and melts, powered by JAX.
 
-Demonstrations
---------------
+Tutorials
+---------
 
 .. toctree::
    :maxdepth: 1
 
+   tutorials/peng_robinson_eos
    tutorials/fixed_composition_cho_eos_comparison
    tutorials/peng_robinson_fixed_state_reference
 
