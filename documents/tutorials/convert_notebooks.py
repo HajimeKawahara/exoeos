@@ -22,6 +22,7 @@ except ImportError as exc:  # pragma: no cover - depends on the docs environment
 NOTEBOOK_DIRECTORY = Path(__file__).resolve().parent
 NOTEBOOK_STEMS = (
     "peng_robinson_eos",
+    "zhang_duan_eos",
     "fixed_composition_cho_eos_comparison",
     "peng_robinson_fixed_state_reference",
 )

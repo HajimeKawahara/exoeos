@@ -11,6 +11,7 @@ Tutorials
    :maxdepth: 1
 
    tutorials/peng_robinson_eos
+   tutorials/zhang_duan_eos
    tutorials/fixed_composition_cho_eos_comparison
    tutorials/peng_robinson_fixed_state_reference
 
