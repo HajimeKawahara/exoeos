@@ -2,6 +2,7 @@
 
 from importlib.metadata import PackageNotFoundError, version
 
+from exoeos.chabrier_debras import ChabrierDebrasEOS
 from exoeos.contracts import (
     EquationOfState,
     GibbsExcessModel,
@@ -21,7 +22,12 @@ from exoeos.ideal_gas import IdealGas
 from exoeos.ideal_solution import IdealSolution
 from exoeos.peng_robinson import PengRobinsonEOS
 from exoeos.second_virial import SecondVirialEOS
-from exoeos.state import SolutionState, TRhoState, ThermodynamicState
+from exoeos.state import (
+    MassThermodynamicState,
+    SolutionState,
+    ThermodynamicState,
+    TRhoState,
+)
 from exoeos.zhang_duan import ZhangDuanEOS
 
 
@@ -32,6 +38,7 @@ except PackageNotFoundError:
 
 
 __all__ = [
+    "ChabrierDebrasEOS",
     "EquationOfState",
     "FluidCriticalProperties",
     "GibbsExcessModel",
@@ -39,6 +46,7 @@ __all__ = [
     "IdealEOS",
     "IdealGas",
     "IdealSolution",
+    "MassThermodynamicState",
     "PengRobinsonEOS",
     "SolutionState",
     "SecondVirialEOS",

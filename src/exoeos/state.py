@@ -60,6 +60,50 @@ class ThermodynamicState(NamedTuple):
         return self.molar_heat_capacity_cv
 
 
+class MassThermodynamicState(NamedTuple):
+    """Immutable mass-specific thermodynamic state in SI units."""
+
+    pressure: Array
+    mass_density: Array
+    specific_internal_energy: Array
+    specific_entropy: Array
+    dlnrho_dlnT_P: Array
+    dlnrho_dlnP_T: Array
+    dlns_dlnT_P: Array
+    dlns_dlnP_T: Array
+    adiabatic_gradient: Array
+
+    @property
+    def P(self) -> Array:
+        """Pressure in Pa."""
+
+        return self.pressure
+
+    @property
+    def rho(self) -> Array:
+        """Mass density in kg m^-3."""
+
+        return self.mass_density
+
+    @property
+    def u(self) -> Array:
+        """Specific internal energy in J kg^-1."""
+
+        return self.specific_internal_energy
+
+    @property
+    def s(self) -> Array:
+        """Specific entropy in J kg^-1 K^-1."""
+
+        return self.specific_entropy
+
+    @property
+    def nabla_ad(self) -> Array:
+        """Adiabatic logarithmic temperature gradient."""
+
+        return self.adiabatic_gradient
+
+
 class TRhoState(NamedTuple):
     """Residual state evaluated at temperature and molar density."""
 
