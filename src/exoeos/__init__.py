@@ -13,6 +13,7 @@ from exoeos.critical_properties import (
     available_critical_properties,
     get_critical_properties,
 )
+from exoeos.density import additive_volume_mass_density, mass_density_tp
 from exoeos.gibbs_excess import solution_state, total_gex_RT
 from exoeos.helmholtz import psir, state_tp, state_trho
 from exoeos.ideal import IdealEOS
@@ -46,8 +47,10 @@ __all__ = [
     "ThermodynamicState",
     "ZhangDuanEOS",
     "__version__",
+    "additive_volume_mass_density",
     "available_critical_properties",
     "get_critical_properties",
+    "mass_density_tp",
     "psir",
     "solution_state",
     "state_tp",

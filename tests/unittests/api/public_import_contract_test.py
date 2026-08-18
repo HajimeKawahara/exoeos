@@ -15,6 +15,8 @@ from exoeos import (
     TRhoState,
     ZhangDuanEOS,
     __version__,
+    additive_volume_mass_density,
+    mass_density_tp,
     psir,
     solution_state,
     state_tp,
@@ -50,6 +52,14 @@ def test_top_level_exports_construct_the_public_state() -> None:
         [1.0],
     )
     solution = solution_state(solution_model, 300.0, 1.0e5, [1.0])
+    mass_density = mass_density_tp(
+        residual_model,
+        300.0,
+        1.0e5,
+        [1.0],
+        [18.0e-3],
+    )
+    mixture_density = additive_volume_mass_density([1.0], [1000.0])
 
     assert isinstance(state, ThermodynamicState)
     assert isinstance(trho_state, TRhoState)
@@ -57,6 +67,8 @@ def test_top_level_exports_construct_the_public_state() -> None:
     assert isinstance(peng_robinson_state, TRhoState)
     assert isinstance(zhang_duan_state, TRhoState)
     assert isinstance(solution, SolutionState)
+    assert mass_density > 0.0
+    assert mixture_density == 1000.0
     assert EquationOfState is not None
     assert GibbsExcessModel is not None
     assert HelmholtzEOS is not None
