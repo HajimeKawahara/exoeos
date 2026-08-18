@@ -110,6 +110,20 @@ root selection to that hook, then evaluates `state_trho` and returns the same
 `TRhoState`. This gives ExoGibbs both molar density and fugacity coefficients
 from its natural `T`, `P`, and `x` inputs.
 
+Mass density follows from the same TP density hook when component molar masses
+are supplied in `kg mol-1`:
+
+```python
+from exoeos import additive_volume_mass_density, mass_density_tp
+
+
+rho = mass_density_tp(eos, T, P, x, molar_masses, phase="vapor")
+rho_mixture = additive_volume_mass_density(mass_fractions, component_densities)
+```
+
+Both results use `kg m-3`. The additive-volume closure evaluates
+`1 / rho_mixture = sum_i(w_i / rho_i)` and does not normalize its inputs.
+
 ```python
 from exoeos import SecondVirialEOS, state_tp
 
