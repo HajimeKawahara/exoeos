@@ -4,7 +4,8 @@ This document defines the initial ExoEOS public contracts. The fluid residual
 layer uses reduced residual Helmholtz energy as its source of truth. The
 solution layer uses reduced molar excess Gibbs energy. The existing
 caloric ideal-gas interface remains separate from the residual
-temperature-pressure inversion layer.
+temperature-pressure inversion layer. Fixed-composition tabulated models use
+a separate mass-specific state.
 
 ## Public interface
 
@@ -14,8 +15,8 @@ The top-level package exports `HelmholtzEOS`, `TPHelmholtzEOS`, `IdealEOS`,
 `FluidCriticalProperties`, `available_critical_properties`,
 `get_critical_properties`,
 `GibbsExcessModel`, `IdealSolution`, `SolutionState`, `total_gex_RT`,
-`solution_state`, `IdealGas`, `ThermodynamicState`, `EquationOfState`, and
-`__version__`.
+`solution_state`, `ChabrierDebrasEOS`, `MassThermodynamicState`, `IdealGas`,
+`ThermodynamicState`, `EquationOfState`, and `__version__`.
 
 ## Residual Helmholtz interface
 
@@ -288,6 +289,33 @@ where the selected model is differentiable.
 The operations support `jax.jit`, external `jax.vmap`, and higher amount
 derivatives when `gex_RT` does. Calculations use at least `float32`, and
 floating numerical model PyTree leaves participate in dtype promotion.
+
+## Fixed-composition tabulated interface
+
+`ChabrierDebrasEOS` is a mass-specific table backend separate from the molar
+`HelmholtzEOS` and `EquationOfState` protocols. It loads the published TP and
+T-rho table pair for one of the fixed `Y0275`, `Y0292`, or `Y0297` variants.
+Composition is construction metadata rather than a state coordinate.
+
+```python
+state_tp = eos.state_tp(T, P)
+state_trho = eos.state_trho(T, mass_density)
+```
+
+The inputs use K, Pa, and kg m-3. Both methods return a
+`MassThermodynamicState` containing pressure, mass density, specific internal
+energy, specific entropy, four tabulated logarithmic derivatives, and the
+adiabatic gradient. Energies use J kg-1 and entropy uses J kg-1 K-1.
+
+Files are parsed and validated before JAX evaluation. Stored logarithmic
+quantities are interpolated bilinearly on their regular base-10 grids and then
+converted to SI. The signed derivative columns are interpolated directly and
+are not exponentiated. Out-of-grid queries return `nan`; no clipping or
+extrapolation is performed. The published rectangular tables do not contain a
+physical-validity mask, so nominally in-range cells can still be unphysical.
+Automatic differentiation follows the piecewise-bilinear interpolant; the
+separately tabulated columns remain the source for thermodynamic derivatives.
+Both methods evaluate one scalar state; use `jax.vmap` for batches.
 
 ## Temperature-pressure ideal-gas interface
 

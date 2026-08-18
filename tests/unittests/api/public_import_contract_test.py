@@ -1,12 +1,14 @@
 """Top-level public import contract."""
 
 from exoeos import (
+    ChabrierDebrasEOS,
     EquationOfState,
     GibbsExcessModel,
     HelmholtzEOS,
     IdealEOS,
     IdealGas,
     IdealSolution,
+    MassThermodynamicState,
     PengRobinsonEOS,
     SecondVirialEOS,
     SolutionState,
@@ -69,10 +71,12 @@ def test_top_level_exports_construct_the_public_state() -> None:
     assert isinstance(solution, SolutionState)
     assert mass_density > 0.0
     assert mixture_density == 1000.0
+    assert ChabrierDebrasEOS is not None
     assert EquationOfState is not None
     assert GibbsExcessModel is not None
     assert HelmholtzEOS is not None
     assert TPHelmholtzEOS is not None
+    assert MassThermodynamicState is not None
     assert residual_model.alphar(300.0, 40.0, [1.0]) == 0.0
     assert psir(residual_model, 300.0, [40.0]) == 0.0
     assert solution_model.gex_RT(300.0, 1.0e5, [1.0]) == 0.0

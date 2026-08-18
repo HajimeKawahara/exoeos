@@ -304,6 +304,39 @@ component amount vector and forms `x = n / sum(n)`. Inputs are neither clipped
 nor numerically validated; the extensive construction uses `n / sum(n)` by
 definition. Use `jax.vmap` for batches.
 
+## Fixed-composition tabulated H/He API
+
+`ChabrierDebrasEOS` loads the published
+[Chabrier-Debras (2021)](https://doi.org/10.3847/1538-4357/abfc48) H/He TP
+and T-rho table pair for one fixed composition. Download and extract the
+[official data archive](https://perso.ens-lyon.fr/gilles.chabrier/DirEOS/),
+then select one of the published `Y0275`, `Y0292`, or `Y0297` variants:
+
+```python
+from exoeos import ChabrierDebrasEOS
+
+
+eos = ChabrierDebrasEOS.from_directory(
+    "/path/to/DirEOS2021",
+    variant="Y0275",
+)
+tp_state = eos.state_tp(T=1.0e4, P=1.0e11)
+trho_state = eos.state_trho(T=1.0e4, mass_density=1.0e3)
+
+tp_state.rho
+tp_state.u
+tp_state.s
+tp_state.nabla_ad
+```
+
+Inputs and returned quantities use SI units. The logarithmic derivative fields
+are dimensionless. The variants are separate fixed-composition datasets;
+ExoEOS does not interpolate in helium mass fraction. Queries outside the
+nominal rectangular grids return `nan`, and the tables do not provide a mask
+for unphysical states inside those rectangles. Both evaluators accept one
+state at a time; use `jax.vmap` for batches. `Y0292` and `Y0297` are the
+effective-abundance variants defined by the authors.
+
 ## Caloric ideal-gas API
 
 All public quantities use SI units. Component molar masses are in `kg mol-1`,
