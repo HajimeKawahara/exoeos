@@ -7,6 +7,7 @@ from exoeos.contracts import (
     EquationOfState,
     GibbsExcessModel,
     HelmholtzEOS,
+    MassDensityProvider,
     TPHelmholtzEOS,
 )
 from exoeos.critical_properties import (
@@ -14,7 +15,14 @@ from exoeos.critical_properties import (
     available_critical_properties,
     get_critical_properties,
 )
-from exoeos.density import additive_volume_mass_density, mass_density_tp
+from exoeos.density import (
+    AdditiveVolumeCompositeDensityProvider,
+    DensityComponent,
+    FixedCompositionDensityProvider,
+    TPHelmholtzDensityProvider,
+    additive_volume_mass_density,
+    mass_density_tp,
+)
 from exoeos.gibbs_excess import solution_state, total_gex_RT
 from exoeos.helmholtz import psir, state_tp, state_trho
 from exoeos.ideal import IdealEOS
@@ -38,19 +46,24 @@ except PackageNotFoundError:
 
 
 __all__ = [
+    "AdditiveVolumeCompositeDensityProvider",
     "ChabrierDebrasEOS",
+    "DensityComponent",
     "EquationOfState",
+    "FixedCompositionDensityProvider",
     "FluidCriticalProperties",
     "GibbsExcessModel",
     "HelmholtzEOS",
     "IdealEOS",
     "IdealGas",
     "IdealSolution",
+    "MassDensityProvider",
     "MassThermodynamicState",
     "PengRobinsonEOS",
     "SolutionState",
     "SecondVirialEOS",
     "TPHelmholtzEOS",
+    "TPHelmholtzDensityProvider",
     "TRhoState",
     "ThermodynamicState",
     "ZhangDuanEOS",

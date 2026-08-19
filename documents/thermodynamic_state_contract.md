@@ -16,7 +16,10 @@ The top-level package exports `HelmholtzEOS`, `TPHelmholtzEOS`, `IdealEOS`,
 `get_critical_properties`,
 `GibbsExcessModel`, `IdealSolution`, `SolutionState`, `total_gex_RT`,
 `solution_state`, `ChabrierDebrasEOS`, `MassThermodynamicState`, `IdealGas`,
-`ThermodynamicState`, `EquationOfState`, and `__version__`.
+`ThermodynamicState`, `EquationOfState`, `MassDensityProvider`,
+`DensityComponent`, `TPHelmholtzDensityProvider`,
+`FixedCompositionDensityProvider`,
+`AdditiveVolumeCompositeDensityProvider`, and `__version__`.
 
 ## Residual Helmholtz interface
 
@@ -316,6 +319,57 @@ physical-validity mask, so nominally in-range cells can still be unphysical.
 Automatic differentiation follows the piecewise-bilinear interpolant; the
 separately tabulated columns remain the source for thermodynamic derivatives.
 Both methods evaluate one scalar state; use `jax.vmap` for batches.
+
+## Composite mass-density interface
+
+`MassDensityProvider` is the structural contract for an object with component
+`molar_masses` and
+
+```python
+mass_density_tp(T, P, x)
+```
+
+where the molar masses use `kg mol-1`. `T` and `P` are scalar values in K and
+Pa, `x` is a one-dimensional mole-fraction vector in the provider's declared
+species order, and the returned mass density uses `kg m-3`. The operation
+evaluates one state; callers use external `jax.vmap` for batches.
+
+`TPHelmholtzDensityProvider` adapts a `TPHelmholtzEOS` and its component molar
+masses to this contract. `FixedCompositionDensityProvider` adapts a
+mass-specific, fixed-composition backend. For the latter, the mass fractions
+computed from the supplied local mole fractions must match the configured
+mass-fraction vector within the provider's tolerance. A traced composition
+mismatch produces `nan`; it does not raise from inside a JAX transformation.
+
+`AdditiveVolumeCompositeDensityProvider` contains an ordered global `species`
+tuple and `DensityComponent` entries. At construction, component species must
+be known, unique, and form an exact partition of the global tuple. For global
+mole fractions `x_i` and molar masses `M_i`, it computes
+
+```text
+m_i = x_i M_i
+w_g = sum_(i in g) m_i / sum_i m_i
+x_i^g = x_i / sum_(j in g) x_j
+1 / rho = sum_g w_g / rho_g(T, P, x^g)
+```
+
+Thus EOS dispatch uses normalized within-group mole fractions, while the
+additive-volume closure uses group mass fractions. A group with zero total
+amount receives a safe fallback composition and contributes zero volume, so
+its density does not affect the result. The composite does not clip or
+normalize the global composition.
+
+Numerical validity remains a caller contract: mole fractions must be
+nonnegative and normalized, molar masses must be finite and positive, and a
+fixed provider's expected mass fractions must be finite, nonnegative, and
+normalized. Automatic differentiation is supported only away from zero-group
+and fixed-composition tolerance boundaries, and only when every active
+component provider supports the requested derivative.
+
+The provider mechanism owns EOS dispatch, mole-to-mass conversion, fixed
+composition checking, and additive-volume assembly. Workflow-specific species
+aliases, component-to-EOS assignments, and unit conversions across ExoEOS,
+ExoGibbs, and ExoJAX remain caller or example responsibilities.
 
 ## Temperature-pressure ideal-gas interface
 
