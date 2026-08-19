@@ -1,9 +1,15 @@
 """Chabrier-Debras 2021 tabulated hydrogen-helium equation of state."""
 
+import hashlib
+import os
+import shutil
+import tarfile
+import tempfile
 from dataclasses import dataclass
 from os import PathLike
 from pathlib import Path
-from typing import Union
+from typing import Dict, Optional, Tuple, Union
+from urllib.request import urlopen
 
 import jax
 import jax.numpy as jnp
@@ -39,6 +45,213 @@ _PRESSURE_COUNT = 441
 _DENSITY_COUNT = 241
 _COLUMN_COUNT = 10
 _FIELD_COUNT = 8
+
+_ARCHIVE_URL = "https://perso.ens-lyon.fr/gilles.chabrier/DirEOS/DirEOS2021.tar.gz"
+_ARCHIVE_SHA256 = "45f316790ce20d5d1ce0abee4db308521b5bfdc5526d0997141a2784834feeff"
+_CITATION = (
+    "Chabrier, G., & Debras, F. (2021), The Astrophysical Journal, 917, 4, "
+    "https://doi.org/10.3847/1538-4357/abfc48"
+)
+_TABLE_FILENAMES = {
+    variant: (
+        f"TABLEEOS_2021_TP_{variant}_v1",
+        f"TABLEEOS_2021_Trho_{variant}_v1",
+    )
+    for variant in _VARIANT_HELIUM_MASS_FRACTIONS
+}
+_TABLE_CHECKSUMS = {
+    "Y0275": (
+        "c4995d114affedddf421b57b847ad4872699e9526f32b4b335013ffcbfb0b938",
+        "b9ffd42d50c83cd691f3152fd21009b366af7044221cd291d87e5e5a48cc8299",
+    ),
+    "Y0292": (
+        "436fe580aac6e8572159b59322bf7baf6afb43ec91630779239698bbeaf57a7d",
+        "60f0ec6a6409b2833293c368910c062e20e60222e3154718b63af8af6a706c54",
+    ),
+    "Y0297": (
+        "3a07460158c1b7feeea9484a94684148ac94ebc9b6df4b2f194f8024b1aa50bb",
+        "7b1b3ae39d819d1380a7ea4c450789f884bd4ba1a186cda74769786f1fd53414",
+    ),
+}
+_TABLE_DOMAIN = {
+    "temperature_K": (_TEMPERATURE_MIN, _TEMPERATURE_MAX),
+    "pressure_Pa": (_PRESSURE_MIN, _PRESSURE_MAX),
+    "mass_density_kg_m3": (_MASS_DENSITY_MIN, _MASS_DENSITY_MAX),
+}
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _default_cache_directory() -> Path:
+    cache_root = os.environ.get("XDG_CACHE_HOME")
+    if cache_root:
+        root = Path(cache_root).expanduser()
+    else:
+        root = Path.home() / ".cache"
+    return root / "exoeos" / "DirEOS2021"
+
+
+@dataclass(frozen=True, init=False)
+class ChabrierDebrasTableLoader:
+    """Fetch and load one verified Chabrier-Debras table pair.
+
+    ``cache_directory`` defaults to
+    ``$XDG_CACHE_HOME/exoeos/DirEOS2021`` or
+    ``~/.cache/exoeos/DirEOS2021``. Only the two files for ``variant`` are
+    extracted from the published archive.
+    """
+
+    variant: str
+    cache_directory: Path
+
+    def __init__(
+        self,
+        variant: str = "Y0275",
+        cache_directory: Optional[Union[str, PathLike[str]]] = None,
+    ) -> None:
+        if variant not in _TABLE_FILENAMES:
+            available = ", ".join(_TABLE_FILENAMES)
+            raise ValueError(
+                f"Unknown variant {variant!r}; available variants: {available}."
+            )
+        directory = (
+            _default_cache_directory()
+            if cache_directory is None
+            else Path(cache_directory).expanduser()
+        )
+        object.__setattr__(self, "variant", variant)
+        object.__setattr__(self, "cache_directory", directory)
+
+    @property
+    def expected_filenames(self) -> Tuple[str, str]:
+        """Published TP and T-rho filenames for this variant."""
+
+        return _TABLE_FILENAMES[self.variant]
+
+    @property
+    def checksum(self) -> str:
+        """SHA-256 checksum of the published archive."""
+
+        return _ARCHIVE_SHA256
+
+    @property
+    def archive_checksum(self) -> str:
+        """SHA-256 checksum of the published archive."""
+
+        return self.checksum
+
+    @property
+    def checksums(self) -> Dict[str, str]:
+        """SHA-256 checksums keyed by expected table filename."""
+
+        return dict(zip(self.expected_filenames, _TABLE_CHECKSUMS[self.variant]))
+
+    @property
+    def citation(self) -> str:
+        """Citation for the table source."""
+
+        return _CITATION
+
+    @property
+    def table_domain(self) -> Dict[str, Tuple[float, float]]:
+        """Nominal rectangular table domain in SI units."""
+
+        return dict(_TABLE_DOMAIN)
+
+    @property
+    def archive_url(self) -> str:
+        """URL of the published table archive."""
+
+        return _ARCHIVE_URL
+
+    def _cached_tables_are_valid(self) -> bool:
+        return all(
+            (self.cache_directory / filename).is_file()
+            and _sha256(self.cache_directory / filename) == checksum
+            for filename, checksum in self.checksums.items()
+        )
+
+    def _extract_tables(self, archive_path: Path) -> None:
+        temporary_paths = []
+        try:
+            with tarfile.open(archive_path, mode="r:gz") as archive:
+                for filename, checksum in self.checksums.items():
+                    member_name = f"DirEOS2021/{filename}"
+                    try:
+                        member = archive.getmember(member_name)
+                    except KeyError as exc:
+                        raise ValueError(
+                            f"Published archive is missing {member_name}."
+                        ) from exc
+                    if not member.isfile():
+                        raise ValueError(
+                            f"Published archive member {member_name} is not a file."
+                        )
+                    source = archive.extractfile(member)
+                    if source is None:
+                        raise ValueError(
+                            f"Could not read published archive member {member_name}."
+                        )
+                    with source, tempfile.NamedTemporaryFile(
+                        dir=self.cache_directory,
+                        prefix=f".{filename}.",
+                        delete=False,
+                    ) as destination:
+                        temporary_path = Path(destination.name)
+                        temporary_paths.append(temporary_path)
+                        shutil.copyfileobj(source, destination)
+                    if _sha256(temporary_path) != checksum:
+                        raise ValueError(f"Checksum mismatch for {filename}.")
+
+            for temporary_path, filename in zip(
+                temporary_paths,
+                self.expected_filenames,
+            ):
+                temporary_path.replace(self.cache_directory / filename)
+        finally:
+            for temporary_path in temporary_paths:
+                temporary_path.unlink(missing_ok=True)
+
+    def fetch(self) -> Path:
+        """Return a verified table directory, downloading it if necessary."""
+
+        if self._cached_tables_are_valid():
+            return self.cache_directory
+
+        self.cache_directory.mkdir(parents=True, exist_ok=True)
+        archive_path = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                dir=self.cache_directory,
+                prefix=".DirEOS2021.",
+                suffix=".tar.gz",
+                delete=False,
+            ) as destination:
+                archive_path = Path(destination.name)
+                with urlopen(self.archive_url, timeout=60) as source:
+                    shutil.copyfileobj(source, destination)
+            if _sha256(archive_path) != self.checksum:
+                raise ValueError("Checksum mismatch for DirEOS2021.tar.gz.")
+            self._extract_tables(archive_path)
+        finally:
+            if archive_path is not None:
+                archive_path.unlink(missing_ok=True)
+
+        return self.cache_directory
+
+    def load(self) -> "ChabrierDebrasEOS":
+        """Return the EOS backed by this verified table pair."""
+
+        return ChabrierDebrasEOS.from_directory(
+            self.fetch(),
+            variant=self.variant,
+        )
 
 
 def _scalar_array(value: ArrayLike, name: str) -> Array:
@@ -255,8 +468,9 @@ class ChabrierDebrasEOS:
                 f"Unknown variant {variant!r}; available variants: {available}."
             )
         data_directory = Path(directory)
-        tp_path = data_directory / f"TABLEEOS_2021_TP_{variant}_v1"
-        trho_path = data_directory / f"TABLEEOS_2021_Trho_{variant}_v1"
+        tp_filename, trho_filename = _TABLE_FILENAMES[variant]
+        tp_path = data_directory / tp_filename
+        trho_path = data_directory / trho_filename
         return cls(
             _read_tp_table(tp_path),
             _read_trho_table(trho_path),

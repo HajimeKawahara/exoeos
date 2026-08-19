@@ -2,7 +2,10 @@
 
 from importlib.metadata import PackageNotFoundError, version
 
-from exoeos.chabrier_debras import ChabrierDebrasEOS
+from exoeos.chabrier_debras import (
+    ChabrierDebrasEOS,
+    ChabrierDebrasTableLoader,
+)
 from exoeos.contracts import (
     EquationOfState,
     GibbsExcessModel,
@@ -48,6 +51,7 @@ except PackageNotFoundError:
 __all__ = [
     "AdditiveVolumeCompositeDensityProvider",
     "ChabrierDebrasEOS",
+    "ChabrierDebrasTableLoader",
     "DensityComponent",
     "EquationOfState",
     "FixedCompositionDensityProvider",
