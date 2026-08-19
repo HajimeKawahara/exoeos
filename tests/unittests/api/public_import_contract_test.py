@@ -3,6 +3,7 @@
 from exoeos import (
     AdditiveVolumeCompositeDensityProvider,
     ChabrierDebrasEOS,
+    ChabrierDebrasTableLoader,
     DensityComponent,
     EquationOfState,
     FixedCompositionDensityProvider,
@@ -77,6 +78,7 @@ def test_top_level_exports_construct_the_public_state() -> None:
     assert mass_density > 0.0
     assert mixture_density == 1000.0
     assert ChabrierDebrasEOS is not None
+    assert ChabrierDebrasTableLoader is not None
     assert AdditiveVolumeCompositeDensityProvider is not None
     assert DensityComponent is not None
     assert EquationOfState is not None

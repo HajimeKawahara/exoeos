@@ -308,18 +308,21 @@ definition. Use `jax.vmap` for batches.
 
 `ChabrierDebrasEOS` loads the published
 [Chabrier-Debras (2021)](https://doi.org/10.3847/1538-4357/abfc48) H/He TP
-and T-rho table pair for one fixed composition. Download and extract the
-[official data archive](https://perso.ens-lyon.fr/gilles.chabrier/DirEOS/),
-then select one of the published `Y0275`, `Y0292`, or `Y0297` variants:
+and T-rho table pair for one fixed composition. The table loader downloads
+the [official data archive](https://perso.ens-lyon.fr/gilles.chabrier/DirEOS/)
+when the selected pair is absent, verifies SHA-256 checksums, and caches only
+the required files. Select one of the published `Y0275`, `Y0292`, or `Y0297`
+variants:
 
 ```python
-from exoeos import ChabrierDebrasEOS
+from exoeos import ChabrierDebrasTableLoader
 
 
-eos = ChabrierDebrasEOS.from_directory(
-    "/path/to/DirEOS2021",
+loader = ChabrierDebrasTableLoader(
     variant="Y0275",
+    # cache_directory="/optional/custom/cache/DirEOS2021",
 )
+eos = loader.load()
 tp_state = eos.state_tp(T=1.0e4, P=1.0e11)
 trho_state = eos.state_trho(T=1.0e4, mass_density=1.0e3)
 
@@ -328,6 +331,12 @@ tp_state.u
 tp_state.s
 tp_state.nabla_ad
 ```
+
+The default cache is `$XDG_CACHE_HOME/exoeos/DirEOS2021`, falling back to
+`~/.cache/exoeos/DirEOS2021`. Loader metadata is available through
+`expected_filenames`, `variant`, `checksum`, `checksums`, `citation`,
+`table_domain`, and `cache_directory`. Existing local tables can still be
+opened directly with `ChabrierDebrasEOS.from_directory(...)`.
 
 Inputs and returned quantities use SI units. The logarithmic derivative fields
 are dimensionless. The variants are separate fixed-composition datasets;
