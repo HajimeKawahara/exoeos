@@ -46,6 +46,26 @@ class TPHelmholtzEOS(HelmholtzEOS, Protocol):
         ...
 
 
+class MassDensityProvider(Protocol):
+    """Temperature-pressure mass-density provider in SI units."""
+
+    @property
+    def molar_masses(self) -> jax.Array:
+        """Return component molar masses in kg mol^-1."""
+
+        ...
+
+    def mass_density_tp(
+        self,
+        temperature: ArrayLike,
+        pressure: ArrayLike,
+        mole_fractions: ArrayLike,
+    ) -> jax.Array:
+        """Return mass density in kg m^-3 for one temperature-pressure state."""
+
+        ...
+
+
 class GibbsExcessModel(Protocol):
     """Symmetric mole-fraction excess Gibbs-energy model.
 

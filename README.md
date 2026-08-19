@@ -337,6 +337,31 @@ for unphysical states inside those rectangles. Both evaluators accept one
 state at a time; use `jax.vmap` for batches. `Y0292` and `Y0297` are the
 effective-abundance variants defined by the authors.
 
+## Composite density providers
+
+The density-provider layer combines heterogeneous EOS backends without
+assigning workflow-specific species mappings to ExoEOS. Its public types are
+`MassDensityProvider`, `DensityComponent`, `TPHelmholtzDensityProvider`,
+`FixedCompositionDensityProvider`, and
+`AdditiveVolumeCompositeDensityProvider`. A composite maps an ordered global
+species tuple to components, converts mole fractions to component mass
+fractions, and applies the additive-volume law.
+
+Component species must form an exact, non-overlapping partition of the global
+species tuple. `TPHelmholtzDensityProvider` adapts a TP Helmholtz EOS, while
+`FixedCompositionDensityProvider` adapts a fixed-composition backend such as
+`ChabrierDebrasEOS`. If the supplied within-group mass fractions do not match
+that backend's configured composition within its declared tolerance, the
+density result is `nan`.
+
+`mass_density_tp(T, P, x)` evaluates one state: `T` and `P` are scalars in K
+and Pa, `x` is a one-dimensional mole-fraction vector in the declared species
+order, molar masses use `kg mol-1`, and the result uses `kg m-3`. Use external
+`jax.vmap` for batches. Numerical normalization and positivity are caller
+contracts. MELTYQ-specific species aliases and EOS assignments, and
+conversions to or from ExoGibbs or ExoJAX units, remain at the calling workflow
+or example boundary.
+
 ## Caloric ideal-gas API
 
 All public quantities use SI units. Component molar masses are in `kg mol-1`,

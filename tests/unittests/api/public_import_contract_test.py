@@ -1,18 +1,23 @@
 """Top-level public import contract."""
 
 from exoeos import (
+    AdditiveVolumeCompositeDensityProvider,
     ChabrierDebrasEOS,
+    DensityComponent,
     EquationOfState,
+    FixedCompositionDensityProvider,
     GibbsExcessModel,
     HelmholtzEOS,
     IdealEOS,
     IdealGas,
     IdealSolution,
+    MassDensityProvider,
     MassThermodynamicState,
     PengRobinsonEOS,
     SecondVirialEOS,
     SolutionState,
     TPHelmholtzEOS,
+    TPHelmholtzDensityProvider,
     ThermodynamicState,
     TRhoState,
     ZhangDuanEOS,
@@ -72,10 +77,15 @@ def test_top_level_exports_construct_the_public_state() -> None:
     assert mass_density > 0.0
     assert mixture_density == 1000.0
     assert ChabrierDebrasEOS is not None
+    assert AdditiveVolumeCompositeDensityProvider is not None
+    assert DensityComponent is not None
     assert EquationOfState is not None
+    assert FixedCompositionDensityProvider is not None
     assert GibbsExcessModel is not None
     assert HelmholtzEOS is not None
+    assert MassDensityProvider is not None
     assert TPHelmholtzEOS is not None
+    assert TPHelmholtzDensityProvider is not None
     assert MassThermodynamicState is not None
     assert residual_model.alphar(300.0, 40.0, [1.0]) == 0.0
     assert psir(residual_model, 300.0, [40.0]) == 0.0
