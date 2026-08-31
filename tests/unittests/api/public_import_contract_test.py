@@ -14,8 +14,11 @@ from exoeos import (
     IdealSolution,
     MassDensityProvider,
     MassThermodynamicState,
+    MarcumSilicateHydrogenEOS,
+    MarcumSilicateHydrogenTableLoader,
     PengRobinsonEOS,
     SecondVirialEOS,
+    SilicateHydrogenState,
     SolutionState,
     TPHelmholtzEOS,
     TPHelmholtzDensityProvider,
@@ -86,9 +89,12 @@ def test_top_level_exports_construct_the_public_state() -> None:
     assert GibbsExcessModel is not None
     assert HelmholtzEOS is not None
     assert MassDensityProvider is not None
+    assert MarcumSilicateHydrogenEOS is not None
+    assert MarcumSilicateHydrogenTableLoader is not None
     assert TPHelmholtzEOS is not None
     assert TPHelmholtzDensityProvider is not None
     assert MassThermodynamicState is not None
+    assert SilicateHydrogenState is not None
     assert residual_model.alphar(300.0, 40.0, [1.0]) == 0.0
     assert psir(residual_model, 300.0, [40.0]) == 0.0
     assert solution_model.gex_RT(300.0, 1.0e5, [1.0]) == 0.0
