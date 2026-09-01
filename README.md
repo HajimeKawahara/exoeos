@@ -346,6 +346,59 @@ for unphysical states inside those rectangles. Both evaluators accept one
 state at a time; use `jax.vmap` for batches. `Y0292` and `Y0297` are the
 effective-abundance variants defined by the authors.
 
+## Composition-dependent tabulated silicate-hydrogen API
+
+`MarcumSilicateHydrogenEOS` interpolates the published
+[Marcum, Stixrude, and Young (2026)](https://arxiv.org/abs/2608.27401)
+MgSiO3-H lookup table at temperature, pressure, and composition. The ordered
+endmember mole-fraction vector is `(MgSiO3, MgSiO3H4)`, so `X = x[1]` and the
+corresponding hydrogen mass fraction is
+`4 X M_H / (M_MgSiO3 + 4 X M_H)`.
+
+```python
+import jax.numpy as jnp
+
+from exoeos import MarcumSilicateHydrogenTableLoader
+
+
+eos = MarcumSilicateHydrogenTableLoader().load()
+state = eos.state_tp(
+    T=6000.0,
+    P=1.0e11,
+    x=jnp.array([0.5, 0.5]),
+)
+
+state.rho
+state.h
+state.s
+state.cp
+state.Ks
+state.nabla_ad
+```
+
+The loader downloads the single CSV from the
+[authors' table repository](https://github.com/s-marcum/MgSiO3-H-EOS),
+verifies its SHA-256 checksum, and caches it. An existing file can be opened
+with `MarcumSilicateHydrogenEOS.from_file(path)`.
+The default cache is `$XDG_CACHE_HOME/exoeos/MgSiO3-H-EOS`, falling back to
+`~/.cache/exoeos/MgSiO3-H-EOS`. Provenance and domain metadata are exposed by
+`expected_filename`, `checksum`, `commit`, `table_url`, `citation`, and
+`table_domain`.
+
+Inputs and outputs use SI units. The table coordinates are 3000--10000 K,
+1--800 GPa, and `2.5e-5 <= X <= 1`; the 1--4 GPa slices stop at 6000 K.
+Queries that require a missing cell or lie outside the table return an
+all-`nan` state; there is no clipping or extrapolation. The evaluator accepts
+one scalar state and a normalized, nonnegative composition of shape `(2,)`;
+it never clips or renormalizes inputs. Use `jax.vmap` for batches. Its
+`molar_masses` and `mass_density_tp` method also satisfy the
+`MassDensityProvider` contract directly.
+
+The table extends beyond the directly simulated calibration range of roughly
+4000--8000 K and 4.9--615.83 GPa. Intermediate compositions are the authors'
+ideal Gibbs mixture of the dry and fully hydrogenated endmembers, not an
+additive-volume mixture with a separate pure-H2 EOS.
+
 ## Composite density providers
 
 The density-provider layer combines heterogeneous EOS backends without

@@ -16,6 +16,8 @@ The top-level package exports `HelmholtzEOS`, `TPHelmholtzEOS`, `IdealEOS`,
 `get_critical_properties`,
 `GibbsExcessModel`, `IdealSolution`, `SolutionState`, `total_gex_RT`,
 `solution_state`, `ChabrierDebrasEOS`, `MassThermodynamicState`, `IdealGas`,
+`MarcumSilicateHydrogenEOS`, `MarcumSilicateHydrogenTableLoader`,
+`SilicateHydrogenState`,
 `ThermodynamicState`, `EquationOfState`, `MassDensityProvider`,
 `DensityComponent`, `TPHelmholtzDensityProvider`,
 `FixedCompositionDensityProvider`,
@@ -319,6 +321,76 @@ physical-validity mask, so nominally in-range cells can still be unphysical.
 Automatic differentiation follows the piecewise-bilinear interpolant; the
 separately tabulated columns remain the source for thermodynamic derivatives.
 Both methods evaluate one scalar state; use `jax.vmap` for batches.
+
+## Composition-dependent tabulated silicate-hydrogen interface
+
+`MarcumSilicateHydrogenEOS` is a mass-specific table backend for the published
+MgSiO3-H lookup table of Marcum, Stixrude, and Young (2026). It is separate
+from the molar residual `HelmholtzEOS` interface because the table, rather than
+a complete free energy, is the source of its caloric and response quantities.
+It evaluates
+
+```python
+state = eos.state_tp(T, P, x)
+```
+
+for scalar temperature in K, scalar absolute pressure in Pa, and an ordered
+endmember mole-fraction vector `x = (x_MgSiO3, x_MgSiO3H4)` of shape `(2,)`.
+The table composition coordinate is `X = x_MgSiO3H4`; inputs are not clipped
+or normalized, and a valid composition is nonnegative and sums to one. It
+corresponds to hydrogen mass fraction
+
+```text
+w_H = 4 X M_H / (M_MgSiO3 + 4 X M_H).
+```
+
+The result is an immutable JAX PyTree `SilicateHydrogenState`:
+
+| Field | Alias | Meaning | SI unit |
+| --- | --- | --- | --- |
+| `pressure` | `P` | Absolute pressure | `Pa` |
+| `mass_density` | `rho` | Mass density | `kg m-3` |
+| `specific_enthalpy` | `h` | Specific enthalpy | `J kg-1` |
+| `specific_entropy` | `s` | Specific entropy | `J kg-1 K-1` |
+| `thermal_expansion` | `alpha` | Isobaric expansivity | `K-1` |
+| `specific_heat_capacity_cp` | `cp` | Isobaric specific heat capacity | `J kg-1 K-1` |
+| `adiabatic_bulk_modulus` | `Ks` | Adiabatic bulk modulus | `Pa` |
+| `reference_mass_density` | `rho0` | Reference mass density | `kg m-3` |
+| `compression_ratio` | `eta` | Tabulated compression ratio | 1 |
+| `gruneisen_parameter` | `gamma` | Gruneisen parameter | 1 |
+
+The derived properties are
+
+```text
+u = h - P / rho,
+nabla_ad = alpha P / (rho cp).
+```
+
+The native axes are 3000--10000 K, 1--800 GPa, and
+`2.5e-5 <= X <= 1`. The pressure grid contains 1 GPa steps through 4 GPa and
+5 GPa steps thereafter; low-pressure slices contain temperatures only through
+6000 K. Values are converted from the published mass-specific units to SI and
+interpolated trilinearly on the native coordinates. A query outside these
+axes, requiring a missing ragged-grid corner, containing a non-finite input,
+or carrying an invalid numerical composition returns `nan` in every state
+field. Shape violations raise `ValueError`.
+There is no clipping or extrapolation. Evaluation is one state at a time; use
+external `jax.vmap` for batches. `jit` and differentiation follow the
+piecewise-trilinear interpolant away from grid-cell boundaries.
+
+`MarcumSilicateHydrogenTableLoader` downloads the single official CSV into a
+user cache, verifies its pinned SHA-256 checksum, and constructs the EOS.
+Existing files can be read with `MarcumSilicateHydrogenEOS.from_file(path)`.
+The loader exposes `expected_filename`, `checksum`, `table_checksum`, `commit`,
+`table_url`, `citation`, `table_domain`, and `cache_directory` metadata.
+The EOS exposes the two endmember `molar_masses` and
+`mass_density_tp(T, P, x)`, so it directly satisfies `MassDensityProvider`.
+
+The published table itself extends the directly simulated range of roughly
+4000--8000 K and 4.9--615.83 GPa. Intermediate compositions use the authors'
+ideal Gibbs mixing construction between dry MgSiO3 and MgSiO3H4. They must not
+be reinterpreted as an additive-volume mixture of dry silicate and a separate
+pure-H2 EOS.
 
 ## Composite mass-density interface
 

@@ -104,6 +104,109 @@ class MassThermodynamicState(NamedTuple):
         return self.adiabatic_gradient
 
 
+class SilicateHydrogenState(NamedTuple):
+    """Immutable mass-specific silicate-hydrogen state in SI units."""
+
+    pressure: Array
+    mass_density: Array
+    specific_enthalpy: Array
+    specific_entropy: Array
+    thermal_expansion: Array
+    specific_heat_capacity_cp: Array
+    adiabatic_bulk_modulus: Array
+    reference_mass_density: Array
+    compression_ratio: Array
+    gruneisen_parameter: Array
+
+    @property
+    def P(self) -> Array:
+        """Pressure in Pa."""
+
+        return self.pressure
+
+    @property
+    def rho(self) -> Array:
+        """Mass density in kg m^-3."""
+
+        return self.mass_density
+
+    @property
+    def h(self) -> Array:
+        """Specific enthalpy in J kg^-1."""
+
+        return self.specific_enthalpy
+
+    @property
+    def s(self) -> Array:
+        """Specific entropy in J kg^-1 K^-1."""
+
+        return self.specific_entropy
+
+    @property
+    def alpha(self) -> Array:
+        """Thermal expansion coefficient in K^-1."""
+
+        return self.thermal_expansion
+
+    @property
+    def cp(self) -> Array:
+        """Specific heat capacity in J kg^-1 K^-1."""
+
+        return self.specific_heat_capacity_cp
+
+    @property
+    def Ks(self) -> Array:
+        """Adiabatic bulk modulus in Pa."""
+
+        return self.adiabatic_bulk_modulus
+
+    @property
+    def rho0(self) -> Array:
+        """Reference mass density in kg m^-3."""
+
+        return self.reference_mass_density
+
+    @property
+    def eta(self) -> Array:
+        """Compression ratio."""
+
+        return self.compression_ratio
+
+    @property
+    def gamma(self) -> Array:
+        """Grueneisen parameter."""
+
+        return self.gruneisen_parameter
+
+    @property
+    def specific_internal_energy(self) -> Array:
+        """Specific internal energy in J kg^-1."""
+
+        return self.specific_enthalpy - self.pressure / self.mass_density
+
+    @property
+    def u(self) -> Array:
+        """Specific internal energy in J kg^-1."""
+
+        return self.specific_internal_energy
+
+    @property
+    def adiabatic_gradient(self) -> Array:
+        """Adiabatic logarithmic temperature gradient."""
+
+        return (
+            self.thermal_expansion
+            * self.pressure
+            / (self.mass_density * self.specific_heat_capacity_cp)
+        )
+
+    @property
+    def nabla_ad(self) -> Array:
+        """Adiabatic logarithmic temperature gradient."""
+
+        return self.adiabatic_gradient
+
+
 class TRhoState(NamedTuple):
     """Residual state evaluated at temperature and molar density."""
 
