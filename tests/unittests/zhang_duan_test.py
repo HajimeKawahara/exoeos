@@ -321,6 +321,62 @@ def test_state_tp_selects_a_mechanically_stable_root(
     assert pressure_density_gradient > 0.0
 
 
+def test_state_tp_finds_first_stable_root_between_scan_nodes(
+    water_eos: ZhangDuanEOS,
+) -> None:
+    temperature = 600.0
+    pressure = 15_560_836.009281473
+    composition = jnp.asarray([1.0])
+    state = state_tp(water_eos, temperature, pressure, composition)
+    density_scale = (2.88e-10 / REFERENCE_DIAMETER) ** 3 / 1000.0
+    reduced_density = state.rho * density_scale
+    pressure_density_gradient = jax.grad(
+        lambda rho: state_trho(water_eos, temperature, rho, composition).P
+    )(state.rho)
+
+    # A narrow positive-pressure lobe contains stable and unstable roots
+    # between two residual scan nodes. Its first root is independently
+    # bracketed at reduced density 3.508628435382223.
+    assert jnp.allclose(
+        reduced_density,
+        3.508628435382223,
+        rtol=1.0e-10,
+        atol=0.0,
+    )
+    assert jnp.allclose(state.P, pressure, rtol=1.0e-12, atol=0.0)
+    assert pressure_density_gradient > 0.0
+
+
+def test_state_tp_finds_coalescing_stationary_pair_within_scan_cell(
+    water_eos: ZhangDuanEOS,
+) -> None:
+    temperature = 654.4784
+    pressure = 23_637_365.134
+    composition = jnp.asarray([1.0])
+    state = jax.jit(state_tp)(
+        water_eos,
+        temperature,
+        pressure,
+        composition,
+    )
+    density_scale = (2.88e-10 / REFERENCE_DIAMETER) ** 3 / 1000.0
+    reduced_density = state.rho * density_scale
+    pressure_density_gradient = jax.grad(
+        lambda rho: state_trho(water_eos, temperature, rho, composition).P
+    )(state.rho)
+
+    # The maximum and minimum of q(rho) nearly coalesce, putting both
+    # stationary points inside one scan cell with positive endpoint slopes.
+    assert jnp.allclose(
+        reduced_density,
+        7.546405616927,
+        rtol=1.0e-7,
+        atol=0.0,
+    )
+    assert jnp.allclose(state.P, pressure, rtol=1.0e-12, atol=0.0)
+    assert pressure_density_gradient > 0.0
+
+
 def test_state_tp_supports_jit_vmap_and_pressure_gradient() -> None:
     eos = ZhangDuanEOS.from_species(("H2O", "CO2"))
     composition = jnp.asarray([0.5, 0.5])
@@ -428,6 +484,25 @@ def test_zhang_duan_is_a_pytree_and_preserves_dtype(dtype) -> None:
     assert all(leaf.dtype == dtype for leaf in leaves)
     assert all(leaf.dtype == dtype for leaf in jax.tree_util.tree_leaves(state))
     assert all(jnp.all(jnp.isfinite(leaf)) for leaf in jax.tree_util.tree_leaves(state))
+
+
+def test_integer_inputs_do_not_promote_float32_zhang_duan() -> None:
+    dtype = jnp.float32
+    eos = ZhangDuanEOS(
+        jnp.asarray([510.0], dtype=dtype),
+        jnp.asarray([2.88e-10], dtype=dtype),
+        jnp.asarray([[1]], dtype=jnp.int32),
+        jnp.asarray([[1]], dtype=jnp.int32),
+    )
+    state = state_tp(
+        eos,
+        jnp.asarray(1200, dtype=jnp.int32),
+        jnp.asarray(1_000_000_000, dtype=jnp.int32),
+        jnp.asarray([1], dtype=jnp.int32),
+    )
+
+    assert all(leaf.dtype == dtype for leaf in jax.tree_util.tree_leaves(eos))
+    assert all(leaf.dtype == dtype for leaf in jax.tree_util.tree_leaves(state))
 
 
 def test_float32_pressure_round_trip_at_high_pressure() -> None:

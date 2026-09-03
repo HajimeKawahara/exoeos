@@ -25,6 +25,7 @@ NOTEBOOK_STEMS = (
     "zhang_duan_eos",
     "fixed_composition_cho_eos_comparison",
     "peng_robinson_fixed_state_reference",
+    "zhang_duan_high_pressure_h2o_co2",
 )
 GENERATED_HEADER = (
     ".. This file is generated from the sibling .ipynb by convert_notebooks.py.\n"

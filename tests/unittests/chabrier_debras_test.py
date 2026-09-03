@@ -266,6 +266,38 @@ def test_out_of_bounds_queries_return_nan(eos: ChabrierDebrasEOS) -> None:
         assert all(bool(jnp.isnan(leaf)) for leaf in jax.tree_util.tree_leaves(state))
 
 
+def test_unrepresentable_tp_field_returns_all_nan_state(
+    eos: ChabrierDebrasEOS,
+) -> None:
+    tp_fields = eos.tp_fields.astype(jnp.float32)
+    tp_fields = tp_fields.at[40, 0, 1].set(200.0)
+    float32_eos = ChabrierDebrasEOS(
+        tp_fields,
+        eos.trho_fields.astype(jnp.float32),
+        variant=eos.variant,
+    )
+
+    state = float32_eos.state_tp(jnp.float32(1.0e4), jnp.float32(1.0))
+
+    assert all(bool(jnp.isnan(field)) for field in state)
+
+
+def test_unrepresentable_trho_field_returns_all_nan_state(
+    eos: ChabrierDebrasEOS,
+) -> None:
+    trho_fields = eos.trho_fields.astype(jnp.float32)
+    trho_fields = trho_fields.at[40, 0, 0].set(200.0)
+    float32_eos = ChabrierDebrasEOS(
+        eos.tp_fields.astype(jnp.float32),
+        trho_fields,
+        variant=eos.variant,
+    )
+
+    state = float32_eos.state_trho(jnp.float32(1.0e4), jnp.float32(1.0e-3))
+
+    assert all(bool(jnp.isnan(field)) for field in state)
+
+
 def test_state_methods_support_jit_vmap_and_pytree_round_trip(
     eos: ChabrierDebrasEOS,
 ) -> None:

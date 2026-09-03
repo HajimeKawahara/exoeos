@@ -14,9 +14,12 @@ Tutorials
    tutorials/zhang_duan_eos
    tutorials/fixed_composition_cho_eos_comparison
    tutorials/peng_robinson_fixed_state_reference
+   tutorials/zhang_duan_high_pressure_h2o_co2
 
 API overview
 ------------
 
 See the project `README <https://github.com/HajimeKawahara/exoeos>`_ for the
-current public API and installation instructions.
+current public API and installation instructions. Exact units, shapes, and
+validity behavior are recorded in the
+:download:`thermodynamic-state contract <thermodynamic_state_contract.md>`.

@@ -97,6 +97,18 @@ def test_mass_density_tp_promotes_state_inputs_to_molar_mass_dtype() -> None:
     assert jnp.allclose(density, expected, rtol=1.0e-14)
 
 
+def test_integer_state_inputs_do_not_promote_float32_density_data() -> None:
+    density = mass_density_tp(
+        IdealEOS(),
+        jnp.asarray(600, dtype=jnp.int32),
+        jnp.asarray(200_000, dtype=jnp.int32),
+        jnp.asarray([1], dtype=jnp.int32),
+        jnp.asarray([18.0e-3], dtype=jnp.float32),
+    )
+
+    assert density.dtype == jnp.float32
+
+
 def test_additive_volume_mass_density_matches_specific_volume_sum() -> None:
     mass_fractions = jnp.asarray([0.25, 0.75])
     component_densities = jnp.asarray([1000.0, 500.0])

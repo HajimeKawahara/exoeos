@@ -8,6 +8,8 @@ import jax.numpy as jnp
 from jax import lax, tree_util
 from jax.typing import ArrayLike
 
+from exoeos._arrays import as_inexact_array
+from exoeos._arrays import scalar_array as _scalar_array
 from exoeos.constants import MOLAR_GAS_CONSTANT
 
 
@@ -56,77 +58,196 @@ _PUBLISHED_BINARY_PARAMETERS = {
 }
 
 
-def _scalar_array(value: ArrayLike, name: str) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
-    if array.ndim != 0:
-        raise ValueError(f"{name} must be a scalar; use jax.vmap for batches.")
-    return array
-
-
 def _component_array(value: ArrayLike, name: str) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
+    array = as_inexact_array(value)
     if array.ndim != 1 or array.shape[0] == 0:
         raise ValueError(f"{name} must be a non-empty one-dimensional array.")
     return array
 
 
 def _composition_array(value: ArrayLike, component_count: int) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
+    array = as_inexact_array(value)
     if array.ndim != 1 or array.shape[0] != component_count:
         raise ValueError(f"x must have shape ({component_count},).")
     return array
 
 
+def _bisect_sign_change(function, lower: Array, upper: Array) -> Array:
+    """Refine a scalar bracket whose endpoint values have opposite signs."""
+
+    lower_value = function(lower)
+
+    def bisect(_, bracket):
+        bracket_lower, bracket_upper, bracket_lower_value = bracket
+        midpoint = 0.5 * (bracket_lower + bracket_upper)
+        midpoint_value = function(midpoint)
+        same_side = (bracket_lower_value <= 0.0) == (midpoint_value <= 0.0)
+        bracket_lower = jnp.where(same_side, midpoint, bracket_lower)
+        bracket_upper = jnp.where(same_side, bracket_upper, midpoint)
+        bracket_lower_value = jnp.where(
+            same_side,
+            midpoint_value,
+            bracket_lower_value,
+        )
+        return bracket_lower, bracket_upper, bracket_lower_value
+
+    lower, upper, _ = lax.fori_loop(
+        0,
+        _BISECTION_STEPS,
+        bisect,
+        (lower, upper, lower_value),
+    )
+    return 0.5 * (lower + upper)
+
+
 def _first_stable_root(function, initial_guess: Array) -> Array:
-    """Bracket and refine the first negative-to-positive scalar root."""
+    """Bracket the first stable root using the function's stationary points."""
 
     zero = jnp.zeros_like(initial_guess)
     limit = jnp.asarray(_REDUCED_DENSITY_LIMIT, dtype=initial_guess.dtype)
+    one = jnp.ones_like(initial_guess)
+
+    def derivative(value):
+        return jax.jvp(function, (value,), (one,))[1]
+
+    def second_derivative(value):
+        return jax.jvp(derivative, (value,), (one,))[1]
+
     initial_state = (
         zero,
-        function(zero),
+        derivative(zero),
+        second_derivative(zero),
+        zero,
         zero,
         limit,
         jnp.asarray(False),
     )
 
     def scan(index, state):
-        previous, previous_residual, lower, upper, found = state
+        (
+            previous,
+            previous_derivative,
+            previous_second_derivative,
+            stable_lower,
+            lower,
+            upper,
+            found,
+        ) = state
         candidate = limit * (index + 1) / _BRACKET_STEPS
-        residual = function(candidate)
-        crossing = (~found) & (previous_residual <= 0.0) & (residual >= 0.0)
-        lower = jnp.where(crossing, previous, lower)
-        upper = jnp.where(crossing, candidate, upper)
-        return candidate, residual, lower, upper, found | crossing
+        candidate_derivative = derivative(candidate)
+        candidate_second_derivative = second_derivative(candidate)
+        curvature_crossing = (
+            (previous_second_derivative < 0.0)
+            & (candidate_second_derivative >= 0.0)
+        ) | (
+            (previous_second_derivative > 0.0)
+            & (candidate_second_derivative <= 0.0)
+        )
+        # Splitting at an extremum of q' exposes a coalescing pair of
+        # stationary points even when q' has the same sign at both scan nodes.
+        split = lax.cond(
+            curvature_crossing,
+            lambda bracket: _bisect_sign_change(second_derivative, *bracket),
+            lambda bracket: bracket[1],
+            (previous, candidate),
+        )
+        split_derivative = lax.cond(
+            curvature_crossing,
+            derivative,
+            lambda value: candidate_derivative,
+            split,
+        )
 
-    _, _, lower, upper, found = lax.fori_loop(
+        def process_segment(values, segment):
+            bracket_lower, root_lower, root_upper, root_found = values
+            (
+                segment_lower,
+                segment_upper,
+                lower_derivative,
+                upper_derivative,
+            ) = segment
+            maximum_crossing = (lower_derivative > 0.0) & (
+                upper_derivative <= 0.0
+            )
+            minimum_crossing = (lower_derivative < 0.0) & (
+                upper_derivative >= 0.0
+            )
+            stationary_crossing = maximum_crossing | minimum_crossing
+            stationary = lax.cond(
+                stationary_crossing,
+                lambda bracket: _bisect_sign_change(derivative, *bracket),
+                lambda bracket: bracket[1],
+                (segment_lower, segment_upper),
+            )
+            maximum_reaches_pressure = lax.cond(
+                (~root_found) & maximum_crossing,
+                lambda value: function(value) >= 0.0,
+                lambda value: jnp.asarray(False),
+                stationary,
+            )
+            root_lower = jnp.where(
+                maximum_reaches_pressure,
+                bracket_lower,
+                root_lower,
+            )
+            root_upper = jnp.where(
+                maximum_reaches_pressure,
+                stationary,
+                root_upper,
+            )
+            bracket_lower = jnp.where(
+                (~root_found) & minimum_crossing,
+                stationary,
+                bracket_lower,
+            )
+            return (
+                bracket_lower,
+                root_lower,
+                root_upper,
+                root_found | maximum_reaches_pressure,
+            )
+
+        bracket_state = process_segment(
+            (stable_lower, lower, upper, found),
+            (
+                previous,
+                split,
+                previous_derivative,
+                split_derivative,
+            ),
+        )
+        stable_lower, lower, upper, found = process_segment(
+            bracket_state,
+            (
+                split,
+                candidate,
+                split_derivative,
+                candidate_derivative,
+            ),
+        )
+        return (
+            candidate,
+            candidate_derivative,
+            candidate_second_derivative,
+            stable_lower,
+            lower,
+            upper,
+            found,
+        )
+
+    _, _, _, stable_lower, lower, upper, found = lax.fori_loop(
         0,
         _BRACKET_STEPS,
         scan,
         initial_state,
     )
-
-    def bisect(_, bracket):
-        lower, upper = bracket
-        midpoint = 0.5 * (lower + upper)
-        residual = function(midpoint)
-        lower = jnp.where(residual < 0.0, midpoint, lower)
-        upper = jnp.where(residual >= 0.0, midpoint, upper)
-        return lower, upper
-
-    lower, upper = lax.fori_loop(
-        0,
-        _BISECTION_STEPS,
-        bisect,
-        (lower, upper),
+    endpoint_crossing = (~found) & (function(stable_lower) <= 0.0) & (
+        function(limit) >= 0.0
     )
-    root = 0.5 * (lower + upper)
+    lower = jnp.where(endpoint_crossing, stable_lower, lower)
+    found = found | endpoint_crossing
+
+    root = _bisect_sign_change(function, lower, upper)
     return jnp.where(found, root, jnp.asarray(jnp.nan, dtype=root.dtype))
 
 
@@ -185,11 +306,7 @@ class ZhangDuanEOS:
         if energy_interaction_parameters is None:
             energy_interactions = jnp.ones(shape, dtype=dtype)
         else:
-            energy_interactions = jnp.asarray(energy_interaction_parameters)
-            if not jnp.issubdtype(energy_interactions.dtype, jnp.inexact):
-                energy_interactions = energy_interactions.astype(
-                    jnp.asarray(1.0).dtype
-                )
+            energy_interactions = as_inexact_array(energy_interaction_parameters)
             if energy_interactions.shape != shape:
                 raise ValueError(
                     "energy_interaction_parameters must have shape "
@@ -199,9 +316,7 @@ class ZhangDuanEOS:
         if size_interaction_parameters is None:
             size_interactions = jnp.ones(shape, dtype=dtype)
         else:
-            size_interactions = jnp.asarray(size_interaction_parameters)
-            if not jnp.issubdtype(size_interactions.dtype, jnp.inexact):
-                size_interactions = size_interactions.astype(jnp.asarray(1.0).dtype)
+            size_interactions = as_inexact_array(size_interaction_parameters)
             if size_interactions.shape != shape:
                 raise ValueError(
                     "size_interaction_parameters must have shape "

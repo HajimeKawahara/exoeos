@@ -10,18 +10,20 @@ a separate mass-specific state.
 ## Public interface
 
 The top-level package exports `HelmholtzEOS`, `TPHelmholtzEOS`, `IdealEOS`,
-`SecondVirialEOS`, `PengRobinsonEOS`, `TRhoState`, `psir`, `state_trho`,
-`state_tp`,
+`SecondVirialEOS`, `PengRobinsonEOS`, `ZhangDuanEOS`, `TRhoState`, `psir`,
+`state_trho`, `state_tp`,
 `FluidCriticalProperties`, `available_critical_properties`,
 `get_critical_properties`,
 `GibbsExcessModel`, `IdealSolution`, `SolutionState`, `total_gex_RT`,
-`solution_state`, `ChabrierDebrasEOS`, `MassThermodynamicState`, `IdealGas`,
+`solution_state`, `ChabrierDebrasEOS`, `ChabrierDebrasTableLoader`,
+`MassThermodynamicState`, `IdealGas`,
 `MarcumSilicateHydrogenEOS`, `MarcumSilicateHydrogenTableLoader`,
 `SilicateHydrogenState`,
 `ThermodynamicState`, `EquationOfState`, `MassDensityProvider`,
 `DensityComponent`, `TPHelmholtzDensityProvider`,
 `FixedCompositionDensityProvider`,
-`AdditiveVolumeCompositeDensityProvider`, and `__version__`.
+`AdditiveVolumeCompositeDensityProvider`, `additive_volume_mass_density`,
+`mass_density_tp`, and `__version__`.
 
 ## Residual Helmholtz interface
 
@@ -318,6 +320,8 @@ converted to SI. The signed derivative columns are interpolated directly and
 are not exponentiated. Out-of-grid queries return `nan`; no clipping or
 extrapolation is performed. The published rectangular tables do not contain a
 physical-validity mask, so nominally in-range cells can still be unphysical.
+If SI conversion makes any state field non-finite in the selected dtype, every
+field in that state is returned as `nan`.
 Automatic differentiation follows the piecewise-bilinear interpolant; the
 separately tabulated columns remain the source for thermodynamic derivatives.
 Both methods evaluate one scalar state; use `jax.vmap` for batches.

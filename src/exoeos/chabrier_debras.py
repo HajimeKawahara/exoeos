@@ -1,7 +1,5 @@
 """Chabrier-Debras 2021 tabulated hydrogen-helium equation of state."""
 
-import hashlib
-import os
 import shutil
 import tarfile
 import tempfile
@@ -17,6 +15,11 @@ import numpy as np
 from jax import tree_util
 from jax.typing import ArrayLike
 
+from exoeos._arrays import as_inexact_array
+from exoeos._arrays import scalar_array as _scalar_array
+from exoeos._table_loader import default_cache_directory as _cache_directory
+from exoeos._table_loader import sha256 as _sha256
+from exoeos._table_loader import verified_download as _verified_download
 from exoeos.state import MassThermodynamicState
 
 
@@ -80,21 +83,8 @@ _TABLE_DOMAIN = {
 }
 
 
-def _sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
 def _default_cache_directory() -> Path:
-    cache_root = os.environ.get("XDG_CACHE_HOME")
-    if cache_root:
-        root = Path(cache_root).expanduser()
-    else:
-        root = Path.home() / ".cache"
-    return root / "exoeos" / "DirEOS2021"
+    return _cache_directory("DirEOS2021")
 
 
 @dataclass(frozen=True, init=False)
@@ -224,24 +214,16 @@ class ChabrierDebrasTableLoader:
         if self._cached_tables_are_valid():
             return self.cache_directory
 
-        self.cache_directory.mkdir(parents=True, exist_ok=True)
-        archive_path = None
-        try:
-            with tempfile.NamedTemporaryFile(
-                dir=self.cache_directory,
-                prefix=".DirEOS2021.",
-                suffix=".tar.gz",
-                delete=False,
-            ) as destination:
-                archive_path = Path(destination.name)
-                with urlopen(self.archive_url, timeout=60) as source:
-                    shutil.copyfileobj(source, destination)
-            if _sha256(archive_path) != self.checksum:
-                raise ValueError("Checksum mismatch for DirEOS2021.tar.gz.")
+        with _verified_download(
+            url=self.archive_url,
+            checksum=self.checksum,
+            cache_directory=self.cache_directory,
+            prefix=".DirEOS2021.",
+            suffix=".tar.gz",
+            checksum_error="Checksum mismatch for DirEOS2021.tar.gz.",
+            opener=urlopen,
+        ) as archive_path:
             self._extract_tables(archive_path)
-        finally:
-            if archive_path is not None:
-                archive_path.unlink(missing_ok=True)
 
         return self.cache_directory
 
@@ -252,15 +234,6 @@ class ChabrierDebrasTableLoader:
             self.fetch(),
             variant=self.variant,
         )
-
-
-def _scalar_array(value: ArrayLike, name: str) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
-    if array.ndim != 0:
-        raise ValueError(f"{name} must be a scalar; use jax.vmap for batches.")
-    return array
 
 
 def _expected_axis(start: float, count: int) -> np.ndarray:
@@ -347,9 +320,7 @@ def _table_array(
     expected_shape: tuple[int, int, int],
     name: str,
 ) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
+    array = as_inexact_array(value)
     if array.shape != expected_shape:
         raise ValueError(
             f"{name} must have shape {expected_shape}; received {array.shape}."
@@ -400,6 +371,17 @@ def _bilinear_interpolate(
     return jnp.where(in_bounds, interpolated, jnp.nan)
 
 
+def _mask_nonfinite_state(
+    state: MassThermodynamicState,
+) -> MassThermodynamicState:
+    """Return an all-NaN state when any converted field is non-finite."""
+
+    valid = jnp.all(jnp.isfinite(jnp.stack(state)))
+    return MassThermodynamicState(
+        *(jnp.where(valid, value, jnp.nan) for value in state)
+    )
+
+
 @tree_util.register_pytree_node_class
 @dataclass(frozen=True, init=False)
 class ChabrierDebrasEOS:
@@ -414,7 +396,8 @@ class ChabrierDebrasEOS:
 
     Values outside the nominal rectangular grids return ``nan`` rather than
     being clipped or extrapolated. The published tables do not include a mask
-    for physically invalid states within those rectangles.
+    for physically invalid states within those rectangles. If SI conversion
+    makes any field non-finite, every field in that state returns ``nan``.
     """
 
     tp_fields: Array
@@ -516,7 +499,7 @@ class ChabrierDebrasEOS:
             in_bounds,
         )
 
-        return MassThermodynamicState(
+        state = MassThermodynamicState(
             pressure=jnp.where(in_bounds, pressure, jnp.nan),
             mass_density=1.0e3 * jnp.power(10.0, interpolated[0]),
             specific_internal_energy=1.0e6 * jnp.power(10.0, interpolated[1]),
@@ -527,6 +510,7 @@ class ChabrierDebrasEOS:
             dlns_dlnP_T=interpolated[6],
             adiabatic_gradient=interpolated[7],
         )
+        return _mask_nonfinite_state(state)
 
     def state_trho(
         self,
@@ -561,7 +545,7 @@ class ChabrierDebrasEOS:
             in_bounds,
         )
 
-        return MassThermodynamicState(
+        state = MassThermodynamicState(
             pressure=1.0e9 * jnp.power(10.0, interpolated[0]),
             mass_density=jnp.where(in_bounds, density, jnp.nan),
             specific_internal_energy=1.0e6 * jnp.power(10.0, interpolated[1]),
@@ -572,6 +556,7 @@ class ChabrierDebrasEOS:
             dlns_dlnP_T=interpolated[6],
             adiabatic_gradient=interpolated[7],
         )
+        return _mask_nonfinite_state(state)
 
     def tree_flatten(self):
         return (self.tp_fields, self.trho_fields), self.variant

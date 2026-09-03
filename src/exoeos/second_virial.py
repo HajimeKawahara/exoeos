@@ -7,25 +7,16 @@ import jax.numpy as jnp
 from jax import tree_util
 from jax.typing import ArrayLike
 
+from exoeos._arrays import as_inexact_array
+from exoeos._arrays import scalar_array as _scalar_array
 from exoeos.constants import MOLAR_GAS_CONSTANT
 
 
 Array = jax.Array
 
 
-def _scalar_array(value: ArrayLike, name: str) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
-    if array.ndim != 0:
-        raise ValueError(f"{name} must be a scalar; use jax.vmap for batches.")
-    return array
-
-
 def _composition_array(value: ArrayLike, component_count: int) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
+    array = as_inexact_array(value)
     if array.ndim != 1 or array.shape[0] != component_count:
         raise ValueError(f"x must have shape ({component_count},).")
     return array
@@ -44,9 +35,7 @@ class SecondVirialEOS:
     coefficients: Array
 
     def __init__(self, coefficients: ArrayLike) -> None:
-        matrix = jnp.asarray(coefficients)
-        if not jnp.issubdtype(matrix.dtype, jnp.inexact):
-            matrix = matrix.astype(jnp.asarray(1.0).dtype)
+        matrix = as_inexact_array(coefficients)
         if (
             matrix.ndim != 2
             or matrix.shape[0] == 0
