@@ -2,10 +2,6 @@
 
 from __future__ import annotations
 
-import hashlib
-import os
-import shutil
-import tempfile
 from dataclasses import dataclass
 from os import PathLike
 from pathlib import Path
@@ -18,6 +14,10 @@ import numpy as np
 from jax import tree_util
 from jax.typing import ArrayLike
 
+from exoeos._arrays import as_inexact_array
+from exoeos._arrays import scalar_array as _scalar_array
+from exoeos._table_loader import default_cache_directory as _cache_directory
+from exoeos._table_loader import fetch_verified_file as _fetch_verified_file
 from exoeos.state import SilicateHydrogenState
 
 
@@ -95,21 +95,8 @@ _TABLE_DOMAIN = {
 }
 
 
-def _sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
 def _default_cache_directory() -> Path:
-    cache_root = os.environ.get("XDG_CACHE_HOME")
-    if cache_root:
-        root = Path(cache_root).expanduser()
-    else:
-        root = Path.home() / ".cache"
-    return root / "exoeos" / "MgSiO3-H-EOS"
+    return _cache_directory("MgSiO3-H-EOS")
 
 
 @dataclass(frozen=True, init=False)
@@ -174,29 +161,14 @@ class MarcumSilicateHydrogenTableLoader:
     def fetch(self) -> Path:
         """Return the verified cached CSV, downloading it if necessary."""
 
-        table_path = self.cache_directory / self.expected_filename
-        if table_path.is_file() and _sha256(table_path) == self.checksum:
-            return table_path
-
-        self.cache_directory.mkdir(parents=True, exist_ok=True)
-        temporary_path = None
-        try:
-            with tempfile.NamedTemporaryFile(
-                dir=self.cache_directory,
-                prefix=f".{self.expected_filename}.",
-                delete=False,
-            ) as destination:
-                temporary_path = Path(destination.name)
-                with urlopen(self.table_url, timeout=60) as source:
-                    shutil.copyfileobj(source, destination)
-            if _sha256(temporary_path) != self.checksum:
-                raise ValueError(f"Checksum mismatch for {self.expected_filename}.")
-            temporary_path.replace(table_path)
-        finally:
-            if temporary_path is not None:
-                temporary_path.unlink(missing_ok=True)
-
-        return table_path
+        return _fetch_verified_file(
+            url=self.table_url,
+            checksum=self.checksum,
+            cache_directory=self.cache_directory,
+            filename=self.expected_filename,
+            checksum_error=f"Checksum mismatch for {self.expected_filename}.",
+            opener=urlopen,
+        )
 
     def load(self) -> "MarcumSilicateHydrogenEOS":
         """Return an EOS backed by the verified table."""
@@ -204,19 +176,8 @@ class MarcumSilicateHydrogenTableLoader:
         return MarcumSilicateHydrogenEOS.from_file(self.fetch())
 
 
-def _scalar_array(value: ArrayLike, name: str) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
-    if array.ndim != 0:
-        raise ValueError(f"{name} must be a scalar; use jax.vmap for batches.")
-    return array
-
-
 def _composition_array(value: ArrayLike) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
+    array = as_inexact_array(value)
     if array.shape != (2,):
         raise ValueError(
             "x must contain the two mole fractions (MgSiO3, MgSiO3H4) "
@@ -226,9 +187,7 @@ def _composition_array(value: ArrayLike) -> Array:
 
 
 def _table_array(value: ArrayLike) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
+    array = as_inexact_array(value)
     expected_shape = (
         _COMPOSITION_COUNT,
         _TEMPERATURE_COUNT,

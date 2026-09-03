@@ -9,6 +9,7 @@ from jax import tree_util
 from jax.scipy.special import xlogy
 from jax.typing import ArrayLike
 
+from exoeos._arrays import as_inexact_array
 from exoeos.constants import BOLTZMANN_CONSTANT, MOLAR_GAS_CONSTANT
 from exoeos.state import ThermodynamicState
 
@@ -17,9 +18,7 @@ Array = jax.Array
 
 
 def _component_array(value: ArrayLike, name: str) -> Array:
-    array = jnp.atleast_1d(jnp.asarray(value))
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
+    array = as_inexact_array(value, atleast_1d=True)
     if array.ndim != 1:
         raise ValueError(f"{name} must be a scalar or one-dimensional array.")
     if array.shape[0] == 0:
@@ -43,12 +42,24 @@ def _reference_array(
 
 
 def _scalar_array(value: ArrayLike, name: str) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
+    array = as_inexact_array(value)
     if array.ndim != 0:
         raise ValueError(f"{name} must be a scalar.")
     return array
+
+
+def _log_ratio(value: Array, reference: Array) -> Array:
+    """Evaluate ``log(value / reference)`` across wide and nearby scales."""
+
+    nearby = (value >= 0.5 * reference) & (reference >= 0.5 * value)
+    safe_reference = jnp.where(nearby, reference, jnp.ones_like(reference))
+    safe_value = jnp.where(nearby, value, safe_reference)
+    nearby_result = jnp.log1p((safe_value - safe_reference) / safe_reference)
+    return jnp.where(
+        nearby,
+        nearby_result,
+        jnp.log(value) - jnp.log(reference),
+    )
 
 
 def _broadcast_inputs(
@@ -57,9 +68,9 @@ def _broadcast_inputs(
     x: ArrayLike,
     component_count: int,
 ) -> Tuple[Array, Array, Array]:
-    temperature = jnp.asarray(T)
-    pressure = jnp.asarray(P)
-    mole_fractions = jnp.asarray(x)
+    temperature = as_inexact_array(T)
+    pressure = as_inexact_array(P)
+    mole_fractions = as_inexact_array(x)
 
     if mole_fractions.ndim == 0:
         raise ValueError("x must have a trailing component axis.")
@@ -163,11 +174,12 @@ def ideal_gas_state(
     )
     mixture_enthalpy = jnp.sum(mole_fractions * component_enthalpy, axis=-1)
 
-    component_entropy = entropies + heat_capacities * jnp.log(
-        component_axis_temperature / reference_T
+    component_entropy = entropies + heat_capacities * _log_ratio(
+        component_axis_temperature,
+        reference_T,
     )
     thermal_entropy = jnp.sum(mole_fractions * component_entropy, axis=-1)
-    pressure_entropy = -MOLAR_GAS_CONSTANT * jnp.log(pressure / reference_P)
+    pressure_entropy = -MOLAR_GAS_CONSTANT * _log_ratio(pressure, reference_P)
     mixing_entropy = -MOLAR_GAS_CONSTANT * jnp.sum(
         xlogy(mole_fractions, mole_fractions),
         axis=-1,

@@ -222,6 +222,21 @@ def test_second_virial_is_a_pytree_and_preserves_dtype(dtype) -> None:
     assert all(leaf.dtype == dtype for leaf in jax.tree_util.tree_leaves(state))
 
 
+def test_integer_parameters_use_minimum_second_virial_dtype() -> None:
+    eos = SecondVirialEOS(jnp.asarray([[0]], dtype=jnp.int32))
+    state = state_tp(
+        eos,
+        jnp.asarray(500.0, dtype=jnp.float32),
+        jnp.asarray(1.0e5, dtype=jnp.float32),
+        jnp.asarray([1.0], dtype=jnp.float32),
+    )
+
+    assert eos.coefficients.dtype == jnp.float32
+    assert all(
+        leaf.dtype == jnp.float32 for leaf in jax.tree_util.tree_leaves(state)
+    )
+
+
 def test_state_tp_differentiates_virial_coefficients() -> None:
     composition = jnp.asarray([0.4, 0.6])
     coefficients = jnp.asarray([[1.0e-4, 2.0e-5], [2.0e-5, 8.0e-5]])

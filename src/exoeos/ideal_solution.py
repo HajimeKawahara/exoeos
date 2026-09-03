@@ -8,6 +8,8 @@ import jax.numpy as jnp
 from jax import tree_util
 from jax.typing import ArrayLike
 
+from exoeos._arrays import as_inexact_array
+
 
 Array = jax.Array
 
@@ -38,9 +40,9 @@ class IdealSolution:
             float32.
         """
 
-        temperature = jnp.asarray(T)
-        pressure = jnp.asarray(P)
-        mole_fractions = jnp.asarray(x)
+        temperature = as_inexact_array(T)
+        pressure = as_inexact_array(P)
+        mole_fractions = as_inexact_array(x)
         if temperature.ndim != 0 or pressure.ndim != 0:
             raise ValueError("T and P must be scalars; use jax.vmap for batches.")
         if mole_fractions.ndim != 1 or mole_fractions.shape[0] == 0:

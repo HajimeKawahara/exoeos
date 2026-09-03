@@ -7,6 +7,7 @@ import io
 import tarfile
 from pathlib import Path
 from typing import Dict
+from urllib.error import URLError
 
 import pytest
 
@@ -33,17 +34,32 @@ def _configure_local_archive(
     tables: Dict[str, bytes],
 ) -> None:
     _write_archive(archive_path, tables)
+    _configure_archive_source(monkeypatch, archive_path)
+    monkeypatch.setitem(
+        chabrier_debras._TABLE_CHECKSUMS,
+        variant,
+        tuple(_digest(tables[name]) for name in tables),
+    )
+
+
+def _configure_archive_source(
+    monkeypatch: pytest.MonkeyPatch,
+    archive_path: Path,
+) -> None:
     monkeypatch.setattr(chabrier_debras, "_ARCHIVE_URL", archive_path.as_uri())
     monkeypatch.setattr(
         chabrier_debras,
         "_ARCHIVE_SHA256",
         _digest(archive_path.read_bytes()),
     )
-    monkeypatch.setitem(
-        chabrier_debras._TABLE_CHECKSUMS,
-        variant,
-        tuple(_digest(tables[name]) for name in tables),
+
+
+def _assert_cache_is_empty(loader: ChabrierDebrasTableLoader) -> None:
+    assert not any(
+        (loader.cache_directory / filename).exists()
+        for filename in loader.expected_filenames
     )
+    assert not list(loader.cache_directory.iterdir())
 
 
 def test_loader_exposes_published_metadata(tmp_path: Path) -> None:
@@ -164,10 +180,96 @@ def test_archive_checksum_failure_leaves_no_partial_tables(
     with pytest.raises(ValueError, match="Checksum mismatch"):
         loader.fetch()
 
-    assert not any(
-        (cache_directory / filename).exists() for filename in loader.expected_filenames
+    _assert_cache_is_empty(loader)
+
+
+def test_download_failure_leaves_no_partial_tables(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    cache_directory = tmp_path / "cache"
+    loader = ChabrierDebrasTableLoader(cache_directory=cache_directory)
+
+    def fail_download(*args, **kwargs):
+        raise URLError("offline")
+
+    monkeypatch.setattr(chabrier_debras, "urlopen", fail_download)
+
+    with pytest.raises(URLError, match="offline"):
+        loader.fetch()
+
+    _assert_cache_is_empty(loader)
+
+
+def test_missing_archive_member_leaves_no_partial_tables(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    cache_directory = tmp_path / "cache"
+    loader = ChabrierDebrasTableLoader(cache_directory=cache_directory)
+    first_filename, missing_filename = loader.expected_filenames
+    first_content = b"TP table"
+    archive_path = tmp_path / "tables.tar.gz"
+    _write_archive(archive_path, {first_filename: first_content})
+    _configure_archive_source(monkeypatch, archive_path)
+    monkeypatch.setitem(
+        chabrier_debras._TABLE_CHECKSUMS,
+        loader.variant,
+        (_digest(first_content), "0" * 64),
     )
-    assert not list(cache_directory.glob(".DirEOS2021.*.tar.gz"))
+
+    with pytest.raises(ValueError, match=f"missing DirEOS2021/{missing_filename}"):
+        loader.fetch()
+
+    _assert_cache_is_empty(loader)
+
+
+def test_non_file_archive_member_is_rejected(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    cache_directory = tmp_path / "cache"
+    loader = ChabrierDebrasTableLoader(cache_directory=cache_directory)
+    filename = loader.expected_filenames[0]
+    archive_path = tmp_path / "tables.tar.gz"
+    with tarfile.open(archive_path, mode="w:gz") as archive:
+        member = tarfile.TarInfo(f"DirEOS2021/{filename}")
+        member.type = tarfile.DIRTYPE
+        archive.addfile(member)
+    _configure_archive_source(monkeypatch, archive_path)
+
+    with pytest.raises(ValueError, match=f"member DirEOS2021/{filename} is not a file"):
+        loader.fetch()
+
+    _assert_cache_is_empty(loader)
+
+
+def test_table_checksum_failure_leaves_no_partial_tables(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    cache_directory = tmp_path / "cache"
+    loader = ChabrierDebrasTableLoader(cache_directory=cache_directory)
+    contents = (b"TP table", b"corrupt T-rho table")
+    tables = dict(zip(loader.expected_filenames, contents))
+    archive_path = tmp_path / "tables.tar.gz"
+    _configure_local_archive(
+        monkeypatch,
+        archive_path,
+        loader.variant,
+        tables,
+    )
+    monkeypatch.setitem(
+        chabrier_debras._TABLE_CHECKSUMS,
+        loader.variant,
+        (_digest(contents[0]), "0" * 64),
+    )
+
+    expected_message = f"Checksum mismatch for {loader.expected_filenames[1]}"
+    with pytest.raises(ValueError, match=expected_message):
+        loader.fetch()
+
+    _assert_cache_is_empty(loader)
 
 
 def test_default_cache_directory_uses_xdg_cache_home(

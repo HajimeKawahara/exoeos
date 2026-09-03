@@ -7,6 +7,7 @@ import jax.numpy as jnp
 from jax import tree_util
 from jax.typing import ArrayLike
 
+from exoeos._arrays import as_inexact_array
 from exoeos.constants import MOLAR_GAS_CONSTANT
 
 
@@ -35,9 +36,9 @@ class IdealEOS:
             A scalar zero in the common input dtype, promoted to at least float32.
         """
 
-        temperature = jnp.asarray(T)
-        molar_density = jnp.asarray(rho)
-        mole_fractions = jnp.asarray(x)
+        temperature = as_inexact_array(T)
+        molar_density = as_inexact_array(rho)
+        mole_fractions = as_inexact_array(x)
         if temperature.ndim != 0 or molar_density.ndim != 0:
             raise ValueError("T and rho must be scalars; use jax.vmap for batches.")
         if mole_fractions.ndim != 1 or mole_fractions.shape[0] == 0:
@@ -61,9 +62,9 @@ class IdealEOS:
 
         if phase != "vapor":
             raise ValueError("IdealEOS supports only phase='vapor'.")
-        temperature = jnp.asarray(T)
-        pressure = jnp.asarray(P)
-        mole_fractions = jnp.asarray(x)
+        temperature = as_inexact_array(T)
+        pressure = as_inexact_array(P)
+        mole_fractions = as_inexact_array(x)
         if temperature.ndim != 0 or pressure.ndim != 0:
             raise ValueError("T and P must be scalars; use jax.vmap for batches.")
         if mole_fractions.ndim != 1 or mole_fractions.shape[0] == 0:

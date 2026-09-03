@@ -4,41 +4,15 @@ import jax
 import jax.numpy as jnp
 from jax.typing import ArrayLike
 
+from exoeos._arrays import common_dtype as _common_dtype
+from exoeos._arrays import scalar_array as _scalar_array
+from exoeos._arrays import vector_array as _vector_array
 from exoeos.constants import MOLAR_GAS_CONSTANT
 from exoeos.contracts import HelmholtzEOS, TPHelmholtzEOS
 from exoeos.state import TRhoState
 
 
 Array = jax.Array
-
-
-def _common_dtype(eos: HelmholtzEOS, *values: ArrayLike):
-    model_dtypes = []
-    for leaf in jax.tree_util.tree_leaves(eos):
-        leaf_dtype = getattr(leaf, "dtype", None)
-        if leaf_dtype is not None and jnp.issubdtype(leaf_dtype, jnp.inexact):
-            model_dtypes.append(leaf_dtype)
-    return jnp.result_type(*values, *model_dtypes, jnp.float32)
-
-
-def _scalar_array(value: ArrayLike, name: str) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
-    if array.ndim != 0:
-        raise ValueError(f"{name} must be a scalar; use jax.vmap for batches.")
-    return array
-
-
-def _vector_array(value: ArrayLike, name: str) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
-    if array.ndim != 1:
-        raise ValueError(f"{name} must be one-dimensional; use jax.vmap for batches.")
-    if array.shape[0] == 0:
-        raise ValueError(f"{name} must contain at least one component.")
-    return array
 
 
 def psir(

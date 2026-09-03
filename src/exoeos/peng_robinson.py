@@ -9,6 +9,8 @@ import jax.numpy as jnp
 from jax import lax, tree_util
 from jax.typing import ArrayLike
 
+from exoeos._arrays import as_inexact_array
+from exoeos._arrays import scalar_array as _scalar_array
 from exoeos.constants import MOLAR_GAS_CONSTANT
 
 
@@ -20,28 +22,15 @@ _COVOLUME_CONSTANT = 0.077796073903888455972
 _SQRT_TWO = 2.0**0.5
 
 
-def _scalar_array(value: ArrayLike, name: str) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
-    if array.ndim != 0:
-        raise ValueError(f"{name} must be a scalar; use jax.vmap for batches.")
-    return array
-
-
 def _component_array(value: ArrayLike, name: str) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
+    array = as_inexact_array(value)
     if array.ndim != 1 or array.shape[0] == 0:
         raise ValueError(f"{name} must be a non-empty one-dimensional array.")
     return array
 
 
 def _composition_array(value: ArrayLike, component_count: int) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
+    array = as_inexact_array(value)
     if array.ndim != 1 or array.shape[0] != component_count:
         raise ValueError(f"x must have shape ({component_count},).")
     return array
@@ -50,9 +39,6 @@ def _composition_array(value: ArrayLike, component_count: int) -> Array:
 def _compressibility_factor_impl(A: Array, B: Array, phase: str) -> Array:
     """Return the selected real root of the Peng-Robinson cubic."""
 
-    if phase not in ("vapor", "liquid"):
-        raise ValueError("phase must be 'vapor' or 'liquid'.")
-
     quadratic = B - 1.0
     linear = A - 3.0 * B**2 - 2.0 * B
     constant = B**3 + B**2 - A * B
@@ -60,14 +46,32 @@ def _compressibility_factor_impl(A: Array, B: Array, phase: str) -> Array:
     depressed_constant = (
         2.0 * quadratic**3 / 27.0 - quadratic * linear / 3.0 + constant
     )
-    cubic_discriminant = (
-        18.0 * quadratic * linear * constant
-        - 4.0 * quadratic**3 * constant
-        + quadratic**2 * linear**2
-        - 4.0 * linear**3
-        - 27.0 * constant**2
+    discriminant_terms = jnp.stack(
+        (
+            18.0 * quadratic * linear * constant,
+            -4.0 * quadratic**3 * constant,
+            quadratic**2 * linear**2,
+            -4.0 * linear**3,
+            -27.0 * constant**2,
+        )
     )
-    discriminant = -cubic_discriminant / 108.0
+    cubic_discriminant = jnp.sum(discriminant_terms)
+    general_discriminant = -cubic_discriminant / 108.0
+    depressed_quadratic_term = (depressed_constant / 2.0) ** 2
+    depressed_cubic_term = (depressed_linear / 3.0) ** 3
+    depressed_discriminant = depressed_quadratic_term + depressed_cubic_term
+
+    # Each equivalent form loses precision in proportion to the magnitudes of
+    # the terms it sums. Select the form with the smaller roundoff scale.
+    general_roundoff_scale = jnp.sum(jnp.abs(discriminant_terms)) / 108.0
+    depressed_roundoff_scale = jnp.abs(depressed_quadratic_term) + jnp.abs(
+        depressed_cubic_term
+    )
+    discriminant = jnp.where(
+        depressed_roundoff_scale < general_roundoff_scale,
+        depressed_discriminant,
+        general_discriminant,
+    )
 
     def one_real_root(_) -> Array:
         half_constant = -depressed_constant / 2.0
@@ -194,9 +198,7 @@ class PengRobinsonEOS:
                 dtype=jnp.result_type(temperatures, pressures, factors),
             )
         else:
-            interactions = jnp.asarray(binary_interaction_parameters)
-            if not jnp.issubdtype(interactions.dtype, jnp.inexact):
-                interactions = interactions.astype(jnp.asarray(1.0).dtype)
+            interactions = as_inexact_array(binary_interaction_parameters)
             if interactions.shape != (component_count, component_count):
                 raise ValueError(
                     "binary_interaction_parameters must have shape "

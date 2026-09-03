@@ -112,6 +112,54 @@ def test_reference_state_includes_mixing_entropy_and_zero_limit(
     assert jnp.allclose(pure.molar_entropy, 10.0)
 
 
+def test_entropy_log_ratios_remain_finite_for_extreme_float32_scales() -> None:
+    dtype = jnp.float32
+    reference_temperature = jnp.asarray(1.0e-20, dtype=dtype)
+    reference_pressure = jnp.asarray(1.0e20, dtype=dtype)
+    temperature = jnp.asarray(1.0e20, dtype=dtype)
+    pressure = jnp.asarray(1.0e-30, dtype=dtype)
+    heat_capacity = jnp.asarray([30.0], dtype=dtype)
+    eos = IdealGas(
+        jnp.asarray([2.0e-3], dtype=dtype),
+        heat_capacity,
+        reference_temperature=reference_temperature,
+        reference_pressure=reference_pressure,
+    )
+
+    state = eos.state(temperature, pressure, jnp.asarray([1.0], dtype=dtype))
+    expected_entropy = heat_capacity[0] * (
+        jnp.log(temperature) - jnp.log(reference_temperature)
+    ) - GAS_CONSTANT * (jnp.log(pressure) - jnp.log(reference_pressure))
+
+    assert jnp.isfinite(state.molar_entropy)
+    assert jnp.allclose(state.molar_entropy, expected_entropy)
+
+
+def test_entropy_log_ratio_preserves_nearby_float32_values() -> None:
+    dtype = jnp.float32
+    reference_temperature = jnp.asarray(300.0, dtype=dtype)
+    temperature = jnp.nextafter(reference_temperature, jnp.asarray(jnp.inf, dtype))
+    heat_capacity = jnp.asarray([30.0], dtype=dtype)
+    eos = IdealGas(
+        jnp.asarray([2.0e-3], dtype=dtype),
+        heat_capacity,
+        reference_temperature=reference_temperature,
+        reference_pressure=jnp.asarray(1.0e5, dtype=dtype),
+    )
+
+    state = eos.state(
+        temperature,
+        jnp.asarray(1.0e5, dtype=dtype),
+        jnp.asarray([1.0], dtype=dtype),
+    )
+    expected_entropy = heat_capacity[0] * jnp.log1p(
+        (temperature - reference_temperature) / reference_temperature
+    )
+
+    assert state.molar_entropy != 0.0
+    assert jnp.allclose(state.molar_entropy, expected_entropy, rtol=2.0e-6)
+
+
 def test_state_broadcasts_thermodynamic_batches_and_species_axis(
     ideal_gas: IdealGas,
 ) -> None:
@@ -204,6 +252,24 @@ def test_state_preserves_explicit_float32_model_dtype() -> None:
         jnp.asarray([0.25, 0.75], dtype=dtype),
     )
 
+    assert all(leaf.dtype == dtype for leaf in jax.tree_util.tree_leaves(state))
+
+
+def test_integer_inputs_do_not_promote_float32_ideal_gas() -> None:
+    dtype = jnp.float32
+    model = IdealGas(
+        jnp.asarray([2.0e-3], dtype=dtype),
+        jnp.asarray([28.0], dtype=dtype),
+        reference_temperature=300,
+        reference_pressure=100_000,
+    )
+    state = model.state(
+        jnp.asarray(600, dtype=jnp.int32),
+        jnp.asarray(200_000, dtype=jnp.int32),
+        jnp.asarray([1], dtype=jnp.int32),
+    )
+
+    assert all(leaf.dtype == dtype for leaf in jax.tree_util.tree_leaves(model))
     assert all(leaf.dtype == dtype for leaf in jax.tree_util.tree_leaves(state))
 
 

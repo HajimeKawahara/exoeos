@@ -9,6 +9,8 @@ import jax.numpy as jnp
 from jax import tree_util
 from jax.typing import ArrayLike
 
+from exoeos._arrays import scalar_array as _scalar_array
+from exoeos._arrays import vector_array as _component_vector
 from exoeos.contracts import MassDensityProvider, TPHelmholtzEOS
 
 
@@ -25,26 +27,6 @@ class _FixedCompositionTPEOS(Protocol):
         T: ArrayLike,
         P: ArrayLike,
     ) -> _MassDensityState: ...
-
-
-def _scalar_array(value: ArrayLike, name: str) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
-    if array.ndim != 0:
-        raise ValueError(f"{name} must be a scalar; use jax.vmap for batches.")
-    return array
-
-
-def _component_vector(value: ArrayLike, name: str) -> Array:
-    array = jnp.asarray(value)
-    if not jnp.issubdtype(array.dtype, jnp.inexact):
-        array = array.astype(jnp.asarray(1.0).dtype)
-    if array.ndim != 1:
-        raise ValueError(f"{name} must be one-dimensional; use jax.vmap for batches.")
-    if array.shape[0] == 0:
-        raise ValueError(f"{name} must contain at least one component.")
-    return array
 
 
 def mass_density_tp(

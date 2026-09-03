@@ -342,9 +342,11 @@ Inputs and returned quantities use SI units. The logarithmic derivative fields
 are dimensionless. The variants are separate fixed-composition datasets;
 ExoEOS does not interpolate in helium mass fraction. Queries outside the
 nominal rectangular grids return `nan`, and the tables do not provide a mask
-for unphysical states inside those rectangles. Both evaluators accept one
-state at a time; use `jax.vmap` for batches. `Y0292` and `Y0297` are the
-effective-abundance variants defined by the authors.
+for unphysical states inside those rectangles. If conversion to the selected
+floating-point dtype makes any returned field non-finite, the complete state
+is returned as `nan`. Both evaluators accept one state at a time; use
+`jax.vmap` for batches. `Y0292` and `Y0297` are the effective-abundance
+variants defined by the authors.
 
 ## Composition-dependent tabulated silicate-hydrogen API
 

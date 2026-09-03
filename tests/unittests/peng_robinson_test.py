@@ -315,6 +315,47 @@ def test_state_tp_selects_reference_vapor_and_liquid_roots(
     assert liquid.rho > vapor.rho
 
 
+def test_critical_root_is_not_perturbed_by_discriminant_roundoff(
+    methane_eos: PengRobinsonEOS,
+) -> None:
+    temperature = methane_eos.critical_temperatures[0]
+    pressure = methane_eos.critical_pressures[0]
+    composition = jnp.asarray([1.0])
+    expected_compressibility = (1.0 - PR_COVOLUME_CONSTANT) / 3.0
+    expected_density = pressure / (
+        expected_compressibility * GAS_CONSTANT * temperature
+    )
+
+    vapor = state_tp(
+        methane_eos,
+        temperature,
+        pressure,
+        composition,
+        phase="vapor",
+    )
+    liquid = state_tp(
+        methane_eos,
+        temperature,
+        pressure,
+        composition,
+        phase="liquid",
+    )
+
+    assert jnp.allclose(vapor.rho, expected_density, rtol=1.0e-5)
+    assert jnp.allclose(liquid.rho, expected_density, rtol=1.0e-5)
+    assert jnp.allclose(vapor.Z, expected_compressibility, rtol=1.0e-5)
+    assert jnp.allclose(liquid.Z, expected_compressibility, rtol=1.0e-5)
+
+    near_critical_pressure = pressure * (1.0 + 1.0e-7)
+    near_critical = state_tp(
+        methane_eos,
+        temperature,
+        near_critical_pressure,
+        composition,
+    )
+    assert jnp.allclose(near_critical.P, near_critical_pressure, rtol=2.0e-10)
+
+
 def test_state_tp_supports_jit_vmap_and_pressure_gradient(
     methane_eos: PengRobinsonEOS,
 ) -> None:
@@ -367,6 +408,40 @@ def test_state_tp_supports_jit_vmap_and_pressure_gradient(
         1.0 / pressure_density_gradient,
         rtol=2.0e-6,
     )
+
+
+def test_float32_root_classification_is_vmap_consistent() -> None:
+    dtype = jnp.float32
+    eos = PengRobinsonEOS(
+        jnp.asarray([190.564], dtype=dtype),
+        jnp.asarray([4_599_200.0], dtype=dtype),
+        jnp.asarray([0.01142], dtype=dtype),
+    )
+    temperatures = jnp.asarray([171.23857, 170.56438], dtype=dtype)
+    pressures = jnp.asarray([80_520.54, 13_460.021], dtype=dtype)
+    composition = jnp.asarray([1.0], dtype=dtype)
+
+    def densities(phase):
+        scalar = jnp.stack(
+            tuple(
+                eos.molar_density(T, P, composition, phase=phase)
+                for T, P in zip(temperatures, pressures)
+            )
+        )
+        vmapped = jax.jit(
+            jax.vmap(
+                lambda T, P: eos.molar_density(T, P, composition, phase=phase)
+            )
+        )(temperatures, pressures)
+        return scalar, vmapped
+
+    scalar_vapor, vmapped_vapor = densities("vapor")
+    scalar_liquid, vmapped_liquid = densities("liquid")
+
+    assert jnp.allclose(vmapped_vapor, scalar_vapor, rtol=5.0e-6)
+    assert jnp.allclose(vmapped_liquid, scalar_liquid, rtol=5.0e-6)
+    assert jnp.allclose(scalar_liquid[0], scalar_vapor[0], rtol=5.0e-6)
+    assert scalar_liquid[1] > scalar_vapor[1]
 
 
 def test_low_pressure_float32_gradient_recovers_ideal_limit() -> None:
@@ -493,6 +568,25 @@ def test_peng_robinson_is_a_pytree_and_preserves_dtype(dtype) -> None:
     leaves = jax.tree_util.tree_leaves(eos)
     assert len(leaves) == 4
     assert all(leaf.dtype == dtype for leaf in leaves)
+    assert all(leaf.dtype == dtype for leaf in jax.tree_util.tree_leaves(state))
+
+
+def test_integer_interactions_do_not_promote_float32_peng_robinson() -> None:
+    dtype = jnp.float32
+    eos = PengRobinsonEOS(
+        jnp.asarray([190.564], dtype=dtype),
+        jnp.asarray([4_599_200.0], dtype=dtype),
+        jnp.asarray([0.01142], dtype=dtype),
+        jnp.asarray([[0]], dtype=jnp.int32),
+    )
+    state = state_tp(
+        eos,
+        jnp.asarray(300.0, dtype=dtype),
+        jnp.asarray(1.0e5, dtype=dtype),
+        jnp.asarray([1.0], dtype=dtype),
+    )
+
+    assert all(leaf.dtype == dtype for leaf in jax.tree_util.tree_leaves(eos))
     assert all(leaf.dtype == dtype for leaf in jax.tree_util.tree_leaves(state))
 
 
