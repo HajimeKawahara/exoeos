@@ -304,6 +304,12 @@ component amount vector and forms `x = n / sum(n)`. Inputs are neither clipped
 nor numerically validated; the extensive construction uses `n / sum(n)` by
 definition. Use `jax.vmap` for batches.
 
+The [Fe-Si-O reference specification](documents/fe_si_o_reference.rst) pins
+a Ma-formalism completion of Young (2023)'s printed alloy coefficients,
+including Fe, formal endmember standards, and independent numerical fixtures.
+This is preparation for a native nonideal model; it adds no physical backend
+or metal-silicate equilibrium solver.
+
 ## Fixed-composition tabulated H/He API
 
 `ChabrierDebrasEOS` loads the published

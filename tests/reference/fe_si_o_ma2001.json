@@ -1,0 +1,353 @@
+{
+  "model_id": "ma2001_fe_si_o_young2023_printed_v1",
+  "review_date": "2026-09-11",
+  "status": "reference specification; native JAX model is not implemented",
+  "components": [
+    "Fe",
+    "Si",
+    "O"
+  ],
+  "phase": "Fe-rich liquid alloy",
+  "activity_basis": "mole_fraction",
+  "standard_state_convention": "symmetric",
+  "endmember_reference": "formal continuation of the completed Ma free energy; not calibrated pure Si or O liquids",
+  "reference_pressure_Pa": 100000.0,
+  "pressure_dependence": "none",
+  "parameters": {
+    "reference_temperature_K": "1873",
+    "epsilon_SiSi_at_reference_temperature": "12.41",
+    "epsilon_SiO_at_reference_temperature": "-5",
+    "epsilon_OO_times_temperature_K": "-16500",
+    "ln_gamma0_Si_at_reference_temperature": "-6.65",
+    "ln_gamma0_O_constant": "4.29",
+    "ln_gamma0_O_inverse_temperature_K": "-16500"
+  },
+  "parameter_source": "Young (2023), published Methods equations 20 and 21; natural logarithms; Si-O interaction is symmetric",
+  "parameter_estimation_status": "adopted published parameters, not new measurements; original per-parameter experimental/estimated status was not independently verified",
+  "sources": {
+    "ma2001": {
+      "doi": "10.1007/s11663-001-0011-0",
+      "use": "epsilon formalism; full equations checked through the primary papers below, not a retrieved Ma full text"
+    },
+    "young2023": {
+      "doi": "10.1038/s41586-023-05823-0",
+      "url": "https://faculty.epss.ucla.edu/~eyoung/reprints/Young_etal_2023_Nature.pdf",
+      "sha256": "1aedd03a814890c9f8ba2c02485b3b9437627cfd6309814573907af2de9b5d0b",
+      "locator": "Methods, equations 20-21, PDF page 7",
+      "use": "printed parameters and selected Si/O corrections; its gamma_Fe=1 approximation is not adopted"
+    },
+    "young_author_code": {
+      "repository": "https://github.com/eyoungucla/chems",
+      "commit": "0a8e03361db27aa72782cde22cb2d204b513224c",
+      "path": "Exoplanet_atmosphere_model_vMCMC_coreT_3000K_dist.py",
+      "sha256": "5e1accdf20f7cdf9439226aa616ad0cb27b9178b5912f28bb8c86a10493a843a",
+      "locator": "gammaO expressions, including line 1581",
+      "use": "uses 1873/T like GCE; establishes that the discrepancy already exists between the Young paper and its author code"
+    },
+    "vogel2018": {
+      "doi": "10.1016/j.gca.2018.06.022",
+      "url": "https://discovery.ucl.ac.uk/id/eprint/10120068/17/Jennings_1Authors_accepted_version.pdf",
+      "sha256": "d7b7855106b52393586f176f7ec5a0070c337a6b28a193842224756265760520",
+      "locator": "accepted manuscript, Appendix A1, page 42",
+      "use": "independent full Fe solvent equation; A2 is not used because its printed cross-term sign differs from Buchan equation 6"
+    },
+    "buchan2022": {
+      "url": "https://academic.oup.com/mnras/article/510/3/3512/6472245",
+      "locator": "equations 6-9",
+      "use": "full Ma solute equation including ln(gamma_Fe), and interaction temperature scaling"
+    },
+    "werlen2026v1": {
+      "url": "https://arxiv.org/abs/2602.05917v1",
+      "sha256_pdf": "8bb9fde40f64cdbc3d5b33bad31432f1a22901ec11d2ffd13aa9a536715c3e13",
+      "locator": "equations 9-11",
+      "use": "confirms the printed Young oxygen coefficient; not an additional calibration"
+    },
+    "badro2015": {
+      "doi": "10.1073/pnas.1505672112",
+      "use": "upstream source cited by Young; supplementary coefficients were not independently accessible and are not claimed verified"
+    }
+  },
+  "gce_comparison": {
+    "repository": "https://github.com/ExoInteriors/GlobalChemicalEquilibrium_Release",
+    "commit": "31558873d8da460c3cd11986b574cb347621b43d",
+    "path": "Young_2023_Version/Equations.py",
+    "sha256": "9ee5b8c5da458325df9a4dccbf121b972d59821421b96a1fdc500a7f0dbef191",
+    "license": "GPL-3.0",
+    "assignments": [
+      "lngSi",
+      "lngO"
+    ],
+    "epsilon_OO_times_temperature_K": "-1873",
+    "difference": "Young printed minus GCE O correction = (16500-1873)/T * ln(1-x_O); upstream intent is unconfirmed",
+    "interpretation": "selected solute corrections only; these equal ln_gamma_source[Si,O] - ln_gamma_source[Fe] for the matching parameter variant"
+  },
+  "standard_state_conversion": {
+    "source_to_formal_shift_mu0_over_RT": "[0, ln_gamma0_Si(T)+epsilon_SiSi(T), ln_gamma0_O(T)+epsilon_OO(T)]",
+    "recipe": "mu0_formal = mu0_source + RT*shift; ln_gamma_formal = ln_gamma_source - shift",
+    "henry_recipe": "mu0_H = mu0_source + RT*[0,ln_gamma0_Si,ln_gamma0_O]; ln_gamma_H = ln_gamma_source - [0,ln_gamma0_Si,ln_gamma0_O]",
+    "absolute_standard_potentials": "not supplied; the consumer must provide compatible thermochemical data"
+  },
+  "domain": {
+    "mathematical": "T>0; P>0 accepted but ignored; x_Fe>0, x_Si>=0, x_O>=0, sum(x)=1",
+    "physical": "Fe-rich homogeneous liquid branch; liquid stability must be established independently",
+    "experimental_calibration_bounds": null,
+    "calibration_note": "Young does not specify a validated T/P/composition box for equations 20-21; reference temperatures and compositions are numerical checks, not measured or equilibrium states",
+    "endpoints": "pure Fe and zero solutes have analytic limits; pure Si/O scalar limits are zero after rebasing, but absent-component derivatives can diverge there",
+    "unsupported": "nonpositive T/P, negative or unnormalized fractions, zero total amount; no clipping, artificial traces, or high-pressure validation"
+  },
+  "precision": {
+    "calculation": "Python decimal, 60 digits; analytic published Fe and solute equations, independent of JAX",
+    "stored": "rounded to binary64 JSON numbers",
+    "comparison_rtol": 5e-12,
+    "comparison_atol": 5e-12,
+    "source_precision": "coefficients are retained exactly as printed in Young equations 20-21",
+    "experimental_uncertainty": "not quantified here; numerical tolerances are not experimental errors"
+  },
+  "states": [
+    {
+      "id": "pure_fe_1873",
+      "T_K": 1873.0,
+      "P_Pa": 100000.0,
+      "x": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "ln_gamma_source": [
+        0.0,
+        -6.65,
+        -4.519396689802456
+      ],
+      "ln_gamma_formal": [
+        0.0,
+        -12.41,
+        8.809396689802456
+      ],
+      "mu0_formal_minus_source_over_RT": [
+        0.0,
+        5.76,
+        -13.328793379604912
+      ],
+      "gex_source_RT": 0.0,
+      "gex_formal_RT": 0.0,
+      "young_printed_solute_corrections": [
+        -6.65,
+        -4.519396689802456
+      ],
+      "gce_solute_corrections": [
+        -6.65,
+        -4.519396689802456
+      ]
+    },
+    {
+      "id": "dilute_1873",
+      "T_K": 1873.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.99999998,
+        1e-08,
+        1e-08
+      ],
+      "ln_gamma_source": [
+        3.1996984328992185e-16,
+        -6.6499999258999996,
+        -4.519396827896424
+      ],
+      "ln_gamma_formal": [
+        3.1996984328992185e-16,
+        -12.4099999259,
+        8.809396551708488
+      ],
+      "mu0_formal_minus_source_over_RT": [
+        0.0,
+        5.76,
+        -13.328793379604912
+      ],
+      "gex_source_RT": -1.116939672179944e-07,
+      "gex_formal_RT": -3.600603342194528e-08,
+      "young_printed_solute_corrections": [
+        -6.6499999259,
+        -4.519396827896424
+      ],
+      "gce_solute_corrections": [
+        -6.6499999259,
+        -4.519396749802457
+      ]
+    },
+    {
+      "id": "ternary_1873",
+      "T_K": 1873.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.9,
+        0.07,
+        0.03
+      ],
+      "ln_gamma_source": [
+        -0.016204061056800625,
+        -5.929549322064539,
+        -5.178430970935198
+      ],
+      "ln_gamma_formal": [
+        -0.016204061056800625,
+        -11.689549322064538,
+        8.150362408669714
+      ],
+      "mu0_formal_minus_source_over_RT": [
+        0.0,
+        5.76,
+        -13.328793379604912
+      ],
+      "gex_source_RT": -0.5850050366236942,
+      "gex_formal_RT": -0.5883412352355468,
+      "young_printed_solute_corrections": [
+        -5.913345261007739,
+        -5.162226909878397
+      ],
+      "gce_solute_corrections": [
+        -5.913345261007739,
+        -4.924358875773308
+      ]
+    },
+    {
+      "id": "ternary_2350",
+      "T_K": 2350.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.85,
+        0.1,
+        0.05
+      ],
+      "ln_gamma_source": [
+        -0.020569452065669763,
+        -4.506406117248992,
+        -3.555211577385589
+      ],
+      "ln_gamma_formal": [
+        -0.020569452065669763,
+        -9.097248670440482,
+        6.197341614103773
+      ],
+      "mu0_formal_minus_source_over_RT": [
+        0.0,
+        4.590842553191489,
+        -9.752553191489362
+      ],
+      "gex_source_RT": -0.645885224849998,
+      "gex_formal_RT": -0.6173418205946788,
+      "young_printed_solute_corrections": [
+        -4.485836665183323,
+        -3.5346421253199196
+      ],
+      "gce_solute_corrections": [
+        -4.485836665183323,
+        -3.2153795648915358
+      ]
+    },
+    {
+      "id": "ternary_3000",
+      "T_K": 3000.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.8,
+        0.15,
+        0.05
+      ],
+      "ln_gamma_source": [
+        -0.060760074213998684,
+        -3.1426088880910044,
+        -2.089261590132516
+      ],
+      "ln_gamma_formal": [
+        -0.060760074213998684,
+        -6.738768888091005,
+        4.620738409867484
+      ],
+      "mu0_formal_minus_source_over_RT": [
+        0.0,
+        3.59616,
+        -6.71
+      ],
+      "gex_source_RT": -0.6244624720914754,
+      "gex_formal_RT": -0.8283864720914754,
+      "young_printed_solute_corrections": [
+        -3.0818488138770057,
+        -2.0285015159185176
+      ],
+      "gce_solute_corrections": [
+        -3.0818488138770057,
+        -1.7784125102496169
+      ]
+    },
+    {
+      "id": "fe_si_3000",
+      "T_K": 3000.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.9,
+        0.1,
+        0.0
+      ],
+      "ln_gamma_source": [
+        -0.0415331502381395,
+        -3.377019,
+        -1.5804335599499872
+      ],
+      "ln_gamma_formal": [
+        -0.0415331502381395,
+        -6.973179,
+        5.129566440050013
+      ],
+      "mu0_formal_minus_source_over_RT": [
+        0.0,
+        3.59616,
+        -6.71
+      ],
+      "gex_source_RT": -0.37508173521432553,
+      "gex_formal_RT": -0.7346977352143256,
+      "young_printed_solute_corrections": [
+        -3.3354858497618607,
+        -1.5389004097118477
+      ],
+      "gce_solute_corrections": [
+        -3.3354858497618607,
+        -1.5389004097118477
+      ]
+    },
+    {
+      "id": "fe_o_3000",
+      "T_K": 3000.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.95,
+        0.0,
+        0.05
+      ],
+      "ln_gamma_source": [
+        0.007113119131527934,
+        -4.304824114848276,
+        -1.485
+      ],
+      "ln_gamma_formal": [
+        0.007113119131527934,
+        -7.900984114848276,
+        5.225
+      ],
+      "mu0_formal_minus_source_over_RT": [
+        0.0,
+        3.59616,
+        -6.71
+      ],
+      "gex_source_RT": -0.06749253682504847,
+      "gex_formal_RT": 0.26800746317495155,
+      "young_printed_solute_corrections": [
+        -4.311937233979804,
+        -1.492113119131528
+      ],
+      "gce_solute_corrections": [
+        -4.311937233979804,
+        -1.2420241134626273
+      ]
+    }
+  ]
+}
