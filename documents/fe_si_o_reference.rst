@@ -259,9 +259,10 @@ tests require no network or external thermodynamic package.
 
 The native backend uses the existing Gibbs-excess kernel without changing
 its responsibilities. ExoGibbs owns standard thermochemistry, bar-to-Pa
-conversion, and equilibrium. Independent MELTS silicate references remain
-PR3; H/S/C/N extensions follow separately. This implementation alone does
-not establish a nonideal calculation for both melt and metal phases.
+conversion, and equilibrium. Independent external silicate states are now
+recorded in :doc:`melts_silicate_reference`; they supply no native silicate
+backend. H/S/C/N extensions follow separately. These deliverables do not
+establish a coupled nonideal calculation for both melt and metal phases.
 
 References
 ----------
