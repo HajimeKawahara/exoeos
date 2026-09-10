@@ -341,6 +341,14 @@ or equilibrium calculation. See the
 [model and reference specification](documents/fe_si_o_reference.rst) for
 equations, provenance, limits, and independent fixtures.
 
+Independent [MELTS silicate references](documents/melts_silicate_reference.rst)
+provide three partially crystallized basalt states from a pinned external
+alphaMELTS release. They record phase masses, liquid endmember activities,
+chemical potentials, and the explicit oxide-basis conversion. The fixture
+and its offline consistency tests require no MELTS installation; regenerating
+it uses a separate runtime. These references add no native silicate model
+or coupled melt-metal equilibrium calculation.
+
 ## Fixed-composition tabulated H/He API
 
 `ChabrierDebrasEOS` loads the published
