@@ -14,7 +14,7 @@ The top-level package exports `HelmholtzEOS`, `TPHelmholtzEOS`, `IdealEOS`,
 `state_trho`, `state_tp`,
 `FluidCriticalProperties`, `available_critical_properties`,
 `get_critical_properties`,
-`GibbsExcessModel`, `IdealSolution`, `SolutionState`, `total_gex_RT`,
+`GibbsExcessModel`, `IdealSolution`, `MaFeSiOLiquid`, `SolutionState`, `total_gex_RT`,
 `solution_state`, `ChabrierDebrasEOS`, `ChabrierDebrasTableLoader`,
 `MassThermodynamicState`, `IdealGas`,
 `MarcumSilicateHydrogenEOS`, `MarcumSilicateHydrogenTableLoader`,
@@ -296,6 +296,57 @@ where the selected model is differentiable.
 The operations support `jax.jit`, external `jax.vmap`, and higher amount
 derivatives when `gex_RT` does. Calculations use at least `float32`, and
 floating numerical model PyTree leaves participate in dtype promotion.
+
+### Fe-Si-O liquid backend
+
+`MaFeSiOLiquid` in `exoeos.ma_fe_si_o` implements the scalar Gibbs-excess
+contract for atomic mole fractions in fixed order `(Fe, Si, O)`. It is an
+immutable JAX PyTree with one numerical leaf, `interaction_K`, a shape `(3,)`
+array of temperature numerators in K, ordered `(Si-Si, O-O, Si-O)`.
+The constructor defaults are `(12.41*1873, -16500, -5*1873)`; dividing these
+by `T` gives the three dimensionless interactions. Altered parameters describe
+an unvalidated mathematical variant of the reference model.
+
+The metadata `components`, `activity_basis="mole_fraction"`,
+`standard_state_convention="symmetric"`,
+`reference_model_id="ma2001_fe_si_o_young2023_printed_v1"`, and
+`reference_pressure_Pa=1e5` record the component order and source convention.
+The reference identifier describes the default parameter set. Its endmembers
+are formal continuations of a Fe-rich liquid expression, not calibrated pure
+Si/O liquid thermochemistry. This backend supplies metal activities only.
+
+`gex_RT(T, P, x)` requires scalar `T` and `P` and shape `(3,)` composition.
+It performs static shape checks and uses common input/parameter dtype
+promotion. Numerical validation is an explicit eager boundary:
+`model.validate_state(T, P, x)` requires real inputs and raises for nonfinite
+or nonpositive T/P, nonfinite parameters, or fractions that are nonfinite,
+negative, unnormalized, or have `x_Fe <= 0`. Normalization is checked within
+eight machine epsilons of the input composition dtype.
+Solute fractions must stay below one before and after normalization, including
+when a tiny positive Fe fraction falls below floating-point resolution.
+Call it before tracing; neither `gex_RT`
+nor `solution_state` calls it. Validation must use the original fractions,
+because `solution_state` forms normalized fractions internally and cannot
+detect that its caller supplied an unnormalized vector.
+
+Pure Fe and binary axes with positive Fe have finite analytic activity and
+derivative limits. Direct `gex_RT` calls extend the scalar continuously to
+zero at pure Si/O; these endpoints are rejected by `validate_state` for
+activity calculations, and `solution_state(...).lngamma` is NaN there.
+No input clipping or artificial trace fractions are used. Pressure is
+accepted in Pa but is not modeled. No calibrated T/P/composition box is
+specified, and the model does not establish liquid or high-pressure stability.
+
+`standard_state_shift_RT(T)` returns a shape `(3,)` vector `h` for the current
+interactions, using the fixed source infinite-dilution expressions. Consumers
+convert both quantities as `ln_gamma_formal = ln_gamma_source - h` and
+`mu0_formal = mu0_source + R*T*h`. With defaults,
+`h = [0, 5.76*1873/T, 4.29-33000/T]`. The helper is differentiable in T and
+the interaction parameters; it supplies no absolute standard potentials.
+The source-to-formal conversion preserves chemical potentials within the
+completed Ma model; including the Fe solvent term itself changes Young's
+original `gamma_Fe=1` approximation. The equations and reference checks are
+in [the model specification](fe_si_o_reference.rst).
 
 ## Fixed-composition tabulated interface
 

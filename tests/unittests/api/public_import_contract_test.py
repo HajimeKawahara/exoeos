@@ -12,6 +12,7 @@ from exoeos import (
     IdealEOS,
     IdealGas,
     IdealSolution,
+    MaFeSiOLiquid,
     MassDensityProvider,
     MassThermodynamicState,
     MarcumSilicateHydrogenEOS,
@@ -46,6 +47,7 @@ def test_top_level_exports_construct_the_public_state() -> None:
     )
     zhang_duan_model = ZhangDuanEOS.from_species(("H2O",))
     solution_model = IdealSolution()
+    alloy_model = MaFeSiOLiquid()
     model = IdealGas([2.0e-3], [29.0])
     state = model.state(300.0, 1.0e5, [1.0])
     trho_state = state_trho(residual_model, 300.0, 40.0, [1.0])
@@ -63,6 +65,7 @@ def test_top_level_exports_construct_the_public_state() -> None:
         [1.0],
     )
     solution = solution_state(solution_model, 300.0, 1.0e5, [1.0])
+    alloy = solution_state(alloy_model, 2350.0, 1.0e5, [0.85, 0.1, 0.05])
     mass_density = mass_density_tp(
         residual_model,
         300.0,
@@ -78,6 +81,8 @@ def test_top_level_exports_construct_the_public_state() -> None:
     assert isinstance(peng_robinson_state, TRhoState)
     assert isinstance(zhang_duan_state, TRhoState)
     assert isinstance(solution, SolutionState)
+    assert isinstance(alloy, SolutionState)
+    assert alloy.lngamma.shape == (3,)
     assert mass_density > 0.0
     assert mixture_density == 1000.0
     assert ChabrierDebrasEOS is not None
