@@ -23,3 +23,11 @@ See the project `README <https://github.com/HajimeKawahara/exoeos>`_ for the
 current public API and installation instructions. Exact units, shapes, and
 validity behavior are recorded in the
 :download:`thermodynamic-state contract <thermodynamic_state_contract.md>`.
+
+Physical model references
+-------------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   fe_si_o_reference
