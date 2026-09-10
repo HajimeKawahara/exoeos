@@ -1,11 +1,64 @@
-Fe-Si-O activity reference specification
-========================================
+Fe-Si-O liquid activities and reference
+==========================================
 
-This PR1 deliverable fixes equations, coefficients, standards, and independent
-reference values for a future native JAX model. It adds no physical
-``GibbsExcessModel``. The record is ``ma2001_fe_si_o_young2023_printed_v1``,
-with ordered atomic components ``(Fe, Si, O)`` in one Fe-rich liquid phase.
-It supplies neither a silicate model nor a metal-silicate equilibrium solve.
+``MaFeSiOLiquid`` implements a native JAX ``GibbsExcessModel`` for ordered
+atomic mole fractions ``(Fe, Si, O)`` in one Fe-rich liquid phase. Its defaults
+use the pinned record ``ma2001_fe_si_o_young2023_printed_v1``, including the
+Fe solvent and formal endmember standards. This is a metal-only model;
+silicate activities and metal-silicate equilibrium remain separate work.
+
+Native model API
+----------------
+
+.. code-block:: python
+
+   import jax
+   import jax.numpy as jnp
+   from exoeos import MaFeSiOLiquid, solution_state
+
+   model = MaFeSiOLiquid()
+   T, P = 2350.0, 1.0e5  # K, Pa
+   x = jnp.array([0.85, 0.10, 0.05])  # Fe, Si, O
+   model.validate_state(T, P, x)
+   state = jax.jit(solution_state)(model, T, P, x)
+   shift_RT = model.standard_state_shift_RT(T)
+   lngamma_source = state.lngamma + shift_RT
+
+``state.gex_RT`` is the scalar :math:`f_{\rm sym}` defined below;
+``state.lngamma`` contains all three natural-log activity coefficients.
+Neither includes ideal mixing, standard potentials, or gas pressure terms.
+If the consumer supplies source standard potentials divided by :math:`RT`,
+it must also apply ``mu0_formal_RT = mu0_source_RT + shift_RT``.
+This preserves chemical potentials within the completed model.
+
+The constructor is
+``MaFeSiOLiquid(interaction_K=(12.41*1873, -16500, -5*1873))``.
+``interaction_K`` is a differentiable array of shape ``(3,)``, ordered
+``(Si-Si, O-O, Si-O)`` and expressed in K. Dividing it by temperature gives
+:math:`(a,b,c)`. It is the immutable model's only numerical PyTree leaf;
+the source infinite-dilution expressions :math:`l_i(T)` remain fixed.
+``standard_state_shift_RT(T)`` uses the current interactions, including
+overrides. Custom parameters are mathematical variants without established
+physical calibration.
+
+The model records ``components``, ``activity_basis``,
+``standard_state_convention``, ``reference_model_id``, and
+``reference_pressure_Pa``. The reference identifier describes the default
+parameter set. Use external ``jax.vmap`` for batches; input and parameter
+dtypes participate in promotion to at least float32.
+
+Call ``validate_state(T, P, x)`` eagerly before JAX transformations. It checks
+finite real positive T/P, finite real interactions, and normalized
+nonnegative finite real fractions with positive Fe. Normalization is checked
+within eight machine epsilons of the input composition dtype.
+Solute fractions must remain below one before and after normalization;
+positive Fe smaller than floating-point resolution cannot avoid a singularity.
+It raises for unsupported states and is never
+called implicitly by ``gex_RT`` or ``solution_state``. The kernel retains
+its static shape checks; notably, its extensive construction normalizes
+fractions internally, so it cannot detect an unnormalized original input.
+Validation checks the mathematical domain, not liquid stability or an
+experimental calibration range.
 
 Source selection
 ----------------
@@ -18,7 +71,7 @@ Young assumes the Fe activity coefficient is one; this completion is a
 distinct model with a composition-dependent Fe coefficient.
 
 Let :math:`s=x_{\rm Si}`, :math:`o=x_{\rm O}`, and
-:math:`x_{\rm Fe}=1-s-o`. All logarithms are natural. Define
+:math:`x_{\rm Fe}=1-s-o`. All logarithms are natural. For the defaults, define
 
 .. math::
 
@@ -152,16 +205,20 @@ assessment. The old 1700 K, 0.73 GPa pilot is not a calibration target.
 
 Pure Fe gives :math:`\ln\boldsymbol\gamma^{\rm src}=(0,l_{\rm Si},l_{\rm O})`
 and :math:`\ln\boldsymbol\gamma^{\rm sym}=(0,-a,-b)` exactly. Solute-zero
-edges have analytic limits: expand products containing
-:math:`\ln(1-x)/x` before evaluation, using ``log1p`` in a native model.
-Do not clip fractions or insert fictitious traces. Pure Si/O scalar limits
-and the present-component coefficient are defined; absent-component
-derivatives can diverge, so finite ``lngamma`` vectors are unsupported there.
+edges have analytic limits. The native expression removes the quotients
+:math:`\ln(1-x)/x` algebraically and uses ``xlog1py`` for products with
+logarithms. It uses exact zero-product limits in the reciprocal terms at
+pure Si/O; it does not clip fractions or insert fictitious traces.
+Direct ``gex_RT`` calls give zero at these two formal endpoints, but absent
+component derivatives can diverge and ``solution_state(...).lngamma`` is NaN
+there. ``validate_state`` rejects them for activity calculations. The
+present-component coefficient has a zero limit when approached through
+valid compositions; no finite endpoint activity vector is supplied.
 With all interactions zero, :math:`f_{\rm sym}=0`; source linear terms are
 absorbed into the standards.
 
-Reproduction and next implementation
-------------------------------------
+Reproduction and verification
+-----------------------------
 
 ``tests/reference/fe_si_o_ma2001.json`` contains seven states, all three
 components, conversion shifts, source hashes, and both printed/code solute
@@ -171,18 +228,22 @@ reference convention, not Young's printed activity vector. The offline
 arithmetic, rounded to binary64 in JSON. Direct comparison tolerances are
 ``rtol=atol=5e-12``; amount finite differences use ``rtol=atol=2e-9`` for
 differencing error. Source precision and unquantified experimental error are
-separate. These calculated equation references are independent of a future
-JAX backend; they are not measured activities.
+separate. These calculated equation references are independent of the native
+JAX implementation; they are not measured activities. The fixture and
+generator retain their original PR1 contents, including the historical
+reference-only status in the JSON record.
 
 Tests compare independent extensive scalar derivatives to the analytic
 activities, check Euler and limits, and preserve chemical potentials and
 the reaction free energy of :math:`2\mathrm{FeO}+\mathrm{Si}\to
-\mathrm{SiO_2}+2\mathrm{Fe}` under standard conversion.
+\mathrm{SiO_2}+2\mathrm{Fe}` under standard conversion. Native model tests
+also cover JIT/VMAP, floating dtypes, temperature and parameter derivatives,
+amount scaling, Gibbs-Duhem, Hessian symmetry, and the validation boundary.
 
 .. code-block:: console
 
    python tests/reference/generate_fe_si_o_ma2001.py --check
-   JAX_ENABLE_X64=1 python -m pytest tests/unittests/fe_si_o_reference_test.py tests/unittests/gibbs_excess_test.py tests/unittests/api/public_import_contract_test.py
+   JAX_ENABLE_X64=1 python -m pytest tests/unittests/ma_fe_si_o_test.py tests/unittests/fe_si_o_reference_test.py tests/unittests/gibbs_excess_test.py tests/unittests/api/public_import_contract_test.py
    ./update_doc.sh
 
 For the optional source comparison, obtain GCE at the pinned commit and run:
@@ -196,13 +257,11 @@ without importing its solver. Four nonzero-solute cases compare directly;
 the upstream expressions have removable zero-solute singularities. Ordinary
 tests require no network or external thermodynamic package.
 
-PR2 can implement :math:`f_{\rm sym}` behind the existing
-``solution_state(model, T_K, P_Pa, x_phase).lngamma`` API. The output excludes
-ideal mixing, standards, and gas pressure terms. Acceptance still requires
-JIT/VMAP, float64, temperature/parameter derivatives, amount scaling,
-Gibbs-Duhem, Hessian symmetry, and documented domain handling. ExoGibbs owns
-standard thermochemistry, bar-to-Pa conversion, and equilibrium. MELTS
-silicate references remain PR3; H/S/C/N extensions follow separately.
+The native backend uses the existing Gibbs-excess kernel without changing
+its responsibilities. ExoGibbs owns standard thermochemistry, bar-to-Pa
+conversion, and equilibrium. Independent MELTS silicate references remain
+PR3; H/S/C/N extensions follow separately. This implementation alone does
+not establish a nonideal calculation for both melt and metal phases.
 
 References
 ----------

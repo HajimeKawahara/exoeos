@@ -300,15 +300,46 @@ equilibrium remain responsibilities of the calling application.
 
 `gex_RT` and `solution_state` accept one state at a time: scalar `T`, scalar
 `P`, and normalized `x` with shape `(K,)`. `total_gex_RT` instead accepts a
-component amount vector and forms `x = n / sum(n)`. Inputs are neither clipped
-nor numerically validated; the extensive construction uses `n / sum(n)` by
-definition. Use `jax.vmap` for batches.
+component amount vector and forms `x = n / sum(n)`. The kernel does not clip
+or numerically validate inputs; the extensive construction uses `n / sum(n)`
+by definition. Use `jax.vmap` for batches.
 
-The [Fe-Si-O reference specification](documents/fe_si_o_reference.rst) pins
-a Ma-formalism completion of Young (2023)'s printed alloy coefficients,
-including Fe, formal endmember standards, and independent numerical fixtures.
-This is preparation for a native nonideal model; it adds no physical backend
-or metal-silicate equilibrium solver.
+### Fe-Si-O liquid activities
+
+`MaFeSiOLiquid` implements a native JAX excess-energy model for ordered
+atomic mole fractions `(Fe, Si, O)`. Its defaults complete Young (2023)'s
+printed alloy coefficients with the Ma Fe solvent term and use explicit
+formal endmember standards.
+
+```python
+import jax.numpy as jnp
+from exoeos import MaFeSiOLiquid, solution_state
+
+model = MaFeSiOLiquid()
+T, P = 2350.0, 1.0e5  # K, Pa
+x = jnp.array([0.85, 0.10, 0.05])  # Fe, Si, O
+model.validate_state(T, P, x)  # Validate eagerly, before JAX transformations.
+state = solution_state(model, T, P, x)
+shift_RT = model.standard_state_shift_RT(T)
+lngamma_source = state.lngamma + shift_RT
+```
+
+The consumer must also transform its source standard potentials:
+`mu0_formal_RT = mu0_source_RT + shift_RT`, where potentials are divided by
+`R*T`. The model supplies the conversion, not absolute thermochemical data.
+`interaction_K` is a differentiable array of shape `(3,)`, ordered
+`(Si-Si, O-O, Si-O)`, with defaults `(12.41*1873, -16500, -5*1873)` K.
+Custom interactions have no established physical calibration.
+
+The activity domain requires positive `T`, `P`, and `x_Fe`, nonnegative
+fractions, and normalized composition. Call `validate_state` explicitly;
+the evaluator does not invoke it. Pure Si/O have zero formal scalar energy,
+but their activity derivatives are unsupported. No calibrated T/P/composition
+box or high-pressure validity is established, and liquid stability must be
+assessed separately. This metal-only model supplies no silicate activities
+or equilibrium calculation. See the
+[model and reference specification](documents/fe_si_o_reference.rst) for
+equations, provenance, limits, and independent fixtures.
 
 ## Fixed-composition tabulated H/He API
 
