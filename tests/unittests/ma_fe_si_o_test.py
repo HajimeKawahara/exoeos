@@ -6,7 +6,6 @@ from pathlib import Path
 import runpy
 
 import jax
-from jax.experimental import enable_x64
 import jax.numpy as jnp
 import numpy as np
 import pytest
@@ -22,12 +21,6 @@ REFERENCE_ACTIVITIES = runpy.run_path(
     str(REFERENCE_DIRECTORY / "generate_fe_si_o_ma2001.py")
 )["activities"]
 DEFAULT_INTERACTION_K = (12.41 * 1873, -16500.0, -5 * 1873)
-
-
-@pytest.fixture(autouse=True)
-def _use_float64():
-    with enable_x64():
-        yield
 
 
 def _five_point_derivative(function, value, step):
