@@ -32,6 +32,7 @@ from exoeos.ideal import IdealEOS
 from exoeos.ideal_gas import IdealGas
 from exoeos.ideal_solution import IdealSolution
 from exoeos.ma_fe_si_o import MaFeSiOLiquid
+from exoeos.ma_fe_si_o_h import MaFeSiOHLiquid
 from exoeos.marcum_silicate_hydrogen import (
     MarcumSilicateHydrogenEOS,
     MarcumSilicateHydrogenTableLoader,
@@ -68,6 +69,7 @@ __all__ = [
     "IdealGas",
     "IdealSolution",
     "MaFeSiOLiquid",
+    "MaFeSiOHLiquid",
     "MassDensityProvider",
     "MassThermodynamicState",
     "MarcumSilicateHydrogenEOS",

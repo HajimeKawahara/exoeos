@@ -341,6 +341,32 @@ or equilibrium calculation. See the
 [model and reference specification](documents/fe_si_o_reference.rst) for
 equations, provenance, limits, and independent fixtures.
 
+### Fe-Si-O-H dilution control
+
+`MaFeSiOHLiquid` extends the dry alloy in atomic `(Fe, Si, O, H)` order:
+`gex_RT = (1 - x_H) * dry_model.gex_RT(T, P, x[:3] / (1 - x_H))`.
+The four-component ideal activities use `x`; the dry excess term uses the
+normalized dry composition. Differentiating this scalar preserves the dry
+activity coefficients and gives `ln(gamma_H) = 0`.
+
+```python
+import jax.numpy as jnp
+from exoeos import MaFeSiOHLiquid, solution_state
+
+model = MaFeSiOHLiquid()
+x = jnp.array([0.765, 0.09, 0.045, 0.10])
+model.validate_state(2350.0, 1.0e5, x)
+state = solution_state(model, 2350.0, 1.0e5, x)
+shift_RT = model.standard_state_shift_RT(2350.0)
+```
+
+This is a formal control with no H excess interactions or H partition
+calibration. It requires positive dry amount and the dry Fe-rich domain;
+pure H is unsupported. The returned H standard-state shift is zero and
+preserves the consumer's H standard, whose absolute potential must be supplied
+separately. See the [control specification](documents/fe_si_o_h_reference.rst)
+for its limits and runnable finite-H numerical check.
+
 Independent [MELTS silicate references](documents/melts_silicate_reference.rst)
 provide three partially crystallized basalt states from a pinned external
 alphaMELTS release. They record phase masses, liquid endmember activities,
