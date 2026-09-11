@@ -5,6 +5,9 @@ Supplied-composition external MELTS evaluator
 with the same pinned alphaMELTS 2.3.2 / rhyolite-MELTS 1.0.2 runtime as
 :doc:`melts_silicate_reference`. Its separate model identifier is
 ``alphamelts_2_3_2_rhyolite_melts_1_0_2_supplied_liquid_v1``.
+This remains the default. Explicit ``calculation_mode=4`` selects the same
+pinned binary's rhyolite-MELTS 1.2.0 model for CO2-bearing liquids, identified
+as ``alphamelts_2_3_2_rhyolite_melts_1_2_0_supplied_liquid_v1``.
 It calls the external property methods directly; it does not equilibrate a
 bulk composition before returning a different liquid. The existing fixture
 supplies runtime hashes, component order, and basis metadata. Its three
@@ -41,9 +44,14 @@ JSON ``null`` (Python ``None``). No trace floor is inserted. Positive finite
 T/P are required; exactly 273.15 K is excluded because the pinned wrapper
 rejects zero Celsius. These input checks do not define a calibration domain.
 Unsupported compositions or failed backend properties raise an exception.
+Positive ``co2`` requires mode 4. Positive ``so3``, ``cl2o-1``, and ``f2o-1``
+are rejected before starting a worker: these are unsupported placeholders in
+both selected models. Nitrogen has no component in this basis. The result's
+``capabilities`` field records these limits. Other calculation modes are not
+accepted by this evaluator.
 
 For the CLI, ``request.json`` contains ``T_K``, ``P_Pa``, and
-``component_moles``; ``common_R_J_mol_K`` is optional:
+``component_moles``; ``common_R_J_mol_K`` and ``calculation_mode`` are optional:
 
 .. code-block:: console
 
@@ -105,6 +113,66 @@ reaction energies. It does not establish pure-oxide standards or allow a
 permutation of the GCE silicate activity coefficients. No oxide activities
 or standard potentials are supplied.
 
+Carbon and the independent component basis
+------------------------------------------
+
+For a carbon property evaluation, supply a positive independent ``co2``
+amount and opt in explicitly:
+
+.. code-block:: python
+
+   from examples.melts_liquid_evaluator import COMPONENTS, evaluate_liquid
+
+   amounts = list(amounts)  # A valid 19-component host in COMPONENTS order.
+   amounts[COMPONENTS.index("co2")] = 0.001  # mol CO2, not mol free CO2 species
+   result = evaluate_liquid(
+       1473.15, 5e7, amounts,
+       runtime="/path/to/alphamelts-py-2.3.2-ubuntu_22_04-x86_64",
+       python_executable="/tmp/exoeos-melts-env/bin/python",
+       calculation_mode=4,
+   )
+
+The carbon-capable backend reports 20 internal liquid species, with CaCO3
+last, while the input has 19 independent components. It uses the reaction
+
+.. math::
+
+   \mathrm{CaSiO_3 + CO_2 = CaCO_3 + SiO_2}.
+
+Writing the backend species fractions as :math:`z` and
+:math:`q=z_{\rm CaCO_3}`, the independent fractions are
+
+.. math::
+
+   x_{\rm SiO_2}=z_{\rm SiO_2}-q,\quad
+   x_{\rm CaSiO_3}=z_{\rm CaSiO_3}+q,\quad
+   x_{\rm CO_2}=z_{\rm CO_2}+q.
+
+The other fractions are unchanged. Both bases have the same total mole
+denominator because the reaction has two formula units on each side.
+The evaluator checks these reconstructed fractions against the request.
+``backend_species`` retains the original species order and fractions;
+``x`` and ``ln_gamma`` always use independent component fractions.
+
+The backend calculates the first 19 full chemical potentials in the
+independent basis, before converting its reported fractions to species.
+The extra carbonate potential obeys
+:math:`\mu_{\rm CaCO_3}=\mu_{\rm CaSiO_3}+\mu_{\rm CO_2}-\mu_{\rm SiO_2}`,
+which is checked when carbonate is present. Therefore the extensive energy
+uses :math:`G=\sum_{i=1}^{19}n_i\mu_i`; adding a separate CaCO3 reservoir would
+double count carbon. The independent CO2 amount includes the carbon in both
+internal CO2 and carbonate, with :math:`n_C=n_{\rm CO_2}` and its two oxygen
+atoms retained in the element ledger. Returned standards remain those of
+the independent liquid endmembers, including the backend's CO2 standard.
+No gas CO2 standard, Henry-law conversion, or alloy alignment is inferred.
+
+This model selection follows the `alphaMELTS model description
+<https://github.com/magmasource/alphaMELTS>`_ and the carbonate conversion in
+``meltsgetendmemberproperties_`` in the `MAGMA source
+<https://github.com/magmasource/MAGMA>`_. The release binary is independently
+checked by hashes and actual extensive-energy derivatives. It is not claimed
+to have been built from the current MAGMA revision.
+
 Provenance includes pinned backend hashes and source information, actual
 backend version, runtime/interpreter paths, Python/NumPy/tinynumpy versions,
 float dtype, worker/caller commands, logs, evaluator and reference hashes,
@@ -150,3 +218,21 @@ a differentiable JAX model, or a stable liquid assemblage at arbitrary inputs.
 Competing solids, common alloy/gas reaction standards, a reduced dissolved-H2
 construction, and acceptance of a final coupled equilibrium against a fresh
 backend evaluation remain separate ExoGibbs integration work.
+
+The separate carbon acceptance command is:
+
+.. code-block:: console
+
+   python tests/reference/generate_melts_carbon.py \
+     --runtime /path/to/alphamelts-py-2.3.2-ubuntu_22_04-x86_64 \
+     --python /tmp/exoeos-melts-env/bin/python \
+     --output /tmp/melts-carbon-validation.json
+
+It performs 114 fresh evaluations for four mode-4 compositions, including
+exact zero C, without changing the original fixture. The separate
+``tests/reference/melts_carbon_v1.json``
+records full properties and fresh finite differences for every present
+independent component. The pinned run's maximum derivative error was
+0.00466 J/mol, within the unchanged 0.02 J/mol threshold. See
+:doc:`cns_provider_scope` for the acceptance scope
+and the remaining C/N/S physical-model requirements.

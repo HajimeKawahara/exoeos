@@ -389,6 +389,14 @@ three saved liquids, Fe/Si/O perturbations, amount scaling, and numerical
 derivatives. This property evaluator supplies no phase-stability result or
 alloy/gas standard-state alignment.
 
+An explicit `calculation_mode=4` selects a separate rhyolite-MELTS 1.2.0
+carbon property path. It retains 19 independent input components and maps the
+backend's dependent CaCO3 species back to that basis. Positive CO2 requires
+this mode; SO3 is unsupported and N is absent from the basis. A separate
+carbon fixture checks finite-difference potentials, amount scaling, and exact
+zero C on the same model. See the [C/N/S provider scope](documents/cns_provider_scope.rst)
+for remaining standard alignment, alloy, dissolution, and calibration work.
+
 ## Fixed-composition tabulated H/He API
 
 `ChabrierDebrasEOS` loads the published
