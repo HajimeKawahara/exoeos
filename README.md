@@ -375,6 +375,17 @@ and its offline consistency tests require no MELTS installation; regenerating
 it uses a separate runtime. These references add no native silicate model
 or coupled melt-metal equilibrium calculation.
 
+The optional [supplied-composition evaluator](documents/melts_liquid_evaluator.rst)
+under `examples/melts_liquid_evaluator.py` calls the same pinned backend at
+requested K, Pa, and liquid endmember amounts. Each evaluation uses a fresh
+process and checks that the returned composition matches the request with
+oxygen buffering disabled. It returns full chemical potentials, phase Gibbs
+energy, standards, activities, and provenance, including explicit conversion
+to the consumer's `mu/(R*T)` convention. Its `--validate` command checks the
+three saved liquids, Fe/Si/O perturbations, amount scaling, and numerical
+derivatives. This property evaluator supplies no phase-stability result or
+alloy/gas standard-state alignment.
+
 ## Fixed-composition tabulated H/He API
 
 `ChabrierDebrasEOS` loads the published
