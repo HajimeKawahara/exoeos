@@ -30,6 +30,9 @@ OXIDE_MASSES = np.asarray(REFERENCE["oxide_molar_masses_g_mol"])
 BACKEND_R = REFERENCE["R_J_mol_K"]
 COMMON_R = 8.31446261815324  # J mol^-1 K^-1; caller can select its common R.
 MODEL_ID = "alphamelts_2_3_2_rhyolite_melts_1_0_2_supplied_liquid_v1"
+MODEL_IDS = {1: MODEL_ID, 4: "alphamelts_2_3_2_rhyolite_melts_1_2_0_supplied_liquid_v1"}
+BACKEND_MODELS = {1: "rhyolite-MELTS 1.0.2", 4: "rhyolite-MELTS 1.2.0"}
+UNSUPPORTED_COMPONENTS = ("so3", "cl2o-1", "f2o-1")
 # Explicit elemental ledger; the formal halogen oxides have negative oxygen.
 OXIDE_FORMULAS = [
     {"Si": 1, "O": 2}, {"Ti": 1, "O": 2}, {"Al": 2, "O": 3},
@@ -52,12 +55,18 @@ def check_runtime(runtime):
             raise ValueError(f"Runtime hash mismatch: {name}")
 
 
-def validate_request(temperature, pressure, component_moles, common_R):
+def validate_request(temperature, pressure, component_moles, common_R, calculation_mode=1):
+    if type(calculation_mode) is not int or calculation_mode not in MODEL_IDS:
+        raise ValueError("calculation_mode must be 1 or 4; carbon requires mode 4.")
     n = np.asarray(component_moles, dtype=float)
     if n.shape != (len(COMPONENTS),) or not np.all(np.isfinite(n)) or np.any(n < 0):
         raise ValueError("Supply 19 finite nonnegative endmember amounts in component_order.")
     if not np.isfinite(n.sum()) or n.sum() <= 0:
         raise ValueError("The liquid must have a finite positive total amount.")
+    unsupported = UNSUPPORTED_COMPONENTS + (("co2",) if calculation_mode == 1 else ())
+    for component in unsupported:
+        if n[COMPONENTS.index(component)] > 0:
+            raise ValueError(f"Unsupported positive component {component} in calculation_mode {calculation_mode}.")
     if not np.isfinite(temperature) or temperature <= 0 or temperature == 273.15:
         raise ValueError("T_K must be positive and finite; the wrapper cannot accept exactly 0 Celsius.")
     if not np.isfinite(pressure) or pressure <= 0 or not np.isfinite(common_R) or common_R <= 0:
@@ -66,6 +75,21 @@ def validate_request(temperature, pressure, component_moles, common_R):
     if not np.all(np.isfinite(grams)) or not np.isfinite(grams.sum()) or grams.sum() <= 0:
         raise ValueError("Converted oxide masses must be finite with a positive total.")
     return n, grams
+
+
+def independent_fractions(species_x, calculation_mode):
+    """Undo CaSiO3 + CO2 = CaCO3 + SiO2 in the reported species amounts."""
+    species_x = np.asarray(species_x, dtype=float)
+    expected_size = len(COMPONENTS) + (calculation_mode == 4)
+    if species_x.shape != (expected_size,) or not np.all(np.isfinite(species_x)) or np.any(species_x < 0):
+        raise ValueError("Invalid backend liquid species fractions.")
+    x = species_x[:len(COMPONENTS)].copy()
+    if calculation_mode == 4:
+        carbonate = species_x[-1]
+        x[COMPONENTS.index("sio2")] -= carbonate
+        x[COMPONENTS.index("casio3")] += carbonate
+        x[COMPONENTS.index("co2")] += carbonate
+    return x
 
 
 def require_match(actual, expected, label, rtol=5e-9, atol=0):
@@ -97,16 +121,18 @@ def source_provenance():
 
 def _worker(runtime, request):
     """Only called in a new process and temporary working directory."""
-    check_runtime(runtime)
     temperature, pressure = request["T_K"], request["P_Pa"]
     common_R = request["common_R_J_mol_K"]
-    n, grams = validate_request(temperature, pressure, request["component_moles"], common_R)
+    calculation_mode = request.get("calculation_mode", 1)
+    n, grams = validate_request(temperature, pressure, request["component_moles"], common_R, calculation_mode)
+    check_runtime(runtime)
     sys.path.insert(0, str(runtime))
     from meltsdynamic import MELTSdynamic
 
-    model = MELTSdynamic(1)
+    model = MELTSdynamic(calculation_mode)
     engine = model.engine
-    if model.endMemberFormulas["bulk"] != OXIDES or model.endMemberFormulas["liquid"] != COMPONENTS:
+    species_order = COMPONENTS + (["caco3"] if calculation_mode == 4 else [])
+    if model.endMemberFormulas["bulk"] != OXIDES or model.endMemberFormulas["liquid"] != species_order:
         raise ValueError("Unexpected MELTS chemical basis.")
     require_match(engine.status.molwts["bulk"], OXIDE_MASSES, "oxide molar masses", rtol=0)
     engine.temperature, engine.pressure = temperature - 273.15, pressure / 1e5
@@ -128,10 +154,20 @@ def _worker(runtime, request):
         raise RuntimeError("MELTS endmember property calculation failed.")
     endmember_wt = np.asarray(engine.dispComposition["liquid"])
     require_match(endmember_wt, 100 * grams / grams.sum(), "endmember oxide composition")
-    x = np.asarray(engine.X["liquid"])
+    species_x = np.asarray(engine.X["liquid"])
+    x = independent_fractions(species_x, calculation_mode)
     require_match(x, n / n.sum(), "endmember mole fractions")
     present = n > 0
-    mu, mu0, activity = [np.asarray(getattr(engine, field)["liquid"]) for field in ("mu", "mu0", "activity")]
+    species_properties = [np.asarray(getattr(engine, field)["liquid"]) for field in ("mu", "mu0", "activity")]
+    if any(values.shape != species_x.shape for values in species_properties):
+        raise ValueError("Unexpected backend species property dimensions.")
+    species_mu = species_properties[0]
+    if calculation_mode == 4 and species_x[-1] > 0:
+        expected_mu = species_mu[COMPONENTS.index("casio3")] + species_mu[COMPONENTS.index("co2")] - species_mu[COMPONENTS.index("sio2")]
+        require_match(species_mu[-1], expected_mu, "carbonate reaction potential", atol=1e-5)
+    # The backend calculates independent-component potentials before reporting
+    # carbonate species fractions; the extra potential follows the reaction.
+    mu, mu0, activity = [values[:len(COMPONENTS)] for values in species_properties]
     if np.any(activity[present] <= 0):
         raise ValueError("Nonpositive activity for a present component.")
     ln_a, ln_gamma = np.full(n.shape, np.nan), np.full(n.shape, np.nan)
@@ -151,11 +187,13 @@ def _worker(runtime, request):
         oxide_mu = nullable(values, active_oxides)
         oxide_status = "full potentials on the present square subspace; no oxide standards or activities"
     return {
-        "model_id": MODEL_ID, "status": "ok_supplied_liquid_properties",
+        "model_id": MODEL_IDS[calculation_mode], "status": "ok_supplied_liquid_properties",
         "T_K": temperature, "P_Pa": pressure,
         "backend_T_C": engine.temperature, "backend_P_bar": engine.pressure,
         "component_order": COMPONENTS, "component_moles": n.tolist(),
         "returned_component_moles": returned_n.tolist(), "x": x.tolist(),
+        "backend_species": {"order": species_order, "x": species_x.tolist(),
+                            "reaction": "casio3 + co2 = caco3 + sio2" if calculation_mode == 4 else None},
         "oxide_order": OXIDES, "oxide_mass_g": grams.tolist(),
         "returned_oxide_mass_g": returned_grams.tolist(), "mass_g": mass, "gibbs_J": gibbs,
         "mu_J_mol": nullable(mu, present), "mu0_J_mol": nullable(mu0, present),
@@ -168,7 +206,7 @@ def _worker(runtime, request):
         "oxide_mu_J_mol": oxide_mu,
         "oxide_potential_status": oxide_status,
         "basis": {
-            "amount_unit": "mol of named MELTS liquid endmember", "energy_unit": "J",
+            "amount_unit": "mol of named independent MELTS liquid component", "energy_unit": "J",
             "component_oxide_matrix": NU.tolist(), "element_order": ELEMENTS,
             "component_element_matrix": FORMULA_MATRIX.tolist(),
             "element_moles": (FORMULA_MATRIX.T @ n).tolist(),
@@ -176,6 +214,7 @@ def _worker(runtime, request):
             "backend_R_J_mol_K": BACKEND_R, "common_R_J_mol_K": common_R,
             "dimensionless_potential": "mu_RT = mu_J_mol / (common_R_J_mol_K * T_K)",
             "activity_convention": "activity, ln_activity, ln_gamma use backend_R; ln_activity_common_R = (mu - mu0)/(common_R*T_K); ln_gamma_common_R = ln_activity_common_R - ln(x)",
+            "mole_fraction_convention": "x and ln_gamma use independent component amounts; backend_species.x reports internal species, including carbonate in mode 4.",
             "mixing": "Full potentials already include ideal and excess mixing; do not add mixing again.",
         },
         "phase_policy": {
@@ -183,9 +222,15 @@ def _worker(runtime, request):
             "calibration_domain": "Not established by this property evaluator; three MORB fixtures and local perturbations are equation references only.",
             "cross_phase_standards": "Not aligned to alloy/gas; oxide basis conversion does not establish pure-oxide standards.",
         },
+        "capabilities": {
+            "carbon": "co2 component with internal carbonate speciation" if calculation_mode == 4 else "unsupported; select calculation_mode 4",
+            "nitrogen": "unsupported; no nitrogen component in the backend basis",
+            "sulfur": "unsupported; so3 is an unparameterized placeholder",
+            "unsupported_positive_components": list(UNSUPPORTED_COMPONENTS) + (["co2"] if calculation_mode == 1 else []),
+        },
         "provenance": {
             **source_provenance(),
-            "backend": REFERENCE["backend"], "backend_version": model.version,
+            "backend": {**REFERENCE["backend"], "model": BACKEND_MODELS[calculation_mode], "calculation_mode": calculation_mode}, "backend_version": model.version,
             "backend_message": engine.status.message, "runtime_directory": str(runtime),
             "worker_pid": os.getpid(), "python_executable": sys.executable,
             "python_version": platform.python_version(), "platform": platform.platform(),
@@ -198,17 +243,18 @@ def _worker(runtime, request):
     }
 
 
-def evaluate_liquid(temperature, pressure, component_moles, *, runtime, common_R=COMMON_R, python_executable=None):
+def evaluate_liquid(temperature, pressure, component_moles, *, runtime, common_R=COMMON_R, python_executable=None, calculation_mode=1):
     """Return JSON-compatible properties from a fresh pinned external worker.
 
     Inputs are K, Pa, and mol in COMPONENTS order. Ordinary imports require only
     NumPy; python_executable may select a separate environment with tinynumpy.
-    Absent endmember potentials are None. Failure raises without returning a state.
+    Mode 4 enables CO2 and internal carbonate speciation; mode 1 is the default.
+    Absent component potentials are None. Failure raises without returning a state.
     """
-    n, _ = validate_request(temperature, pressure, component_moles, common_R)
+    n, _ = validate_request(temperature, pressure, component_moles, common_R, calculation_mode)
     runtime = Path(runtime).resolve()
     check_runtime(runtime)
-    request = {"T_K": float(temperature), "P_Pa": float(pressure), "component_moles": n.tolist(), "common_R_J_mol_K": float(common_R)}
+    request = {"T_K": float(temperature), "P_Pa": float(pressure), "component_moles": n.tolist(), "common_R_J_mol_K": float(common_R), "calculation_mode": calculation_mode}
     with tempfile.TemporaryDirectory(prefix="exoeos-melts-liquid-") as directory:
         request_path, output = Path(directory) / "request.json", Path(directory) / "result.json"
         request_path.write_text(json.dumps(request, allow_nan=False))
@@ -287,7 +333,7 @@ def validate_backend(runtime, python_executable=None):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--runtime", required=True, type=Path, help="Pinned extracted Linux x86_64 alphaMELTS runtime.")
-    parser.add_argument("--input", type=Path, help="JSON with T_K, P_Pa, component_moles; optional common_R_J_mol_K.")
+    parser.add_argument("--input", type=Path, help="JSON with T_K, P_Pa, component_moles; optional common_R_J_mol_K and calculation_mode (1 or 4).")
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--python", help="Separate Python interpreter with numpy and tinynumpy installed.")
     parser.add_argument("--validate", action="store_true", help="Run saved-liquid, Fe/Si/O, amount-scaling, and finite-difference checks.")
@@ -305,6 +351,7 @@ def main():
         result = _worker(args.runtime.resolve(), request) if args.worker else evaluate_liquid(
             request["T_K"], request["P_Pa"], request["component_moles"], runtime=args.runtime,
             common_R=request["common_R_J_mol_K"], python_executable=args.python,
+            calculation_mode=request.get("calculation_mode", 1),
         )
     args.output.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n")
 
