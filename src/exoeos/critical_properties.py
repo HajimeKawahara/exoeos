@@ -1,4 +1,8 @@
-"""Small, curated critical-property table for cubic equations of state."""
+"""Small, curated critical-property table for cubic equations of state.
+
+Pure-fluid constants do not calibrate mixture interactions, establish a
+high-temperature validity domain, or supply melt/metal partition chemistry.
+"""
 
 from dataclasses import dataclass
 
@@ -48,6 +52,42 @@ _CRITICAL_PROPERTIES = {
         critical_pressure=1_296_357.6060553084,
         acentric_factor=-0.219,
         source_url=f"{_COOLPROP_ROOT}/Hydrogen.html",
+    ),
+    # CoolProp 8.0.0 fluid-information pages, accessed 2026-09-12.
+    "CH4": FluidCriticalProperties(
+        formula="CH4",
+        critical_temperature=190.56400265128698,
+        critical_pressure=4_599_200.474282439,
+        acentric_factor=0.01142,
+        source_url=f"{_COOLPROP_ROOT}/Methane.html",
+    ),
+    "N2": FluidCriticalProperties(
+        formula="N2",
+        critical_temperature=126.19199999958556,
+        critical_pressure=3_395_800.444647145,
+        acentric_factor=0.0372,
+        source_url=f"{_COOLPROP_ROOT}/Nitrogen.html",
+    ),
+    "NH3": FluidCriticalProperties(
+        formula="NH3",
+        critical_temperature=405.55999997326353,
+        critical_pressure=11_363_391.157414673,
+        acentric_factor=0.2556905229865023,
+        source_url=f"{_COOLPROP_ROOT}/Ammonia.html",
+    ),
+    "H2S": FluidCriticalProperties(
+        formula="H2S",
+        critical_temperature=373.1008747131923,
+        critical_pressure=8_998_871.587082043,
+        acentric_factor=0.1005,
+        source_url=f"{_COOLPROP_ROOT}/HydrogenSulfide.html",
+    ),
+    "SO2": FluidCriticalProperties(
+        formula="SO2",
+        critical_temperature=430.6400006320635,
+        critical_pressure=7_886_578.976938645,
+        acentric_factor=0.2561299361987246,
+        source_url=f"{_COOLPROP_ROOT}/SulfurDioxide.html",
     ),
 }
 
