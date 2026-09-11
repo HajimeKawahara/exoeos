@@ -193,8 +193,11 @@ be passed directly to `SecondVirialEOS` when comparing PR with its consistent
 second-virial truncation.
 
 A small curated critical-property table is available through
-`get_critical_properties(formula)`. It currently contains `CO`, `H2O`, `CO2`,
-and `H2`, with source URLs retained in every record.
+`get_critical_properties(formula)`. It contains `CO`, `H2O`, `CO2`, `H2`,
+`CH4`, `N2`, `NH3`, `H2S`, and `SO2`, with CoolProp source URLs retained in
+every record. These records can populate the existing `PengRobinsonEOS`
+constructor; they supply no fitted mixture interactions or validation at
+magma temperatures. HCN is not included in the curated table.
 
 The optional `binary_interaction_parameters` matrix defaults to zero and uses
 `a_ij = (1 - k_ij) sqrt(a_i a_j)`. `phase="vapor"` selects the largest
