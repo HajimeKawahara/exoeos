@@ -32,3 +32,4 @@ Physical model references
 
    fe_si_o_reference
    melts_silicate_reference
+   melts_liquid_evaluator
