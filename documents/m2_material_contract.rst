@@ -55,6 +55,67 @@ Tests independently verify ideal-mixture potentials, finite differences,
 Euler's relation, reciprocal derivatives, extensivity, gauge changes, dry
 alloy limits, and exact whole-phase absence. They also exercise JIT/VMAP.
 
+Conservative alloy curvature on a declared domain
+--------------------------------------------------
+
+``exoeos.ma_interval.ma_alloy_curvature_lower_bound(model, temperature_k,
+lower, upper)`` supplies a global lower eigenvalue bound for the molar
+ideal-plus-Ma energy :math:`g/(RT)`. Bounds follow Fe, Si, O, H atomic
+fractions and intersect :math:`\sum_i x_i=1`. Eliminating Fe gives independent
+coordinates :math:`z=(x_{Si},x_O,x_H)`; fixed solute coordinates are removed.
+The result bounds the Hessian in these coordinates throughout the declared
+domain. Linear standard potentials and elemental insertion costs contribute
+no curvature.
+
+.. code-block:: python
+
+   from exoeos import MaFeSiOHLiquid
+   from exoeos.ma_interval import ma_alloy_curvature_lower_bound
+
+   lower = [0.86, 0.0, 0.0, 0.0]
+   upper = [1.0, 0.08, 0.02, 0.04]
+   bound = ma_alloy_curvature_lower_bound(
+       MaFeSiOHLiquid(), 2173.15, lower, upper,
+   )
+   # Approximately 7.95567654: positive curvature for this restricted model.
+
+This Fe-rich box is chosen for a mathematical control, not experimental
+calibration. The helper accepts the exact built-in MaFeSiOHLiquid and
+MaFeSiOLiquid types; subclasses that could change the scalar are rejected.
+Custom dry interaction coefficients are included in the bound but remain
+uncalibrated model variants. This eager NumPy calculation is separate from
+the JAX state evaluator and has no pressure argument because the current
+Ma excess scalar has no pressure dependence.
+
+Second-order interval differentiation encloses the existing Ma excess
+Hessian on the enclosing Si/O/H box. The ideal Hessian is
+
+.. math::
+
+   H_{ideal}=\operatorname{diag}(1/x_{Si},1/x_O,1/x_H)
+             +(1/x_{Fe})\mathbf{1}\mathbf{1}^{\mathsf T}.
+
+For a lower bound, the calculation replaces each diagonal by
+:math:`1/u_i`, where :math:`u_i` is its declared upper fraction, and drops
+the positive-semidefinite Fe term. Gershgorin row bounds then enclose the
+smallest eigenvalue of the complete Hessian. Basic binary64 operations are
+widened outward. Logarithms use exact binary range reduction and a
+convergent series with an explicit geometric remainder, without assuming a
+platform-specific logarithm error. Composition samples only test the
+implementation against independent JAX Hessians; they do not supply the
+global bound.
+
+A nonnegative bound establishes convexity for this scalar on the declared
+domain, including its continuous zero-solute energy limits. It can support
+a consumer's tangent-plane certificate once the minimizer and its optimality
+conditions are checked. It does not itself minimize insertion cost, certify
+metal absence, or address another phase's stability. Negative bounds are
+inconclusive: interval overestimation can require a narrower domain even
+for a convex model. Boxes crossing pure-H or dry pure-solute singularities,
+nonfinite bounds, infeasible inputs, and complex inputs raise exceptions.
+Narrowing a domain to obtain a bound does not justify excluding physically
+possible alloy compositions. Material acceptance remains pending.
+
 Pinned BSE liquid evaluation
 ----------------------------------------
 
