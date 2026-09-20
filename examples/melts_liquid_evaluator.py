@@ -196,6 +196,7 @@ def _worker(runtime, request):
                             "reaction": "casio3 + co2 = caco3 + sio2" if calculation_mode == 4 else None},
         "oxide_order": OXIDES, "oxide_mass_g": grams.tolist(),
         "returned_oxide_mass_g": returned_grams.tolist(), "mass_g": mass, "gibbs_J": gibbs,
+        "gibbs_RT": gibbs / (common_R * temperature),
         "mu_J_mol": nullable(mu, present), "mu0_J_mol": nullable(mu0, present),
         "mu_RT": nullable(mu / (common_R * temperature), present),
         "mu0_RT": nullable(mu0 / (common_R * temperature), present),

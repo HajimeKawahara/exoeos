@@ -75,7 +75,8 @@ Returned thermodynamics and basis
 ---------------------------------
 
 The result includes full ``mu_J_mol``, pure-liquid endmember ``mu0_J_mol`` at
-the supplied T/P, total ``gibbs_J``, mass in grams, requested and returned
+the supplied T/P, total ``gibbs_J``, ``gibbs_RT = gibbs_J/(common_R*T_K)``
+(in mol), mass in grams, requested and returned
 component amounts, oxide masses, and endmember mole fractions. It also records
 the component-to-oxide and component-to-element formula matrices, element
 order and finite element amounts. Mg and all original background elements
