@@ -278,3 +278,10 @@ class SolutionState(NamedTuple):
         """Logarithmic activity coefficients."""
 
         return self.log_activity_coefficients
+
+
+class TotalSolutionState(NamedTuple):
+    """Extensive solution G/(RT) [mol] and component mu/(RT) [dimensionless]."""
+
+    gibbs_RT: Array
+    mu_RT: Array

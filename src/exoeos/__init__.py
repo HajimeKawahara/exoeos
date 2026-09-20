@@ -39,10 +39,12 @@ from exoeos.marcum_silicate_hydrogen import (
 )
 from exoeos.peng_robinson import PengRobinsonEOS
 from exoeos.second_virial import SecondVirialEOS
+from exoeos.solution_gibbs import total_solution_gibbs_RT, total_solution_state
 from exoeos.state import (
     MassThermodynamicState,
     SilicateHydrogenState,
     SolutionState,
+    TotalSolutionState,
     ThermodynamicState,
     TRhoState,
 )
@@ -77,6 +79,7 @@ __all__ = [
     "PengRobinsonEOS",
     "SilicateHydrogenState",
     "SolutionState",
+    "TotalSolutionState",
     "SecondVirialEOS",
     "TPHelmholtzEOS",
     "TPHelmholtzDensityProvider",
@@ -93,4 +96,6 @@ __all__ = [
     "state_tp",
     "state_trho",
     "total_gex_RT",
+    "total_solution_gibbs_RT",
+    "total_solution_state",
 ]

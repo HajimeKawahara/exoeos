@@ -149,6 +149,7 @@ def test_worker_preserves_amounts_and_reports_two_gas_constant_conventions(monke
     mu, mu0 = [np.asarray(result[field], float)[present] for field in ("mu_J_mol", "mu0_J_mol")]
     mu_rt, mu0_rt = [np.asarray(result[field], float)[present] for field in ("mu_RT", "mu0_RT")]
     np.testing.assert_allclose(mu_rt, mu / (evaluator.COMMON_R * result["T_K"]))
+    np.testing.assert_allclose(result["gibbs_RT"], result["gibbs_J"] / (evaluator.COMMON_R * result["T_K"]))
     np.testing.assert_allclose(mu_rt - mu0_rt, np.asarray(result["ln_activity_common_R"], float)[present])
     np.testing.assert_allclose(np.asarray(result["ln_activity"], float)[present], (mu - mu0) / (evaluator.BACKEND_R * result["T_K"]))
     expected_gamma = (mu - mu0) / (evaluator.COMMON_R * result["T_K"]) - np.log(np.asarray(result["x"])[present])

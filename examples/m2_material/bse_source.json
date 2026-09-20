@@ -1,0 +1,34 @@
+{
+  "source": {
+    "citation": "McDonough, W. F., and Sun, S.-s. (1995), The composition of the Earth, Chemical Geology 120, 223-253.",
+    "doi": "10.1016/0009-2541(94)00140-4",
+    "url": "https://earthref.org/cgi-bin/z-download.cgi?database_name=err&search_start=main&file_name=McDonough+%26+Sun1995&file_path=%2Fprojects%2Fearthref%2Farchive%2Fbgfiles%2Faaaa%2Faaaa0000003tab04.pdf",
+    "pdf_sha256": "914896ea1276b3de2e8d16e078a3bd4504bfdcff6162e01f75c31c2a01011146",
+    "pdf_bytes": 120353,
+    "pdf_scope": "EarthRef scan of the original Table 4 only; this is not a hash of the complete article.",
+    "archive_record_url": "https://earthref.org/ERR/3/",
+    "table": 4,
+    "page": 237,
+    "column": "1: Pyrolite model based on peridotites, komatiites and basalts (this study)",
+    "accessed_utc_date": "2026-09-20"
+  },
+  "oxides_wt_percent": {
+    "SiO2": 45.0,
+    "TiO2": 0.201,
+    "Al2O3": 4.45,
+    "Cr2O3": 0.384,
+    "MnO": 0.135,
+    "FeO": 8.05,
+    "NiO": 0.25,
+    "MgO": 37.8,
+    "CaO": 3.55,
+    "Na2O": 0.36,
+    "K2O": 0.029,
+    "P2O5": 0.021
+  },
+  "omitted_oxides": ["MnO", "NiO"],
+  "reported_total_wt_percent": 100.23,
+  "retained_total_wt_percent": 99.845,
+  "omitted_total_wt_percent": 0.385,
+  "note": "Values are transcribed oxide mass percentages, not converted from the independently rounded elemental Table 5. The sum of the twelve reported oxide rows is 100.230, rather than exactly 100. No unlisted component is inferred from that mismatch. Omitting MnO and NiO removes 0.385 nominal mass units, leaving 99.845. The retained fraction relative to these twelve source rows is 99.845/100.230; at f3=0 on the FeO-equivalent basis, retained dry oxide mass fractions use each retained value divided by 99.845. Nonzero ferric fractions require normalization after the explicit FeO/Fe2O3 split. This projection does not quantify the fraction of every terrestrial trace element retained. FeO represents the total-iron input convention; a ferric fraction is specified separately and is not measured by this table. No water, initial alloy, gas, or pre-existing core is supplied by the source projection."
+}

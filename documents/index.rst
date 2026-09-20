@@ -35,3 +35,4 @@ Physical model references
    melts_silicate_reference
    melts_liquid_evaluator
    cns_provider_scope
+   m2_material_contract

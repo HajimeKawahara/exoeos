@@ -1,0 +1,68 @@
+{
+  "contract_id": "m2_provider_material_audit_v1",
+  "scientific_gates": {"M2_A": "pending", "M2_B": "pending"},
+  "element_order": ["O", "Mg", "Si", "Fe", "Al", "Ca", "Na", "K", "Ti", "Cr", "P", "H", "He"],
+  "units": {"T": "K", "P": "Pa", "amount": "mol of named components", "G": "J", "mu": "J/mol of named components", "G_RT": "mol", "mu_RT": "dimensionless"},
+  "common_R_J_mol_K": 8.31446261815324,
+  "accepted_coupled_material_domain": null,
+  "evaluated_liquid_point": {
+    "T_K": 2173.15,
+    "P_Pa": 100000.0,
+    "composition": "bse_inventory.json dry rock, scaled to 100 g with source atom amounts preserved",
+    "model_id": "alphamelts_2_3_2_rhyolite_melts_1_0_2_supplied_liquid_v1",
+    "evidence": "bse_liquid_validation.json",
+    "meaning": "Local scalar/derivative and extensivity checks only; no phase selection or coupled equilibrium acceptance."
+  },
+  "liquid_domain_evidence": {
+    "nominal_MELTS_temperature_K": [773.15, 2273.15],
+    "nominal_MELTS_pressure_Pa": [0.0, 2000000000.0],
+    "reference": "https://melts.ofm-research.org/",
+    "restriction": "Nominal limits are not a calibrated rectangle for every composition; the evaluator requires strictly positive pressure.",
+    "BSE_like_liquid_experiment": "https://doi.org/10.1126/sciadv.abd1387",
+    "experiment_T_K": 2173.15,
+    "experiment_P_Pa": 100000.0,
+    "experiment_restriction": "KLB-1-derived Mg-Si-Fe-Al-Ca melt, not the full retained McDonough-Sun input or its Mg/Si variants."
+  },
+  "standards": {
+    "MELTS": "Full pure-liquid-endmember standards at supplied T/P; native G and mu are divided by common R*T once. Native mixing is already included.",
+    "alloy": "Source Fe/Si/O standards plus Ma formal-minus-source shifts; atomic H standard must be supplied independently. No absolute standard values are supplied by the excess model.",
+    "gas": "Consumer supplies mu0(T) at declared p0 plus ideal ln(y*P/p0); reaction-cycle alignment to MELTS/alloy is not established by EOS.",
+    "H2_augmentation": "Consumer supplies a scalar molecular-H2 standard and reciprocal host dilution; native MELTS H2O must not receive an additional H2O dissolution correction.",
+    "upper_column": "A continuous thermochemical law and shared-species contact alignment remain pending; frozen-temperature controls do not establish these."
+  },
+  "missing_material_evidence": [
+    {"id": "alloy_H", "owner": "ExoEOS and ExoGibbs", "status": "pending", "required": "Supported H standard/interaction and partition calibration on the declared Fe-rich composition domain."},
+    {"id": "alloy_pressure", "owner": "ExoEOS", "status": "pending", "required": "Pressure response or a quantitatively justified pressure restriction; the present Ma excess model is pressure independent."},
+    {"id": "common_standards", "owner": "ExoGibbs", "status": "pending", "required": "Independent reaction-cycle audit of MELTS, gas and alloy standards; elemental gauges cannot repair reaction-energy errors."},
+    {"id": "H2_concentration_basis", "owner": "ExoGibbs", "status": "pending", "required": "Experimental concentration denominator, conversion to MELTS endmember amounts, and calibration overlap with the selected liquid conditions."},
+    {"id": "liquid_domain", "owner": "ExoEOS and ExoGibbs", "status": "pending", "required": "Stable liquid evidence for the exact BSE projection, redox/water states and Mg/Si range, including competing phases."},
+    {"id": "omitted_transfer", "owner": "ExoEOS and ExoGibbs", "status": "pending", "required": "Supported Mg metal and Al/Ca/K/Ti/Cr/P gas/metal transfer estimates, plus their effect on coupled partition and metal boundaries."},
+    {"id": "column_contact", "owner": "ExoInventory and ExoGibbs", "status": "pending", "required": "Prescribed temperature rule, geometry, top pressure, bottom-pressure range and continuous common thermochemistry."}
+  ],
+  "omission_error_budget": {
+    "status": "proposed_not_validated",
+    "origin": "Explicit engineering acceptance targets, not literature-derived uncertainty estimates.",
+    "atmosphere_mass_relative": 0.01,
+    "partitioned_element_amount_relative_to_total": 0.01,
+    "metal_boundary_log10_hydrogen_shift": 0.01,
+    "estimated_effects": null,
+    "rule": "Compare with a supported expanded-channel or bounded model, including incipient alloys; restricted-model zeros are not an omission bound. A vanished atmosphere or boundary outside the search domain remains unresolved."
+  },
+  "initial_omission_inventory_bounds": {
+    "basis": "All atoms of the omitted-transfer elements moved out of the baseline dry rock; strict inventory upper bounds on those atoms' mass only.",
+    "dry_rock_mass_kg": 1e23,
+    "Al_Ca_K_Ti_Cr_P_mass_kg": 5.316999953515597e21,
+    "Mg_mass_kg": 2.283014362260611e22,
+    "K_mass_kg": 2.411165860312922e19,
+    "hydrogen_plus_helium_mass_kg": 1.4082002e21,
+    "interpretation": "These loose bounds do not establish small transfer: retained background atoms are 5.317% and Mg is 22.830% of dry rock; K alone is 1.712% of initial H+He mass. Associated O/H mass and chemical/phase-boundary response are not bounded by these figures."
+  },
+  "references": {
+    "BSE": "https://doi.org/10.1016/0009-2541(94)00140-4",
+    "BSE_like_liquid": "https://doi.org/10.1126/sciadv.abd1387",
+    "MELTS": "https://melts.ofm-research.org/",
+    "H2_solubility": "https://doi.org/10.1007/s00410-025-02272-y",
+    "Mg_metal": "https://doi.org/10.1029/2018GL080405",
+    "rock_vapor": "https://arxiv.org/abs/2305.13327"
+  }
+}
