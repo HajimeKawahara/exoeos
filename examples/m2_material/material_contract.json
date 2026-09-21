@@ -5,6 +5,21 @@
   "units": {"T": "K", "P": "Pa", "amount": "mol of named components", "G": "J", "mu": "J/mol of named components", "G_RT": "mol", "mu_RT": "dimensionless"},
   "common_R_J_mol_K": 8.31446261815324,
   "accepted_coupled_material_domain": null,
+  "domain_audit": {
+    "evidence_file": "domain_evidence.json",
+    "review_date": "2026-09-21",
+    "status": "no_supported_coupled_domain_established",
+    "numerical_control_only": {"T_K": 2173.15, "P_Pa": 100000.0},
+    "alloy_mathematical_control": {
+      "component_order": ["Fe", "Si", "O", "H"],
+      "lower_atomic_fractions": [0.86, 0.0, 0.0, 0.0],
+      "upper_atomic_fractions": [1.0, 0.08, 0.02, 0.04],
+      "sum_atomic_fractions": 1.0,
+      "experimental_calibration": false
+    },
+    "fixed_bottom_pressure_column_use": "Numerical connection control only; carry pending material gates into the column result. Do not infer a continuous physical T/P/composition domain from this point or the alloy curvature box.",
+    "domain_extension_requires": ["Common reaction-standard validation", "H2 concentration-basis and host calibration", "Alloy H and pressure calibration", "Exact-composition liquid stability against competing phases", "Omitted-transfer error bounds"]
+  },
   "evaluated_liquid_point": {
     "T_K": 2173.15,
     "P_Pa": 100000.0,
@@ -31,12 +46,12 @@
     "upper_column": "A continuous thermochemical law and shared-species contact alignment remain pending; frozen-temperature controls do not establish these."
   },
   "missing_material_evidence": [
-    {"id": "alloy_H", "owner": "ExoEOS and ExoGibbs", "status": "pending", "required": "Supported H standard/interaction and partition calibration on the declared Fe-rich composition domain."},
-    {"id": "alloy_pressure", "owner": "ExoEOS", "status": "pending", "required": "Pressure response or a quantitatively justified pressure restriction; the present Ma excess model is pressure independent."},
+    {"id": "alloy_H", "owner": "ExoEOS and ExoGibbs", "status": "pending", "evidence_ids": ["ma_h_implementation", "jiang_2025"], "required": "Supported H standard/interaction and partition calibration on the declared Fe-rich composition domain."},
+    {"id": "alloy_pressure", "owner": "ExoEOS", "status": "pending", "evidence_ids": ["ma_h_implementation", "badro_2018"], "required": "Pressure response or a quantitatively justified pressure restriction; the present Ma excess model is pressure independent. Pressure independence of the different high-pressure Mg partition fit is not supporting evidence."},
     {"id": "common_standards", "owner": "ExoGibbs", "status": "pending", "required": "Independent reaction-cycle audit of MELTS, gas and alloy standards; elemental gauges cannot repair reaction-energy errors."},
-    {"id": "H2_concentration_basis", "owner": "ExoGibbs", "status": "pending", "required": "Experimental concentration denominator, conversion to MELTS endmember amounts, and calibration overlap with the selected liquid conditions."},
-    {"id": "liquid_domain", "owner": "ExoEOS and ExoGibbs", "status": "pending", "required": "Stable liquid evidence for the exact BSE projection, redox/water states and Mg/Si range, including competing phases."},
-    {"id": "omitted_transfer", "owner": "ExoEOS and ExoGibbs", "status": "pending", "required": "Supported Mg metal and Al/Ca/K/Ti/Cr/P gas/metal transfer estimates, plus their effect on coupled partition and metal boundaries."},
+    {"id": "H2_concentration_basis", "owner": "ExoGibbs", "status": "pending", "evidence_ids": ["chaudhari_2025", "marcum_2026"], "required": "Convert experimental H2 mass ppm and its fugacity convention to MELTS endmember amounts, and establish calibration overlap. A buffered pressure fit or supercritical binary EOS is not a direct replacement standard."},
+    {"id": "liquid_domain", "owner": "ExoEOS and ExoGibbs", "status": "pending", "evidence_ids": ["melts_guidance", "sossi_2020"], "required": "Stable liquid evidence for the exact BSE projection, redox/water states and Mg/Si range, including competing phases."},
+    {"id": "omitted_transfer", "owner": "ExoEOS and ExoGibbs", "status": "pending", "evidence_ids": ["badro_2018", "fegley_2023"], "required": "Supported Mg metal and Al/Ca/K/Ti/Cr/P gas/metal transfer estimates, plus their effect on coupled partition and metal boundaries."},
     {"id": "column_contact", "owner": "ExoInventory and ExoGibbs", "status": "pending", "required": "Prescribed temperature rule, geometry, top pressure, bottom-pressure range and continuous common thermochemistry."}
   ],
   "omission_error_budget": {

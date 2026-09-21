@@ -1,0 +1,126 @@
+{
+  "audit_id": "m2_material_domain_evidence_v1",
+  "review_date": "2026-09-21",
+  "meaning": "Source-specific evidence, not a calibration rectangle or proof that no physical common domain exists.",
+  "evidence": {
+    "melts_guidance": {
+      "kind": "provider_guidance",
+      "url": "https://melts.ofm-research.org/",
+      "locator": "Answers to Questions: MELTS, rhyolite-MELTS and pMELTS",
+      "temperature_K": [773.15, 2273.15],
+      "pressure_Pa": [0.0, 2000000000.0],
+      "composition": "Mafic magmatic liquids; accuracy depends on composition and phase assemblage.",
+      "supports": "Nominal MELTS/rhyolite-MELTS limits only; the evaluator additionally requires P > 0.",
+      "does_not_establish": "Stable liquid for the exact retained BSE input, its redox/water state or Mg/Si variants. pMELTS is a different near-solidus calibration, not a remedy at 1 bar."
+    },
+    "sossi_2020": {
+      "kind": "experiment",
+      "doi": "10.1126/sciadv.abd1387",
+      "url": "https://www.research-collection.ethz.ch/bitstreams/3d075b5e-a151-41fa-9ae5-534b8a379e69/download",
+      "locator": "Results and Materials and Methods, printed pages 2 and 5-6",
+      "temperature_K": [2123.15, 2223.15],
+      "temperature_meaning": "Reported 1900 +/- 50 degrees C experiment, not a validated continuous interpolation domain.",
+      "pressure_Pa": [100000.0, 100000.0],
+      "delta_IW": [-1.5, 6.4],
+      "composition": "Synthetic KLB-1-like Mg-Si-Fe-Al-Ca peridotite; Na2O and K2O each below 0.01 wt% in average glass.",
+      "average_glass_oxide_weight_percent": {"SiO2": 46.53, "Al2O3": 4.37, "FeO_total": 8.44, "MgO": 38.05, "CaO": 2.06},
+      "supports": "Complete initial fusion and measured Fe redox at a BSE-like candidate condition.",
+      "does_not_establish": "Exact McDonough-Sun liquid stability or H-rich metal coexistence. The two most reduced samples lost about 10% of Fe by evaporation."
+    },
+    "chaudhari_2025": {
+      "kind": "experiment",
+      "doi": "10.1007/s00410-025-02272-y",
+      "url": "https://epub.uni-bayreuth.de/id/eprint/8940/1/s00410-025-02272-y.pdf",
+      "locator": "Tables 1-2 (pages 3, 5), Eq. 1 (page 8), Eq. 5 and extrapolation discussion (page 14)",
+      "temperature_K": [1473.15, 1673.15],
+      "pressure_Pa": [500000000.0, 4000000000.0],
+      "range_meaning": "Envelope of buffered Table 2 data across different hosts, not a calibration rectangle.",
+      "composition": "Fe-free basalt, andesite and haplogranite.",
+      "buffered_host_conditions": {
+        "basalt": {"temperature_K": [1673.15], "pressure_Pa": [500000000.0, 1200000000.0, 2000000000.0]},
+        "andesite": {"temperature_K": [1673.15], "pressure_Pa": [500000000.0, 1000000000.0, 2000000000.0, 3000000000.0]},
+        "haplogranite": {"temperature_K": [1473.15, 1523.15, 1573.15], "pressure_envelope_Pa": [500000000.0, 4000000000.0]}
+      },
+      "preliminary_pure_H2_runs": {"temperature_K": 1373.15, "pressure_Pa": [100000000.0, 200000000.0], "meaning": "Separate preliminary experiments; not the buffered regression domain."},
+      "concentration_basis": "ppm molecular H2 by weight (micrograms per gram)",
+      "supports": "Recalibrated H2 absorption; concentration/pressure fits at the Fe-FeO-H2O buffer.",
+      "does_not_establish": "An arbitrary-H2-fugacity standard without conversion, or H2 solubility in BSE at 2173.15 K and 1 bar."
+    },
+    "marcum_2026": {
+      "kind": "first_principles_eos_and_lookup_table",
+      "doi": "10.48550/arXiv.2608.27401",
+      "url": "https://arxiv.org/html/2608.27401v1",
+      "locator": "Sections II.1 and IV.1; pinned ExoEOS table metadata",
+      "source_files": ["../../src/exoeos/marcum_silicate_hydrogen.py"],
+      "table_temperature_K": [3000.0, 10000.0],
+      "table_pressure_Pa": [1000000000.0, 800000000000.0],
+      "table_hydrogen_weight_percent": [0.0001, 3.86099],
+      "range_meaning": "Nominal lookup coordinates, not a claim of direct simulation coverage of every grid cell.",
+      "composition": "Supercritical MgSiO3-MgSiO3H4 binary, not the retained multicomponent BSE liquid.",
+      "supports": "A distinct hydrogen-bearing material EOS and its thermodynamic derivatives.",
+      "does_not_establish": "A molecular-H2 Henry law or MELTS endmember standard; its table and nominal MELTS temperature ranges do not overlap."
+    },
+    "ma_h_implementation": {
+      "kind": "implemented_mathematical_model",
+      "source_files": ["../../src/exoeos/ma_fe_si_o.py", "../../src/exoeos/ma_fe_si_o_h.py"],
+      "model_id": "ma2001_fe_si_o_h_no_h_interaction_v1",
+      "reference_pressure_Pa": 100000.0,
+      "calibrated_temperature_K": null,
+      "calibrated_pressure_Pa": null,
+      "calibrated_composition": null,
+      "supports": "An integrable dry Ma excess scalar with ideal atomic-H dilution and supplied absolute standards.",
+      "does_not_establish": "H excess interactions, pressure response, H partition calibration or liquid phase stability. Finite positive T/P checks are mathematical input validation."
+    },
+    "jiang_2025": {
+      "kind": "first_principles_calculation",
+      "doi": "10.26464/epp2025055",
+      "url": "https://www.eppcgs.org/en/article/doi/10.26464/epp2025055",
+      "locator": "Abstract",
+      "temperature_K": [5000.0, 5000.0],
+      "pressure_Pa": [135000000000.0, 135000000000.0],
+      "composition": "Fe-O-Si-H; reported alloy contains 5.2 wt% O and 4.8 wt% Si.",
+      "supports": "The calculated H partition coefficient changes from 18.2 for Fe-H to 11.8 for Fe-O-Si-H, demonstrating a composition effect.",
+      "does_not_establish": "A calibrated four-component scalar at the M2 candidate point, or permission to set all H interactions to zero."
+    },
+    "badro_2018": {
+      "kind": "experiment",
+      "doi": "10.1029/2018GL080405",
+      "url": "https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2018GL080405",
+      "locator": "Abstract, sections 2 and 4; corrected article",
+      "temperature_K": [3500.0, 5450.0],
+      "pressure_Pa": [34000000000.0, 138000000000.0],
+      "range_meaning": "The 22 new experiments; not an envelope of every datum in the combined regression.",
+      "composition": "Metal-silicate MgO dissolution experiments; metal composition enters the partition model.",
+      "supports": "Measured Mg transfer into metal at high T/P; the study resolves no pressure dependence in its fitted data.",
+      "does_not_establish": "A low-pressure omission bound at 2173.15 K, or pressure independence of the different Fe-Si-O-H excess model."
+    },
+    "fegley_2023": {
+      "kind": "thermochemical_calculation",
+      "url": "https://arxiv.org/pdf/2305.13327",
+      "locator": "Major Elements, Calcium, Aluminum, Potassium; Table 1; printed pages 19-25 and 61",
+      "pressure_Pa": [0.1, 10000000.0],
+      "range_meaning": "Pressure range of the reported dry-BSE condensation curves; not experimental calibration of our providers.",
+      "composition": "Palme-O'Neill BSE model, distinct from the retained McDonough-Sun projection and the M2 H/He inventory.",
+      "example_vapor_channels": ["Ca", "CaO", "Al", "AlO", "AlO2", "K", "K+", "KO"],
+      "supports": "Background-element vapor channels exist and predicted condensation depends on liquid activities.",
+      "does_not_establish": "Quantitative Al/Ca/K/Ti/Cr/P transfer errors or their effect on an H-rich BSE metal boundary."
+    }
+  },
+  "candidate_assessment": {
+    "temperature_K": 2173.15,
+    "pressure_Pa": 100000.0,
+    "composition_file": "bse_inventory.json",
+    "numerical_liquid_receipt": "bse_liquid_validation.json",
+    "inside_nominal_melts_limits": true,
+    "matches_sossi_temperature_pressure": true,
+    "matches_sossi_full_composition": false,
+    "inside_chaudhari_experimental_temperature_pressure_envelope": false,
+    "inside_marcum_table_temperature_pressure_bounds": false,
+    "marcum_table_melts_nominal_temperature_overlap_K": null,
+    "ma_h_calibration_available": false,
+    "supported_omission_error_bounds_available": false,
+    "accepted_coupled_material_domain": null,
+    "blocking_evidence_ids": ["alloy_H", "alloy_pressure", "common_standards", "H2_concentration_basis", "liquid_domain", "omitted_transfer", "column_contact"],
+    "interpretation": "Retain this one point for numerical integration controls. The cited experiments and formal alloy domain do not certify a coupled BSE material domain."
+  }
+}

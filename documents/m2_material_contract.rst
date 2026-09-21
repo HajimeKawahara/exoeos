@@ -215,3 +215,75 @@ response; they are not atmospheric error estimates.
 There is currently no accepted coupled material domain. The artifact keeps
 that field null and scientific gates pending, while the scalar/derivative
 contract and the native BSE equation audit remain usable for further work.
+
+Source-specific domain decision
+----------------------------------------
+
+The 2026-09-21 review is recorded in
+:download:`domain_evidence.json <../examples/m2_material/domain_evidence.json>`.
+Each entry separates the source's conditions, supported claim and missing
+evidence. Numerical evaluation, a mathematical curvature box and experimental
+calibration are distinct fields in
+:download:`material_contract.json <../examples/m2_material/material_contract.json>`.
+The review retains **2173.15 K and 100000 Pa as a numerical control point**;
+it establishes no coupled physical domain. This conclusion describes the
+available evidence, not a proof that no such domain can exist.
+
+.. list-table:: Evidence relevant to the selected point
+   :header-rows: 1
+   :widths: 22 35 43
+
+   * - Evidence
+     - Conditions or composition
+     - Consequence for this implementation
+   * - MELTS guidance
+     - Nominal 773.15--2273.15 K and 0--2 GPa
+     - Candidate point is inside nominal limits; exact BSE liquid stability
+       still needs a competing-phase calculation and material validation.
+   * - Sossi et al. (2020)
+     - Synthetic KLB-1-like melt, 1900 +/- 50 degrees C, 1 bar
+     - Similar T/P does not make this reduced experimental composition
+       identical to the retained McDonough-Sun inventory.
+   * - Chaudhari et al. (2025)
+     - Buffered Table 2 hosts over 1473.15--1673.15 K and 0.5--4 GPa
+     - Candidate lies outside this envelope; preliminary pure-H2 runs are
+       recorded separately and do not extend the buffered fit.
+   * - Marcum et al. (2026)
+     - Supercritical MgSiO3--MgSiO3H4; table starts at 3000 K
+     - No temperature overlap with nominal MELTS; not a replacement
+       molecular-H2 dissolution standard.
+   * - Implemented Ma Fe-Si-O-H control
+     - Integrable scalar, ideal H dilution, no pressure dependence
+     - Positive curvature supplies mathematical evidence only.
+   * - Mg uptake and background vapor
+     - Different high-T/P experiments and dry-BSE calculations
+     - Transfer errors in this H-rich inventory remain unbounded.
+
+The `new H2 measurements
+<https://link.springer.com/article/10.1007/s00410-025-02272-y>`_
+report molecular H2 in mass ppm. Their buffered concentration/total-pressure
+fits cannot be inserted as arbitrary-fugacity standards. Converting mass
+concentration to a MELTS component basis does not remove the temperature,
+pressure and host-composition extrapolation. Native MELTS water remains a
+separate contribution.
+
+The `Marcum et al. EOS <https://arxiv.org/html/2608.27401v1>`_ describes a
+supercritical binary whose hydrogen need not remain molecular. Its table's
+3000--10000 K and 1--800 GPa coordinates are not a calibration rectangle
+for BSE or for H2 dissolution. Replacing the current material with that
+binary would change the physical model, rather than close the present gate.
+
+For alloy H, `Jiang et al. (2025)
+<https://www.eppcgs.org/en/article/doi/10.26464/epp2025055>`_ find a
+composition effect on partitioning at 5000 K and 135 GPa. This cannot
+calibrate the present low-pressure scalar. Likewise, the lack of resolved
+pressure dependence in the Mg partition fit of Badro et al. is not evidence
+for pressure-independent Fe-Si-O-H activities. The background vapor
+channels in `Fegley et al. (2023) <https://arxiv.org/pdf/2305.13327>`_ use a
+different BSE composition and do not bound their omission here.
+
+A fixed-bottom-pressure column may use the selected point to check provider
+connections, amount mapping and conservation, while carrying the pending
+material gates. Extending bottom pressure, liquid composition or temperature
+requires new material evidence. Neither a successful column solve nor
+numerical closure promotes M2-A or M2-B to scientific acceptance.

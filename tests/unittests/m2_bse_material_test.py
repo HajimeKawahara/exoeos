@@ -49,3 +49,30 @@ def test_native_receipt_is_pinned_and_scientific_gates_remain_pending():
     np.testing.assert_allclose(bound["Al_Ca_K_Ti_Cr_P_mass_kg"],
                                sum(by_element[name] for name in ("Al", "Ca", "K", "Ti", "Cr", "P")))
     np.testing.assert_allclose(bound["Mg_mass_kg"], by_element["Mg"])
+
+
+def test_domain_evidence_matches_receipt_and_preserves_distinct_materials():
+    from exoeos.marcum_silicate_hydrogen import MarcumSilicateHydrogenTableLoader
+
+    contract = json.loads((DATA / "material_contract.json").read_text())
+    evidence = json.loads((DATA / contract["domain_audit"]["evidence_file"]).read_text())
+    receipt = json.loads((DATA / "bse_liquid_validation.json").read_text())
+    candidate = evidence["candidate_assessment"]
+    sources = evidence["evidence"]
+    assert candidate["temperature_K"] == receipt["state"]["T_K"]
+    assert candidate["pressure_Pa"] == receipt["state"]["P_Pa"]
+    missing = {item["id"] for item in contract["missing_material_evidence"]}
+    assert set(candidate["blocking_evidence_ids"]) <= missing
+    for item in contract["missing_material_evidence"]:
+        assert set(item.get("evidence_ids", ())) <= sources.keys()
+    for source in sources.values():
+        for filename in source.get("source_files", ()):
+            assert (DATA / filename).is_file()
+    loader = MarcumSilicateHydrogenTableLoader()
+    marcum = sources["marcum_2026"]
+    assert tuple(marcum["table_temperature_K"]) == loader.table_domain["temperature_K"]
+    assert tuple(marcum["table_pressure_Pa"]) == loader.table_domain["pressure_Pa"]
+    assert sources["melts_guidance"]["temperature_K"][1] < marcum["table_temperature_K"][0]
+    assert sources["chaudhari_2025"]["temperature_K"][1] < candidate["temperature_K"]
+    assert sources["chaudhari_2025"]["pressure_Pa"][0] > candidate["pressure_Pa"]
+    assert candidate["accepted_coupled_material_domain"] is None
