@@ -1,0 +1,555 @@
+{
+  "record_id": "m2_hydrogen_material_references_v1",
+  "review_date": "2026-09-22",
+  "accepted_coupled_material_domain": null,
+  "interpretation": "Independent source-specific concentration reference laws and observations. Not a joint Fe-Si-O-H / BSE calibration or a continuous material acceptance domain.",
+  "chaudhari_2025": {
+    "authors": [
+      "Alok Chaudhari",
+      "Matteo Masotta",
+      "Svyatoslav Shcheka",
+      "Hans Keppler"
+    ],
+    "title": "The solubility of molecular hydrogen in silicate melts and the origin of hydrogen in the interiors of terrestrial planets",
+    "journal": "Contributions to Mineralogy and Petrology",
+    "year": 2025,
+    "volume": 180,
+    "article_number": 84,
+    "doi": "10.1007/s00410-025-02272-y",
+    "url": "https://epub.uni-bayreuth.de/id/eprint/8940/1/s00410-025-02272-y.pdf",
+    "pdf_sha256": "94c0fe67b6548e464481753956eaa42b4836931248e7b0a7af41786c74953c8f",
+    "locators": {
+      "host_compositions": "Table 1, printed page 3",
+      "observations": "Table 2, printed page 5",
+      "regression": "Equation 1, printed pages 7-8; Figure 7, page 12",
+      "fugacity_regression": "Equation 5 and Figure 9, printed page 14"
+    },
+    "equation": "c_H2_mass_ppm = slope_ppm_per_GPa * P_total_Pa / 1e9",
+    "concentration_species": "molecular H2",
+    "concentration_basis": "H2 mass per total glass mass; micrograms per gram. The total-glass denominator is an interpretation of the analytical method, not a stated dry-oxide normalization.",
+    "hosts": {
+      "basalt": {
+        "table_1_oxide_weight_percent": {
+          "SiO2": 51.67,
+          "TiO2": 1.88,
+          "Al2O3": 15.51,
+          "MgO": 10.19,
+          "CaO": 15.84,
+          "Na2O": 3.53,
+          "K2O": 0.35
+        },
+        "table_1_oxide_weight_percent_one_sigma": {
+          "SiO2": 0.28,
+          "TiO2": 0.05,
+          "Al2O3": 0.16,
+          "MgO": 0.19,
+          "CaO": 0.15,
+          "Na2O": 0.09,
+          "K2O": 0.02
+        },
+        "table_1_reported_total_weight_percent": 99.0,
+        "missing_oxide_value_meaning": "Dash in published Table 1, not an independently quantified zero.",
+        "buffer": "Fe-FeO-H2O",
+        "slope_H2_mass_ppm_per_GPa": 206,
+        "slope_reported_uncertainty_H2_mass_ppm_per_GPa": 10,
+        "slope_uncertainty_type": "Published plus/minus regression uncertainty; exact statistical definition is not stated alongside Eq.1.",
+        "observed_temperature_pressure_pairs_K_Pa": [
+          [
+            1673.15,
+            500000000.0
+          ],
+          [
+            1673.15,
+            1200000000.0
+          ],
+          [
+            1673.15,
+            2000000000.0
+          ]
+        ],
+        "use": "Host-specific empirical regression at the stated buffer; no BSE transfer or arbitrary fugacity conversion."
+      },
+      "andesite": {
+        "table_1_oxide_weight_percent": {
+          "SiO2": 58.04,
+          "TiO2": 1,
+          "Al2O3": 18.19,
+          "MgO": 5.65,
+          "CaO": 11.01,
+          "Na2O": 3.6,
+          "K2O": 1.44
+        },
+        "table_1_oxide_weight_percent_one_sigma": {
+          "SiO2": 0.32,
+          "TiO2": 0.03,
+          "Al2O3": 0.11,
+          "MgO": 0.07,
+          "CaO": 0.11,
+          "Na2O": 0.06,
+          "K2O": 0.03
+        },
+        "table_1_reported_total_weight_percent": 98.9,
+        "missing_oxide_value_meaning": "Dash in published Table 1, not an independently quantified zero.",
+        "buffer": "Fe-FeO-H2O",
+        "slope_H2_mass_ppm_per_GPa": 362,
+        "slope_reported_uncertainty_H2_mass_ppm_per_GPa": 35,
+        "slope_uncertainty_type": "Published plus/minus regression uncertainty; exact statistical definition is not stated alongside Eq.1.",
+        "observed_temperature_pressure_pairs_K_Pa": [
+          [
+            1673.15,
+            500000000.0
+          ],
+          [
+            1673.15,
+            1000000000.0
+          ],
+          [
+            1673.15,
+            2000000000.0
+          ],
+          [
+            1673.15,
+            3000000000.0
+          ]
+        ],
+        "use": "Host-specific empirical regression at the stated buffer; no BSE transfer or arbitrary fugacity conversion."
+      },
+      "haplogranite": {
+        "table_1_oxide_weight_percent": {
+          "SiO2": 77.24,
+          "TiO2": null,
+          "Al2O3": 11.79,
+          "MgO": null,
+          "CaO": null,
+          "Na2O": 5.79,
+          "K2O": 5.36
+        },
+        "table_1_oxide_weight_percent_one_sigma": {
+          "SiO2": 0.74,
+          "TiO2": null,
+          "Al2O3": 0.56,
+          "MgO": null,
+          "CaO": null,
+          "Na2O": 0.53,
+          "K2O": 0.17
+        },
+        "table_1_reported_total_weight_percent": 100.2,
+        "missing_oxide_value_meaning": "Dash in published Table 1, not an independently quantified zero.",
+        "buffer": "Fe-FeO-H2O",
+        "slope_H2_mass_ppm_per_GPa": 500,
+        "slope_reported_uncertainty_H2_mass_ppm_per_GPa": 62,
+        "slope_uncertainty_type": "Published plus/minus regression uncertainty; exact statistical definition is not stated alongside Eq.1.",
+        "observed_temperature_pressure_pairs_K_Pa": [
+          [
+            1473.15,
+            500000000.0
+          ],
+          [
+            1473.15,
+            1000000000.0
+          ],
+          [
+            1473.15,
+            1500000000.0
+          ],
+          [
+            1473.15,
+            2000000000.0
+          ],
+          [
+            1523.15,
+            2000000000.0
+          ],
+          [
+            1573.15,
+            1000000000.0
+          ],
+          [
+            1573.15,
+            2000000000.0
+          ],
+          [
+            1573.15,
+            3000000000.0
+          ],
+          [
+            1573.15,
+            4000000000.0
+          ]
+        ],
+        "use": "Host-specific empirical regression at the stated buffer; no BSE transfer or arbitrary fugacity conversion."
+      }
+    },
+    "observations": [
+      {
+        "run_id": "AMPC5",
+        "host": "haplogranite",
+        "pressure_Pa": 1500000000.0,
+        "temperature_C": 1200,
+        "temperature_K": 1473.15,
+        "duration_min": 360,
+        "H2O_total_weight_percent": 0.32,
+        "H2_mass_ppm": 431,
+        "H2_mass_ppm_one_sigma": 20,
+        "author_flag": "anomalous; buffer exhaustion or failed containment discussed",
+        "excluded_from_further_analysis_by_authors": true
+      },
+      {
+        "run_id": "AMPC6",
+        "host": "haplogranite",
+        "pressure_Pa": 1500000000.0,
+        "temperature_C": 1200,
+        "temperature_K": 1473.15,
+        "duration_min": 360,
+        "H2O_total_weight_percent": 1.68,
+        "H2_mass_ppm": 2549,
+        "H2_mass_ppm_one_sigma": 120,
+        "author_flag": "anomalous; buffer exhaustion or failed containment discussed",
+        "excluded_from_further_analysis_by_authors": true
+      },
+      {
+        "run_id": "AMPC7",
+        "host": "haplogranite",
+        "pressure_Pa": 2000000000.0,
+        "temperature_C": 1250,
+        "temperature_K": 1523.15,
+        "duration_min": 270,
+        "H2O_total_weight_percent": 0.48,
+        "H2_mass_ppm": 594,
+        "H2_mass_ppm_one_sigma": 27,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC11",
+        "host": "haplogranite",
+        "pressure_Pa": 1000000000.0,
+        "temperature_C": 1200,
+        "temperature_K": 1473.15,
+        "duration_min": 270,
+        "H2O_total_weight_percent": 0.63,
+        "H2_mass_ppm": 912,
+        "H2_mass_ppm_one_sigma": 41,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC14",
+        "host": "haplogranite",
+        "pressure_Pa": 2000000000.0,
+        "temperature_C": 1300,
+        "temperature_K": 1573.15,
+        "duration_min": 120,
+        "H2O_total_weight_percent": 0.95,
+        "H2_mass_ppm": 1137,
+        "H2_mass_ppm_one_sigma": 52,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC15",
+        "host": "haplogranite",
+        "pressure_Pa": 1500000000.0,
+        "temperature_C": 1200,
+        "temperature_K": 1473.15,
+        "duration_min": 15,
+        "H2O_total_weight_percent": 0.34,
+        "H2_mass_ppm": 1337,
+        "H2_mass_ppm_one_sigma": 62,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC16",
+        "host": "haplogranite",
+        "pressure_Pa": 1500000000.0,
+        "temperature_C": 1200,
+        "temperature_K": 1473.15,
+        "duration_min": 30,
+        "H2O_total_weight_percent": 0.32,
+        "H2_mass_ppm": 1329,
+        "H2_mass_ppm_one_sigma": 60,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC18",
+        "host": "haplogranite",
+        "pressure_Pa": 1500000000.0,
+        "temperature_C": 1200,
+        "temperature_K": 1473.15,
+        "duration_min": 60,
+        "H2O_total_weight_percent": 0.36,
+        "H2_mass_ppm": 1108,
+        "H2_mass_ppm_one_sigma": 50,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC22",
+        "host": "haplogranite",
+        "pressure_Pa": 500000000.0,
+        "temperature_C": 1200,
+        "temperature_K": 1473.15,
+        "duration_min": 180,
+        "H2O_total_weight_percent": 0.28,
+        "H2_mass_ppm": 320,
+        "H2_mass_ppm_one_sigma": 15,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC28",
+        "host": "haplogranite",
+        "pressure_Pa": 3000000000.0,
+        "temperature_C": 1300,
+        "temperature_K": 1573.15,
+        "duration_min": 15,
+        "H2O_total_weight_percent": 0.73,
+        "H2_mass_ppm": 1563,
+        "H2_mass_ppm_one_sigma": 72,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC29",
+        "host": "haplogranite",
+        "pressure_Pa": 4000000000.0,
+        "temperature_C": 1300,
+        "temperature_K": 1573.15,
+        "duration_min": 15,
+        "H2O_total_weight_percent": 0.58,
+        "H2_mass_ppm": 1613,
+        "H2_mass_ppm_one_sigma": 74,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC34",
+        "host": "haplogranite",
+        "pressure_Pa": 1000000000.0,
+        "temperature_C": 1300,
+        "temperature_K": 1573.15,
+        "duration_min": 15,
+        "H2O_total_weight_percent": 0.49,
+        "H2_mass_ppm": 816,
+        "H2_mass_ppm_one_sigma": 37,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC35",
+        "host": "haplogranite",
+        "pressure_Pa": 2000000000.0,
+        "temperature_C": 1200,
+        "temperature_K": 1473.15,
+        "duration_min": 15,
+        "H2O_total_weight_percent": 0.35,
+        "H2_mass_ppm": 404,
+        "H2_mass_ppm_one_sigma": 18,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC37",
+        "host": "andesite",
+        "pressure_Pa": 500000000.0,
+        "temperature_C": 1400,
+        "temperature_K": 1673.15,
+        "duration_min": 15,
+        "H2O_total_weight_percent": 0.6,
+        "H2_mass_ppm": 271,
+        "H2_mass_ppm_one_sigma": 12,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC24",
+        "host": "andesite",
+        "pressure_Pa": 1000000000.0,
+        "temperature_C": 1400,
+        "temperature_K": 1673.15,
+        "duration_min": 60,
+        "H2O_total_weight_percent": 0.78,
+        "H2_mass_ppm": 581,
+        "H2_mass_ppm_one_sigma": 26,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC23",
+        "host": "andesite",
+        "pressure_Pa": 2000000000.0,
+        "temperature_C": 1400,
+        "temperature_K": 1673.15,
+        "duration_min": 120,
+        "H2O_total_weight_percent": 1.8,
+        "H2_mass_ppm": 793,
+        "H2_mass_ppm_one_sigma": 36,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC26",
+        "host": "andesite",
+        "pressure_Pa": 2000000000.0,
+        "temperature_C": 1400,
+        "temperature_K": 1673.15,
+        "duration_min": 15,
+        "H2O_total_weight_percent": 1.8,
+        "H2_mass_ppm": 556,
+        "H2_mass_ppm_one_sigma": 25,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC36",
+        "host": "andesite",
+        "pressure_Pa": 3000000000.0,
+        "temperature_C": 1400,
+        "temperature_K": 1673.15,
+        "duration_min": 15,
+        "H2O_total_weight_percent": 2.73,
+        "H2_mass_ppm": 1066,
+        "H2_mass_ppm_one_sigma": 49,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC38",
+        "host": "basalt",
+        "pressure_Pa": 500000000.0,
+        "temperature_C": 1400,
+        "temperature_K": 1673.15,
+        "duration_min": 15,
+        "H2O_total_weight_percent": 3.23,
+        "H2_mass_ppm": 75,
+        "H2_mass_ppm_one_sigma": 4,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC25",
+        "host": "basalt",
+        "pressure_Pa": 1200000000.0,
+        "temperature_C": 1400,
+        "temperature_K": 1673.15,
+        "duration_min": 15,
+        "H2O_total_weight_percent": 1.15,
+        "H2_mass_ppm": 267,
+        "H2_mass_ppm_one_sigma": 12,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      },
+      {
+        "run_id": "AMPC39",
+        "host": "basalt",
+        "pressure_Pa": 2000000000.0,
+        "temperature_C": 1400,
+        "temperature_K": 1673.15,
+        "duration_min": 15,
+        "H2O_total_weight_percent": 1.84,
+        "H2_mass_ppm": 407,
+        "H2_mass_ppm_one_sigma": 19,
+        "author_flag": null,
+        "excluded_from_further_analysis_by_authors": false
+      }
+    ],
+    "observational_uncertainty_note": "Table 2 states one standard deviation. Includes extinction coefficient, absorbance, density and thickness contributions; does not include a systematic effect of extinction coefficient host dependence.",
+    "regression_validation_policy": "Keep observation-minus-prediction residuals. Published regression is not within every quoted analytical one-sigma interval.",
+    "fugacity_regression_adopted": false,
+    "fugacity_regression_restriction": "Equation 5 does not explicitly specify the numerical pressure unit of fugacity in the inspected text/axes/caption. Do not derive an arbitrary-fugacity standard from presumed units; do not substitute fugacity for total pressure in Equation 1.",
+    "excluded_runs_locator": "Printed page 5 below Table 2: AMPC5 and AMPC6 are explicitly excluded from further consideration because of suspected buffer exhaustion / mechanical capsule failure."
+  },
+  "kato_1970": {
+    "authors": [
+      "Eiichi Kato",
+      "Shigeyoshi Fukuda",
+      "Takayasu Sugiyama",
+      "Takeshi Furukawa"
+    ],
+    "authors_ja": [
+      "加藤栄一",
+      "福田重美",
+      "椙山隆安",
+      "古川武"
+    ],
+    "title": "Solubility of Hydrogen in Liquid Iron Alloys",
+    "title_ja": "溶融鉄合金の水素溶解度",
+    "journal": "Tetsu-to-Hagane",
+    "year": 1970,
+    "volume": 56,
+    "issue": 5,
+    "pages": "521-535",
+    "doi": "10.2355/tetsutohagane1955.56.5_521",
+    "url": "https://www.jstage.jst.go.jp/article/tetsutohagane1955/56/5/56_5_521/_pdf/-char/en",
+    "pdf_sha256": "faf8ce7cec253627b731c657c0d3124c9aeedd04a7b63dc6e69694bdaf321397",
+    "locators": {
+      "standard_and_equilibrium_constant": "Printed page 525, Equations 1-8 and section 3.1",
+      "pure_iron_observations": "Printed pages 525-526, Table 2 and Figures 6-7",
+      "silicon_interaction": "Printed page 528, section 3.3; page 529, Figure 9 and Table 5"
+    },
+    "reaction": "0.5 H2(gas) = H(in liquid iron)",
+    "concentration_species": "atomic H",
+    "activity_basis": "a_H=f_H*[mass%H], referenced to infinite dilution in liquid pure iron; f_H=1 in the measured dilute pure-iron range.",
+    "pressure_basis": "H2 partial pressure in atm, distinct from total liquid pressure; 1 atm = 101325 Pa.",
+    "pure_iron": {
+      "equation": "log10(K) = -1874 / temperature_K - 1.601; K = mass_percent_H / sqrt(p_H2_Pa/101325)",
+      "equation_mass_ppm": "H_mass_ppm = 1e4 * 10**(-1874/temperature_K - 1.601) * sqrt(p_H2_Pa/101325)",
+      "reported_temperature_C": [
+        1570,
+        1740
+      ],
+      "converted_temperature_K": [
+        1843.15,
+        2013.15
+      ],
+      "abstract_rounded_temperature_K": [
+        1843,
+        2013
+      ],
+      "reference_H2_partial_pressure_Pa": 101325,
+      "measured_1600_C_H_mass_ppm": 25.0,
+      "one_atmosphere_temperature_regression_is_not": "A pressure-dependent liquid Gibbs model or high-pressure solubility calibration."
+    },
+    "lower_partial_pressure_observation": {
+      "temperature_C": 1600,
+      "temperature_K": 1873.15,
+      "H2_partial_pressure_atm": "1/11",
+      "H2_partial_pressure_Pa": 9211.363636363636,
+      "total_pressure_Pa": 101325,
+      "gas": "H2:Ar = 1:10 by flow",
+      "H_mass_ppm_replicates": [
+        7.26,
+        7.18,
+        7.16,
+        7.51,
+        7.61
+      ],
+      "reported_mean_H_mass_ppm": 7.34,
+      "reported_standard_deviation_H_mass_ppm": 0.18,
+      "use": "Independent sampling-method receipt at one temperature; not a general T/P calibration rectangle."
+    },
+    "silicon_interaction": {
+      "equation": "log10(f_H_Si) = 0.033 * silicon_mass_percent",
+      "wagner_e_H_Si_per_mass_percent": 0.033,
+      "reported_temperature_C": [
+        1550,
+        1600
+      ],
+      "converted_temperature_K": [
+        1823.15,
+        1873.15
+      ],
+      "silicon_mass_percent_lower_inclusive": 0,
+      "silicon_mass_percent_upper_exclusive": 2.5,
+      "H2_partial_pressure_Pa": 101325,
+      "combined_pure_iron_regression_temperature_K": [
+        1843.15,
+        1873.15
+      ],
+      "restriction": "Fe-Si-H trace-H reference only; oxygen/H cross interactions and finite-H self interactions are not measured here."
+    },
+    "scope": "Dilute pure Fe / Fe-Si liquid reference evaluations only. Does not establish the current 2173.15 K point or full x_H<=0.04 Fe-Si-O-H control box."
+  }
+}

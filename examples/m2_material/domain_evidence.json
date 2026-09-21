@@ -1,6 +1,6 @@
 {
   "audit_id": "m2_material_domain_evidence_v1",
-  "review_date": "2026-09-21",
+  "review_date": "2026-09-22",
   "meaning": "Source-specific evidence, not a calibration rectangle or proof that no physical common domain exists.",
   "evidence": {
     "melts_guidance": {
@@ -104,6 +104,31 @@
       "example_vapor_channels": ["Ca", "CaO", "Al", "AlO", "AlO2", "K", "K+", "KO"],
       "supports": "Background-element vapor channels exist and predicted condensation depends on liquid activities.",
       "does_not_establish": "Quantitative Al/Ca/K/Ti/Cr/P transfer errors or their effect on an H-rich BSE metal boundary."
+    },
+    "kato_1970": {
+      "kind": "experiment",
+      "doi": "10.2355/tetsutohagane1955.56.5_521",
+      "url": "https://www.jstage.jst.go.jp/article/tetsutohagane1955/56/5/56_5_521/_pdf/-char/en",
+      "locator": "Pure Fe p.525 Eqs.1-3; reduced partial pressure p.526 Table2; Si effect pp.528-529",
+      "data_file": "hydrogen_reference.json",
+      "pure_iron_temperature_K": [
+        1843.15,
+        2013.15
+      ],
+      "reference_hydrogen_partial_pressure_Pa": 101325.0,
+      "pure_iron_equation": "log10(wt_percent_H/sqrt(p_H2/atm))=-1874/T_K-1.601",
+      "silicon_interaction": "log10(f_H_Si)=0.033*wt_percent_Si; Si<2.5 wt%, no O calibration.",
+      "combined_Fe_Si_temperature_K": [
+        1843.15,
+        1873.15
+      ],
+      "separate_pressure_receipt": {
+        "temperature_K": 1873.15,
+        "p_H2_Pa": 9211.363636363636,
+        "total_pressure_Pa": 101325.0
+      },
+      "supports": "Low-pressure dilute atomic-H concentration in liquid Fe and a limited Si dependence, including an explicit mass basis and H2 partial-pressure unit.",
+      "does_not_establish": "2173.15 K Fe-Si-O-H, finite-H self-interactions, O cross terms, arbitrary liquid pressure response, or a common BSE/H2/alloy domain."
     }
   },
   "candidate_assessment": {
