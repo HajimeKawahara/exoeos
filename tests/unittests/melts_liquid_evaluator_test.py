@@ -137,6 +137,48 @@ def request():
     return {"T_K": 1473.15, "P_Pa": 5e7, "component_moles": N.tolist(), "common_R_J_mol_K": evaluator.COMMON_R}
 
 
+def test_saturation_keeps_missing_and_changed_candidates(monkeypatch):
+    grams = np.ones(19)
+    oxide = np.zeros(19)
+    oxide[0] = 100.
+
+    class Engine:
+        status = SimpleNamespace(failed=False)
+
+        def setBulkComposition(self, values):
+            self.bulkComposition = values
+
+        def calcSaturationState(self):
+            self.affinity = {"quartz": -100., "kalsilite": np.nan, "hornblende": 100.}
+            self.dispComposition = {name: oxide.copy() for name in self.affinity}
+            return list(self.affinity)
+
+        def calcPhaseProperties(self, phase, requested):
+            self.mass = {phase: 200. if phase == "hornblende" else 100.}
+            self.g = {phase: -1e5}
+
+    model = SimpleNamespace(engine=Engine(), systemNames=["bulk", "oxygen", "liquid", "quartz", "kalsilite", "hornblende", "missing"])
+    result = evaluator.saturation_properties(model, grams)
+    rows = result["candidates"]
+    assert result["candidate_order"] == ["quartz", "kalsilite", "hornblende", "missing"]
+    assert rows[0]["status"] == "ok_candidate_properties"
+    assert rows[0]["native_affinity_J"] == -100.
+    assert rows[1]["native_affinity_J"] is None
+    assert rows[2]["status"] == "unavailable" and "changed" in rows[2]["reason"]
+    assert rows[3]["status"] == "unavailable"
+    assert not result["equilibrated"] and not result["global_minimum_certified"]
+    np.testing.assert_array_equal(model.engine.bulkComposition, grams)
+    json.dumps(result, allow_nan=False)
+
+
+def test_saturation_native_failure_is_not_phase_absence():
+    engine = SimpleNamespace(status=SimpleNamespace(failed=True),
+                             setBulkComposition=lambda values: None,
+                             calcSaturationState=lambda: [])
+    with pytest.raises(RuntimeError, match="saturation calculation failed"):
+        evaluator.saturation_properties(SimpleNamespace(engine=engine), np.ones(19))
+
+
 def test_worker_preserves_amounts_and_reports_two_gas_constant_conventions(monkeypatch, tmp_path):
     engine, calls = mock_engine(monkeypatch)
     result = evaluator._worker(tmp_path, request())
