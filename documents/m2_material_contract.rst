@@ -312,6 +312,34 @@ contract and the native BSE equation audit remain usable for further work.
 Source-specific domain decision
 ----------------------------------------
 
+Actual-state evidence assessment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``examples/m2_material/material_admission.py`` now evaluates the actual T/P,
+native-host oxide composition, H2 and H2O concentrations, and optional
+Fe-Si-O-H composition. It keeps measured conditions, nominal software limits
+and published extrapolations separate. It removes native water only for dry
+host comparisons, converts alloy atomic fractions to experimental mass
+fractions, and preserves unreported oxides as unknowns. Composition differences
+have no invented acceptance radius. Measured T/P envelopes do not create
+unsupported combinations, and reference-condition matches do not establish a
+coupled material domain.
+
+An additional comparison reproduces the 515 mass-ppm/GPa pure-H2 illustration
+in Chaudhari et al. (2025), pp. 14--16, assuming ideal H2 fugacity for a gas
+mixture. Its output explicitly rejects use as material admission or an error
+bound. The molecular-H2 and native-water concentrations share the complete
+liquid mass denominator; the existing constitutive law is unchanged.
+
+See :download:`the evaluator and input contract
+<../examples/m2_material/material_admission.md>` for units, source limitations,
+the executable report and its provenance. Scientific acceptance remains
+pending. A new evidence report on an archived equilibrium does not relabel
+that archived result.
+
+Recorded source audit
+~~~~~~~~~~~~~~~~~~~~~~
+
 The 2026-09-21 review is recorded in
 :download:`domain_evidence.json <../examples/m2_material/domain_evidence.json>`.
 Each entry separates the source's conditions, supported claim and missing
