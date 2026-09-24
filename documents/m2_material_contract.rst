@@ -171,6 +171,99 @@ No ExoInventory import or MELTS installation is required for ordinary tests.
 Material gates and omissions
 ----------------------------------------
 
+Mass-based hydrogen references
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``examples/m2_material/hydrogen_reference.py`` now evaluates two independently
+documented experimental reference families. Their complete transcription,
+source PDF hashes, host compositions, units and excluded observations are in
+``hydrogen_reference.json``. The code enforces each reference's operational
+domain instead of treating the union as a common BSE calibration.
+
+.. list-table:: Implemented concentration references
+   :header-rows: 1
+   :widths: 24 42 34
+
+   * - Reference
+     - Conditions
+     - Concentration law
+   * - Chaudhari et al. (2025)
+     - Named Fe-free basalt/andesite at 1673.15 K and the Fe-FeO-H2O buffer;
+       pressure interpolation only within their measured intervals.
+       Haplogranite is restricted to retained measured T/P pairs.
+     - Molecular H2 mass ppm = 206, 362 or 500 times total pressure in GPa,
+       for basalt, andesite or haplogranite respectively.
+   * - Kato et al. (1970), pure Fe
+     - 1843.15--2013.15 K, H2 partial pressure 101325 Pa, dilute H.
+     - log10(wt% atomic H) = -1874/T - 1.601.
+   * - Kato et al. (1970), Fe-Si
+     - Common regression range 1843.15--1873.15 K, Si below 2.5 mass%,
+       H2 partial pressure 101325 Pa; no O calibration.
+     - Multiply the pure-Fe H concentration by 10**(-0.033 * mass% Si).
+
+The `Kato original article <https://doi.org/10.2355/tetsutohagane1955.56.5_521>`_
+supplies low-pressure alloy-H evidence previously absent from this audit.
+At 1873.15 K its pure-Fe regression predicts 25.0349 ppm, compared with the
+reported 25.0 ppm. A separate 1/11-atm H2 partial-pressure measurement used
+1-atm total H2/Ar pressure: the square-root law predicts 7.5483 ppm versus
+7.34 +/- 0.18 ppm observed. That residual is preserved; this isolated check
+does not establish a T/P rectangle or the liquid alloy's pressure response.
+
+Chaudhari's pressure regression is a buffer-specific total-pressure relation,
+not a Henry coefficient for arbitrary H2 fugacity. The original article's
+reported slope uncertainties are recorded without relabeling them as complete
+measurement scatter. For example, AMPC38 has 75 +/- 4 ppm observed but 103 ppm
+from the published regression. The two author-excluded runs, AMPC5 and AMPC6,
+remain in the transcription and are excluded from the residual report.
+
+``kato_atomic_h_standard_RT`` provides a separate pure-Fe standard for the
+atom-balanced reaction 0.5 H2(g) = H(metal), using the supplied gas H2 standard
+and standard pressure. It is an alternative to the inherited high-pressure
+H standard, not a correction added to it. Atomic H mass ppm must not be
+interpreted as molecular-H2 ppm or an atomic mole fraction.
+
+An extensive mass-fraction solute scalar
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``exoeos.mass_fraction_solute_state`` adds a specified mass-fraction solute
+law to an already mixed host. If host component amounts and molar masses are
+:math:`n_i,W_i`, solute amount/molar mass are :math:`h,W_s`, and
+:math:`S=\sum_i W_i n_i/W_s`, the added scalar is
+
+.. math::
+
+   \frac{G_{add}}{RT}=h\frac{\mu_s^0}{RT}
+       +S\ln\frac{S}{S+h}+h\ln\frac{h}{S+h}.
+
+Consequently :math:`\mu_s/(RT)=\mu_s^0/(RT)+\ln w_s`, where
+:math:`w_s=h/(S+h)` is the solute mass fraction of the complete liquid.
+Each host chemical potential acquires
+:math:`(W_i/W_s)\ln(1-w_s)`. The reciprocal host response is necessary;
+changing only the solute concentration denominator would not derive from
+this scalar. Exactly zero solute preserves the host and has insertion
+potential minus infinity, with no trace floor.
+
+This mass-based dilution is an alternative to endmember-count dilution.
+Do not add both, duplicate native host mixing, or add a second native-water
+solubility correction. The solute standard is explicitly supplied and must
+be independent of host composition. The function supplies no BSE Henry
+coefficient. Tests cover independent energy differences, reciprocal
+derivatives, Euler's relation, amount scaling, host-basis changes, exact
+zero and the independently minimized dilute pure-Fe reference.
+
+The silicate-H2 and low-pressure Fe-H reference temperature ranges do not
+overlap. These additions do not calibrate 2173.15 K BSE, O-containing alloy
+H interactions, competing liquid/solid phases, or omitted transfer errors.
+The common accepted material domain remains null and M2-A/B remain pending.
+Reproduce the source-regression residuals without a native runtime:
+
+.. code-block:: console
+
+   python examples/m2_material/hydrogen_reference.py --output /tmp/new-hydrogen-reference.json
+
+Remaining gates
+~~~~~~~~~~~~~~~~
+
 ``examples/m2_material/material_contract.json`` records units, models,
 evidence, missing inputs, ownership, and the unresolved common domain.
 The following limitations prevent scientific acceptance:

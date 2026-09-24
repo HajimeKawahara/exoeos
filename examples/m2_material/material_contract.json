@@ -20,6 +20,15 @@
     "fixed_bottom_pressure_column_use": "Numerical connection control only; carry pending material gates into the column result. Do not infer a continuous physical T/P/composition domain from this point or the alloy curvature box.",
     "domain_extension_requires": ["Common reaction-standard validation", "H2 concentration-basis and host calibration", "Alloy H and pressure calibration", "Exact-composition liquid stability against competing phases", "Omitted-transfer error bounds"]
   },
+  "implemented_hydrogen_references": {
+    "data_file": "hydrogen_reference.json",
+    "evaluator": "hydrogen_reference.py",
+    "mass_fraction_scalar": "exoeos.mass_fraction_solute_state",
+    "silicate": "Published Chaudhari buffered pressure regressions on named Fe-free experimental hosts. This is not an arbitrary-fugacity standard.",
+    "alloy": "Kato dilute pure-Fe and low-Si Fe-Si references at p_H2=101325 Pa; a separate pure-Fe atomic-H mass-fraction standard includes the one-half H2 stoichiometry.",
+    "mutual_temperature_overlap_K": null,
+    "policy": "No automatic replacement of archived MELTS endmember dilution or the inherited alloy H standard. The mass-based scalar is an alternative constitutive choice, not an extra dilution term."
+  },
   "evaluated_liquid_point": {
     "T_K": 2173.15,
     "P_Pa": 100000.0,
@@ -46,10 +55,10 @@
     "upper_column": "A continuous thermochemical law and shared-species contact alignment remain pending; frozen-temperature controls do not establish these."
   },
   "missing_material_evidence": [
-    {"id": "alloy_H", "owner": "ExoEOS and ExoGibbs", "status": "pending", "evidence_ids": ["ma_h_implementation", "jiang_2025"], "required": "Supported H standard/interaction and partition calibration on the declared Fe-rich composition domain."},
+    {"id": "alloy_H", "owner": "ExoEOS and ExoGibbs", "status": "pending", "evidence_ids": ["ma_h_implementation", "jiang_2025", "kato_1970"], "required": "Supported H standard/interaction and partition calibration on the declared Fe-rich composition domain.", "partial_evidence": "Low-pressure pure Fe and Fe-Si H data are implemented as restricted references; O-bearing Fe-Si-O-H and 2173.15 K remain uncalibrated."},
     {"id": "alloy_pressure", "owner": "ExoEOS", "status": "pending", "evidence_ids": ["ma_h_implementation", "badro_2018"], "required": "Pressure response or a quantitatively justified pressure restriction; the present Ma excess model is pressure independent. Pressure independence of the different high-pressure Mg partition fit is not supporting evidence."},
     {"id": "common_standards", "owner": "ExoGibbs", "status": "pending", "required": "Independent reaction-cycle audit of MELTS, gas and alloy standards; elemental gauges cannot repair reaction-energy errors."},
-    {"id": "H2_concentration_basis", "owner": "ExoGibbs", "status": "pending", "evidence_ids": ["chaudhari_2025", "marcum_2026"], "required": "Convert experimental H2 mass ppm and its fugacity convention to MELTS endmember amounts, and establish calibration overlap. A buffered pressure fit or supercritical binary EOS is not a direct replacement standard."},
+    {"id": "H2_concentration_basis", "owner": "ExoGibbs", "status": "pending", "evidence_ids": ["chaudhari_2025", "marcum_2026"], "required": "Convert experimental H2 mass ppm and its fugacity convention to MELTS endmember amounts, and establish calibration overlap. A buffered pressure fit or supercritical binary EOS is not a direct replacement standard.", "partial_evidence": "Host-restricted mass-ppm regressions and an extensive mass-fraction scalar are implemented. The original Hirschmann mole denominator and arbitrary-fugacity BSE standard remain unverified."},
     {"id": "liquid_domain", "owner": "ExoEOS and ExoGibbs", "status": "pending", "evidence_ids": ["melts_guidance", "sossi_2020"], "required": "Stable liquid evidence for the exact BSE projection, redox/water states and Mg/Si range, including competing phases."},
     {"id": "omitted_transfer", "owner": "ExoEOS and ExoGibbs", "status": "pending", "evidence_ids": ["badro_2018", "fegley_2023"], "required": "Supported Mg metal and Al/Ca/K/Ti/Cr/P gas/metal transfer estimates, plus their effect on coupled partition and metal boundaries."},
     {"id": "column_contact", "owner": "ExoInventory and ExoGibbs", "status": "pending", "required": "Prescribed temperature rule, geometry, top pressure, bottom-pressure range and continuous common thermochemistry."}

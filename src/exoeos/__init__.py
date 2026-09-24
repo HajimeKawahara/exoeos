@@ -37,6 +37,7 @@ from exoeos.marcum_silicate_hydrogen import (
     MarcumSilicateHydrogenEOS,
     MarcumSilicateHydrogenTableLoader,
 )
+from exoeos.mass_fraction_solute import MassFractionSoluteState, mass_fraction_solute_state
 from exoeos.peng_robinson import PengRobinsonEOS
 from exoeos.second_virial import SecondVirialEOS
 from exoeos.solution_gibbs import total_solution_gibbs_RT, total_solution_state
@@ -73,6 +74,7 @@ __all__ = [
     "MaFeSiOLiquid",
     "MaFeSiOHLiquid",
     "MassDensityProvider",
+    "MassFractionSoluteState",
     "MassThermodynamicState",
     "MarcumSilicateHydrogenEOS",
     "MarcumSilicateHydrogenTableLoader",
@@ -91,6 +93,7 @@ __all__ = [
     "available_critical_properties",
     "get_critical_properties",
     "mass_density_tp",
+    "mass_fraction_solute_state",
     "psir",
     "solution_state",
     "state_tp",
