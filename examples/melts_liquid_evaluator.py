@@ -119,6 +119,62 @@ def source_provenance():
             "changed_tracked_file_sha256": hashes, "worker_command": sys.argv}
 
 
+def saturation_properties(model, grams):
+    """Return native candidate properties without equilibrating the liquid.
+
+    Affinities retain the backend's convention. Candidate energies instead
+    use an explicit 100 g oxide basis, including signed redox oxide amounts.
+    Failed candidates stay in the catalog and never imply phase absence.
+    """
+    engine = model.engine
+    engine.setBulkComposition(grams.tolist())
+    phases = engine.calcSaturationState()
+    if engine.status.failed:
+        raise RuntimeError("MELTS supplied-liquid saturation calculation failed.")
+    require_match(engine.bulkComposition, grams, "saturation input oxide amounts", rtol=0)
+    catalog = [name for name in model.systemNames if name not in {"bulk", "oxygen", "liquid"}]
+    # Phase-property calls overwrite display compositions, so capture all
+    # incipient compositions before evaluating any candidate.
+    native = [(name, engine.affinity.get(name),
+               np.asarray(engine.dispComposition[name], dtype=float).copy()
+               if name in phases and name in engine.dispComposition else None)
+              for name in catalog]
+    candidates = []
+    for name, affinity, oxide in native:
+        row = {"phase": name, "native_affinity_J": None,
+               "status": "unavailable", "reason": "No finite native saturation estimate."}
+        if affinity is not None and np.isfinite(affinity):
+            row["native_affinity_J"] = float(affinity)
+        if row["native_affinity_J"] is not None and oxide is not None and np.all(np.isfinite(oxide)):
+            if oxide.shape != grams.shape or not np.isclose(oxide.sum(), 100., rtol=1e-10):
+                row["reason"] = "Invalid native incipient oxide basis."
+            else:
+                row["oxide_mass_g"] = oxide.tolist()
+                engine.calcPhaseProperties(name, oxide.tolist())
+                if engine.status.failed:
+                    raise RuntimeError(f"MELTS candidate property calculation failed: {name}")
+                mass, gibbs = float(engine.mass[name]), float(engine.g[name])
+                returned = mass * np.asarray(engine.dispComposition[name], dtype=float) / 100
+                if np.isfinite(mass) and np.isfinite(gibbs) and np.all(np.isfinite(returned)):
+                    row.update(gibbs_J=gibbs, mass_g=mass, returned_oxide_mass_g=returned.tolist())
+                    if mass > 0 and np.allclose(returned, oxide, rtol=5e-9, atol=1e-9):
+                        row.update(status="ok_candidate_properties", reason=None)
+                    else:
+                        row["reason"] = "Candidate property call changed the requested oxide amounts."
+                else:
+                    row["reason"] = "Nonfinite candidate properties."
+        candidates.append(row)
+    require_match(engine.bulkComposition, grams, "unchanged saturation input oxide amounts", rtol=0)
+    return {
+        "status": "native_saturation_candidates_only", "candidate_order": catalog,
+        "candidates": candidates, "equilibrated": False, "global_minimum_certified": False,
+        "affinity_convention": "Native MELTS affinity in J; smaller means closer to saturation. Candidate Gibbs energies use the independently recorded oxide-mass basis.",
+        "composition_search": "Native incipient estimates; no global minimization certificate.",
+        "excluded_system_entries": ["bulk", "oxygen", "liquid"],
+        "scope": "Native supplied liquid only; external solutes, alloy models and gas standards are not included.",
+    }
+
+
 def _worker(runtime, request):
     """Only called in a new process and temporary working directory."""
     temperature, pressure = request["T_K"], request["P_Pa"]
@@ -186,7 +242,7 @@ def _worker(runtime, request):
         values[active_oxides] = np.linalg.solve(subspace, mu[present])
         oxide_mu = nullable(values, active_oxides)
         oxide_status = "full potentials on the present square subspace; no oxide standards or activities"
-    return {
+    result = {
         "model_id": MODEL_IDS[calculation_mode], "status": "ok_supplied_liquid_properties",
         "T_K": temperature, "P_Pa": pressure,
         "backend_T_C": engine.temperature, "backend_P_bar": engine.pressure,
@@ -195,6 +251,7 @@ def _worker(runtime, request):
         "backend_species": {"order": species_order, "x": species_x.tolist(),
                             "reaction": "casio3 + co2 = caco3 + sio2" if calculation_mode == 4 else None},
         "oxide_order": OXIDES, "oxide_mass_g": grams.tolist(),
+        "oxide_molar_masses_g_mol": OXIDE_MASSES.tolist(),
         "returned_oxide_mass_g": returned_grams.tolist(), "mass_g": mass, "gibbs_J": gibbs,
         "gibbs_RT": gibbs / (common_R * temperature),
         "mu_J_mol": nullable(mu, present), "mu0_J_mol": nullable(mu0, present),
@@ -242,20 +299,30 @@ def _worker(runtime, request):
             "methods": ["calcPhaseProperties(liquid, oxide_grams)", "calcEndMemberProperties(liquid, oxide_grams)"],
         },
     }
+    if request.get("include_saturation", False):
+        result["saturation"] = saturation_properties(model, grams)
+        result["provenance"]["methods"].extend([
+            "calcSaturationState(supplied_liquid_oxide_grams)",
+            "calcPhaseProperties(candidate, incipient_oxide_grams)",
+        ])
+    return result
 
 
-def evaluate_liquid(temperature, pressure, component_moles, *, runtime, common_R=COMMON_R, python_executable=None, calculation_mode=1):
+def evaluate_liquid(temperature, pressure, component_moles, *, runtime, common_R=COMMON_R, python_executable=None, calculation_mode=1, include_saturation=False):
     """Return JSON-compatible properties from a fresh pinned external worker.
 
     Inputs are K, Pa, and mol in COMPONENTS order. Ordinary imports require only
     NumPy; python_executable may select a separate environment with tinynumpy.
     Mode 4 enables CO2 and internal carbonate speciation; mode 1 is the default.
     Absent component potentials are None. Failure raises without returning a state.
+    Optional native saturation candidates do not certify equilibrium or stability.
     """
     n, _ = validate_request(temperature, pressure, component_moles, common_R, calculation_mode)
     runtime = Path(runtime).resolve()
     check_runtime(runtime)
-    request = {"T_K": float(temperature), "P_Pa": float(pressure), "component_moles": n.tolist(), "common_R_J_mol_K": float(common_R), "calculation_mode": calculation_mode}
+    if type(include_saturation) is not bool:
+        raise ValueError("include_saturation must be a boolean.")
+    request = {"T_K": float(temperature), "P_Pa": float(pressure), "component_moles": n.tolist(), "common_R_J_mol_K": float(common_R), "calculation_mode": calculation_mode, "include_saturation": include_saturation}
     with tempfile.TemporaryDirectory(prefix="exoeos-melts-liquid-") as directory:
         request_path, output = Path(directory) / "request.json", Path(directory) / "result.json"
         request_path.write_text(json.dumps(request, allow_nan=False))
@@ -353,6 +420,7 @@ def main():
             request["T_K"], request["P_Pa"], request["component_moles"], runtime=args.runtime,
             common_R=request["common_R_J_mol_K"], python_executable=args.python,
             calculation_mode=request.get("calculation_mode", 1),
+            include_saturation=request.get("include_saturation", False),
         )
     args.output.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n")
 
