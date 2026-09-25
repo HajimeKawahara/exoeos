@@ -112,6 +112,75 @@ def audit_metal_water_exchange(temperature_K, *, fe_metal_mu0_RT, feo_liquid_mu0
             "accepted_coupled_material_domain": None}
 
 
+def audit_formal_reduction_standards(temperature_K, pressure_Pa, *, standards_rt,
+                                     standard_conventions, standard_pressure_Pa=1e5):
+    """Audit supplied model reaction sums without claiming empirical alignment.
+
+    Supply mu0/(R*T) on the common R below for six named components. Liquid
+    standards are native pure endmembers, not pure oxide standards. Metal
+    inputs must retain the caller's applied alloy convention; a linear
+    standard parameter need not equal its pure-component limit. Gas inputs
+    must come from the actual selected model at its stated standard pressure.
+    Three nonempty convention descriptions prevent a silently mixed basis;
+    they document the caller's assertion, not independently verify it.
+
+    The virtual FeO combination is half (Fe2SiO4 - SiO2). Its reaction sum
+    is meaningful bookkeeping, not a measured/native pure-FeO standard.
+    ExoEOS does not import a consumer or extract its model standards here.
+    """
+    t, p, p0 = map(float, (temperature_K, pressure_Pa, standard_pressure_Pa))
+    names = ("sio2_liquid", "fe2sio4_liquid", "Fe_metal", "Si_metal", "H2_gas", "H2O_gas")
+    if (not all(np.isfinite(v) and v > 0 for v in (t, p, p0))
+            or not isinstance(standards_rt, dict) or set(standards_rt) != set(names)
+            or not isinstance(standard_conventions, dict)
+            or set(standard_conventions) != {"liquid", "metal", "gas"}
+            or any(not isinstance(v, str) or not v.strip() for v in standard_conventions.values())):
+        raise ValueError("Supply positive T/P, exactly six standards and three explicit phase conventions.")
+    if any(isinstance(standards_rt[name], (bool, np.bool_, str)) for name in names):
+        raise ValueError("Standard potentials must be finite real scalars.")
+    try:
+        mu = np.array([standards_rt[name] for name in names], dtype=float)
+    except (TypeError, ValueError) as error:
+        raise ValueError("Standard potentials must be finite real scalars.") from error
+    if mu.shape != (6,) or not np.all(np.isfinite(mu)):
+        raise ValueError("Standard potentials must be finite real scalars.")
+    # Rows: Fe, Si, O, H. Columns follow the explicit standards above.
+    formula = np.array([[0, 2, 1, 0, 0, 0], [1, 1, 0, 1, 0, 0],
+                        [2, 4, 0, 0, 0, 1], [0, 0, 0, 0, 2, 2]])
+    reactions = (
+        ("Fe2SiO4(liquid) + 2 H2(g) = 2 Fe(metal) + SiO2(liquid) + 2 H2O(g)",
+         [1., -1., 2., 0., -2., 2.], False),
+        ("SiO2(liquid) + 2 H2(g) = Si(metal) + 2 H2O(g)",
+         [-1., 0., 0., 1., -2., 2.], False),
+        ("FeO(virtual) + H2(g) = Fe(metal) + H2O(g)",
+         [.5, -.5, 1., 0., -1., 1.], True))
+    rows = []
+    for reaction, coefficients, virtual in reactions:
+        coefficients = np.asarray(coefficients)
+        imbalance = formula @ coefficients
+        if np.any(imbalance != 0):
+            raise RuntimeError("The declared reduction reaction does not conserve atoms.")
+        dg = float(coefficients @ mu)
+        if not np.isfinite(dg):
+            raise ValueError("The reaction sum exceeds finite floating-point range.")
+        log_k = -dg
+        # Preserve logarithms instead of overflowing or inventing exact-zero K.
+        k = float(np.exp(log_k)) if np.log(np.nextafter(0., 1.)) <= log_k <= np.log(np.finfo(float).max) else None
+        rows.append({"reaction": reaction, "stoichiometry": coefficients.tolist(),
+                     "element_imbalance": imbalance.tolist(), "uses_virtual_FeO": virtual,
+                     "delta_G0_RT": dg, "delta_G0_J_mol_reaction": R_J_MOL_K*t*dg,
+                     "ln_K_dimensionless": log_k, "K_dimensionless": k})
+    return {"role": "supplied_model_reaction_bookkeeping", "T_K": t, "P_Pa": p,
+            "R_J_mol_K": R_J_MOL_K, "standard_pressure_Pa": p0,
+            "component_order": list(names), "standards_rt": dict(zip(names, mu.tolist())),
+            "standard_conventions": dict(standard_conventions), "element_order": ["Fe", "Si", "O", "H"],
+            "reactions": rows, "virtual_FeO_mu0_RT": float(.5*(mu[1]-mu[0])),
+            "virtual_FeO_is_native_or_measured_pure_standard": False,
+            "conventions_independently_verified": False, "empirical_alignment_accepted": False,
+            "accepted_coupled_material_domain": None,
+            "scope": "Formal sums in the supplied model conventions; neither an empirical equilibrium constant nor a phase-applicability certificate."}
+
+
 def calibration_report():
     return {"report_kind": "reaction_reference_calibration_v1",
             "execution": {"python": platform.python_version(), "numpy": np.__version__,

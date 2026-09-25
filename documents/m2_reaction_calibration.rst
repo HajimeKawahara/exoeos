@@ -154,6 +154,22 @@ that fit. It detects host-standard changes without inventing a MELTS
 pure-oxide basis or a cross-phase calibration. Sources and the inspected
 consumer revision are pinned in ``reaction_calibration_sources.json``.
 
+``audit_formal_reduction_standards`` accepts six **supplied** standards
+``sio2_liquid``, ``fe2sio4_liquid``, ``Fe_metal``, ``Si_metal``, ``H2_gas``
+and ``H2O_gas`` in common-R units of mu0/(RT), together with explicit
+``liquid``, ``metal`` and ``gas`` convention descriptions. It computes
+formal delta-G, log-K and dimensionless K for the atom-balanced reactions
+Fe2SiO4 + 2H2 = 2Fe + SiO2 + 2H2O and SiO2 + 2H2 = Si + 2H2O.
+Half of the first reaction is additionally labeled using the *virtual*
+FeO standard (mu0_Fe2SiO4 - mu0_SiO2)/2, not a native or measured pure-FeO
+standard. The metal entries retain the caller's applied convention; a
+linear alloy standard parameter is not automatically its pure limit.
+The caller must supply the actual selected gas model rather than silently
+mixing legacy gas anchors. Descriptions record that assertion; they do
+not independently verify cross-phase alignment. Missing values or phase
+conventions fail, and unrepresentable K remains null with finite log-K.
+This is model bookkeeping, never empirical reaction calibration.
+
 Run and checks
 --------------
 
@@ -167,7 +183,10 @@ From the checkout, with ExoEOS importable:
 The CLI refuses to overwrite an existing result. The report retains
 source hashes, all experimental residuals, both original Sossi IR
 branches, convention discrepancies, and unbounded uncertainties.
-``reaction_calibration_validation.json`` is the archived replay. Tests
+``reaction_calibration_validation.json`` is the unchanged archived replay
+from commit ``c267ee6``; its source hashes belong to that execution. Supplied
+native/model standards are extracted and archived separately by their
+consumer, not fabricated by the default replay. Tests
 check raw-data hashes, source selection, derivative finite differences,
 amount scaling, Euler consistency, reciprocal derivatives, the
 water/H atom conversion under the explicit interpretation, equilibrium

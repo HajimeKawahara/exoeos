@@ -75,3 +75,72 @@ def test_combined_report_does_not_promote_fit_replay_or_reference_laws_to_admiss
 def test_invalid_reaction_standard_inputs_fail(t,p,p0):
     with pytest.raises(ValueError):
         r.source_h2_standard_audit(t,p,standard_pressure_Pa=p0)
+
+
+def formal_standard_fixture():
+    return ({"sio2_liquid": -30., "fe2sio4_liquid": -52., "Fe_metal": -4.,
+             "Si_metal": -7., "H2_gas": -3., "H2O_gas": -12.},
+            {"liquid": "Synthetic native-endmember test", "metal": "Synthetic applied alloy standard",
+             "gas": "Synthetic common gas standard at 1bar"})
+
+
+def test_formal_native_reductions_keep_virtual_oxide_and_balanced_element_gauge():
+    standards, conventions = formal_standard_fixture()
+    result = r.audit_formal_reduction_standards(2173.15, 2e7,
+        standards_rt=standards, standard_conventions=conventions)
+    assert result["virtual_FeO_mu0_RT"] == -11.
+    assert [item["delta_G0_RT"] for item in result["reactions"]] == pytest.approx([-4., 5., -2.])
+    assert result["empirical_alignment_accepted"] is False
+    assert result["virtual_FeO_is_native_or_measured_pure_standard"] is False
+    assert result["reactions"][2]["uses_virtual_FeO"] is True
+    # Use independently written atomic compositions for the gauge shift.
+    atoms = {"sio2_liquid": {"Si":1,"O":2}, "fe2sio4_liquid": {"Fe":2,"Si":1,"O":4},
+             "Fe_metal": {"Fe":1}, "Si_metal": {"Si":1}, "H2_gas": {"H":2},
+             "H2O_gas": {"H":2,"O":1}}
+    gauge = {"Fe":1.7,"Si":-.3,"O":8.,"H":-2.}
+    shifted = {name: value+sum(count*gauge[element] for element,count in atoms[name].items())
+               for name,value in standards.items()}
+    alternate = r.audit_formal_reduction_standards(2173.15, 2e7,
+        standards_rt=shifted, standard_conventions=conventions)
+    for a,b in zip(result["reactions"], alternate["reactions"]):
+        assert a["delta_G0_RT"] == pytest.approx(b["delta_G0_RT"], abs=1e-13)
+        assert a["K_dimensionless"] == pytest.approx(np.exp(-a["delta_G0_RT"]))
+    # Both reductions have equal gas stoichiometry on each side: a common
+    # standard-pressure change cannot alter their formal reaction sums.
+    for name in ("H2_gas", "H2O_gas"):
+        standards[name] += np.log(2.)
+    rescaled = r.audit_formal_reduction_standards(2173.15, 2e7, standards_rt=standards,
+        standard_conventions=conventions, standard_pressure_Pa=2e5)
+    assert [x["ln_K_dimensionless"] for x in rescaled["reactions"]] == pytest.approx([4.,-5.,2.])
+
+
+def test_formal_reduction_preserves_extreme_log_K_without_false_zero_or_infinity():
+    standards, conventions = formal_standard_fixture()
+    for value in (-1000.,1000.):
+        standards["Fe_metal"] = value
+        result = r.audit_formal_reduction_standards(2173.15, 1e5,
+            standards_rt=standards, standard_conventions=conventions)
+        assert result["reactions"][0]["K_dimensionless"] is None
+        assert np.isfinite(result["reactions"][0]["ln_K_dimensionless"])
+
+
+@pytest.mark.parametrize("bad", [None, np.nan, True, [1.], "1"])
+def test_formal_reductions_reject_missing_or_ambiguous_standard_values(bad):
+    standards, conventions = formal_standard_fixture()
+    standards["Fe_metal"] = bad
+    with pytest.raises(ValueError):
+        r.audit_formal_reduction_standards(2173.15, 1e5,
+            standards_rt=standards, standard_conventions=conventions)
+
+
+def test_formal_reductions_require_each_phase_convention_and_each_standard():
+    standards, conventions = formal_standard_fixture()
+    conventions["metal"] = ""
+    with pytest.raises(ValueError):
+        r.audit_formal_reduction_standards(2173.15, 1e5,
+            standards_rt=standards, standard_conventions=conventions)
+    _, conventions = formal_standard_fixture()
+    del standards["H2_gas"]
+    with pytest.raises(ValueError):
+        r.audit_formal_reduction_standards(2173.15, 1e5,
+            standards_rt=standards, standard_conventions=conventions)
