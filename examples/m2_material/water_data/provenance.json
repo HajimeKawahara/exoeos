@@ -1,0 +1,142 @@
+{
+  "record_id": "thompson2025_eq18_replay_v1",
+  "retrieved_date": "2026-09-25",
+  "paper": {
+    "authors": [
+      "Maggie A. Thompson",
+      "Paolo A. Sossi",
+      "Dan J. Bower",
+      "Anat Shahar",
+      "Christian Liebske",
+      "Julien Allaz"
+    ],
+    "doi": "10.1016/j.chemgeo.2025.123048",
+    "url": "https://arxiv.org/pdf/2510.05281v1",
+    "pdf_sha256": "481d6a752c1fa54d6d1466982cc08b81cbce889101e47943a432f5bba9575bb3",
+    "locators": "Eq.18 printed p7; Table4 printed p8; Table3 printed p7; original author CSV and notebook"
+  },
+  "dataset": {
+    "doi": "10.5281/zenodo.16418810",
+    "version": "v1",
+    "url": "https://zenodo.org/records/16418810",
+    "license": "CC-BY-4.0",
+    "attribution": "Maggie Thompson (2025); original CSV bytes preserved."
+  },
+  "archived_files": [
+    {
+      "name": "CombinedDataset_withS23N17.csv",
+      "url": "https://zenodo.org/records/16418810/files/CombinedDataset_withS23N17.csv?download=1",
+      "bytes": 10183,
+      "sha256": "635fd0c93ef90643d4909329463e958442fb562d10a84b8a61b39ce81b50eab5",
+      "md5": "a12b2240028dda7e01657c6afb0316e2"
+    },
+    {
+      "name": "Sossi23_Data.csv",
+      "url": "https://zenodo.org/records/16418810/files/Sossi23_Data.csv?download=1",
+      "bytes": 3450,
+      "sha256": "8d77d029791a0f96e62bb6818d684e68ac713b273f40fe494f3e17711b87fc92",
+      "md5": "39a7336732ef7c44f6a06444fa3e8f1f"
+    }
+  ],
+  "inspected_notebook": {
+    "name": "solubilitylaw_revision_combodataset_bayesianmultivariate.ipynb",
+    "url": "https://zenodo.org/records/16418810/files/solubilitylaw_revision_combodataset_bayesianmultivariate.ipynb?download=1",
+    "bytes": 31939440,
+    "sha256": "bf01c18c57e28ec8cf1ca780319073d83bf73f7402429a1ac7fa4e0077cc51a3",
+    "md5": "663d323f3837e66afda4f6d660282046"
+  },
+  "concentration_basis_evidence": {
+    "cell_index_zero_based": 3,
+    "assignment": "hsol_combo_all['XOH'] = hsol_combo_all['OH_Conc_ppm']/1e6",
+    "interpretation": "The fitting response is the OH_Conc_ppm column divided by1e6. The paper calls X(OH) a mole fraction. We reproduce the notebook scaling; the pooled Sossi columns require clarification before literal OH atomic conversion."
+  },
+  "fit_selection": {
+    "cell_index_zero_based": 3,
+    "rule": "fH2O > 0",
+    "included": 74,
+    "blanks_excluded_from_fit": 7,
+    "all_rows_retained": 81,
+    "study_row_ranges_zero_based": {
+      "Thompson2025": [
+        0,
+        43
+      ],
+      "Sossi2023": [
+        44,
+        55
+      ],
+      "Newcombe2017": [
+        56,
+        80
+      ]
+    }
+  },
+  "coefficients": {
+    "source": "Table4 second row, rounded posterior means",
+    "oxide_order": [
+      "CaO",
+      "SiO2",
+      "MgO",
+      "Al2O3",
+      "FeO"
+    ],
+    "A_bar_minus_half": 0.000719,
+    "b_K": [
+      -1511.1,
+      886.5,
+      -1015.2,
+      890.6,
+      -1755.9
+    ],
+    "b_marginal_posterior_sd_K": [
+      513.3,
+      315.9,
+      268.9,
+      795.4,
+      364.5
+    ],
+    "covariance_K2": null,
+    "covariance_status": "Not supplied as numerical posterior samples or covariance in the downloaded dataset files; do not assume independent coefficients.",
+    "A_uncertainty": "Author de-scaling constant, not a fitted uncertain intercept."
+  },
+  "sossi_2023": {
+    "doi": "10.1016/j.epsl.2022.117894",
+    "primary_url": "https://arxiv.org/pdf/2211.13344",
+    "host": "peridotite",
+    "nominal_temperature_K": 2173,
+    "total_pressure_Pa": 100000.0,
+    "water_coefficient_ppmw_per_sqrt_bar": [
+      524,
+      647
+    ],
+    "water_coefficient_reported_sigma": [
+      16,
+      25
+    ],
+    "epsilon_m2_per_mol": [
+      6.3,
+      5.1
+    ],
+    "note": "Both absorption alternatives remain archived. The combined OH column numerically uses H2O_ppm_mean * M_OH/M_H2O. If the raw column means H2O mass ppm, literal two-OH-group counting gives twice this value. No source correction is made; spectroscopy/equivalent-species conventions remain to be clarified."
+  },
+  "newcombe_2017": {
+    "doi": "10.1016/j.gca.2016.12.026",
+    "title": "Solubility of water in lunar basalt at low pH2O"
+  },
+  "uncertainties": {
+    "measurement_T_composition_fugacity_joint_covariance": null,
+    "absorption_calibration_systematic_bound": null,
+    "pressure_transfer_bound": null,
+    "unmeasured_composition_transfer_bound": null,
+    "H2_molecular_calibration": "Not established by these OH observations.",
+    "melt_metal_H_standard": "Not calibrated by this OH fit.",
+    "pooled_response_to_atomic_amounts": "Unresolved; factor-of-two arithmetic discrepancy conditional on literal H2O/OH mass interpretations."
+  },
+  "scope": {
+    "all_fitting_data_total_pressure_Pa": 100000.0,
+    "rectangle_accepted": false,
+    "text_recommendation": "Section4.2: ~1600-2100K, <=~1kbar; conclusion: up to2200K and ~100bar. Neither is a joint experimental rectangular domain.",
+    "external_pressure_comparison": "Paper reports agreement within a factor of2 against Shishkina2010 basalt at1250C up to1kbar; those data are not independently replayed here.",
+    "accepted_coupled_material_domain": null
+  }
+}
