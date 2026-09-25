@@ -119,6 +119,55 @@ def source_provenance():
             "changed_tracked_file_sha256": hashes, "worker_command": sys.argv}
 
 
+def molar_candidate_properties(model, name, oxide_mass_g=None):
+    """Evaluate a solid on its native endmember basis, preserving oxide amounts.
+
+    The oxide-to-endmember converter in some native phases changes the input
+    composition. Unit endmember properties define the inverse basis without
+    parsing display formulas or changing the pinned native model. The native
+    molar API normalizes its input to one mole; restore the requested amount.
+    """
+    engine = model.engine
+    count = len(engine.status.molwts[name])
+    width = len(engine.status.molwts["bulk"])
+    columns = []
+    for index in range(count):
+        engine.molarComposition = np.eye(width)[index]
+        engine.calcMolarProperties(name)
+        if engine.status.failed:
+            raise RuntimeError(f"MELTS molar basis evaluation failed: {name}")
+        columns.append(float(engine.mass[name]) * np.asarray(engine.dispComposition[name]) / 100.)
+    matrix = np.asarray(columns, dtype=float).T
+    if (matrix.shape != (width, count) or not np.all(np.isfinite(matrix))
+            or np.linalg.matrix_rank(matrix) != count):
+        raise ValueError("Invalid or singular native endmember oxide basis.")
+    result = {"phase": name, "native_endmember_oxide_mass_g_per_mol": matrix.tolist(),
+              "composition_basis_method": "Native unit endmembers through calcMolarProperties."}
+    if oxide_mass_g is None:
+        return result
+    oxide = np.asarray(oxide_mass_g, dtype=float)
+    if oxide.shape != (width,) or not np.all(np.isfinite(oxide)) or oxide.sum() <= 0:
+        raise ValueError("Candidate oxide amounts must be finite with positive mass.")
+    amounts, _, _, _ = np.linalg.lstsq(matrix, oxide, rcond=None)
+    require_match(matrix @ amounts, oxide, "candidate endmember reconstruction", atol=1e-9)
+    total = float(amounts.sum())
+    if not np.isfinite(total) or total <= 0:
+        raise ValueError("Candidate endmember total must be positive.")
+    engine.molarComposition = np.r_[amounts / total, np.zeros(width - count)]
+    engine.calcMolarProperties(name)
+    if engine.status.failed:
+        raise RuntimeError(f"MELTS molar candidate evaluation failed: {name}")
+    mass, gibbs = total * float(engine.mass[name]), total * float(engine.g[name])
+    returned = mass * np.asarray(engine.dispComposition[name], dtype=float) / 100.
+    if not np.isfinite(gibbs) or not np.isfinite(mass) or mass <= 0 or not np.all(np.isfinite(returned)):
+        raise ValueError("Nonfinite native molar candidate properties.")
+    require_match(returned, oxide, "candidate oxide amounts", atol=1e-9)
+    result.update(oxide_mass_g=oxide.tolist(), native_endmember_moles=amounts.tolist(),
+                  gibbs_J=gibbs, mass_g=mass, returned_oxide_mass_g=returned.tolist(),
+                  status="ok_candidate_properties", reason=None)
+    return result
+
+
 def saturation_properties(model, grams):
     """Return native candidate properties without equilibrating the liquid.
 
@@ -163,6 +212,13 @@ def saturation_properties(model, grams):
                         row["reason"] = "Candidate property call changed the requested oxide amounts."
                 else:
                     row["reason"] = "Nonfinite candidate properties."
+                if row["status"] == "unavailable":
+                    row["oxide_conversion_diagnostic"] = {
+                        key: row.get(key) for key in ("reason", "mass_g", "gibbs_J", "returned_oxide_mass_g")}
+                    try:
+                        row.update(molar_candidate_properties(model, name, oxide))
+                    except ValueError as error:
+                        row["reason"] = str(error)
         candidates.append(row)
     require_match(engine.bulkComposition, grams, "unchanged saturation input oxide amounts", rtol=0)
     return {
@@ -304,11 +360,24 @@ def _worker(runtime, request):
         result["provenance"]["methods"].extend([
             "calcSaturationState(supplied_liquid_oxide_grams)",
             "calcPhaseProperties(candidate, incipient_oxide_grams)",
+            "calcMolarProperties(candidate, reconstructed_native_endmembers) when oxide conversion fails",
         ])
+    if "candidate_compositions" in request:
+        rows = []
+        for candidate in request["candidate_compositions"]:
+            name = candidate["phase"]
+            if name not in model.systemNames or name in {"bulk", "oxygen", "liquid"}:
+                raise ValueError("Supply a native solid candidate phase.")
+            try:
+                rows.append(molar_candidate_properties(model, name, candidate.get("oxide_mass_g")))
+            except ValueError as error:
+                rows.append({"phase": name, "status": "unavailable", "reason": str(error)})
+        result["candidate_evaluations"] = rows
+        result["provenance"]["methods"].append("calcMolarProperties(candidate, native_endmember_basis)")
     return result
 
 
-def evaluate_liquid(temperature, pressure, component_moles, *, runtime, common_R=COMMON_R, python_executable=None, calculation_mode=1, include_saturation=False):
+def evaluate_liquid(temperature, pressure, component_moles, *, runtime, common_R=COMMON_R, python_executable=None, calculation_mode=1, include_saturation=False, candidate_compositions=None):
     """Return JSON-compatible properties from a fresh pinned external worker.
 
     Inputs are K, Pa, and mol in COMPONENTS order. Ordinary imports require only
@@ -323,6 +392,12 @@ def evaluate_liquid(temperature, pressure, component_moles, *, runtime, common_R
     if type(include_saturation) is not bool:
         raise ValueError("include_saturation must be a boolean.")
     request = {"T_K": float(temperature), "P_Pa": float(pressure), "component_moles": n.tolist(), "common_R_J_mol_K": float(common_R), "calculation_mode": calculation_mode, "include_saturation": include_saturation}
+    if candidate_compositions is not None:
+        if (not isinstance(candidate_compositions, list)
+                or any(not isinstance(row, dict) or not isinstance(row.get("phase"), str)
+                       or set(row) - {"phase", "oxide_mass_g"} for row in candidate_compositions)):
+            raise ValueError("Candidate compositions require phase and optional oxide_mass_g.")
+        request["candidate_compositions"] = candidate_compositions
     with tempfile.TemporaryDirectory(prefix="exoeos-melts-liquid-") as directory:
         request_path, output = Path(directory) / "request.json", Path(directory) / "result.json"
         request_path.write_text(json.dumps(request, allow_nan=False))
@@ -421,6 +496,7 @@ def main():
             common_R=request["common_R_J_mol_K"], python_executable=args.python,
             calculation_mode=request.get("calculation_mode", 1),
             include_saturation=request.get("include_saturation", False),
+            candidate_compositions=request.get("candidate_compositions"),
         )
     args.output.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n")
 

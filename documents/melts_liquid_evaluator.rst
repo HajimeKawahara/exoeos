@@ -74,6 +74,33 @@ adjustment cannot be accepted as a closed-oxygen property evaluation.
 Returned thermodynamics and basis
 ---------------------------------
 
+Native candidate amount bases
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Optional ``include_saturation=True`` retains the complete native candidate
+catalog. If an oxide-based phase property call changes a candidate's requested
+amounts, the evaluator records that failure and reconstructs the candidate
+from native unit-endmember oxide vectors. It then calls ``calcMolarProperties``
+and restores the requested extensive amount from the native one-mole result.
+The original oxide round-trip tolerance is unchanged. Singular bases,
+nonfinite energies and changed returned amounts remain unavailable.
+
+``candidate_compositions=[{"phase": "hornblende", "oxide_mass_g": values}]``
+requests supplied candidate properties at the same T/P in that worker.
+Omitting ``oxide_mass_g`` returns the native endmember oxide basis for an
+external composition search. These are property evaluations, not a phase
+selection or global minimization algorithm. In particular, finite kalsilite
+interior values do not repair its unavailable native incipient estimate.
+The same pinned binary and thermodynamic model are used throughout.
+
+The source checkout includes a
+`native candidate validation receipt <https://github.com/HajimeKawahara/exoeos/tree/main/examples/m2_candidate_basis>`_
+at 2173.15 K and 432.298471 bar, with independent requested/returned oxide
+amounts and the original failed conversions retained.
+
+Liquid properties
+~~~~~~~~~~~~~~~~~
+
 The result includes full ``mu_J_mol``, pure-liquid endmember ``mu0_J_mol`` at
 the supplied T/P, total ``gibbs_J``, ``gibbs_RT = gibbs_J/(common_R*T_K)``
 (in mol), mass in grams, requested and returned

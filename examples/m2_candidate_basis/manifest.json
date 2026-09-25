@@ -1,0 +1,12 @@
+{
+  "input": {
+    "path": "/tmp/exoinventory-m2-series-preflight-20260925/exoinventory/examples/subneptune_taxonomy/finite_melt/validation/20260925_m2_hydrogen_pilot/native_h_pilot/case_002/physical_root_000.json",
+    "sha256": "3acd22df518064c8ae0572acef88fb8e5bc91fea7e76a48fe076e3c3ca2c3d09"
+  },
+  "evaluator_sha256": "c8fdb8a8295f796407fc854333ca15eae1590e2a3f27d154fd9cab9032ac2e92",
+  "artifacts": {
+    "native_supplied_host.json": "305729369617f7a4dd4693b22fd63f4936e2b2cb940b62e07ce3e5859cb3ed44",
+    "native_kalsilite_interiors.json": "304d973d403970ad014abc63e5bac5b2937c5b6726481dbd1aa40fdbced6bce2"
+  },
+  "scope": "Fresh supplied-property evaluations only; no source re-equilibration or global stability certificate."
+}

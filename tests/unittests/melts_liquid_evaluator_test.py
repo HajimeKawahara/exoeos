@@ -138,6 +138,9 @@ def request():
 
 
 def test_saturation_keeps_missing_and_changed_candidates(monkeypatch):
+    def unavailable_basis(*args):
+        raise ValueError("Candidate property call changed the requested oxide amounts.")
+    monkeypatch.setattr(evaluator, "molar_candidate_properties", unavailable_basis)
     grams = np.ones(19)
     oxide = np.zeros(19)
     oxide[0] = 100.
@@ -169,6 +172,34 @@ def test_saturation_keeps_missing_and_changed_candidates(monkeypatch):
     assert not result["equilibrated"] and not result["global_minimum_certified"]
     np.testing.assert_array_equal(model.engine.bulkComposition, grams)
     json.dumps(result, allow_nan=False)
+
+
+def test_native_molar_basis_preserves_requested_atoms_and_extensive_energy():
+    matrix = np.array([[60., 30.], [0., 40.], [20., 10.]])
+
+    class Engine:
+        status = SimpleNamespace(failed=False, molwts={"bulk": [1, 1, 1], "solid": [80., 80.]})
+
+        def calcMolarProperties(self, name):
+            x = np.asarray(self.molarComposition)[:2]
+            x = x / x.sum()  # Native API returns a one-mole state.
+            oxide = matrix @ x
+            self.mass = {name: oxide.sum()}
+            self.dispComposition = {name: oxide * 100 / oxide.sum()}
+            self.g = {name: float(x @ [-10., -20.])}
+
+    model = SimpleNamespace(engine=Engine())
+    amounts = np.array([.3, .1])
+    first = evaluator.molar_candidate_properties(model, "solid", matrix @ amounts)
+    np.testing.assert_allclose(first["native_endmember_moles"], amounts)
+    np.testing.assert_allclose(first["returned_oxide_mass_g"], matrix @ amounts)
+    assert first["gibbs_J"] == pytest.approx(-5.)
+    scaled = evaluator.molar_candidate_properties(model, "solid", 7 * matrix @ amounts)
+    assert scaled["gibbs_J"] == pytest.approx(7 * first["gibbs_J"])
+    assert scaled["mass_g"] == pytest.approx(7 * first["mass_g"])
+    incompatible = matrix @ amounts + [0, 0, .1]
+    with pytest.raises(ValueError, match="reconstruction"):
+        evaluator.molar_candidate_properties(model, "solid", incompatible)
 
 
 def test_saturation_native_failure_is_not_phase_absence():
