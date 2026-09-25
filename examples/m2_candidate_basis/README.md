@@ -18,6 +18,12 @@ endmember amounts `(0.25, 0.25, 0.25, 0.25)` and
 point proves phase stability or a global minimum. Runtime and executed
 evaluator hashes are embedded in both receipts.
 
+`native_domain_guard_check.json` reevaluates the same host after adding the
+explicit nonnegative-endmember guard and per-candidate native-failure
+diagnostics. Both repaired candidate energies are exactly unchanged from
+the earlier receipt. The earlier raw files are retained; `manifest.json`
+records the executed evaluator hash separately for each receipt.
+
 The upstream [hornblende conversion](https://github.com/magmasource/MAGMA/blob/main/sources/hornblende.c)
 assigns elemental Mg directly to the pargasite amount, despite four Mg
 atoms per pargasite and Mg in the ferric endmember. The
@@ -33,3 +39,11 @@ properties do not justify replacing unavailable endpoint or saturation
 values with zero. Composition searches must retain these failed evaluations
 and may report a negative feasible witness; nonnegative samples remain
 insufficient to certify absence.
+
+The direct candidate evaluator restricts requests to the nonnegative native
+endmember cone. Some native solution models also admit signed endmember
+coordinates; these wider domains are not validated here and remain
+unresolved. Negative least-squares coordinates are rejected without clipping.
+Signed oxide amounts are distinct and remain supported. A failed native
+candidate call retains its reason and marks all later candidates unavailable
+without calling the potentially invalidated native session again.

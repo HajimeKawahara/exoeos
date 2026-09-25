@@ -200,6 +200,68 @@ def test_native_molar_basis_preserves_requested_atoms_and_extensive_energy():
     incompatible = matrix @ amounts + [0, 0, .1]
     with pytest.raises(ValueError, match="reconstruction"):
         evaluator.molar_candidate_properties(model, "solid", incompatible)
+    with pytest.raises(ValueError, match="signed native endmember"):
+        evaluator.molar_candidate_properties(model, "solid", matrix @ [.3, -.1])
+
+
+def test_native_candidate_failure_preserves_catalog_and_stops_shared_state_use(monkeypatch):
+    oxide = np.r_[100., np.zeros(18)]
+    calls = []
+
+    class Engine:
+        status = SimpleNamespace(failed=False)
+
+        def setBulkComposition(self, values):
+            self.bulkComposition = values
+
+        def calcSaturationState(self):
+            self.affinity = {name: 1. for name in ("first", "broken", "later")}
+            self.dispComposition = {name: oxide.copy() for name in self.affinity}
+            return list(self.affinity)
+
+        def calcPhaseProperties(self, phase, requested):
+            calls.append(phase)
+            self.mass = {phase: 200. if phase == "broken" else 100.}
+            self.g = {phase: -1e5}
+
+    def fail(*args):
+        raise RuntimeError("Native molar basis failed.")
+
+    monkeypatch.setattr(evaluator, "molar_candidate_properties", fail)
+    model = SimpleNamespace(engine=Engine(), systemNames=["first", "broken", "later"])
+    result = evaluator.saturation_properties(model, np.ones(19))
+    assert calls == ["first", "broken"]
+    assert result["candidate_order"] == ["first", "broken", "later"]
+    assert result["native_session_invalidated"]
+    assert result["candidates"][0]["status"] == "ok_candidate_properties"
+    assert result["candidates"][1]["reason"] == "Native molar basis failed."
+    assert "Not evaluated" in result["candidates"][2]["reason"]
+
+
+def test_requested_candidate_failure_stops_later_native_calls(monkeypatch, tmp_path):
+    mock_engine(monkeypatch)
+    original = sys.modules["meltsdynamic"].MELTSdynamic
+
+    def model(mode):
+        result = original(mode)
+        result.systemNames = ["broken", "later"]
+        return result
+
+    calls = []
+
+    def fail(model, phase, oxide):
+        calls.append(phase)
+        raise RuntimeError("Native molar candidate failed.")
+
+    monkeypatch.setattr(sys.modules["meltsdynamic"], "MELTSdynamic", model)
+    monkeypatch.setattr(evaluator, "molar_candidate_properties", fail)
+    requested = {**request(), "candidate_compositions": [{"phase": "broken"}, {"phase": "later"}]}
+    result = evaluator._worker(tmp_path, requested)
+    assert calls == ["broken"]
+    first, second = result["candidate_evaluations"]
+    assert first["status"] == second["status"] == "unavailable"
+    assert first["native_session_invalidated"]
+    assert "Not evaluated" in second["reason"]
 
 
 def test_saturation_native_failure_is_not_phase_absence():

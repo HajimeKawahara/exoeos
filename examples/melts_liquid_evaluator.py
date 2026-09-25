@@ -150,6 +150,8 @@ def molar_candidate_properties(model, name, oxide_mass_g=None):
         raise ValueError("Candidate oxide amounts must be finite with positive mass.")
     amounts, _, _, _ = np.linalg.lstsq(matrix, oxide, rcond=None)
     require_match(matrix @ amounts, oxide, "candidate endmember reconstruction", atol=1e-9)
+    if np.any(amounts < 0):
+        raise ValueError("Candidate requires signed native endmember coordinates outside this evaluator's nonnegative search domain.")
     total = float(amounts.sum())
     if not np.isfinite(total) or total <= 0:
         raise ValueError("Candidate endmember total must be positive.")
@@ -189,11 +191,16 @@ def saturation_properties(model, grams):
                if name in phases and name in engine.dispComposition else None)
               for name in catalog]
     candidates = []
+    native_failure = None
     for name, affinity, oxide in native:
         row = {"phase": name, "native_affinity_J": None,
                "status": "unavailable", "reason": "No finite native saturation estimate."}
         if affinity is not None and np.isfinite(affinity):
             row["native_affinity_J"] = float(affinity)
+        if native_failure is not None:
+            row["reason"] = "Not evaluated after a native candidate failure: " + native_failure
+            candidates.append(row)
+            continue
         if row["native_affinity_J"] is not None and oxide is not None and np.all(np.isfinite(oxide)):
             if oxide.shape != grams.shape or not np.isclose(oxide.sum(), 100., rtol=1e-10):
                 row["reason"] = "Invalid native incipient oxide basis."
@@ -201,7 +208,10 @@ def saturation_properties(model, grams):
                 row["oxide_mass_g"] = oxide.tolist()
                 engine.calcPhaseProperties(name, oxide.tolist())
                 if engine.status.failed:
-                    raise RuntimeError(f"MELTS candidate property calculation failed: {name}")
+                    native_failure = f"MELTS candidate property calculation failed: {name}"
+                    row.update(reason=native_failure, native_session_invalidated=True)
+                    candidates.append(row)
+                    continue
                 mass, gibbs = float(engine.mass[name]), float(engine.g[name])
                 returned = mass * np.asarray(engine.dispComposition[name], dtype=float) / 100
                 if np.isfinite(mass) and np.isfinite(gibbs) and np.all(np.isfinite(returned)):
@@ -219,11 +229,15 @@ def saturation_properties(model, grams):
                         row.update(molar_candidate_properties(model, name, oxide))
                     except ValueError as error:
                         row["reason"] = str(error)
+                    except RuntimeError as error:
+                        native_failure = str(error)
+                        row.update(reason=native_failure, native_session_invalidated=True)
         candidates.append(row)
     require_match(engine.bulkComposition, grams, "unchanged saturation input oxide amounts", rtol=0)
     return {
         "status": "native_saturation_candidates_only", "candidate_order": catalog,
         "candidates": candidates, "equilibrated": False, "global_minimum_certified": False,
+        "native_session_invalidated": native_failure is not None, "native_failure": native_failure,
         "affinity_convention": "Native MELTS affinity in J; smaller means closer to saturation. Candidate Gibbs energies use the independently recorded oxide-mass basis.",
         "composition_search": "Native incipient estimates; no global minimization certificate.",
         "excluded_system_entries": ["bulk", "oxygen", "liquid"],
@@ -364,14 +378,23 @@ def _worker(runtime, request):
         ])
     if "candidate_compositions" in request:
         rows = []
+        native_failure = result.get("saturation", {}).get("native_failure")
         for candidate in request["candidate_compositions"]:
             name = candidate["phase"]
             if name not in model.systemNames or name in {"bulk", "oxygen", "liquid"}:
                 raise ValueError("Supply a native solid candidate phase.")
+            if native_failure is not None:
+                rows.append({"phase": name, "status": "unavailable",
+                             "reason": "Not evaluated after a native candidate failure: " + native_failure})
+                continue
             try:
                 rows.append(molar_candidate_properties(model, name, candidate.get("oxide_mass_g")))
             except ValueError as error:
                 rows.append({"phase": name, "status": "unavailable", "reason": str(error)})
+            except RuntimeError as error:
+                native_failure = str(error)
+                rows.append({"phase": name, "status": "unavailable", "reason": native_failure,
+                             "native_session_invalidated": True})
         result["candidate_evaluations"] = rows
         result["provenance"]["methods"].append("calcMolarProperties(candidate, native_endmember_basis)")
     return result

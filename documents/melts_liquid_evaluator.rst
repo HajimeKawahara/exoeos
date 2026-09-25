@@ -84,6 +84,12 @@ from native unit-endmember oxide vectors. It then calls ``calcMolarProperties``
 and restores the requested extensive amount from the native one-mole result.
 The original oxide round-trip tolerance is unchanged. Singular bases,
 nonfinite energies and changed returned amounts remain unavailable.
+The direct evaluator supports the nonnegative native endmember cone only;
+it does not infer the admissibility of signed endmember coordinates. Native
+models can have additional signed-coordinate domains, which remain unresolved
+here. Signed *oxide* amounts are still retained. A native candidate failure
+is recorded and stops subsequent candidate evaluations in that worker;
+remaining catalog entries are marked unavailable without reusing failed state.
 
 ``candidate_compositions=[{"phase": "hornblende", "oxide_mass_g": values}]``
 requests supplied candidate properties at the same T/P in that worker.
