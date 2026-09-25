@@ -1,0 +1,61 @@
+{
+  "record_id": "m2_reaction_reference_sources_v1",
+  "adopted_molecular_H2": {
+    "experiment_doi": "10.1016/j.epsl.2012.06.031",
+    "formulation_doi": "10.3847/1538-4357/ad7461",
+    "equation": "x_H2 = (f_H2/bar) exp(-11.403 - 0.76 P_melt/GPa)",
+    "role": "Existing M2 source, not a newly validated BSE law",
+    "experiment_nominal_T_K": [
+      1673.15,
+      1773.15
+    ],
+    "experiment_P_Pa": [
+      700000000.0,
+      3000000000.0
+    ],
+    "temperature_dependence": "Uncalibrated; the adopted lnK has no T dependence.",
+    "experimental_mole_basis_to_MELTS_verified": false
+  },
+  "adopted_metal_H": {
+    "fit_dG_J_mol": "143589.7 - 69.1 T",
+    "reaction": "Fe(metal) + H2O(silicate) = FeO(silicate) + 2H(metal)",
+    "origin_doi": "10.1126/science.278.5344.1781",
+    "source_model_doi": "10.1038/s41586-023-05823-0",
+    "code_repository": "https://github.com/ExoInteriors/GlobalChemicalEquilibrium_Release",
+    "code_commit": "31558873d8da460c3cd11986b574cb347621b43d",
+    "source_subdirectory": "Young_2023_Version",
+    "implementation_owner": "ExoGibbs",
+    "note": "Current M2 uses these inherited metal standards plus the ExoEOS dry-metal shifts. Kato1970 is an independent comparison, not the adopted metal-H standard."
+  },
+  "inspected_consumer": {
+    "repository": "https://github.com/HajimeKawahara/exogibbs",
+    "commit": "f9fb584e8b95d3ce5e8a155904c029667af5fbd1",
+    "files": {
+      "examples/metal_silicate/source.py": "df61525a449761d66193e37845b79adfffc54f24947db47a8de56a150287a07e",
+      "examples/metal_silicate/hydrogen.py": "8c6aaa6303583e1a7048b93db07a8edfea036321bc5c266425950821961887f3",
+      "examples/metal_silicate/run_bse_common_gibbs.py": "379ed85df5b051e2f37eb198c4aa4605fc6c7bfb262f554cc93d77fbde4c8188"
+    }
+  },
+  "comparison_molecular_H2": {
+    "doi": "10.1007/s00410-025-02272-y",
+    "pdf_sha256": "94c0fe67b6548e464481753956eaa42b4836931248e7b0a7af41786c74953c8f",
+    "buffered_regressions": "Existing hydrogen_reference.json remains the experimental reference; total buffered P is not H2 fugacity.",
+    "low_pressure_illustration": {
+      "H2_mass_ppm_per_GPa": 515,
+      "locator": "Printed p15, pure-H2 illustration derived from basalt buffered slope with ideal gas mixing",
+      "role": "Descriptive extrapolation, not directly measured low-pressure solubility or error bound"
+    },
+    "Eq5_not_converted": "The units implicit in ln(c/f) are not explicitly specified in Eq5/Fig9; no automatic mass-standard conversion from that expression is introduced.",
+    "spectroscopic_systematic": "New absorption calibration differs from the old coefficient by about an order of magnitude; no blanket rescaling of the adopted law.",
+    "temperature_and_BSE_transfer_error_bound": null
+  },
+  "comparison_atomic_H": {
+    "doi": "10.2355/tetsutohagane1955.56.5_521",
+    "primary_url": "https://www.jstage.jst.go.jp/article/tetsutohagane1955/56/5/56_5_521/_pdf/-char/en",
+    "pure_Fe_fit": "log10(wt%H/sqrt(p_H2/atm)) = -1874/T - 1.601",
+    "Si_interaction": "log10 f_H^Si = 0.033 wt%Si, Si < 2.5 wt%",
+    "supported_scope": "Existing hydrogen_reference.py restricts pure Fe to 1843.15-2013.15K and FeSi joint fit to1843.15-1873.15K; reference p_H2=1atm; no O interactions."
+  },
+  "uncertainty_policy": "Retain measurement scatter, coefficient marginals and unknown covariance separately. Unknown composition, total-pressure and temperature-transfer uncertainties remain unbounded, never zero.",
+  "accepted_coupled_material_domain": null
+}
