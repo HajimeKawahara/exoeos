@@ -3,8 +3,8 @@ name: Run pytest
 on:
   push:
     branches: ["main"]
+  # Stacked model PRs target feature branches and need the same checks.
   pull_request:
-    branches: ["main"]
 
 permissions:
   contents: read
