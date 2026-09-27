@@ -32,6 +32,6 @@ thermodynamic source identity and empirical calibration domain remain separate
 requirements.
 
 The reproducible command is recorded in the raw file and uses
-[`run_native_comparison.py`](../../../../examples/m2_liquid_mixing/run_native_comparison.py).
+[`run_native_comparison.py`](../../../examples/m2_liquid_mixing/run_native_comparison.py).
 Provider implementation and model-selection contracts are documented in the
-[example guide](../../../../examples/m2_liquid_mixing/README.md).
+[example guide](../../../examples/m2_liquid_mixing/README.md).
