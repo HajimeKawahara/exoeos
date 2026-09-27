@@ -1,0 +1,31 @@
+{
+  "source_doi": "10.2355/tetsutohagane1955.83.10_623",
+  "primary_url": "https://www.jstage.jst.go.jp/article/tetsutohagane1955/83/10/83_10_623/_pdf/-char/en",
+  "pdf_sha256": "814f29d3f50f15c44ad5f2c0624777895af430fb6cae05103d7ed697c4314ec7",
+  "table_locator": "Table 2 p625, 37 observations at exactly 1873 and 2023 K, manually transcribed and visually rechecked",
+  "activity_locator": "Equations 5-6 p625-626; coefficients 27-33 p628",
+  "standard_basis": "Both solutes use Henry mass percent in dilute pure liquid Fe; MgO(cr) activity is one in the MgO crucible experiment.",
+  "oxygen_self_interaction": "e_O^O=-1750/T+0.76 from Sakao1959; Itoh cites the JSPS recommended value and tabulates -0.17 at 1873 K.",
+  "temperature_K": [
+    1873,
+    2023
+  ],
+  "concentration_note": "Table headings are (mass %) x 10^4: divide the transcribed columns by 10000 to recover mass percent. Row23 Mg=0.7, visually checked. No rectangle between extrema is empirically established.",
+  "pressure_note": "Ar laboratory gas and MgO crucible; no high-pressure response or exact pressure uncertainty is calibrated.",
+  "JANAF": {
+    "url": "https://janaf.nist.gov/tables/Mg-008.txt",
+    "phase": "MgO(cr)",
+    "standard_pressure_Pa": 100000,
+    "Hf_298_kJ_mol": -601.241,
+    "used_temperature_envelope_K": [
+      1700,
+      2400
+    ],
+    "columns": "S and H-H(Tr); absolute G on fixed 298.15K elemental enthalpy gauge, not the temperature-dependent formation G column."
+  },
+  "data_sha256": {
+    "Itoh1997_Table2.csv": "3ef07a5d399c2664dfef159346aecc53daf2af5f6285b362c8c757746a23d1d3",
+    "JANAF_Mg-008.txt": "2efaf6db392a6ee21a2720b84bad3cd2e9b4cbbdd2afce0a1145fbecdae796d8"
+  },
+  "uncertainty_policy": "No fit covariance or statistical transfer bound; reported residuals are descriptive. No unlimited high-O/Si/H extrapolation is adopted."
+}
