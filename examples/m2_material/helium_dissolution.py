@@ -35,9 +35,10 @@ def make_helium_dissolution(model, temperature_K, dry_host_molar_masses_kg,
     """Freeze provider coefficients; return analytic potentials and scalar AD.
 
     No pressure-volume correction or wet-host calibration is inferred.
-    A zero-He endpoint has zero G/host shifts and insertion mu=-infinity.
-    An entirely absent phase has zero G and undefined potentials; positive He
-    without positive dry-host mass is outside this model's domain.
+    A zero-He endpoint has zero G/host shifts. Its insertion mu is -infinity
+    at positive dry mass and +infinity at fixed zero dry mass. The latter is
+    a one-sided limit, not a joint smooth derivative. An entirely absent phase
+    has zero G and undefined potentials. Positive He requires a dry host.
     """
     if model not in MODELS:
         raise ValueError("Select a declared Guillot 2012 dry-host He model")
@@ -60,8 +61,8 @@ def make_helium_dissolution(model, temperature_K, dry_host_molar_masses_kg,
         if n.shape != (len(masses) + 1,) or np.any(~np.isfinite(n)) or np.any(n < 0):
             raise ValueError("Supply finite nonnegative host amounts followed by He")
         mass = float(n[:-1] @ masses)
-        if mass <= 0 and n.sum() > 0:
-            raise ValueError("A present He-bearing phase requires positive dry-host mass")
+        if mass <= 0 and n[-1] > 0:
+            raise ValueError("Positive He requires positive dry-host mass")
         return n, mass
 
     def state(amounts):
@@ -70,7 +71,8 @@ def make_helium_dissolution(model, temperature_K, dry_host_molar_masses_kg,
             return {"gibbs_rt": 0., "mu_rt": np.full_like(n, np.nan)}
         he = n[-1]
         if he == 0:
-            return {"gibbs_rt": 0., "mu_rt": np.r_[np.zeros_like(masses), -np.inf]}
+            return {"gibbs_rt": 0., "mu_rt": np.r_[np.zeros_like(masses),
+                                                   -np.inf if mass > 0 else np.inf]}
         chemical_potential = standard + np.log(he / (mass * capacity))
         return {"gibbs_rt": float(he * (chemical_potential - 1.)),
                 "mu_rt": np.r_[-he * masses / mass, chemical_potential]}

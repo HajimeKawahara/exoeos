@@ -55,8 +55,11 @@ provide the actual shared He gas standard plus the dry mass per host component.
 Assign zero dry mass to native water and dissolved H2. `state` returns analytic
 G/RT and all host/He potentials; `energy_value_and_grad_rt` independently
 differentiates the scalar. Positive He requires positive dry-host mass. At
-zero He the energy and host shifts vanish and its insertion potential is
-negative infinity. An entirely absent phase has zero energy and undefined
+zero He the energy and host shifts vanish; its insertion potential is negative
+infinity at positive dry mass and positive infinity at fixed zero dry mass.
+The latter is a one-sided limit, not a joint smooth derivative. Thus a He-free
+water-only host keeps its original energy and host potentials. An entirely
+absent phase has zero energy and undefined
 potentials. He contributes neither to the existing H2 mixing denominator nor
 to the dry-host mass. This trace-law completion supplies no new pressure-volume
 term or empirical finite-concentration bound.
