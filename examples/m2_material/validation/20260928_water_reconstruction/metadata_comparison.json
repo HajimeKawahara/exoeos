@@ -1,0 +1,33 @@
+{
+  "scope": "Metadata-only provider comparison at positive, extensive-scaled and dry limits using identical synthetic dry published mixing. Not a new native equilibrium or empirical material acceptance.",
+  "original_runtime_head": "a60cdb43c9d97b1df619f891844eb21b4ad1418d",
+  "provider_source_sha256": {
+    "runtime": "e00164f423208d3955cedeefb0e137ccee3ccccba27745dfab9a9b770956bf2f",
+    "delivery": "53a6ad7c938ac1f76991cac8cc3a255361b5ae965ec0a7d08839071cf4aff8ff"
+  },
+  "actual_exit_code": 0,
+  "targeted_tests": {
+    "passed": 15,
+    "seconds": 13.17
+  },
+  "comparison": [
+    {
+      "total_component_amount_mol": 0.5270000100000001,
+      "water_mol": 0.01,
+      "G_RT_difference": 0.0,
+      "max_abs_active_mu_RT_difference": 0.0
+    },
+    {
+      "total_component_amount_mol": 5.2700001e+23,
+      "water_mol": 1e+22,
+      "G_RT_difference": 0.0,
+      "max_abs_active_mu_RT_difference": 0.0
+    },
+    {
+      "total_component_amount_mol": 0.5170000100000001,
+      "water_mol": 0.0,
+      "G_RT_difference": 0.0,
+      "max_abs_active_mu_RT_difference": 0.0
+    }
+  ]
+}

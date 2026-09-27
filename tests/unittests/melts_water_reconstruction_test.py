@@ -1,6 +1,7 @@
 """Replacement water G, host derivatives, zero water and gauge covariance."""
 
 import importlib.util
+import json
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -102,3 +103,27 @@ def test_zero_water_reduces_to_dry_and_standard_shift_is_linear(dry):
     assert provider.evaluate_liquid(t, p, n)["gibbs_RT"] == pytest.approx(dry.evaluate_liquid(t, p, n)["gibbs_RT"])
     with pytest.raises(ValueError, match="positive dry host"):
         provider.evaluate_liquid(t, p, np.eye(19)[-1])
+
+
+def test_saved_expression_reconstructs_scalar_without_provider_constants(dry):
+    provider = water.make_reconstructed_water_evaluator(dry, lambda t, p: -3.2)
+    n, t, p = composition(), 2173.15, 27e6
+    state = provider.evaluate_liquid(t, p, n)
+    saved = json.loads(json.dumps(state["water_reconstruction"]))
+    expression = saved["expression"]
+    i = expression["water_index"]
+    h = n[i]
+    host = n.copy()
+    host[i] = 0
+    counts = np.asarray(expression["predictor_oxide_counts"])
+    weights = np.asarray(expression["predictor_temperature_weights_K"])
+    s = np.asarray(expression["component_masses_kg_mol"]) @ host / expression["water_mass_kg_mol"]
+    ln_capacity = expression["log_capacity_prefactor"] + (weights @ host)/(t*(counts @ host))
+    water_g = h*(saved["gas_H2O_standard_RT"]-2*ln_capacity)
+    water_g += 2*(s*np.log(s/(s+h))+h*np.log(h/(s+h)))
+    assert saved["dry_properties"]["component_moles"][i] == 0
+    assert saved["dry_properties"]["gibbs_RT"]+water_g == pytest.approx(state["gibbs_RT"], abs=1e-12)
+    assert expression == provider.water_expression_parameters
+    # A saved result must not alias factory coefficients or dry results.
+    state["water_reconstruction"]["expression"]["water_index"] = -1
+    assert provider.water_expression_parameters["water_index"] == i

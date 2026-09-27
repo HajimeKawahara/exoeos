@@ -5,6 +5,7 @@ not add a solubility correction on top of hydrated MELTS. Model and
 calibration scopes are recorded separately from numerical validity.
 """
 
+import copy
 import hashlib
 import importlib.util
 from pathlib import Path
@@ -58,6 +59,19 @@ def make_reconstructed_water_evaluator(dry_evaluator, gas_water_standard_rt):
     masses_jax = jnp.asarray(masses)
     log_a = np.log(_capacity.A_PER_SQRT_BAR * _capacity.WATER_KG_MOL / _capacity.OH_KG_MOL)
     standard_receipts = []
+    expression = {
+        "schema": "dry_melts_water_equivalent_expression_v1",
+        "component_order": names, "water_index": water_index,
+        "component_masses_kg_mol": masses.tolist(), "water_mass_kg_mol": float(water_mass),
+        "predictor_oxide_counts": np.asarray(counts).tolist(),
+        "predictor_temperature_weights_K": np.asarray(weights).tolist(),
+        "component_oxygen_counts": np.asarray(oxygen).tolist(), "log_capacity_prefactor": float(log_a),
+        "capacity_formula": "log_Cw = log_prefactor + (weights @ dry)/(T_K*(counts @ dry))",
+        "gibbs_formula": "G_RT = G_dry_RT + h*(gas_standard_RT - 2*log_Cw) + 2*G_mass_fraction_RT",
+        "water_mixing_factor": 2., "water_standard_pressure_Pa": 1e5,
+        "domain": "nonnegative amounts; positive dry host; h <= oxygen @ dry",
+        "rounding": "JSON numbers are the exact binary64 values used by this provider.",
+    }
 
     @jax.jit
     def water_state(t, n, gas_standard):
@@ -87,6 +101,7 @@ def make_reconstructed_water_evaluator(dry_evaluator, gas_water_standard_rt):
         dry = n.copy()
         dry[water_index] = 0
         result = dict(dry_evaluator.evaluate_liquid(temperature, pressure, dry, **options))
+        dry_properties = copy.deepcopy(result)
         gas = float(gas_water_standard_rt(temperature, pressure))
         added_g, added_mu = water_state(temperature, jnp.asarray(n), gas)
         present = n > 0
@@ -122,6 +137,7 @@ def make_reconstructed_water_evaluator(dry_evaluator, gas_water_standard_rt):
                                "capacity_provider_sha256": hashlib.sha256(CALIBRATION_PATH.read_bytes()).hexdigest(),
                                "water_sources_sha256": hashlib.sha256(SOURCE_PATH.read_bytes()).hexdigest()}
         result["water_reconstruction"] = {
+            "expression": copy.deepcopy(expression), "dry_properties": dry_properties,
             "gas_H2O_standard_RT": gas, "gas_standard_pressure_Pa": 1e5,
             "water_added_gibbs_RT": float(added_g), "native_water_amount_used_mol": 0.,
             "water_mass_fraction": float(n[water_index]*water_mass/(masses @ n)),
@@ -150,4 +166,5 @@ def make_reconstructed_water_evaluator(dry_evaluator, gas_water_standard_rt):
                               "energy_value_and_grad_rt": energy_value_and_grad_rt,
                               "water_source_sha256": hashlib.sha256(SOURCE_PATH.read_bytes()).hexdigest(),
                               "water_standard_receipts": standard_receipts,
+                              "water_expression_parameters": expression,
                               "dry_provider_model_id": DRY_MODEL_ID})

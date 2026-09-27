@@ -58,3 +58,9 @@ composition. The latter has zero reported active derivative discrepancy and
 Euler residual 1.68e-16; it is not a newly solved source or pressure closure.
 The source table and publication locators are recorded in
 [provenance](water_data/water_basis_pressure_sources.json).
+
+Saved results include the exact binary64 coefficient arrays in
+`water_reconstruction.expression` and the unmodified dry-host result in
+`water_reconstruction.dry_properties`. Independent stability audits can
+reconstruct the scalar using those recorded values. This metadata does not
+reuse the hydrated MELTS supporting-plane result or establish a new bound.
