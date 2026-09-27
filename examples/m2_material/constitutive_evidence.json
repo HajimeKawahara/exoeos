@@ -698,5 +698,44 @@
     "model_acceptance": "No boolean empirical acceptance is inferred from this ledger. Reference overlap is useful evidence but its absence is not by itself a rejection of a declared model.",
     "numerical_acceptance": "Element/mass/pressure closure and global phase support remain independent numerical requirements.",
     "physical_error_assessment": "Compare actual source concentrations and phase responses across justified constitutive choices and reference widths. Identify unresolved coefficients separately; do not require simultaneous observation of every species as an automatic prerequisite."
+  },
+  "additional_omitted_transfer_paths": {
+    "source_path": "na_helium_transfer_sources.json",
+    "source_sha256": "e1078b86b92735b85209883f67a9037532399ebd1cdf4e611e75e5369108ee8d",
+    "previous_omitted_metal_catalog": [
+      "Mg",
+      "Al",
+      "Ca",
+      "K",
+      "Ti",
+      "Cr",
+      "P"
+    ],
+    "catalog_complete_does_not_mean_all_inventory_paths_assessed": true,
+    "all_13_element_transfer_coverage_established": false,
+    "supports_material_admission": false,
+    "paths": {
+      "Na_to_metal": {
+        "status": "not_evaluated",
+        "existing_model": "Na remains available to gas and silicate; associated_k has no Na metal component.",
+        "insolubility_established": false,
+        "missing": "A Na metal standard/activity law or a quantitative detection-limit-derived partition bound transferable to the declared state.",
+        "available": "A published 1 GPa Fe-S/basalt exchange fit with explicit silicate activity and S-interaction assumptions; conversion to the current source standard remains unimplemented."
+      },
+      "He_to_silicate": {
+        "status": "not_evaluated_in_finite_equilibrium",
+        "existing_model": "He is an explicitly gas-only inert component. Chemical inertness does not imply zero physical solubility.",
+        "insolubility_established": false,
+        "available": "Measured low-pressure solubility, composition-dependent ionic-porosity law and high-temperature dry-host simulations.",
+        "missing": "Declared BSE host/temperature/pressure continuation and a finite He budget response."
+      },
+      "He_to_metal": {
+        "status": "not_evaluated_in_finite_equilibrium",
+        "existing_model": "No dissolved He metal component.",
+        "insolubility_established": false,
+        "available": "Nonzero high-pressure metal/silicate partition observations.",
+        "missing": "Low-pressure standard/partition continuation and its uncertainty for the actual alloy."
+      }
+    }
   }
 }
