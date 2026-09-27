@@ -58,3 +58,43 @@ def test_carbon_model_is_not_silently_treated_as_v102():
     n = np.eye(19)[14]
     with pytest.raises(ValueError, match="unsupported"):
         mixing.liquid_mixing_state(parameters, n)
+
+
+def test_selected_published_callback_caches_standards_and_keeps_only_computed_properties(monkeypatch, tmp_path):
+    native_spec = importlib.util.spec_from_file_location("native", ROOT / "examples/melts_liquid_evaluator.py")
+    native = importlib.util.module_from_spec(native_spec)
+    native_spec.loader.exec_module(native)
+    calls = []
+
+    def reference_call(t, p, n, *, common_R, **kwargs):
+        calls.append((t, p))
+        coefficients = mixing.liquid_mixing_parameters(t, p, common_R)
+        state = mixing.liquid_mixing_state(coefficients, n)
+        standard = np.arange(19, dtype=float) + t + p*1e-5
+        mu = standard/(common_R*t) + np.asarray(state["mixing_mu_rt"], dtype=float)
+        present = np.asarray(n) > 0
+        nullable = lambda values: [float(v) if exists else None for v, exists in zip(values, present)]
+        return {"model_id": native.MODEL_ID, "T_K": t, "P_Pa": p,
+                "component_order": native.COMPONENTS, "component_moles": list(n),
+                "mu_RT": nullable(mu), "mu0_RT": nullable(standard/(common_R*t)),
+                "mu0_J_mol": nullable(standard),
+                "basis": {"common_R_J_mol_K": common_R, "element_moles": [999.]},
+                "phase_policy": {"oxygen_buffer": "None"}, "density": 999., "enthalpy_J": 123.}
+
+    monkeypatch.setattr(native, "evaluate_liquid", reference_call)
+    provider = mixing.make_published_liquid_evaluator(native, runtime=tmp_path, python_executable="worker")
+    parent = np.eye(19)[0] + 2*np.eye(19)[7]
+    first = provider.evaluate_liquid(2173.15, 3e7, parent)
+    for index in (0, 7, 18):
+        state = provider.evaluate_liquid(2173.15, 3e7, np.eye(19)[index])
+        assert state["gibbs_RT"] == state["mu_RT"][index]
+        assert "density" not in state and "enthalpy_J" not in state
+        assert state["provenance"]["native_composition_evaluated"] is False
+    assert calls == [(2173.15, 3e7)]
+    assert len(provider.standard_state_receipts) == 1
+    other = provider.evaluate_liquid(2173.15, 4e7, parent)
+    assert calls == [(2173.15, 3e7), (2173.15, 4e7)]
+    assert other["provenance"]["native_standard_state_receipt_sha256"] != first["provenance"]["native_standard_state_receipt_sha256"]
+    assert other["model_id"] == mixing.PUBLISHED_MODEL_ID
+    present = parent > 0
+    assert first["gibbs_RT"] == pytest.approx(parent[present]@np.asarray(first["mu_RT"], float)[present])

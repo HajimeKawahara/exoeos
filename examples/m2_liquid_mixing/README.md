@@ -41,3 +41,22 @@ commit is not independently established, and finite comparisons do not prove
 a uniform native error bound. A certificate for the explicit expression must
 not be reported as empirical calibration or a certified error bound for an
 unidentified native build. Provider consumers retain both records separately.
+
+## Explicit constitutive-model selection
+
+`make_published_liquid_evaluator(native_evaluator, runtime=...,
+python_executable=...)` returns a liquid-only property callback with model ID
+`melts_v102_published_mixing_native_standard_states_v1`. Its
+`evaluate_liquid(T_K, P_Pa, n, ...)` gets native pure-liquid standards once per
+exact T/P/R, using a positive probe of all 15 supported components, then
+computes subsequent total G and potentials from the published expression.
+`standard_state_receipts` retains every original probe, compatibility check,
+standard-state policy and SHA256. No standard is fitted or interpolated.
+
+This explicit model lets a consumer use precisely the same coefficients for
+equilibrium and global phase-stability bounds. Native composition evaluation
+remains available separately as a control. Newly computed states contain only
+G, potentials, activities, mass, basis and composition data; they do not reuse
+probe density, volume, enthalpy, entropy or heat capacity. Candidate saturation
+and other calculation modes are not supplied by this callback. Exact-zero
+amounts retain continuous energies and unavailable absent potentials.
