@@ -63,6 +63,40 @@ does not bound a trace species' chemical potential or phase response.
 Higher density virials and the two temperature extrapolations also need
 separate assessment.
 
+## Independent He-H2 equation replay
+
+[Beckmueller et al. 2024](https://doi.org/10.1016/j.cryogenics.2024.103817)
+provide a complete binary Helmholtz EOS and machine-readable supplementary
+coefficients. [h2_he_reference_sources.json](h2_he_reference_sources.json)
+preserves the He-H2 entries and the original PDF, ZIP, and extracted-file
+hashes. The optional [replay_h2_he_reference.py](replay_h2_he_reference.py)
+uses `teqp==0.23.1` to evaluate those coefficients with its pinned normal-H2
+and helium pure-fluid equations. It does not replace the five pair laws above.
+
+The [preserved replay](h2_he_oh_reference_replay.json) retains a discrepancy
+in the first Table 6 pressure check, even with the author's original JSON:
+
+| T (K) | Density (mol/m3) | Calculated / printed pressure - 1 |
+| ---: | ---: | ---: |
+| 25 | 1000 | -4.86139e-3 |
+| 35 | 40000 | +3.91650e-8 |
+| 75 | 10000 | -1.94225e-8 |
+| 100 | 60000 | -4.06438e-8 |
+
+Thus `all_pressure_reference_checks_passed` is false at the paper's stated
+1e-6 implementation-comparison scale. The source of the low-temperature
+discrepancy remains unresolved; no coefficient was adjusted to match it.
+
+At the OH source T/P, conditioning on He/H2 alone gives Z=1.01969530.
+The second density virial at that same density gives Z=1.01940858. These
+are binary-model calculations, not the wet 76-species atmosphere. The
+extracted apparent cross virial at 2173.15 K varies from 11.2612 to
+11.5594 cm3/mol over the sampled helium fractions 0.1--0.9, due to the
+composition-dependent reducing function. It cannot silently fill the
+missing unique pair coefficient in `SecondVirialEOS`. This temperature also
+exceeds the model's 2000 K cross-virial reference data. The replay supplies
+additional model evidence, without a full-gas or empirical error bound.
+
 ## Reproduction
 
 Use the unchanged OH closure archived in ExoInventory PR #35:
@@ -81,3 +115,11 @@ pytest -q tests/unittests/m2_gas_virial_test.py \
 
 The combined targeted checks passed: 27 tests. The diagnostic command exited
 successfully. Full coupled equilibrium was not rerun for this diagnostic.
+
+The independent binary replay uses an optional reference environment; teqp
+is not a package dependency:
+
+```sh
+python examples/m2_material/replay_h2_he_reference.py \
+  --closure /path/to/closure.json --output /tmp/h2_he_reference.json
+```

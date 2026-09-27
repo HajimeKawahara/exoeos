@@ -1,0 +1,153 @@
+{
+  "assessment_id": "beckmueller2024_helium_hydrogen_replay_v1",
+  "teqp_version": "0.23.1",
+  "source_doi": "10.1016/j.cryogenics.2024.103817",
+  "implementation_checks": [
+    {
+      "temperature_K": 25,
+      "density_mol_m3": 1000,
+      "pressure_MPa": 0.204638046,
+      "calculated_pressure_MPa": 0.20364322047590028,
+      "relative_error": -0.0048613908485996005,
+      "within_tolerance": false
+    },
+    {
+      "temperature_K": 35,
+      "density_mol_m3": 40000,
+      "pressure_MPa": 25.89085492,
+      "calculated_pressure_MPa": 25.89085593401496,
+      "relative_error": 3.916498569900284e-08,
+      "within_tolerance": true
+    },
+    {
+      "temperature_K": 75,
+      "density_mol_m3": 10000,
+      "pressure_MPa": 6.982336252,
+      "calculated_pressure_MPa": 6.982336116385262,
+      "relative_error": -1.942254457265591e-08,
+      "within_tolerance": true
+    },
+    {
+      "temperature_K": 100,
+      "density_mol_m3": 60000,
+      "pressure_MPa": 213.5412698,
+      "calculated_pressure_MPa": 213.54126112086624,
+      "relative_error": -4.064382397306332e-08,
+      "within_tolerance": true
+    }
+  ],
+  "all_pressure_reference_checks_passed": false,
+  "original_closure_sha256": "f7b848f0c89740ac77010b56eccdaa6c5283c17216d6aeac24d2c99ea54b9235",
+  "conditioned_binary": {
+    "temperature_K": 2173.15,
+    "pressure_Pa": 26965451.525057938,
+    "original_He_H2_fractions": [
+      0.17012551384253258,
+      0.7649356517549216
+    ],
+    "omitted_original_fraction": 0.06493883440254578,
+    "He_H2_fractions": [
+      0.18194051908233344,
+      0.8180594809176666
+    ],
+    "density_mol_m3": 1463.568374156051,
+    "compressibility": 1.0196952987820458,
+    "second_virial_compressibility_at_same_density": 1.019408584663424,
+    "density_virials_SI": {
+      "2": 1.3261139695380344e-05,
+      "3": 1.2340402327144142e-10,
+      "4": 7.149654464043263e-15
+    }
+  },
+  "apparent_cross_virials": [
+    {
+      "temperature_K": 1000.0,
+      "helium_fraction": 0.1,
+      "apparent_cross_virial_cm3_mol": 14.060818537795743
+    },
+    {
+      "temperature_K": 1000.0,
+      "helium_fraction": 0.18194051908233344,
+      "apparent_cross_virial_cm3_mol": 14.093497037403557
+    },
+    {
+      "temperature_K": 1000.0,
+      "helium_fraction": 0.5,
+      "apparent_cross_virial_cm3_mol": 14.12193301624959
+    },
+    {
+      "temperature_K": 1000.0,
+      "helium_fraction": 0.9,
+      "apparent_cross_virial_cm3_mol": 13.791135483794022
+    },
+    {
+      "temperature_K": 1500.0,
+      "helium_fraction": 0.1,
+      "apparent_cross_virial_cm3_mol": 12.75033214850756
+    },
+    {
+      "temperature_K": 1500.0,
+      "helium_fraction": 0.18194051908233344,
+      "apparent_cross_virial_cm3_mol": 12.78099143003994
+    },
+    {
+      "temperature_K": 1500.0,
+      "helium_fraction": 0.5,
+      "apparent_cross_virial_cm3_mol": 12.802425521322977
+    },
+    {
+      "temperature_K": 1500.0,
+      "helium_fraction": 0.9,
+      "apparent_cross_virial_cm3_mol": 12.483343812587353
+    },
+    {
+      "temperature_K": 2000.0,
+      "helium_fraction": 0.1,
+      "apparent_cross_virial_cm3_mol": 11.790576992760567
+    },
+    {
+      "temperature_K": 2000.0,
+      "helium_fraction": 0.18194051908233344,
+      "apparent_cross_virial_cm3_mol": 11.81961906681653
+    },
+    {
+      "temperature_K": 2000.0,
+      "helium_fraction": 0.5,
+      "apparent_cross_virial_cm3_mol": 11.837932422010393
+    },
+    {
+      "temperature_K": 2000.0,
+      "helium_fraction": 0.9,
+      "apparent_cross_virial_cm3_mol": 11.53446188907556
+    },
+    {
+      "temperature_K": 2173.15,
+      "helium_fraction": 0.1,
+      "apparent_cross_virial_cm3_mol": 11.513127582756589
+    },
+    {
+      "temperature_K": 2173.15,
+      "helium_fraction": 0.18194051908233344,
+      "apparent_cross_virial_cm3_mol": 11.541695418855667
+    },
+    {
+      "temperature_K": 2173.15,
+      "helium_fraction": 0.5,
+      "apparent_cross_virial_cm3_mol": 11.559366806728256
+    },
+    {
+      "temperature_K": 2173.15,
+      "helium_fraction": 0.9,
+      "apparent_cross_virial_cm3_mol": 11.261238926301484
+    }
+  ],
+  "file_sha256": {
+    "/tmp/stage2-alloy-insertion-eos-20260927/examples/m2_material/replay_h2_he_reference.py": "dd1142e060fb04430f8c429047f1b6e9a94162d49dda846c69630a0db90d9425",
+    "/tmp/stage2-alloy-insertion-eos-20260927/examples/m2_material/h2_he_reference_sources.json": "7e0f7ad241fa68da3acc0d28c53e6a10012acabc91ed51b4f5aeef5eb9f846e3",
+    "/tmp/stage2-gas-reference-env/teqp/fluiddata/dev/fluids/Helium.json": "ae864f5eb2d359926b2d4b4c158740e16ec611e034d4cbc33d13f33f4ae8cc51",
+    "/tmp/stage2-gas-reference-env/teqp/fluiddata/dev/fluids/Hydrogen.json": "c1ee7e5f1dc86f14ba77b38fd1378d017475a7e39833a559b45f16584e1db9a0",
+    "/tmp/stage2-gas-reference-env/teqp/teqp.cpython-39-x86_64-linux-gnu.so": "9007e3ae0a7206b58a3eeb0e0d3c34b996a0cdd72a4fc808778f3a8e847f24bd"
+  },
+  "adopted_in_m2_provider": false,
+  "scope": "Author EOS replay at a conditioned binary composition and the full saved pressure. The apparent cross virial varies with composition under the reducing function; it is not silently inserted as a unique pair coefficient. The saved temperature exceeds the 2000 K cross-virial reference data. No wet-gas closure or empirical error bound is established."
+}
