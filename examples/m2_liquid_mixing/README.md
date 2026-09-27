@@ -60,3 +60,8 @@ G, potentials, activities, mass, basis and composition data; they do not reuse
 probe density, volume, enthalpy, entropy or heat capacity. Candidate saturation
 and other calculation modes are not supplied by this callback. Exact-zero
 amounts retain continuous energies and unavailable absent potentials.
+
+The [saved 2026-09-27 comparison](../../results/m2_liquid_mixing/20260927/README.md)
+includes exact-zero and near-boundary states, all native failures, callback
+timing, and the complete EOS test output. Its near-pure-water potential
+discrepancy is retained separately from the central BSE comparison.
