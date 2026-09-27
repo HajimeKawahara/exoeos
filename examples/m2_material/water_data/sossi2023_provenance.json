@@ -1,0 +1,52 @@
+{
+  "record_id": "sossi2023_table1_shared_background_v1",
+  "retrieved_date": "2026-09-27",
+  "source_doi": "10.1016/j.epsl.2022.117894",
+  "primary_pdf_url": "https://arxiv.org/pdf/2211.13344",
+  "primary_pdf_sha256": "e31925f013ff211e5f415ee370208dd940d6f147a0dee3c256093a5a93a503f4",
+  "license": "CC-BY; paper states copyright 2022 The Authors",
+  "attribution": "Paolo A. Sossi, Peter M. E. Tollan, James Badro and Dan J. Bower (2023)",
+  "table_file": "Sossi2023_Table1.csv",
+  "table_sha256": "5907d9d2312aabad091ca3413bb21e56f62619ba277c2b296506c67ef26f7cfd",
+  "transcription": "Manually transcribed factual values from Table 1, printed page 3; visually checked against the PDF page. Preserve both raw and corrected concentrations and their published rounding; each branch differs from raw minus baseline by up to 0.1 ppm.",
+  "sample_count": 14,
+  "baseline": {
+    "sample": "Per-5",
+    "locator": "Eq.2 and text, printed page 4",
+    "water_raw_63_ppm": 32.5,
+    "water_raw_63_sigma_ppm": 2.3,
+    "water_raw_51_ppm": 40.2,
+    "water_raw_51_sigma_ppm": 3.2,
+    "choice": "Authors use the lowest measured concentration. The new uncertainty propagation is conditional on that choice and cannot bound background-selection bias."
+  },
+  "regression": {
+    "locator": "Eq.11 and preceding paragraph, printed page 5",
+    "equation": "C_H2O_ppmw = alpha_H2O sqrt(f_H2O/bar) + alpha_H2 sqrt(f_H2/bar)",
+    "excluded_samples": ["Per-1", "Per-2", "Per-5"],
+    "selected_count": 11,
+    "published_coefficients_63": [524, 183],
+    "published_coefficient_sd_63": [16, 14],
+    "published_coefficients_51": [647, 225],
+    "published_coefficient_sd_51": [25, 13],
+    "reconstruction": "Equal-weight least squares of the rounded table; do not replace published rounded coefficients or claim to reproduce unavailable raw regression inputs."
+  },
+  "concentration_basis": {
+    "locator": "Eq.1, printed pages 2-3; Eqs.9-11, printed page 5",
+    "mass_molar_H2O_kg_mol": 0.018015,
+    "meaning": "Equivalent H2O mass / glass mass. The H2 fugacity term represents hydroxyl production, not detected molecular H2 dissolution. No conversion through the later pooled OH column is used."
+  },
+  "experiment": {
+    "nominal_temperature_K": 2173,
+    "total_pressure_Pa": 100000,
+    "host": "KLB-1-derived five-major-oxide peridotite glasses; mean excludes the two most reduced glasses with Fe evaporation",
+    "host_locator": "Section 2.1, printed page 2",
+    "gas": "Flowing Ar-CO2-H2/O2 mixtures, calculated ideal fugacities; carbon-bearing experimental gas is not the M2 closed carbon-free inventory.",
+    "temperature_composition_pressure_transfer": "Not independently calibrated by this fixed nominal-temperature, fixed-pressure experiment."
+  },
+  "uncertainty": {
+    "raw_concentration_sd": "Published 1-sigma marginals include spectroscopy calibration uncertainty; joint covariance unavailable.",
+    "shared_baseline": "For corrected observations y_i-y_b, even independent raw errors yield off-diagonal sigma_b^2. The subtraction must precede propagation to coefficients/predictions.",
+    "arbitrary_covariance_sd_bound": "For any PSD covariance with the published marginal SDs, sd(L y) <= sum_i abs(L_i) sigma_i. Fixed-design, linear concentration uncertainty only; not a total prediction-error bound or confidence interval.",
+    "unknowns": ["Raw measurement correlations", "Calculated fugacity and temperature covariance", "Composition uncertainty and transfer", "Background-selection bias", "Pressure transfer", "Unrepresented physical chemistry"]
+  }
+}
