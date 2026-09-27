@@ -1,8 +1,12 @@
 """Associated species must conserve Fe/O and differentiate as one scalar."""
 
+from pathlib import Path
+import sys
+
 import numpy as np
 import pytest
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from examples.m2_material.feo_reference import (
     binary_coexistence, interactions_rt, mixing_state_rt, oxygen_activity_shape, reference_report,
 )
