@@ -61,7 +61,16 @@ def test_absent_helium_and_absent_host_have_explicit_distinct_limits():
     absent = m.state(np.zeros(5))
     assert absent["gibbs_rt"] == 0.
     assert np.all(np.isnan(absent["mu_rt"]))
-    for invalid in ([0., 0., 0., 0., 1.], [0., 0., 1., 0., 0.], [-1., 0., 0., 0., 0.]):
+    wet_only = m.state([0., 0., 1., 0., 0.])
+    assert wet_only["gibbs_rt"] == 0.
+    assert float(m.scalar(np.array([0., 0., 1., 0., 0.]))) == 0.
+    assert float(m.scalar(np.array([0., 0., 1., 0., 1.]))) == np.inf
+    np.testing.assert_array_equal(wet_only["mu_rt"][:-1], 0.)
+    assert wet_only["mu_rt"][-1] == np.inf
+    energy, derivative = m.energy_value_and_grad_rt([0., 0., 1., 0., 0.])
+    assert energy == 0.
+    np.testing.assert_array_equal(derivative, wet_only["mu_rt"])
+    for invalid in ([0., 0., 0., 0., 1.], [0., 0., 1., 0., 1.], [-1., 0., 0., 0., 0.]):
         with pytest.raises(ValueError):
             m.state(invalid)
 
