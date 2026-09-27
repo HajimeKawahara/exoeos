@@ -19,6 +19,9 @@ ATM_PA = 101325.0
 ALLOY_COMPONENTS = ("Fe", "Si", "O", "H")
 ALLOY_MOLAR_MASSES = np.array([0.055845, 0.0280855, 0.0159994, 0.00100794])
 PHOSPHORUS_MOLAR_MASS = 0.030973761998
+EXTENDED_ALLOY_COMPONENTS = ALLOY_COMPONENTS + ("P", "Mg", "Ca", "Al", "Cr", "Ti")
+EXTENDED_ALLOY_MOLAR_MASSES = np.r_[ALLOY_MOLAR_MASSES, PHOSPHORUS_MOLAR_MASS,
+                                   .024305, .040078, .0269815385, .0519961, .047867]
 OXIDES = ("SiO2", "TiO2", "Al2O3", "Cr2O3", "FeO", "Fe2O3", "MgO", "CaO",
           "Na2O", "K2O", "P2O5", "MnO", "NiO", "CoO", "H2O", "CO2")
 
@@ -97,7 +100,9 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
     (including native water, excluding the added molecular-H2 contribution),
     H2 mass ppm and native-water mass percent relative to the complete liquid,
     and optional alloy atomic fractions as a mapping or in Fe, Si, O, H order,
-    optionally followed by P. The complete supplied alloy sets the mass basis.
+    optionally followed by P, or P, Mg, Ca, Al, Cr, Ti. For an associated alloy,
+    the caller first counts all species into atomic amounts. The complete
+    supplied alloy sets the mass basis.
     Oxide names accept chemical case or lowercase native MELTS labels. ``None`` denotes
     an absent/unsupplied alloy, not a zero-composition calibration. This example
     owns no equilibrium or planetary inventory calculation.
@@ -176,19 +181,22 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
     if alloy_atomic_fractions is not None:
         components = ALLOY_COMPONENTS
         if isinstance(alloy_atomic_fractions, dict):
-            if set(alloy_atomic_fractions) == set(ALLOY_COMPONENTS + ("P",)):
+            if set(alloy_atomic_fractions) == set(EXTENDED_ALLOY_COMPONENTS):
+                components = EXTENDED_ALLOY_COMPONENTS
+            elif set(alloy_atomic_fractions) == set(ALLOY_COMPONENTS + ("P",)):
                 components += ("P",)
             elif set(alloy_atomic_fractions) != set(ALLOY_COMPONENTS):
-                raise ValueError("Supply exactly Fe, Si, O, H, optionally with P, alloy atomic fractions.")
+                raise ValueError("Supply Fe, Si, O, H, optionally with P or all six additional metal elements.")
             alloy_atomic_fractions = [alloy_atomic_fractions[name] for name in components]
         x = np.asarray(alloy_atomic_fractions)
         if x.shape == (5,):
             components = ALLOY_COMPONENTS + ("P",)
-        if (x.shape not in ((4,), (5,)) or not np.isrealobj(x) or not np.all(np.isfinite(x))
+        elif x.shape == (10,):
+            components = EXTENDED_ALLOY_COMPONENTS
+        if (x.shape not in ((4,), (5,), (10,)) or not np.isrealobj(x) or not np.all(np.isfinite(x))
                 or np.any(x < 0) or not np.isclose(x.sum(), 1.0, rtol=0.0, atol=1e-10)):
-            raise ValueError("Alloy atomic fractions must be finite, nonnegative and sum to one in Fe, Si, O, H[, P] order.")
-        masses = (ALLOY_MOLAR_MASSES if len(components) == 4 else
-                  np.r_[ALLOY_MOLAR_MASSES, PHOSPHORUS_MOLAR_MASS])
+            raise ValueError("Alloy atomic fractions must be finite, nonnegative and sum to one in the declared 4, 5 or 10 element order.")
+        masses = EXTENDED_ALLOY_MOLAR_MASSES[:len(components)]
         mass = x * masses
         wt_percent = mass / mass.sum() * 100.0
         fe_si = x[1] > 0
@@ -200,6 +208,7 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
             "pure_h2_reference_partial_pressure": partial == ATM_PA,
             "oxygen_free": x[2] == 0,
             "phosphorus_free": len(x) == 4 or x[4] == 0,
+            "other_metal_solutes_free": len(x) < 10 or np.all(x[5:] == 0),
             "silicon_below_2_5_mass_percent": wt_percent[1] < 2.5,
             "positive_iron_host": x[0] > 0,
         }
@@ -213,7 +222,7 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
                  "hydrogen_partial_pressure_distance_Pa": None if partial is None else abs(partial - ATM_PA),
                  "condition_checks": {name: bool(value) for name, value in conditions.items()},
                  "reference_conditions_supported": bool(all(conditions.values())),
-                 "finite_concentration_calibration": "Not established by this implemented dilute-H reference: O-H, P-H and finite-H interaction domains are not included in this reference assessment."}
+                 "finite_concentration_calibration": "Not established by this implemented dilute-H reference: O-H, P-H, other metal-solute and finite-H interaction domains are not included in this reference assessment."}
         dilute_values = [1e4 * 10**(-1874.0 / value - 1.601 - .033 * wt_percent[1])
                          for value in temperature_bounds]
         alloy["dilute_regression_atomic_h_mass_ppm_range"] = dilute_values
