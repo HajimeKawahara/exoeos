@@ -60,6 +60,8 @@ def main():
     parser.add_argument("--native-standards-directory", required=True)
     parser.add_argument("--host-properties", required=True)
     parser.add_argument("--output", required=True)
+    parser.add_argument("--additional-models", nargs="*", default=[],
+                        help="Independent pinned pyroxene/spinel, rhm and binary-instruction model fragments.")
     args = parser.parse_args()
     root = Path(args.source_directory)
     v = sp.symbols('v0:6')
@@ -401,6 +403,16 @@ def main():
              1 - a - b - c / 2])
     models['ortho-oxide']['pure_reference_bounds'] = [{'endmember_index': j, 'enthalpy_lower_J_mol': 0. if j == 0 else -12500., 'enthalpy_upper_J_mol': 23500. if j == 0 else 11000., 'entropy_site_groups': [[1, 2], [2 if j == 0 else 1, 2]],
                                                        'derivation':'Published pureOox: PB_H=12500-11000s-1500s^2; FE_H=MG_H=-11000s-1500s^2, -1<=s<=1. The PB entropy is the sum of normalized binary-site entropies of multiplicities 1 and 2. FE/MG entropy is a binary entropy plus at most ln2. Interval bounds enclose every admissible pure-order state.'} for j in range(3)]
+    for fragment in args.additional_models:
+        incoming = json.loads(Path(fragment).read_text())
+        additions = incoming.get("models", incoming)
+        if set(additions) & set(models):
+            raise ValueError("An additional fragment would replace an existing declared model.")
+        for model in additions.values():
+            model.pop("native_standard_receipt_sha256", None)
+            if model["phase"] == "plagioclase":
+                model["source_disassembly_audit"] = "plagioclase_instruction_audit.json"
+        models.update(additions)
     result = {
         'schema': 'magma_site_mixing_polynomials_v1',
         'upstream_commit': '705a0fb315e5054d18275a580562f6121c8e458c',

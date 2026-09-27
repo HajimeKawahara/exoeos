@@ -453,6 +453,7 @@ def _worker(runtime, request):
                 raise ValueError("Supply a native solid candidate phase.")
             # A failed session cannot safely supply subsequent phase results.
             row = candidate_standard_state_properties(model, name)
+            row["native_binary_sha256"] = result["provenance"]["backend"]["runtime_sha256"]["libalphamelts.so"]
             result["candidate_standard_states"].append(row)
         result["provenance"]["methods"].append("calcEndMemberProperties(candidate, positive_probe_oxide_mass_g)")
     return result

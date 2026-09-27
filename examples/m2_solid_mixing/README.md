@@ -7,14 +7,20 @@ not select phases. The expressions are transcribed from
 Every source file SHA256 and the numeric parameter file SHA256 accompany the
 runtime declaration. SymPy is only needed to regenerate the committed file.
 
-The current 15 models are hornblende, biotite, garnet, alkali-feldspar,
+The complete 20-model native solution catalog are hornblende, biotite, garnet, alkali-feldspar,
 kalsilite, leucite, alloy-solid, alloy-liquid, cummingtonite, olivine,
-nepheline, clinoamphibole, orthoamphibole, melilite, and ortho-oxide.
+nepheline, clinoamphibole, orthoamphibole, melilite, ortho-oxide,
+clinopyroxene, orthopyroxene, spinel, rhm-oxide, and plagioclase.
 Olivine covers the entire Fe/Mg/Ca face conditional on absent Mn/Ni/Co.
 The native Fe/Ni alloys are different models from the source Fe/Si/O/H alloy.
-Plagioclase is deliberately not aliased to alkali-feldspar: native mixture
-energies disagree with that expression. The other untranscribed native
-solutions are clinopyroxene, orthopyroxene, spinel, and rhm-oxide.
+Rhm-oxide covers the complete Mn-free face and checks absent Mn. Its pinned
+SRO spline has identical ordinates and therefore is exactly constant.
+Plagioclase has a distinct provenance class: symbolic transcription of 107
+instructions from `gmixPlg` in the pinned alphaMELTS binary. It is not aliased
+to the published alkali-feldspar expression. The instruction audit, binary
+SHA256, symbol hash, and loaded binary64 constants are retained in
+`plagioclase_instruction_audit.json`. A chemical consumer must verify the
+native standard provider's binary hash for this build-specific declaration.
 
 `solid_mixing_parameters(phase, T_K, P_Pa)` returns sparse enthalpy, entropy,
 and volume polynomials combined at the requested state, site entropy terms,
@@ -29,8 +35,14 @@ contains a positive `sqrt(DBL_EPSILON)/r1` barrier. Its zero boundary diverges
 to positive infinity and is retained as such. Melilite and ortho-oxide
 subtract pure-reference ordering energies. Their declarations contain
 conservative analytic intervals enclosing every admissible pure ordering
-state, including the source's reference offsets. A state evaluator reports
-the unreferenced energy when this subtraction remains interval valued.
+state, including the source's reference offsets. Pyroxene, spinel, and rhm
+references additionally expose their full one-dimensional pure-order curves.
+The declared equilibrium reference is the global minimum of each curve;
+chemical consumers must enclose that minimum, not use a finite optimizer
+value as a lower bound. Both pyroxenes reference monoclinic pure states,
+including orthopyroxene, as specified in `pureOrder`/`purePyx` in the source.
+A state evaluator reports the unreferenced energy while this subtraction
+remains interval valued.
 
 `melts_liquid_evaluator.evaluate_liquid(...,
 candidate_standard_states=[phase, ...])` separately obtains composition-
@@ -48,9 +60,19 @@ must be reported separately.
 Regenerate with Python, NumPy, and SymPy 1.14.0:
 
 ```sh
+python transcribe_pyroxenes_spinel.py --source-directory /path/to/pinned/MAGMA/sources \
+  --native-standards-directory /path/to/saved/native/standards \
+  --host-properties /path/to/host_properties.json --output ordered.json
+python transcribe_rhm.py --source-directory /path/to/pinned/MAGMA/sources \
+  --native-standards-directory /path/to/saved/native/standards \
+  --host-properties /path/to/host_properties.json --output rhm.json
+python transcribe_plagioclase.py --binary /path/to/pinned/libalphamelts.so \
+  --native-standards-directory /path/to/saved/native/standards \
+  --host-properties /path/to/host_properties.json --output-prefix plagioclase
 python transcribe_parameters.py --source-directory /path/to/pinned/MAGMA/sources \
   --native-standards-directory /path/to/saved/native/standards \
-  --host-properties /path/to/host_properties.json --output parameters.json
+  --host-properties /path/to/host_properties.json --output parameters.json \
+  --additional-models rhm.json plagioclase-parameters.json ordered.json
 ```
 
 The transcription requires saved pure-standard receipts with a native molar

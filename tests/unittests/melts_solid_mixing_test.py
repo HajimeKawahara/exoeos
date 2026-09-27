@@ -65,9 +65,29 @@ def test_pure_reference_uncertainty_is_not_reported_as_evaluated_mixing_energy()
     assert result["pure_reference_bounds"][0]["enthalpy_upper_J_mol"] == 21588.5
 
 
-def test_unsupported_feldspar_variant_is_not_silently_identified_with_alkali_feldspar():
-    with pytest.raises(ValueError, match="No declared site expression"):
-        parameters("plagioclase")
+def test_binary_feldspar_variant_retains_its_distinct_expression_and_provenance():
+    plagioclase = parameters("plagioclase")
+    feldspar = parameters("alkali-feldspar")
+    assert plagioclase["source_kind"] == "pinned_native_binary_instruction_transcription"
+    assert plagioclase["source_commit"] is None
+    difference = (MIXING.solid_mixing_state(plagioclase, [0.5, 0.])["mixing_gibbs_rt"]
+                  - MIXING.solid_mixing_state(feldspar, [0.5, 0.])["mixing_gibbs_rt"])
+    assert difference * plagioclase["T_K"] * MIXING.COMMON_R == pytest.approx(-7390.875, abs=1e-8)
+
+
+def test_orthopyroxene_pure_references_keep_the_monoclinic_source_convention():
+    cpx = parameters("clinopyroxene")
+    opx = parameters("orthopyroxene")
+    assert cpx["pure_reference_models"] == opx["pure_reference_models"]
+    assert cpx["polynomial_rt"] != opx["polynomial_rt"]
+
+
+def test_rhm_retains_the_complete_manganese_free_site_domain():
+    model = parameters("rhm-oxide")
+    assert model["required_absent_elements"] == ["Mn"]
+    assert model["native_endmember_indices"] == [0, 1, 2, 4]
+    assert [row["endmember_index"] for row in model["pure_reference_models"]] == [0, 1, 2, 4]
+    assert any(site["coefficient_rt"] < 0 for site in model["entropy_sites"])
 
 
 def test_standards_keep_the_actual_probe_without_reusing_its_composition(monkeypatch):

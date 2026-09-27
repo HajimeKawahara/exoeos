@@ -43,15 +43,24 @@ def solid_mixing_parameters(phase: str, temperature_k: float, pressure_pa: float
         raise ValueError("No declared site expression for phase: " + phase)
     model = deepcopy(data["models"][phase])
     rt = common_R * temperature_k
-    terms = {}
-    for field, multiplier in (("H_polynomial", 1.), ("S_polynomial", -temperature_k),
-                              ("V_polynomial", pressure_pa / 1e5 - 1.)):
-        for value, powers in model.pop(field):
-            key = tuple(powers)
-            terms[key] = terms.get(key, 0.) + multiplier * value
-    model["polynomial_rt"] = [[value / rt, list(powers)] for powers, value in sorted(terms.items()) if value]
-    for site in model["entropy_sites"]:
-        site["coefficient_rt"] = site.pop("multiplicity") * data["native_entropy_R_J_mol_K"] / common_R
+    def prepare(expression):
+        terms = {}
+        for field, multiplier in (("H_polynomial", 1.), ("S_polynomial", -temperature_k),
+                                  ("V_polynomial", pressure_pa / 1e5 - 1.)):
+            for value, powers in expression.pop(field):
+                key = tuple(powers)
+                terms[key] = terms.get(key, 0.) + multiplier * value
+        expression["polynomial_rt"] = [[value / rt, list(powers)] for powers, value in sorted(terms.items()) if value]
+        for site in expression["entropy_sites"]:
+            site["coefficient_rt"] = site.pop("multiplicity") * data["native_entropy_R_J_mol_K"] / common_R
+
+    prepare(model)
+    for reference in model.get("pure_reference_models", []):
+        prepare(reference)
+        reference["endmember_index"] = reference.pop("native_endmember_index", reference["endmember_index"])
+    if model.get("pure_reference_models"):
+        model.pop("pure_reference_bounds", None)
+        model["reference_selection"] = "global_minimum_of_each_declared_pure_order_expression"
     if model["barrier"] is not None:
         barrier = model["barrier"]
         barrier["numerator_rt"] = barrier.pop("numerator_J_mol") / rt
@@ -59,11 +68,13 @@ def solid_mixing_parameters(phase: str, temperature_k: float, pressure_pa: float
             powers = [0] * len(model["coordinate_order"])
             powers[barrier.pop("coordinate_index")] = 1
             barrier["polynomial"] = [[1., powers]]
+    binary_source = model.get("source_kind") == "pinned_native_binary_instruction_transcription"
     return {**model, "T_K": float(temperature_k), "P_Pa": float(pressure_pa),
             "native_entropy_R_J_mol_K": data["native_entropy_R_J_mol_K"],
             "common_R_J_mol_K": float(common_R), "oxide_order": data["oxide_order"],
             "schema": data["schema"], "parameter_sha256": hashlib.sha256(PARAMETER_PATH.read_bytes()).hexdigest(),
-            "source_commit": data["upstream_commit"], "source_url": data["upstream_url"],
+            "source_commit": None if binary_source else data["upstream_commit"],
+            "source_url": "https://github.com/magmasource/alphaMELTS" if binary_source else data["upstream_url"],
             "native_binary_uniform_error_bound": None,
             "empirical_calibration_domain_established": False}
 
@@ -93,9 +104,10 @@ def solid_mixing_state(parameters: dict, coordinates) -> dict:
             return {"status": "positive_infinite_boundary", "mixing_gibbs_rt": None,
                     "boundary_limit": "+infinity"}
         energy += barrier["numerator_rt"] / amount
-    if parameters.get("pure_reference_bounds"):
+    if parameters.get("pure_reference_bounds") or parameters.get("pure_reference_models"):
         return {"status": "ok_unreferenced_site_properties", "unreferenced_gibbs_rt": float(energy),
-                "pure_reference_bounds": parameters["pure_reference_bounds"],
+                "pure_reference_bounds": parameters.get("pure_reference_bounds"),
+                "pure_reference_models": parameters.get("pure_reference_models"),
                 "native_endmember_fractions": [polynomial_value(row, x) for row in parameters["endmember_polynomials"]]}
     return {"status": "ok_declared_site_properties", "mixing_gibbs_rt": float(energy),
             "native_endmember_fractions": [polynomial_value(row, x) for row in parameters["endmember_polynomials"]]}
