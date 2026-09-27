@@ -34,7 +34,7 @@ def safe(expr):
 def entropy_terms(expr):
     # Return source entropy/R as linear site terms and its remaining polynomial.
     terms = []
-    for node in expr.atoms(sp.log):
+    for node in sorted(expr.atoms(sp.log), key=sp.sstr):
         if not node.args[0].free_symbols:
             continue
         factor = sp.expand(expr).coeff(node)
