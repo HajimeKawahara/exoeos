@@ -1,0 +1,123 @@
+......................F...                                               [100%]
+=================================== FAILURES ===================================
+________ test_analytic_potentials_equal_independent_scalar_ad_and_euler ________
+
+    def backends() -> dict[str, xla_client.Client]:
+      global _backends
+      global _backend_errors
+      global _default_backend
+      global _at_fork_handler_installed
+    
+      _discover_and_register_pjrt_plugins()
+    
+      with _backend_lock:
+        if _backends:
+          return _backends
+    
+        # os.register_at_fork only exists on Unix.
+        if not _at_fork_handler_installed and hasattr(os, "register_at_fork"):
+          os.register_at_fork(before=_at_fork)
+          _at_fork_handler_installed = True
+    
+        if jax_platforms := config.jax_platforms.value:
+          platforms = []
+          # Allow platform aliases in the list of platforms.
+          for platform in jax_platforms.split(","):
+            platforms.extend(expand_platform_alias(platform))
+          priorities = range(len(platforms), 0, -1)
+          # If the user specified a list of platforms explicitly, always fail
+          # loudly.
+          fail_quietly_list = [False] * len(platforms)
+          platform_registrations = list(
+            zip(platforms, priorities, fail_quietly_list))
+        else:
+          platform_registrations = [
+              (platform, registration.priority, registration.fail_quietly)
+              for platform, registration
+              in _backend_factories.items()
+          ]
+        default_priority = -1000
+        for platform, priority, fail_quietly in platform_registrations:
+          try:
+>           backend = _init_backend(platform)
+
+/home/kawahara/anaconda3/envs/myenv39/lib/python3.9/site-packages/jax/_src/xla_bridge.py:879: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/kawahara/anaconda3/envs/myenv39/lib/python3.9/site-packages/jax/_src/xla_bridge.py:970: in _init_backend
+    backend = registration.factory()
+/home/kawahara/anaconda3/envs/myenv39/lib/python3.9/site-packages/jax/_src/xla_bridge.py:668: in factory
+    return xla_client.make_c_api_client(plugin_name, updated_options, None)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+plugin_name = 'cuda'
+options = {'allocator': 'default', 'enable_mock_nccl': False, 'platform_name': 'cuda'}
+distributed_client = None
+
+    def make_c_api_client(
+        plugin_name: str,
+        options: _NameValueMapping | None = None,
+        distributed_client: _xla.DistributedRuntimeClient | None = None,
+    ):
+      """Creates a PJRT C API client for a PJRT plugin.
+    
+      It is required that load_pjrt_plugin_dynamically is called once with the same
+      plugin_name before this method is called.
+    
+      Args:
+         plugin_name: the name of the PJRT plugin.
+         options: extra platform-specific options.
+         distributed_client: distributed client.
+    
+      Returns:
+         A PJRT C API client for plugin_name.
+      """
+      if options is None:
+        options = {}
+>     return _xla.get_c_api_client(plugin_name, options, distributed_client)
+E     jaxlib.xla_extension.XlaRuntimeError: FAILED_PRECONDITION: No visible GPU devices.
+
+/home/kawahara/anaconda3/envs/myenv39/lib/python3.9/site-packages/jaxlib/xla_client.py:200: XlaRuntimeError
+
+During handling of the above exception, another exception occurred:
+Traceback (most recent call last):
+  File "/home/kawahara/anaconda3/envs/myenv39/lib/python3.9/site-packages/jax/_src/xla_bridge.py", line 879, in backends
+    backend = _init_backend(platform)
+  File "/home/kawahara/anaconda3/envs/myenv39/lib/python3.9/site-packages/jax/_src/xla_bridge.py", line 970, in _init_backend
+    backend = registration.factory()
+  File "/home/kawahara/anaconda3/envs/myenv39/lib/python3.9/site-packages/jax/_src/xla_bridge.py", line 668, in factory
+    return xla_client.make_c_api_client(plugin_name, updated_options, None)
+  File "/home/kawahara/anaconda3/envs/myenv39/lib/python3.9/site-packages/jaxlib/xla_client.py", line 200, in make_c_api_client
+    return _xla.get_c_api_client(plugin_name, options, distributed_client)
+jaxlib.xla_extension.XlaRuntimeError: FAILED_PRECONDITION: No visible GPU devices.
+
+During handling of the above exception, another exception occurred:
+
+jax.errors.SimplifiedTraceback: For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.
+
+The above exception was the direct cause of the following exception:
+
+    def test_analytic_potentials_equal_independent_scalar_ad_and_euler():
+        m = model()
+        n = np.array([.5, .2, .03, .01, .00002])
+        state = m.state(n)
+>       energy, derivative = m.energy_value_and_grad_rt(n)
+
+tests/unittests/m2_helium_dissolution_test.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+amounts = array([5.e-01, 2.e-01, 3.e-02, 1.e-02, 2.e-05])
+
+    def energy_value_and_grad_rt(amounts):
+        n, mass = validate(amounts)
+        if n.sum() == 0 or n[-1] == 0:
+            endpoint = state(n)
+            return endpoint["gibbs_rt"], endpoint["mu_rt"]
+>       energy, gradient = derivative(n)
+E       RuntimeError: Unable to initialize backend 'cuda': FAILED_PRECONDITION: No visible GPU devices. (you may need to uninstall the failing plugin package, or set JAX_PLATFORMS=cpu to skip this backend.)
+
+examples/m2_material/helium_dissolution.py:88: RuntimeError
+----------------------------- Captured stderr call -----------------------------
+2026-09-28 08:35:16.894011: E external/xla/xla/stream_executor/cuda/cuda_driver.cc:266] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+=========================== short test summary info ============================
+FAILED tests/unittests/m2_helium_dissolution_test.py::test_analytic_potentials_equal_independent_scalar_ad_and_euler
+1 failed, 25 passed in 0.96s
