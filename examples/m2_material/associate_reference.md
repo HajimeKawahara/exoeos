@@ -113,6 +113,12 @@ The existing temperature policy selects either a constant coefficient or
 1873.15K. Pressure response, H self interaction and empirical BSE errors
 are not supplied.
 
+The finite-K factory accepts the same option and retains this eighteen-species
+host normalization. Its extensive perspective contributes
+`N_19*epsilon_HO*x_H*x_O/(1-x_K)` in nineteen-species coordinates. It reduces
+exactly to the eighteen-species term at zero K; its curvature audit evaluates
+the actual perspective, including the nonconvex host when selected.
+
 At2173.15K the old declared box has curvature bounds -78.7129 (constant) and
 -63.2693 (enthalpic), so the old positive-curvature proof cannot be reused.
 A separate outward point calculation also proves negative O/H-direction
