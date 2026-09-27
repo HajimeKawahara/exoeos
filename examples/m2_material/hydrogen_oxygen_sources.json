@@ -1,0 +1,46 @@
+{
+  "record_id": "schenck1961_HO_contemporary_abstract_v1",
+  "original_doi": "10.1002/srin.196103272",
+  "original_authors": [
+    "H.Schenck",
+    "H.Wuensch"
+  ],
+  "original_locator": "Archiv fuer das Eisenhuettenwesen32(11),1961,779-790",
+  "original_full_text_verified": false,
+  "inspected_record": "Tetsu-to-Hagane49(1),1963,p96 contemporary Japanese abstract by H.Sakao",
+  "inspected_record_url": "https://tetsutohagane.net/articles/search/files/49/1/KJ00002706857.pdf",
+  "reported_temperature_K": 1883.15,
+  "reported_temperature_C": 1610,
+  "reported_gas_ratio_H2O_over_H2": [
+    0.1,
+    0.3
+  ],
+  "reported_total_pressure": "p_H2O+p_H2=1; pressure unit not independently recovered from original full text",
+  "reported_log10_gamma_H_derivative_wrt_O_mole_fraction": 52.4,
+  "reported_numerical_example": {
+    "O_mole_fraction": 0.00343,
+    "gamma_H_due_to_O": 1.52,
+    "gas_ratio_H2O_over_H2": 0.3
+  },
+  "measured_H_O_concentration_table_verified": false,
+  "interaction_coefficient_uncertainty": null,
+  "natural_log_conversion": "epsilon_HO = ln(10) * 52.4",
+  "scalar_continuation": "G_add/RT = N_species * epsilon_HO * x_H * x_O; free H/O fractions use the complete18-species denominator",
+  "temperature_continuations": {
+    "constant": "epsilon_HO independent of T",
+    "enthalpic": "epsilon_HO(T)=epsilon_HO(1883.15K)*1883.15/T"
+  },
+  "scope": [
+    "Contemporary abstract equation and independent numerical example agree in base10; this is not a retrieval of the original concentration observations.",
+    "The1967 Tohoku retelling lists epsilon52.4 with e_O^H2.71; that pair is not substituted for the explicit1963 log10 convention.",
+    "A reciprocal quadratic continuation reproduces the dilute derivative; finite-concentration behavior is not uniquely determined by that derivative.",
+    "No H-H interaction, pressure response, uncertainty band or BSE applicability domain is inferred.",
+    "Other metal species retain their existing terms; zero added H-O returns the previous provider."
+  ],
+  "raw_sha256": {
+    "Schenck1961_1963abstract.pdf": "a2d550b170588aeabbac44c0e892180a50bcb92f36dd531971b845a5b06a53c6",
+    "Schenck1961_1963abstract_p1.png": "17521fc7aabd7c49ac0663da332a929fdf60459fec74c3450f140fe292fa5f85",
+    "Tohoku1967_FeO.pdf": "c561e27dab41d70f637a24b8acf798a94b85cfb9a571c12c41725036196dde8b",
+    "Tohoku1967_FeO_p11.png": "acc70bfb09a169e4538e829a37ae23e61ffede3380d92732a24cc1cdf7382258"
+  }
+}
