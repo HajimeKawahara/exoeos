@@ -108,6 +108,40 @@ def test_one_bar_is_not_the_one_atmosphere_hydrogen_reference():
     assert not alloy["reference_conditions_supported"]
 
 
+def test_phosphorus_uses_the_complete_mass_basis_without_four_component_admission():
+    fractions = {"Fe": .95, "Si": .04, "O": 0., "H": .001, "P": .009}
+    alloy = assess(1873.15, 101325., silicate_oxide_mass_fractions=bse(),
+                   alloy_atomic_fractions=fractions,
+                   hydrogen_partial_pressure_Pa=101325.)["alloy_hydrogen_reference"]
+    denominator = (.95 * .055845 + .04 * .0280855 + .001 * .00100794
+                   + .009 * .030973761998)
+    assert alloy["atomic_h_mass_ppm"] == pytest.approx(1e6 * .001 * .00100794 / denominator)
+    assert alloy["mass_percent"]["P"] == pytest.approx(100 * .009 * .030973761998 / denominator)
+    assert not alloy["condition_checks"]["phosphorus_free"]
+    assert not alloy["reference_conditions_supported"]
+    zero = assess(1873.15, 101325., silicate_oxide_mass_fractions=bse(),
+                  alloy_atomic_fractions=[.959, .04, 0., .001, 0.],
+                  hydrogen_partial_pressure_Pa=101325.)["alloy_hydrogen_reference"]
+    assert zero["reference_conditions_supported"]
+    assert zero["condition_checks"]["phosphorus_free"]
+
+
+def test_associated_metal_atomic_recount_keeps_all_ten_elements_in_mass_basis():
+    fractions = dict(zip(MODULE.EXTENDED_ALLOY_COMPONENTS,
+                         [.918, .001, .01, .03, .001, .001, .001, .001, .036, .001]))
+    x = np.array(list(fractions.values()))
+    assert x.sum() == pytest.approx(1.)
+    alloy = assess(1873.15, 101325., silicate_oxide_mass_fractions=bse(),
+                   alloy_atomic_fractions=fractions,
+                   hydrogen_partial_pressure_Pa=101325.)["alloy_hydrogen_reference"]
+    assert alloy["mass_percent"]["Cr"] == pytest.approx(
+        100*.036*.0519961/(x@MODULE.EXTENDED_ALLOY_MOLAR_MASSES))
+    assert alloy["atomic_h_mass_ppm"] == pytest.approx(
+        1e6*.03*.00100794/(x@MODULE.EXTENDED_ALLOY_MOLAR_MASSES))
+    assert not alloy["condition_checks"]["other_metal_solutes_free"]
+    assert not alloy["reference_conditions_supported"]
+
+
 def test_sossi_comparison_uses_feo_total_without_changing_the_input_state():
     measured = {"SiO2": 46.53, "Al2O3": 4.37, "FeO": 8.44, "MgO": 38.05, "CaO": 2.06}
     # Re-express half of the same Fe atoms as Fe2O3, then normalize physical mass.
