@@ -1,0 +1,38 @@
+{
+  "actual_checks": [
+    {
+      "command": "JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 PYTHONPATH=src taskset -c 40 /home/kawahara/anaconda3/envs/myenv39/bin/pytest tests/unittests/m2_hydrogen_oxygen_reference_test.py tests/unittests/m2_associate_reference_test.py -q",
+      "exit_code": 0,
+      "passed": 6,
+      "wall_seconds": 17.35
+    },
+    {
+      "command": "JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 PYTHONPATH=src taskset -c 40 /home/kawahara/anaconda3/envs/myenv39/bin/pytest tests/unittests/m2_hydrogen_oxygen_reference_test.py -q",
+      "exit_code": 0,
+      "passed": 3,
+      "wall_seconds": 11.75
+    },
+    {
+      "command": "JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 taskset -c 40 /home/kawahara/anaconda3/envs/myenv39/bin/python /tmp/stage2-hydrogen-oxygen-reference-replay.py",
+      "exit_code": 0
+    }
+  ],
+  "preparation_failures": [
+    {
+      "exit_code": 1,
+      "reason": "First replay output parent absent; changed mkdir to parents=True."
+    },
+    {
+      "exit_code": 1,
+      "reason": "Initial point-witness JSON had NumPy bool; explicitly converted to Python bool. Failed output directory left unchanged and successful replay used new v2 directory."
+    }
+  ],
+  "file_sha256": {
+    "examples/m2_material/validation/20260928_hydrogen_oxygen_curvature_v2/comparison.json": "44c94fd53a8c9dc8e010203864057df05ef5839cde112bed9d92f13ae9664eae",
+    "examples/m2_material/validation/20260928_hydrogen_oxygen_curvature_v2/replay.py": "4cb0cc8e0d7428369481ca51a217b0236f33e4a42a6617d0e6ead13476d84185",
+    "examples/m2_material/associate_reference.py": "fae2fac6554e8c66d5f012bf8c3b1a443517a21a1ae4c098c13731e95fcacd71",
+    "examples/m2_material/hydrogen_oxygen_sources.json": "c9cace0f4772c5900d2fef797ca7f39fb88e5f5112c0db05f1e21f20ba624cad",
+    "tests/unittests/m2_hydrogen_oxygen_reference_test.py": "35057b449ec5d4cddaa6dd4b07ea22029b64a49dace7ced5022636d7b65ea29c"
+  },
+  "scope": "No finite source/pressure closure. Old reference comparison remains unchanged; point curvature is distinct from insertion stability."
+}

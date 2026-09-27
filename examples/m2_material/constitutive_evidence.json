@@ -1,0 +1,702 @@
+{
+  "record_id": "m2_constitutive_evidence_ledger_v1",
+  "scope": "Evidence for declared constitutive models, not an automatic admission rule or a requirement for simultaneous measurement of all components. A coupled calculation may test robustness over explicitly declared model choices; observed reference spread is not a universal extrapolation bound.",
+  "categories": {
+    "experimental_conditions": "Conditions and observables actually reported; envelopes do not create an independently measured rectangular domain.",
+    "constitutive_extrapolation": "A declared integrable law or temperature/pressure continuation beyond direct observations, with assumptions exposed.",
+    "reference_spread_only": "A range covering stated reference discrepancies or coefficient alternatives, not a universal empirical confidence band.",
+    "coefficient_unidentified": "A parameter or error not identified by the retained evidence; omitted is not measured zero."
+  },
+  "systems": {
+    "silicate_water": {
+      "source_records": [
+        "water_author_data",
+        "water_author_provenance",
+        "water_basis_pressure",
+        "water_reference_width"
+      ],
+      "experimental_conditions": {
+        "pooled_fit_count": 74,
+        "pooled_fit_temperature_envelope_K": [
+          1623.15,
+          2197.0
+        ],
+        "pooled_fit_fH2O_envelope_bar": [
+          0.00071,
+          0.32424
+        ],
+        "peridotite": {
+          "temperature_K_nominal": 2173.0,
+          "total_pressure_Pa": 100000.0,
+          "water_coefficient_mass_ppm_per_sqrt_bar": [
+            524,
+            647
+          ],
+          "reported_sigma": [
+            16,
+            25
+          ]
+        },
+        "independent_basalt": {
+          "temperature_K": 1523.15,
+          "total_pressures_Pa": [
+            50000000.0,
+            100000000.0
+          ],
+          "count": 14,
+          "observable": "KFT total H2O-equivalent water; quenched-glass speciation does not establish in-situ OH/H2O partition."
+        }
+      },
+      "constitutive_extrapolation": {
+        "model_id": "dry_melts_thompson2025_water_equivalent_v1",
+        "concentration_basis": "Total H2O-equivalent mass on the dry host plus equivalent water; additional molecular H2 is excluded from the host scalar but included in the final complete-liquid mass report.",
+        "normalization": "Restore M_H2O/M_OH from the author mass-scaled response; do not divide by two.",
+        "law": "One extensive dry-MELTS plus water scalar reproduces the declared square-root fugacity response and includes the composition derivative of capacity.",
+        "pressure": "Ideal source H2O fugacity unless a separately declared gas model is supplied. Independent comparison used ideal and Zhang-Duan evaluations; neither is the original Pitzer-Sterner/Aranovich-Newton mixture recipe.",
+        "BSE_2173K_270bar": "Direct peridotite temperature/host evidence exists at 1 bar; elevated-pressure continuation and independent 1523 K basalt comparison are distinct evidence."
+      },
+      "reference_spread_only": {
+        "factor": 2.265,
+        "capacity_interval": [
+          0.44150110375275936,
+          2.265
+        ],
+        "standard_shift_key": "h2o_melts",
+        "standard_shift_RT": [
+          -1.6351495178699949,
+          1.6351495178699949
+        ],
+        "covered_observation_count": 88,
+        "original_author_fit_count": 74,
+        "independent_KFT_count": 14
+      },
+      "coefficient_unidentified": [
+        "Joint coefficient covariance",
+        "BSE pressure/composition transfer error",
+        "Finite water partial molar volume",
+        "High-temperature in-situ OH versus molecular H2O partition"
+      ],
+      "width_limit": "Factor 2.265 covers retained central concentrations; concentration-only 1sigma coverage needs 2.5489608181958774. Neither is an unmeasured-state error guarantee."
+    },
+    "silicate_molecular_hydrogen": {
+      "source_records": [
+        "hydrogen_observations",
+        "h2_absorption",
+        "h2_absorption_scenario"
+      ],
+      "experimental_conditions": {
+        "basalt": {
+          "temperature_pressure_pairs_K_Pa": [
+            [
+              1673.15,
+              500000000.0
+            ],
+            [
+              1673.15,
+              1200000000.0
+            ],
+            [
+              1673.15,
+              2000000000.0
+            ]
+          ],
+          "host_and_buffer": {
+            "table_1_oxide_weight_percent": {
+              "SiO2": 51.67,
+              "TiO2": 1.88,
+              "Al2O3": 15.51,
+              "MgO": 10.19,
+              "CaO": 15.84,
+              "Na2O": 3.53,
+              "K2O": 0.35
+            },
+            "table_1_oxide_weight_percent_one_sigma": {
+              "SiO2": 0.28,
+              "TiO2": 0.05,
+              "Al2O3": 0.16,
+              "MgO": 0.19,
+              "CaO": 0.15,
+              "Na2O": 0.09,
+              "K2O": 0.02
+            },
+            "table_1_reported_total_weight_percent": 99.0,
+            "missing_oxide_value_meaning": "Dash in published Table 1, not an independently quantified zero.",
+            "buffer": "Fe-FeO-H2O",
+            "slope_H2_mass_ppm_per_GPa": 206,
+            "slope_reported_uncertainty_H2_mass_ppm_per_GPa": 10,
+            "slope_uncertainty_type": "Published plus/minus regression uncertainty; exact statistical definition is not stated alongside Eq.1.",
+            "observed_temperature_pressure_pairs_K_Pa": [
+              [
+                1673.15,
+                500000000.0
+              ],
+              [
+                1673.15,
+                1200000000.0
+              ],
+              [
+                1673.15,
+                2000000000.0
+              ]
+            ],
+            "use": "Host-specific empirical regression at the stated buffer; no BSE transfer or arbitrary fugacity conversion."
+          }
+        },
+        "andesite": {
+          "temperature_pressure_pairs_K_Pa": [
+            [
+              1673.15,
+              500000000.0
+            ],
+            [
+              1673.15,
+              1000000000.0
+            ],
+            [
+              1673.15,
+              2000000000.0
+            ],
+            [
+              1673.15,
+              3000000000.0
+            ]
+          ],
+          "host_and_buffer": {
+            "table_1_oxide_weight_percent": {
+              "SiO2": 58.04,
+              "TiO2": 1,
+              "Al2O3": 18.19,
+              "MgO": 5.65,
+              "CaO": 11.01,
+              "Na2O": 3.6,
+              "K2O": 1.44
+            },
+            "table_1_oxide_weight_percent_one_sigma": {
+              "SiO2": 0.32,
+              "TiO2": 0.03,
+              "Al2O3": 0.11,
+              "MgO": 0.07,
+              "CaO": 0.11,
+              "Na2O": 0.06,
+              "K2O": 0.03
+            },
+            "table_1_reported_total_weight_percent": 98.9,
+            "missing_oxide_value_meaning": "Dash in published Table 1, not an independently quantified zero.",
+            "buffer": "Fe-FeO-H2O",
+            "slope_H2_mass_ppm_per_GPa": 362,
+            "slope_reported_uncertainty_H2_mass_ppm_per_GPa": 35,
+            "slope_uncertainty_type": "Published plus/minus regression uncertainty; exact statistical definition is not stated alongside Eq.1.",
+            "observed_temperature_pressure_pairs_K_Pa": [
+              [
+                1673.15,
+                500000000.0
+              ],
+              [
+                1673.15,
+                1000000000.0
+              ],
+              [
+                1673.15,
+                2000000000.0
+              ],
+              [
+                1673.15,
+                3000000000.0
+              ]
+            ],
+            "use": "Host-specific empirical regression at the stated buffer; no BSE transfer or arbitrary fugacity conversion."
+          }
+        },
+        "haplogranite": {
+          "temperature_pressure_pairs_K_Pa": [
+            [
+              1473.15,
+              500000000.0
+            ],
+            [
+              1473.15,
+              1000000000.0
+            ],
+            [
+              1473.15,
+              1500000000.0
+            ],
+            [
+              1473.15,
+              2000000000.0
+            ],
+            [
+              1523.15,
+              2000000000.0
+            ],
+            [
+              1573.15,
+              1000000000.0
+            ],
+            [
+              1573.15,
+              2000000000.0
+            ],
+            [
+              1573.15,
+              3000000000.0
+            ],
+            [
+              1573.15,
+              4000000000.0
+            ]
+          ],
+          "host_and_buffer": {
+            "table_1_oxide_weight_percent": {
+              "SiO2": 77.24,
+              "TiO2": null,
+              "Al2O3": 11.79,
+              "MgO": null,
+              "CaO": null,
+              "Na2O": 5.79,
+              "K2O": 5.36
+            },
+            "table_1_oxide_weight_percent_one_sigma": {
+              "SiO2": 0.74,
+              "TiO2": null,
+              "Al2O3": 0.56,
+              "MgO": null,
+              "CaO": null,
+              "Na2O": 0.53,
+              "K2O": 0.17
+            },
+            "table_1_reported_total_weight_percent": 100.2,
+            "missing_oxide_value_meaning": "Dash in published Table 1, not an independently quantified zero.",
+            "buffer": "Fe-FeO-H2O",
+            "slope_H2_mass_ppm_per_GPa": 500,
+            "slope_reported_uncertainty_H2_mass_ppm_per_GPa": 62,
+            "slope_uncertainty_type": "Published plus/minus regression uncertainty; exact statistical definition is not stated alongside Eq.1.",
+            "observed_temperature_pressure_pairs_K_Pa": [
+              [
+                1473.15,
+                500000000.0
+              ],
+              [
+                1473.15,
+                1000000000.0
+              ],
+              [
+                1473.15,
+                1500000000.0
+              ],
+              [
+                1473.15,
+                2000000000.0
+              ],
+              [
+                1523.15,
+                2000000000.0
+              ],
+              [
+                1573.15,
+                1000000000.0
+              ],
+              [
+                1573.15,
+                2000000000.0
+              ],
+              [
+                1573.15,
+                3000000000.0
+              ],
+              [
+                1573.15,
+                4000000000.0
+              ]
+            ],
+            "use": "Host-specific empirical regression at the stated buffer; no BSE transfer or arbitrary fugacity conversion."
+          }
+        }
+      },
+      "constitutive_extrapolation": {
+        "absorption_calibration": {
+          "old_L_mol_cm": 0.26,
+          "new_L_mol_cm": 2.12,
+          "reported_new_plus_minus": 0.05,
+          "calibration_host": "haplogranitic glass"
+        },
+        "standard_offset_RT": 2.09848973665053,
+        "meaning": "Measured absorptivity correction motivates a dilute Henry amplitude rescaling; this is distinct from an arbitrary reference-spread sensitivity.",
+        "finite_law": "Existing Hirschmann-based scalar plus an explicit linear H2_dissolved standard shift. A finite host-mole concentration need not scale exactly as dilute mass ppm.",
+        "BSE_2173K_270bar": "Temperature, pressure and host continuation of the solubility law remain additional assumptions; a corrected absorptivity does not determine these dependences."
+      },
+      "reference_spread_only": {
+        "absorption_error_only_offset_RT": [
+          2.074622255243887,
+          2.121800815518977
+        ],
+        "confidence_level": "Not specified in calibration paragraph; not host-transfer uncertainty."
+      },
+      "coefficient_unidentified": [
+        "Low-pressure peridotite H2 solubility temperature/composition correction",
+        "Finite dissolved-H2 mixing beyond the adopted scalar",
+        "Joint absorption, density and host-transfer uncertainty"
+      ]
+    },
+    "iron_oxygen": {
+      "source_records": [
+        "feo"
+      ],
+      "experimental_conditions": {
+        "binary_Fe_O": {
+          "doi": "10.1179/cmq.1971.10.1.13",
+          "url": "https://www.tandfonline.com/doi/abs/10.1179/cmq.1971.10.1.13",
+          "locator": "Publisher primary abstract; P.A.Distin,S.G.Whiteway,C.R.Masson,Can.Metall.Quart.10(1),13\u201318",
+          "method": "Levitated iron in equilibrium with liquid iron oxide; sampled metal and oxide.",
+          "fit": "log10(O mass percent) = -6380/T_K +2.765",
+          "fit_temperature_domain_K": [
+            1800,
+            2230
+          ],
+          "observations": [
+            {
+              "temperature_C": 1785,
+              "O_mass_percent": 0.45
+            },
+            {
+              "temperature_C": 1880,
+              "O_mass_percent": 0.62
+            },
+            {
+              "temperature_C": 1960,
+              "O_mass_percent": 0.83
+            }
+          ],
+          "reported_uncertainty_mass_percent": 0.02,
+          "uncertainty_scope": "Abstract reports \u00b10.02 wt%; confidence level and individual covariance unavailable."
+        },
+        "high_pressure_binary_fit": "12\u201324.5GPa,2373\u20132473K coexistence; ambient mixing inherited from KowalskiSpencer1995; FeO1.5 neglected above2000K."
+      },
+      "constitutive_extrapolation": {
+        "independent_model": "Frost Fe/FeO associated scalar; atomic muO equals muFeO minus muFe.",
+        "pressure_term_scope": "Only excess binary mixing W(T,P). Pure-component volumes and multicomponent Si/H/P effects are not supplied.",
+        "reference_alignment": "Composition effects compared after equal infinite-dilution anchors; this is not absolute-standard agreement.",
+        "BSE_2173K_270bar": "Direct high-temperature binary saturation evidence overlaps the source temperature; it does not alone determine activity in the multicomponent source."
+      },
+      "reference_spread_only": {
+        "max_replayed_saturation_error_mass_percent": 0.15504,
+        "reported_observation_uncertainty_mass_percent": 0.02,
+        "meaning": "Rounded observed model discrepancy; some residuals exceed stated measurement uncertainty."
+      },
+      "coefficient_unidentified": [
+        "Multicomponent finite-concentration correction to binary activity",
+        "Pure-component pressure volumes and their uncertainty"
+      ]
+    },
+    "metal_hydrogen_oxygen": {
+      "source_records": [
+        "hydrogen_observations",
+        "hydrogen_oxygen"
+      ],
+      "experimental_conditions": {
+        "pure_Fe_H": {
+          "equation": "log10(K) = -1874 / temperature_K - 1.601; K = mass_percent_H / sqrt(p_H2_Pa/101325)",
+          "equation_mass_ppm": "H_mass_ppm = 1e4 * 10**(-1874/temperature_K - 1.601) * sqrt(p_H2_Pa/101325)",
+          "reported_temperature_C": [
+            1570,
+            1740
+          ],
+          "converted_temperature_K": [
+            1843.15,
+            2013.15
+          ],
+          "abstract_rounded_temperature_K": [
+            1843,
+            2013
+          ],
+          "reference_H2_partial_pressure_Pa": 101325,
+          "measured_1600_C_H_mass_ppm": 25.0,
+          "one_atmosphere_temperature_regression_is_not": "A pressure-dependent liquid Gibbs model or high-pressure solubility calibration."
+        },
+        "Fe_Si_H": {
+          "equation": "log10(f_H_Si) = 0.033 * silicon_mass_percent",
+          "wagner_e_H_Si_per_mass_percent": 0.033,
+          "reported_temperature_C": [
+            1550,
+            1600
+          ],
+          "converted_temperature_K": [
+            1823.15,
+            1873.15
+          ],
+          "silicon_mass_percent_lower_inclusive": 0,
+          "silicon_mass_percent_upper_exclusive": 2.5,
+          "H2_partial_pressure_Pa": 101325,
+          "combined_pure_iron_regression_temperature_K": [
+            1843.15,
+            1873.15
+          ],
+          "restriction": "Fe-Si-H trace-H reference only; oxygen/H cross interactions and finite-H self interactions are not measured here."
+        },
+        "HO_abstract": {
+          "reported_temperature_K": 1883.15,
+          "reported_total_pressure": "p_H2O+p_H2=1; pressure unit not independently recovered from original full text",
+          "reported_log10_gamma_H_derivative_wrt_O_mole_fraction": 52.4,
+          "reported_numerical_example": {
+            "O_mole_fraction": 0.00343,
+            "gamma_H_due_to_O": 1.52,
+            "gas_ratio_H2O_over_H2": 0.3
+          },
+          "measured_H_O_concentration_table_verified": false,
+          "original_full_text_verified": false
+        }
+      },
+      "constitutive_extrapolation": {
+        "option": "schenck1961_abstract",
+        "natural_log_coefficient": "52.4*ln(10)",
+        "reference_temperature_K": 1883.15,
+        "temperature_options": [
+          "constant",
+          "inverse_temperature"
+        ],
+        "finite_term": "Reciprocal N18*epsilon*xH*xO; K19 perspective divides the equivalent full-species term by (1-xK).",
+        "curvature": "The original declared box is nonconvex under both continuations. Global insertion must use a proof that permits nonconvexity; silently narrowing that box or returning a negative lower bound does not establish stability on the original domain."
+      },
+      "reference_spread_only": {
+        "independent_abstract_example_reported_gamma": 1.52,
+        "example_reconstruction": "10**(52.4*.00343) approximately 1.513; convention check, not concentration-data replay."
+      },
+      "coefficient_unidentified": [
+        "Original H/O concentration observations and interaction uncertainty",
+        "Temperature dependence of HO interaction",
+        "Pressure response of Fe-H/O standards and finite interactions",
+        "H self interaction and higher-order concentration terms"
+      ]
+    },
+    "metal_phosphorus": {
+      "source_records": [
+        "phosphorus"
+      ],
+      "experimental_conditions": {
+        "Yamamoto1980": {
+          "doi": "10.2355/tetsutohagane1955.66.14_2032",
+          "table": "Table 3, p.2037; independent visual check of original PDF",
+          "units": "kcal/mol; gas pressure atm; dissolved P Henry 1 mass percent",
+          "P_g_to_P": [
+            -95.3,
+            0.0155
+          ],
+          "half_P2_g_to_P": [
+            -37.7,
+            0.0013
+          ],
+          "reported_two_sigma_kcal_mol": {
+            "P1": 2.2,
+            "P2": 1.1
+          },
+          "temperature_K": [
+            1863.15,
+            1923.15
+          ],
+          "P_mass_percent": [
+            1,
+            3
+          ]
+        },
+        "Yamada1979": {
+          "doi": "10.2355/tetsutohagane1955.65.2_264",
+          "location": "Abstract, equation 19 and discussion",
+          "epsilon_P_P": 7.3,
+          "reported_error": 0.1,
+          "temperature_K": 1873.15,
+          "P_mass_percent": [
+            0.7,
+            3.2
+          ],
+          "P_atomic_fraction": [
+            0.013,
+            0.057
+          ]
+        },
+        "Yamada1983": {
+          "doi": "10.2355/isijinternational1966.23.51",
+          "location": "Abstract and equation 11",
+          "epsilon_P_Si": 11.9,
+          "reported_error": 0.6,
+          "temperature_K": 1873.15
+        },
+        "Sanbongi1962": {
+          "doi": "10.2355/tetsutohagane1955.48.14_1729",
+          "location": "Abstract and conclusion; source-specific mean rather than later compiled 0.07",
+          "e_O_P_mass_percent": 0.06,
+          "reported_temperature_specific_range": [
+            0.05,
+            0.07
+          ],
+          "temperature_K": [
+            1813.15,
+            1858.15,
+            1898.15
+          ]
+        },
+        "Nozaki1966": {
+          "doi": "10.2355/tetsutohagane1955.52.13_1823",
+          "location": "Published English abstract, item 3",
+          "e_H_P_mass_percent": 0.015,
+          "P_mass_percent_less_than": 6,
+          "temperature_K": [
+            1723.15,
+            1943.15
+          ],
+          "hydrogen_pressure_atm": 1
+        }
+      },
+      "constitutive_extrapolation": {
+        "finite_G": "Perspective of the Fe-Si-O-H excess, h*g_ex,FeSiOH(x/h) with h=1-x_P, plus all-five atomic ideal mixing and reciprocal quadratic P terms. Dilute derivatives match measurements; finite terms are the declared integrable continuation.",
+        "temperature": "Constant or inverse-temperature coefficients are explicit alternatives, not calibrated uncertainty bounds.",
+        "pressure": "No calibrated P partial-molar-volume correction is adopted by this implementation.",
+        "scope": "This dataset supplies local standards and partial derivatives, not an empirical simultaneous five-component error certificate."
+      },
+      "reference_spread_only": {
+        "P1_standard_reported_two_sigma_kcal_mol": 2.2,
+        "P2_standard_reported_two_sigma_kcal_mol": 1.1,
+        "scope": "Reported reference reaction alternatives and coefficient errors; no simultaneous high-temperature multicomponent prediction interval."
+      },
+      "coefficient_unidentified": [
+        "P partial molar pressure volume",
+        "Temperature evolution and higher-order P cross interactions outside measured limits",
+        "Joint standard/interaction uncertainty"
+      ]
+    },
+    "metal_associates_and_potassium": {
+      "source_records": [
+        "associates"
+      ],
+      "experimental_conditions": {
+        "source_locations": [
+          "Table I, p.495",
+          "Table II, p.496",
+          "Section V, p.501",
+          "Appendix II, pp.504\u2013506"
+        ],
+        "measurement_limits": [
+          "Mg/Ca binary coefficients at one temperature; authors assume purely enthalpic 1/T continuation.",
+          "Authors prefer closed-container Mg experiments Han1997 and Seo/Kim2000 over conflicting Itoh1997 series.",
+          "Measured subsystem models do not establish a simultaneous Fe-Si-O-H-P-Mg-Ca-Al-Cr-Ti error bound.",
+          "Ma/P host is retained; O standard and nonideality differ from original complete Jung host."
+        ],
+        "additional_cross_observations": {
+          "P,Al": {
+            "epsilon": 4.6,
+            "reported_error": 0.7,
+            "temperature_K": 1873.15,
+            "source": "https://doi.org/10.2355/isijinternational1966.23.51"
+          },
+          "P,Cr": {
+            "epsilon": -3.8,
+            "reported_error": 0.7,
+            "temperature_K": 1873.15,
+            "source": "https://doi.org/10.2355/isijinternational1966.23.51"
+          },
+          "P,Ti": {
+            "epsilon": -8.0,
+            "reported_error": 2.0,
+            "temperature_K": 1873.15,
+            "source": "https://doi.org/10.2355/isijinternational1966.23.51"
+          },
+          "H,Cr": {
+            "mass_percent_e_H_Cr": -0.0056,
+            "solute_molar_mass_g_mol": 51.9961,
+            "temperature_interval_K": [
+              1823.15,
+              1943.15
+            ],
+            "max_Cr_mass_percent": 20.0,
+            "source": "https://doi.org/10.2355/tetsutohagane1955.53.2_101",
+            "pdf": "https://tetsutohagane.net/articles/search/files/53/2/KJ00002650099.pdf"
+          }
+        },
+        "Mg_Ca_reference_temperature_K": 1873.0,
+        "gas_pressure_standard_Pa": 100000.0
+      },
+      "constitutive_extrapolation": {
+        "law": "One extensive ideal chemical-species mixture plus the declared Jung association/free-species excess terms and retained Ma/P host.",
+        "temperature": "Mg/Ca binary reference is one temperature; enthalpic continuation is an author model assumption. Extra P/H interactions use explicit constant or inverse-temperature choices.",
+        "pure_standards": "Pinned JANAF 2100-2400 K interpolation replaces original FactSage references; Cr crystal is a metastable declared standard above its melting point.",
+        "host": "Retained Ma/P oxygen law differs from complete Jung oxygen host; this hybrid does not silently reproduce every fitted subsystem.",
+        "potassium": "Finite ideal K perspective with a required explicit gas-to-metal standard offset; no empirical default."
+      },
+      "reference_spread_only": {
+        "cross_coefficient_errors": {
+          "P,Al": 0.7,
+          "P,Cr": 0.7,
+          "P,Ti": 2.0
+        },
+        "scope": "Individual reference coefficient errors, not a joint finite-alloy error certificate."
+      },
+      "coefficient_unidentified": [
+        "K Henry standard and its pressure/temperature dependence",
+        "Unlisted higher-order and cross interactions",
+        "Association and condensed-standard pressure volumes",
+        "Joint error of the hybrid host at the source composition"
+      ]
+    }
+  },
+  "source_records": {
+    "water_author_data": {
+      "path": "water_data/CombinedDataset_withS23N17.csv",
+      "sha256": "635fd0c93ef90643d4909329463e958442fb562d10a84b8a61b39ce81b50eab5",
+      "url": "https://github.com/HajimeKawahara/exoeos/blob/8bbfc27731ea21bb436edeb51ea2d81d650dd73e/examples/m2_material/water_data/CombinedDataset_withS23N17.csv"
+    },
+    "water_basis_pressure": {
+      "path": "water_data/water_basis_pressure_sources.json",
+      "sha256": "e114a959b266cdb2893bfe52b40185f53f353a766d49b42e67bfc9e25e116d50",
+      "url": "https://github.com/HajimeKawahara/exoeos/blob/8bbfc27731ea21bb436edeb51ea2d81d650dd73e/examples/m2_material/water_data/water_basis_pressure_sources.json"
+    },
+    "water_author_provenance": {
+      "path": "water_data/provenance.json",
+      "sha256": "93475d9846d5575c87a9b2a0bf0674b7e038c79b94373bc801825df6f405c374",
+      "url": "https://github.com/HajimeKawahara/exoeos/blob/8bbfc27731ea21bb436edeb51ea2d81d650dd73e/examples/m2_material/water_data/provenance.json"
+    },
+    "water_reference_width": {
+      "path": "validation/20260928_water_reconstruction/capacity_scenario_manifest.json",
+      "sha256": "631dd7aff7428fc60d989d984b88760fc8038e02bedecb8e3fec26bd0d9fc13a",
+      "url": "https://github.com/HajimeKawahara/exoeos/blob/8bbfc27731ea21bb436edeb51ea2d81d650dd73e/examples/m2_material/validation/20260928_water_reconstruction/capacity_scenario_manifest.json"
+    },
+    "h2_absorption": {
+      "path": "water_data/Chaudhari2025_absorption_sources.json",
+      "sha256": "5e20e4e8186d55d3b76dad6166b49d0bf9ad844b1862a423ab1a5255fdf2915b",
+      "url": "https://github.com/HajimeKawahara/exoeos/blob/8bbfc27731ea21bb436edeb51ea2d81d650dd73e/examples/m2_material/water_data/Chaudhari2025_absorption_sources.json"
+    },
+    "h2_absorption_scenario": {
+      "path": "validation/20260928_h2_absorption/receipt.json",
+      "sha256": "68ba1c6839a460ad11589dc20d206bae897ffd6db46a461f44d91cb0db19cff7",
+      "url": "https://github.com/HajimeKawahara/exoeos/blob/8bbfc27731ea21bb436edeb51ea2d81d650dd73e/examples/m2_material/validation/20260928_h2_absorption/receipt.json"
+    },
+    "hydrogen_observations": {
+      "path": "hydrogen_reference.json",
+      "sha256": "5922d909964bf1c04a0c915e4cd02a8e03b40650bac0011ede6e6a93e10578aa",
+      "url": "https://github.com/HajimeKawahara/exoeos/blob/126c1f38a1b0dd9cf784ad66a5168c1083881760/examples/m2_material/hydrogen_reference.json"
+    },
+    "feo": {
+      "path": "steel_data/feo_reference_sources.json",
+      "sha256": "2fde6c49e8e976dc76d924262c426b92556922bfb46ef90f164030904749a5b6",
+      "url": "https://github.com/HajimeKawahara/exoeos/blob/8bbfc27731ea21bb436edeb51ea2d81d650dd73e/examples/m2_material/steel_data/feo_reference_sources.json"
+    },
+    "hydrogen_oxygen": {
+      "path": "hydrogen_oxygen_sources.json",
+      "sha256": "c9cace0f4772c5900d2fef797ca7f39fb88e5f5112c0db05f1e21f20ba624cad",
+      "url": "https://github.com/HajimeKawahara/exoeos/blob/126c1f38a1b0dd9cf784ad66a5168c1083881760/examples/m2_material/hydrogen_oxygen_sources.json"
+    },
+    "phosphorus": {
+      "path": "phosphorus_sources.json",
+      "sha256": "89d42a3a45f8147ac4fb49c38c2d3035ea95f754ebe24e23beb8be92921aa9d5",
+      "url": "https://github.com/HajimeKawahara/exoeos/blob/126c1f38a1b0dd9cf784ad66a5168c1083881760/examples/m2_material/phosphorus_sources.json"
+    },
+    "associates": {
+      "path": "associate_sources.json",
+      "sha256": "eeeab1e019382f3ebf2f88b95c34573a5635b5f4755b95200c21eaa3887bf511",
+      "url": "https://github.com/HajimeKawahara/exoeos/blob/126c1f38a1b0dd9cf784ad66a5168c1083881760/examples/m2_material/associate_sources.json"
+    }
+  },
+  "application_policy": {
+    "model_acceptance": "No boolean empirical acceptance is inferred from this ledger. Reference overlap is useful evidence but its absence is not by itself a rejection of a declared model.",
+    "numerical_acceptance": "Element/mass/pressure closure and global phase support remain independent numerical requirements.",
+    "physical_error_assessment": "Compare actual source concentrations and phase responses across justified constitutive choices and reference widths. Identify unresolved coefficients separately; do not require simultaneous observation of every species as an automatic prerequisite."
+  }
+}

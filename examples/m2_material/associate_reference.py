@@ -5,6 +5,7 @@ element conservation remain caller responsibilities; this module supplies G.
 """
 
 from dataclasses import dataclass
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -21,6 +22,7 @@ from exoeos.ma_interval import _Interval, _SecondOrder, _interval, _ma_excess
 
 R = 8.31446261815324
 DATA_PATH = Path(__file__).with_name("associate_sources.json")
+HO_DATA_PATH = Path(__file__).with_name("hydrogen_oxygen_sources.json")
 COMPONENTS = ("Fe", "Si", "O", "H", "P", "Mg", "Ca", "Al", "Cr", "Ti",
               "MgO", "CaO", "AlO", "CrO", "TiO", "Al2O", "Cr2O", "Ti2O")
 FORMULAS = tuple([{name: 1.} for name in COMPONENTS[:10]] +
@@ -44,7 +46,8 @@ def _phosphorus():
     return module
 
 
-def associated_interactions(temperature_k, *, temperature_policy="constant"):
+def associated_interactions(temperature_k, *, temperature_policy="constant",
+                            hydrogen_oxygen_model="omitted"):
     """Return a symmetric matrix for additional, explicitly declared terms."""
     p = _phosphorus()
     p_inputs = p.phosphorus_interactions(temperature_k, temperature_policy=temperature_policy)
@@ -63,14 +66,36 @@ def associated_interactions(temperature_k, *, temperature_policy="constant"):
                  p.mass_percent_to_mole_interaction(row["mass_percent_e_H_Cr"],
                                                    row["solute_molar_mass_g_mol"]))
         matrix[i, j] = matrix[j, i] = value * factor
+    if hydrogen_oxygen_model not in ("omitted", "schenck1961_abstract"):
+        raise ValueError("Select omitted or schenck1961_abstract hydrogen/oxygen interaction.")
+    ho_receipt = {"model": hydrogen_oxygen_model, "epsilon_natural_log": 0.}
+    if hydrogen_oxygen_model == "schenck1961_abstract":
+        ho = json.loads(HO_DATA_PATH.read_text())
+        reference = ho["reported_log10_gamma_H_derivative_wrt_O_mole_fraction"] * np.log(10.)
+        factor_ho = (1. if temperature_policy == "constant" else
+                     ho["reported_temperature_K"] / temperature_k)
+        coefficient = float(reference * factor_ho)
+        matrix[2, 3] = matrix[3, 2] = coefficient
+        example = ho["reported_numerical_example"]
+        ho_receipt.update(epsilon_natural_log=coefficient,
+                          epsilon_reference_natural_log=float(reference),
+                          reference_temperature_K=ho["reported_temperature_K"],
+                          temperature_policy=temperature_policy,
+                          example_predicted_gamma_H=float(np.exp(reference * example["O_mole_fraction"])),
+                          example_reported_gamma_H=example["gamma_H_due_to_O"],
+                          source_sha256=hashlib.sha256(HO_DATA_PATH.read_bytes()).hexdigest(),
+                          scope=ho["scope"], original_full_text_verified=False)
     return matrix, {"phosphorus": p_inputs, "additional_matrix": matrix.tolist(),
+                    "hydrogen_oxygen": ho_receipt,
                     "temperature_policy_for_extra_P_H_cross_terms": temperature_policy,
                     "zero_terms": "Unlisted additional terms are omitted by the declared continuation, not measured to be zero. The original Jung model used no further terms for its evaluated subsystems; H/P extensions have separately listed coefficients."}
 
 
-def make_associated_model(temperature_k, *, temperature_policy="constant"):
+def make_associated_model(temperature_k, *, temperature_policy="constant",
+                          hydrogen_oxygen_model="omitted"):
     p = _phosphorus()
-    matrix, receipt = associated_interactions(temperature_k, temperature_policy=temperature_policy)
+    matrix, receipt = associated_interactions(temperature_k, temperature_policy=temperature_policy,
+                                             hydrogen_oxygen_model=hydrogen_oxygen_model)
     model = MaAssociatedLiquid(p.MaPhosphorusLiquid(np.asarray(receipt["phosphorus"]["epsilon"])), matrix)
     return model, receipt
 

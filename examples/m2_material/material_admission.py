@@ -95,12 +95,13 @@ def published_basalt_h2_extrapolation(hydrogen_partial_pressure_Pa, *,
 def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fractions,
                           molecular_h2_mass_ppm=None, water_mass_percent=None,
                           alloy_atomic_fractions=None,
-                          hydrogen_partial_pressure_Pa=None, buffer=None):
+                          hydrogen_partial_pressure_Pa=None, buffer=None,
+                          liquid_model=None, metal_model=None, hydrogen_oxygen_model=None):
     """Return material evidence for a supplied state, without mutating it.
 
-    Supply native silicate oxides as a normalized name-to-mass-fraction mapping
-    (including native water, excluding the added molecular-H2 contribution),
-    H2 mass ppm and native-water mass percent relative to the complete liquid,
+    Supply silicate oxides as a normalized name-to-mass-fraction mapping
+    (including equivalent water, excluding the added molecular-H2 contribution),
+    H2 mass ppm and equivalent-water mass percent relative to the complete liquid,
     and optional alloy atomic fractions as a mapping or in Fe, Si, O, H order,
     optionally followed by P, or P, Mg, Ca, Al, Cr, Ti. For an associated alloy,
     the caller first counts all species into atomic amounts. The complete
@@ -108,7 +109,20 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
     Oxide names accept chemical case or lowercase native MELTS labels. ``None`` denotes
     an absent/unsupplied alloy, not a zero-composition calibration. This example
     owns no equilibrium or planetary inventory calculation.
+    Optional model selectors document the source recipe, not physical acceptance.
+    The legacy Chaudhari/Kato checks remain source-specific reference comparisons;
+    an unsupported reference condition is not an automatic rejection of a different
+    constitutive model. Scenario offsets are recorded separately by the source.
     """
+    for name, value, allowed in (
+            ("liquid_model", liquid_model, (None, "native", "published", "published_water")),
+            ("metal_model", metal_model, (None, "ma", "phosphorus", "associated", "associated_k")),
+            ("hydrogen_oxygen_model", hydrogen_oxygen_model,
+             (None, "omitted", "schenck1961_abstract"))):
+        if value not in allowed:
+            raise ValueError(f"Unknown {name}; declare an existing source model or leave unspecified.")
+    if hydrogen_oxygen_model == "schenck1961_abstract" and metal_model not in ("associated", "associated_k"):
+        raise ValueError("The declared H-O option requires an associated metal model.")
     temperature = _nonnegative(temperature_K, "T")
     pressure = _nonnegative(pressure_Pa, "P")
     if temperature == 0 or pressure == 0:
@@ -202,6 +216,9 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
         if (x.shape not in ((4,), (5,), (10,), (11,)) or not np.isrealobj(x) or not np.all(np.isfinite(x))
                 or np.any(x < 0) or not np.isclose(x.sum(), 1.0, rtol=0.0, atol=1e-10)):
             raise ValueError("Alloy atomic fractions must be finite, nonnegative and sum to one in the declared 4, 5, 10 or 11 element order.")
+        expected_size = {"ma": 4, "phosphorus": 5, "associated": 10, "associated_k": 11}.get(metal_model)
+        if expected_size is not None and len(x) != expected_size:
+            raise ValueError("Count every alloy element in the selected metal model before the mass comparison.")
         masses = POTASSIUM_ALLOY_MOLAR_MASSES[:len(components)]
         mass = x * masses
         wt_percent = mass / mass.sum() * 100.0
@@ -259,11 +276,27 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
                    "dry_silicate_oxide_mass_fractions": oxides,
                    "molecular_h2_mass_ppm": h2, "water_mass_percent": water,
                    "hydrogen_partial_pressure_Pa": partial, "buffer": buffer}
+    constitutive = json.loads((DATA / "constitutive_evidence.json").read_text())
+    constitutive["selected_models"] = {
+        "liquid_model": liquid_model, "metal_model": metal_model,
+        "hydrogen_oxygen_model": hydrogen_oxygen_model,
+        "unspecified_meaning": "Not supplied; no model or standard-offset choice is inferred from concentrations."}
+    constitutive["actual_comparison_coordinates"] = {
+        **input_state,
+        "alloy_atomic_fractions": (dict(zip(alloy["component_order"], alloy["atomic_fractions"]))
+                                   if alloy["status"] == "evaluated" else None),
+        "alloy_mass_percent": alloy.get("mass_percent"),
+        "concentration_basis": "Complete supplied phase mass, with all counted alloy atoms. Dry-oxide normalization is descriptive only. Reference-specific host/speciation restrictions still apply."}
     return {
         "report_kind": "actual_state_material_evidence",
         "input": input_state,
         "accepted_coupled_material_domain": None,
         "material_admission": "not_established",
+        "reference_assessment_scope": {
+            "legacy_checks": "Chaudhari silicate and Kato Fe/Fe-Si-H source conditions only; native_water keys are retained historical aliases for equivalent-water mass comparisons.",
+            "reference_conditions_are_constitutive_acceptance": False,
+            "not_established_means": "This diagnostic makes no coupled physical acceptance decision. It does not reject a declared model solely because these reference families have no simultaneous measured overlap."},
+        "constitutive_evidence": constitutive,
         "nominal_melts": {
             "inside_nominal_limits": (_distance(temperature, melts["temperature_K"]) == 0
                                       and _distance(pressure, melts["pressure_Pa"]) == 0),
@@ -291,7 +324,8 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
                        "Composition differences and source extrapolations have no quantified validity radius or error bound.",
                        "Phase stability, reaction standards and omitted-transfer errors require independent assessments."],
         "provenance": {name: hashlib.sha256((DATA / name).read_bytes()).hexdigest()
-                       for name in ("domain_evidence.json", "hydrogen_reference.json", "material_admission.py")},
+                       for name in ("domain_evidence.json", "hydrogen_reference.json", "constitutive_evidence.json",
+                                    "material_admission.py")},
     }
 
 
