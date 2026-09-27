@@ -10,12 +10,29 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import numpy as np
+import jax
+import jax.numpy as jnp
+from jax.scipy.special import xlogy
 
 
 PARAMETER_PATH = Path(__file__).parent / "m2_liquid_mixing/parameters.json"
 PARAMETERS = json.loads(PARAMETER_PATH.read_text())
 COMPONENTS = PARAMETERS["component_order"]
 PUBLISHED_MODEL_ID = "melts_v102_published_mixing_native_standard_states_v1"
+
+
+@jax.jit
+def _active_liquid_scalar(amounts, standard, matrix, alpha, water_mask):
+    """Independent extensive scalar on the strictly positive component face."""
+    total = jnp.sum(amounts)
+    wet, dry = jnp.sum(amounts * water_mask), jnp.sum(amounts * (1-water_mask))
+    water_entropy = (xlogy(wet, jnp.where(wet > 0, wet/total, 1.))
+                     + xlogy(dry, jnp.where(dry > 0, dry/total, 1.)))
+    return (jnp.dot(amounts, standard) + .5 * amounts @ matrix @ amounts / total
+            + alpha * (jnp.sum(xlogy(amounts, amounts/total)) + water_entropy))
+
+
+_active_liquid_value_gradient = jax.jit(jax.value_and_grad(_active_liquid_scalar))
 
 
 def liquid_mixing_parameters(temperature, pressure, common_R=8.31446261815324):
@@ -192,11 +209,34 @@ def make_published_liquid_evaluator(native_evaluator, *, runtime, python_executa
                            "native_composition_evaluated": False},
         }
 
+    def energy_value_and_grad_rt(temperature, pressure, component_moles, **options):
+        """Audit present-component potentials by AD of an independent scalar.
+
+        Native pure standards are shared physical inputs. Neither analytical
+        mixture potentials nor the returned mixture energy is differentiated.
+        Absent components retain unavailable derivatives on their fixed face.
+        """
+        if not jax.config.x64_enabled:
+            raise RuntimeError("Published-liquid derivative audits require JAX_ENABLE_X64=1.")
+        state = evaluate_liquid(temperature, pressure, component_moles, **options)
+        n = np.asarray(state["component_moles"])
+        present = n > 0
+        parameters = state["mixing_expression"]
+        standard = np.asarray(state["mu0_RT"], dtype=float)[present]
+        matrix = np.asarray(parameters["quadratic_matrix_rt"])[np.ix_(present, present)]
+        water_mask = (np.flatnonzero(present) == parameters["water_index"]).astype(float)
+        energy, gradient = _active_liquid_value_gradient(
+            n[present], standard, matrix, parameters["entropy_coefficient"], water_mask)
+        full_gradient = np.full(n.shape, np.nan)
+        full_gradient[present] = np.asarray(gradient)
+        return float(energy), full_gradient
+
     return SimpleNamespace(
         MODEL_ID=PUBLISHED_MODEL_ID, COMPONENTS=COMPONENTS, ELEMENTS=native_evaluator.ELEMENTS,
         OXIDES=native_evaluator.OXIDES, NU=native_evaluator.NU, OXIDE_MASSES=native_evaluator.OXIDE_MASSES,
         FORMULA_MATRIX=native_evaluator.FORMULA_MATRIX, REFERENCE=native_evaluator.REFERENCE,
         REFERENCE_PATH=native_evaluator.REFERENCE_PATH, __file__=__file__,
-        evaluate_liquid=evaluate_liquid, standard_state_receipts=receipts,
+        evaluate_liquid=evaluate_liquid, energy_value_and_grad_rt=energy_value_and_grad_rt,
+        standard_state_receipts=receipts,
         mixing_model_id=PARAMETERS["model_id"],
         mixing_parameter_sha256=hashlib.sha256(PARAMETER_PATH.read_bytes()).hexdigest())
