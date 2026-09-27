@@ -1,0 +1,43 @@
+{
+  "scope": "Unfitted reference replay and one fixed old OH composition; no new equilibrium/closure or admitted BSE domain.",
+  "executions": [
+    {
+      "artifact": "pressure_ideal.json",
+      "actual_exit_code": 0,
+      "command": "JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 PYTHONPATH=src taskset -c40 python -m examples.m2_material.water_basis_pressure --output <artifact>"
+    },
+    {
+      "artifact": "pressure_zhang_duan.json",
+      "actual_exit_code": 0,
+      "command": "JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 PYTHONPATH=src taskset -c40 python -m examples.m2_material.water_basis_pressure --gas-model zhang_duan2009 --output <artifact>"
+    },
+    {
+      "artifact": "native_fixed_OH_point.json",
+      "actual_exit_code": 0,
+      "command": "JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 PYTHONPATH=<selected EOS/Gibbs source and examples> taskset -c40 python native_fixed_OH_point.py"
+    }
+  ],
+  "checks": {
+    "provider_new_water_and_published_mixing_tests": {
+      "passed": 14,
+      "actual_exit_code": 0
+    },
+    "Gibbs_melts_coupling_tests": {
+      "passed": 27,
+      "actual_exit_code": 0
+    }
+  },
+  "artifacts": {
+    "pressure_ideal.json": "73247a231d1b5ba6786016a01829548313f3a911b1570ea928d022ea9c68d8fc",
+    "pressure_zhang_duan.json": "78e1c3a66f24e7f548cc2949ab7c94802a3fbf19b7ee967130aaa81871cd93ba",
+    "native_fixed_OH_point.json": "1f8fcc4eb9e1a0f15504b78828bbffec1e78dd3c9ec3417fdf4e27321e7fa567",
+    "native_fixed_OH_point.py": "e412ab5bbac06ccb7d4166f8ccbb9a01ea90fd70c2ea94f1c41b486426a2782a"
+  },
+  "file_sha256": {
+    "examples/melts_water_reconstruction.py": "e00164f423208d3955cedeefb0e137ccee3ccccba27745dfab9a9b770956bf2f",
+    "examples/m2_material/water_basis_pressure.py": "d77d319ef0280891e0ff840d3cc537a205961a4fc24c9d0490d6de2abb033c62",
+    "examples/m2_material/water_data/water_basis_pressure_sources.json": "e114a959b266cdb2893bfe52b40185f53f353a766d49b42e67bfc9e25e116d50",
+    "examples/m2_material/water_data/Shishkina2010_Table2_low_pressure.csv": "1955d679ea9dcb198e35523e9c6b8b7ffbff7f138372185a338f0b52b56238da"
+  },
+  "prior_failed_attempts": "Before these successful outputs: default CUDA backend unavailable (fixed by explicit JAX_PLATFORMS=cpu); original spreadsheet empty footer required exclusion as a non-observation. Neither failed attempt produced an archived successful report."
+}
