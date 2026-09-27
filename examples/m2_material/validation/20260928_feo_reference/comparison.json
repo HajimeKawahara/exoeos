@@ -1,0 +1,100 @@
+{
+  "record_id": "primary_high_temperature_FeO_reference_v1",
+  "T_K": 2173.15,
+  "P_bar": 269.6545152505794,
+  "observations": [
+    {
+      "temperature_C": 1785,
+      "O_mass_percent": 0.45,
+      "T_K": 2058.15,
+      "published_fit_O_mass_percent": 0.462518125018394,
+      "Frost_binary_O_mass_percent": 0.4870408735937377,
+      "Frost_minus_measured_mass_percent": 0.0370408735937377,
+      "published_fit_minus_measured_mass_percent": 0.012518125018394,
+      "coexistence": {
+        "FeO_associated_mole_fractions": [
+          0.017083514709873068,
+          0.9733802800916916
+        ],
+        "O_mass_percent": [
+          0.4870408735937377,
+          21.805548846177967
+        ],
+        "max_abs_common_tangent_mu_residual_RT": 1.2073675392798577e-15
+      }
+    },
+    {
+      "temperature_C": 1880,
+      "O_mass_percent": 0.62,
+      "T_K": 2153.15,
+      "published_fit_O_mass_percent": 0.633722937197901,
+      "Frost_binary_O_mass_percent": 0.7206480227760051,
+      "Frost_minus_measured_mass_percent": 0.10064802277600515,
+      "published_fit_minus_measured_mass_percent": 0.013722937197900964,
+      "coexistence": {
+        "FeO_associated_mole_fractions": [
+          0.02533703098529017,
+          0.9657350864150759
+        ],
+        "O_mass_percent": [
+          0.7206480227760051,
+          21.671398021749564
+        ],
+        "max_abs_common_tangent_mu_residual_RT": 4.85722573273506e-17
+      }
+    },
+    {
+      "temperature_C": 1960,
+      "O_mass_percent": 0.83,
+      "T_K": 2233.15,
+      "published_fit_O_mass_percent": 0.809187296759798,
+      "Frost_binary_O_mass_percent": 0.9850373942804326,
+      "Frost_minus_measured_mass_percent": 0.15503739428043262,
+      "published_fit_minus_measured_mass_percent": -0.020812703240202013,
+      "coexistence": {
+        "FeO_associated_mole_fractions": [
+          0.03472508733722756,
+          0.9580408123876989
+        ],
+        "O_mass_percent": [
+          0.9850373942804326,
+          21.53592043489021
+        ],
+        "max_abs_common_tangent_mu_residual_RT": 8.590350653037149e-15
+      }
+    }
+  ],
+  "target_published_ambient_saturation_fit_O_mass_percent": 0.6747913759077827,
+  "target_Frost_binary_coexistence": {
+    "FeO_associated_mole_fractions": [
+      0.02747871046903114,
+      0.9638710802141095
+    ],
+    "O_mass_percent": [
+      0.7810869042594868,
+      21.638620331640812
+    ],
+    "max_abs_common_tangent_mu_residual_RT": 6.38378239159465e-16
+  },
+  "target_binary_activity_shape": {
+    "O_mass_percent": 0.08530558765855167,
+    "O_atomic_mole_fraction": 0.002971304969275759,
+    "FeO_associated_mole_fraction": 0.0029801599332947948,
+    "Frost_ln_gamma_O_minus_infinite_dilution": -0.01805311181714009,
+    "Ma_ln_gamma_O_minus_infinite_dilution": -0.022593706363493078,
+    "difference_RT": 0.004540594546352989,
+    "Frost_dilute_atomic_epsilon_OO": -6.060009606275825,
+    "Ma_dilute_atomic_epsilon_OO": -7.592665025423924
+  },
+  "Frost_excess_only_pressure_shift_O_infinite_dilution_RT": -0.000877247757071946,
+  "Frost_excess_only_pressure_slope_reported_sigma_RT": 8.921163631240129e-05,
+  "limitations": [
+    "Measured high-temperature saturation excludes a claim that2173K Fe\u2013O has no direct binary evidence.",
+    "The Distin binary saturation fit does not certify arbitrary Fe\u2013Si\u2013O\u2013H or13-element alloy stability.",
+    "The Frost two-associated-species approximation has visible residuals against the3 Distin measurements, larger than reported0.02wt% at some points; it is not silently treated as exact.",
+    "Only composition-dependent binary activity after equal infinite-dilution anchors is compared to Ma; this does not establish agreement of absolute standards.",
+    "Reported pressure term is excess mixing only. Pure-component pressure volumes and Si/H effects are not included and must not be declared bounded by it.",
+    "Neither a common empirical material domain nor a complete multicomponent phase-stability result is established."
+  ],
+  "accepted_coupled_material_domain": null
+}
