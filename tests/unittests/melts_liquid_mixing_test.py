@@ -98,3 +98,30 @@ def test_selected_published_callback_caches_standards_and_keeps_only_computed_pr
     assert other["model_id"] == mixing.PUBLISHED_MODEL_ID
     present = parent > 0
     assert first["gibbs_RT"] == pytest.approx(parent[present]@np.asarray(first["mu_RT"], float)[present])
+
+    # A trace phosphate amount makes macroscopic total-energy differences
+    # unresolved; the independent scalar AD keeps the same intensive limit.
+    for scale in (1., 1e24):
+        for water in (0., .02, 1.):
+            n = np.zeros(19)
+            n[0], n[13], n[18] = 1-water, 1e-18 if water < 1 else 0., water
+            n *= scale
+            state = provider.evaluate_liquid(2173.15, 3e7, n)
+            energy, gradient = provider.energy_value_and_grad_rt(2173.15, 3e7, n)
+            present = n > 0
+            assert energy == pytest.approx(state["gibbs_RT"], rel=2e-14, abs=1e-14)
+            np.testing.assert_allclose(gradient[present], np.asarray(state["mu_RT"], float)[present],
+                                       rtol=0, atol=5e-12)
+            assert np.all(np.isnan(gradient[~present]))
+
+    original = mixing.liquid_mixing_state
+    def incorrect_mixture(parameters, n):
+        state = original(parameters, n)
+        state["mixing_gibbs_rt"] += .01*np.sum(n)
+        state["mixing_mu_rt"][0] += .02
+        return state
+    monkeypatch.setattr(mixing, "liquid_mixing_state", incorrect_mixture)
+    wrong = provider.evaluate_liquid(2173.15, 3e7, parent)
+    independent, gradient = provider.energy_value_and_grad_rt(2173.15, 3e7, parent)
+    assert wrong["gibbs_RT"]-independent == pytest.approx(.01*parent.sum())
+    assert wrong["mu_RT"][0]-gradient[0] == pytest.approx(.02)

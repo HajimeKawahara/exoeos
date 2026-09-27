@@ -60,3 +60,14 @@ G, potentials, activities, mass, basis and composition data; they do not reuse
 probe density, volume, enthalpy, entropy or heat capacity. Candidate saturation
 and other calculation modes are not supplied by this callback. Exact-zero
 amounts retain continuous energies and unavailable absent potentials.
+# Independent derivative audit
+
+The published evaluator exposes `energy_value_and_grad_rt(T_K, P_Pa, n, ...)`
+for an independent scalar audit. JAX differentiates a separately written
+extensive standard/regular-solution/entropy expression on the positive
+component face. It shares native pure standards and the published coefficients
+as physical inputs, and does not reuse the analytical mixture potentials or
+mixture energy. Exact-zero components have unavailable face derivatives;
+present trace components remain auditable even when total-energy finite
+differences lose significance. This numerical audit does not extend the
+empirical material domain or certify native/published global equivalence.
