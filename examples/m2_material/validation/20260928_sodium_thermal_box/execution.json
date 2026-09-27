@@ -1,0 +1,19 @@
+{
+  "command": [
+    "taskset",
+    "-c",
+    "40",
+    "/home/kawahara/anaconda3/envs/myenv39/bin/python",
+    "/tmp/stage2-sodium-exchange-eos-20260928/examples/m2_material/validation/20260928_sodium_thermal_box/replay.py",
+    "--source",
+    "/tmp/stage2-final-reclosed-h1e24-sakao-oh-16/closure.json",
+    "--output",
+    "/tmp/stage2-sodium-exchange-eos-20260928/examples/m2_material/validation/20260928_sodium_thermal_box/assessment.json"
+  ],
+  "exit_code": 0,
+  "wall_seconds": 0.09281154721975327,
+  "stdout": "",
+  "stderr": "",
+  "assessment_sha256": "ac7952d6f4efe7c4da026fdcf83a9c6ea29a0969085dab06e608e8ab8e8dffc3",
+  "ast_and_local_links_passed": true
+}

@@ -94,6 +94,8 @@ these interactions. The FeS `5.44 - 14340/T` regression and its coefficient
 errors do not bound the S-free 2173.15 K, approximately 270 bar extrapolation.
 The five limits can constrain declared continuations and finite-inventory
 tests, but their direct transplantation is not an empirical BSE error bound.
+The separate [fixed-host Na box](sodium_fixed_box.md) declares constant D
+explicitly and evaluates the finite 1%-of-global-Na engineering threshold.
 
 The [saved replay](validation/20260928_sodium_exchange/replay.json) records
 all nine basalt cases, including the excluded GGK3 observation. The
