@@ -1,0 +1,664 @@
+{
+  "status": "independent_unfitted_pressure_comparison",
+  "gas_model": "zhang_duan2009",
+  "original_paper_gas_EOS_reproduced": false,
+  "prediction_basis": "H2O_equivalent_mass_from_published_absorptivity",
+  "normalization": {
+    "conversion": "author_response * M_H2O / M_OH",
+    "equivalent_molar_species": "H2O",
+    "observations": [
+      {
+        "sample": "Per-fO2(1)",
+        "original_H2O_mass_ppm": 3.2,
+        "reconstructed_H2O_mass_ppm": 3.1999999995821797,
+        "difference_mass_ppm": -4.178204449090117e-10
+      },
+      {
+        "sample": "Per-fO2(2)",
+        "original_H2O_mass_ppm": 5.7,
+        "reconstructed_H2O_mass_ppm": 5.700000000017075,
+        "difference_mass_ppm": 1.7075230118734908e-11
+      },
+      {
+        "sample": "Per-fO2(3)",
+        "original_H2O_mass_ppm": 19.6,
+        "reconstructed_H2O_mass_ppm": 19.599999997308444,
+        "difference_mass_ppm": -2.6915571993413323e-09
+      },
+      {
+        "sample": "Per-fO2(6)",
+        "original_H2O_mass_ppm": 22.45,
+        "reconstructed_H2O_mass_ppm": 22.450000003672333,
+        "difference_mass_ppm": 3.672333548365714e-09
+      },
+      {
+        "sample": "Per-fO2(7)",
+        "original_H2O_mass_ppm": 38.8,
+        "reconstructed_H2O_mass_ppm": 38.800000001156874,
+        "difference_mass_ppm": 1.1568772606551647e-09
+      },
+      {
+        "sample": "Per-fO2(8)",
+        "original_H2O_mass_ppm": 60.55,
+        "reconstructed_H2O_mass_ppm": 60.54999999508968,
+        "difference_mass_ppm": -4.910319262307894e-09
+      },
+      {
+        "sample": "Per-fO2(9)",
+        "original_H2O_mass_ppm": 89.4,
+        "reconstructed_H2O_mass_ppm": 89.40000000004483,
+        "difference_mass_ppm": 4.482103577174712e-11
+      },
+      {
+        "sample": "Per-fO2(10)",
+        "original_H2O_mass_ppm": 115.4,
+        "reconstructed_H2O_mass_ppm": 115.39999995626707,
+        "difference_mass_ppm": -4.373293904791353e-08
+      },
+      {
+        "sample": "Per-fO2(11)",
+        "original_H2O_mass_ppm": 117.15,
+        "reconstructed_H2O_mass_ppm": 117.15000003357717,
+        "difference_mass_ppm": 3.3577165936549136e-08
+      },
+      {
+        "sample": "Per-fO2(12)",
+        "original_H2O_mass_ppm": 107.2,
+        "reconstructed_H2O_mass_ppm": 107.19999996322967,
+        "difference_mass_ppm": -3.677033078020031e-08
+      },
+      {
+        "sample": "Per-TS1",
+        "original_H2O_mass_ppm": 34.9,
+        "reconstructed_H2O_mass_ppm": 34.900000001368184,
+        "difference_mass_ppm": 1.368185564842861e-09
+      },
+      {
+        "sample": "Per-TS2",
+        "original_H2O_mass_ppm": 38.1,
+        "reconstructed_H2O_mass_ppm": 38.10000000200959,
+        "difference_mass_ppm": 2.0095853869861457e-09
+      }
+    ],
+    "max_abs_rounding_difference_mass_ppm": 4.373293904791353e-08
+  },
+  "statistics": {
+    "KFT_H2O_wt_percent": {
+      "count": 14,
+      "ratio_min": 0.619184293890847,
+      "ratio_max": 1.1010371790873303,
+      "RMSE_wt_percent": 0.4199250018550218,
+      "max_multiplicative_discrepancy": 1.615028045553567
+    },
+    "NIR_total_H2O_wt_percent": {
+      "count": 12,
+      "ratio_min": 0.6547154718909481,
+      "ratio_max": 1.3532424439491049,
+      "RMSE_wt_percent": 0.4255428766317275,
+      "max_multiplicative_discrepancy": 1.52738104250355
+    },
+    "NIR_OH_H2O_equivalent_wt_percent": {
+      "count": 12,
+      "ratio_min": 1.166971660984302,
+      "ratio_max": 1.6417250795320013,
+      "RMSE_wt_percent": 0.4587799356449931,
+      "max_multiplicative_discrepancy": 1.6417250795320013
+    }
+  },
+  "observations": [
+    {
+      "sample": "M13",
+      "P_MPa": 50.0,
+      "fluid_H2O_mole_fraction": 1.0,
+      "fluid_H2O_sigma": 0.08,
+      "KFT_H2O_wt_percent": 1.67,
+      "KFT_sigma_wt_percent": 0.14,
+      "MIR_H2O_wt_percent": null,
+      "MIR_sigma_wt_percent": null,
+      "NIR_molecular_H2O_wt_percent": null,
+      "NIR_molecular_sigma_wt_percent": null,
+      "NIR_OH_H2O_equivalent_wt_percent": null,
+      "NIR_OH_sigma_wt_percent": null,
+      "NIR_total_H2O_wt_percent": null,
+      "NIR_total_sigma_wt_percent": null,
+      "FeO_loss_relative_percent": null,
+      "FeII_over_total_Fe": null,
+      "T_K": 1523.15,
+      "P_Pa": 50000000.0,
+      "log_phi_H2O": -0.003346074034517266,
+      "f_H2O_Pa": 49832975.891626626,
+      "predicted_H2O_equivalent_wt_percent": 1.8387320890758416,
+      "comparisons": {
+        "KFT_H2O_wt_percent": {
+          "predicted_over_measured": 1.1010371790873303,
+          "difference_wt_percent": 0.1687320890758417,
+          "legacy_literal_OH_predicted_over_measured": 0.5505185895436652
+        },
+        "NIR_total_H2O_wt_percent": null,
+        "NIR_OH_H2O_equivalent_wt_percent": null
+      }
+    },
+    {
+      "sample": "M14",
+      "P_MPa": 50.0,
+      "fluid_H2O_mole_fraction": 1.0,
+      "fluid_H2O_sigma": 0.05,
+      "KFT_H2O_wt_percent": 1.82,
+      "KFT_sigma_wt_percent": 0.12,
+      "MIR_H2O_wt_percent": 1.59,
+      "MIR_sigma_wt_percent": 0.21,
+      "NIR_molecular_H2O_wt_percent": 0.59,
+      "NIR_molecular_sigma_wt_percent": 0.06,
+      "NIR_OH_H2O_equivalent_wt_percent": 1.12,
+      "NIR_OH_sigma_wt_percent": 0.12,
+      "NIR_total_H2O_wt_percent": 1.71,
+      "NIR_total_sigma_wt_percent": 0.13,
+      "FeO_loss_relative_percent": null,
+      "FeII_over_total_Fe": 0.64,
+      "T_K": 1523.15,
+      "P_Pa": 50000000.0,
+      "log_phi_H2O": -0.003346074034517266,
+      "f_H2O_Pa": 49832975.891626626,
+      "predicted_H2O_equivalent_wt_percent": 1.8387320890758416,
+      "comparisons": {
+        "KFT_H2O_wt_percent": {
+          "predicted_over_measured": 1.0102923566350779,
+          "difference_wt_percent": 0.018732089075841563,
+          "legacy_literal_OH_predicted_over_measured": 0.5051461783175389
+        },
+        "NIR_total_H2O_wt_percent": {
+          "predicted_over_measured": 1.0752819234361648,
+          "difference_wt_percent": 0.12873208907584166,
+          "legacy_literal_OH_predicted_over_measured": 0.5376409617180824
+        },
+        "NIR_OH_H2O_equivalent_wt_percent": {
+          "predicted_over_measured": 1.6417250795320013,
+          "difference_wt_percent": 0.7187320890758415,
+          "legacy_literal_OH_predicted_over_measured": 0.8208625397660007
+        }
+      }
+    },
+    {
+      "sample": "M15",
+      "P_MPa": 50.0,
+      "fluid_H2O_mole_fraction": 0.48,
+      "fluid_H2O_sigma": 0.08,
+      "KFT_H2O_wt_percent": 1.54,
+      "KFT_sigma_wt_percent": 0.12,
+      "MIR_H2O_wt_percent": 1.43,
+      "MIR_sigma_wt_percent": 0.2,
+      "NIR_molecular_H2O_wt_percent": 0.54,
+      "NIR_molecular_sigma_wt_percent": 0.06,
+      "NIR_OH_H2O_equivalent_wt_percent": 0.98,
+      "NIR_OH_sigma_wt_percent": 0.1,
+      "NIR_total_H2O_wt_percent": 1.52,
+      "NIR_total_sigma_wt_percent": 0.12,
+      "FeO_loss_relative_percent": null,
+      "FeII_over_total_Fe": 0.68,
+      "T_K": 1523.15,
+      "P_Pa": 50000000.0,
+      "log_phi_H2O": -0.0028339189818685356,
+      "f_H2O_Pa": 23932082.226623256,
+      "predicted_H2O_equivalent_wt_percent": 1.2742372216543874,
+      "comparisons": {
+        "KFT_H2O_wt_percent": {
+          "predicted_over_measured": 0.8274267673080438,
+          "difference_wt_percent": -0.2657627783456127,
+          "legacy_literal_OH_predicted_over_measured": 0.4137133836540219
+        },
+        "NIR_total_H2O_wt_percent": {
+          "predicted_over_measured": 0.8383139616147285,
+          "difference_wt_percent": -0.24576277834561266,
+          "legacy_literal_OH_predicted_over_measured": 0.41915698080736424
+        },
+        "NIR_OH_H2O_equivalent_wt_percent": {
+          "predicted_over_measured": 1.30024206291264,
+          "difference_wt_percent": 0.29423722165438737,
+          "legacy_literal_OH_predicted_over_measured": 0.65012103145632
+        }
+      }
+    },
+    {
+      "sample": "M16",
+      "P_MPa": 50.0,
+      "fluid_H2O_mole_fraction": 0.2,
+      "fluid_H2O_sigma": 0.08,
+      "KFT_H2O_wt_percent": 1.07,
+      "KFT_sigma_wt_percent": 0.12,
+      "MIR_H2O_wt_percent": 1.1,
+      "MIR_sigma_wt_percent": 0.17,
+      "NIR_molecular_H2O_wt_percent": null,
+      "NIR_molecular_sigma_wt_percent": null,
+      "NIR_OH_H2O_equivalent_wt_percent": null,
+      "NIR_OH_sigma_wt_percent": null,
+      "NIR_total_H2O_wt_percent": null,
+      "NIR_total_sigma_wt_percent": null,
+      "FeO_loss_relative_percent": 6.55,
+      "FeII_over_total_Fe": 0.73,
+      "T_K": 1523.15,
+      "P_Pa": 50000000.0,
+      "log_phi_H2O": 0.0029196168625814645,
+      "f_H2O_Pa": 10029238.830948044,
+      "predicted_H2O_equivalent_wt_percent": 0.8248861858599346,
+      "comparisons": {
+        "KFT_H2O_wt_percent": {
+          "predicted_over_measured": 0.7709216690279762,
+          "difference_wt_percent": -0.2451138141400655,
+          "legacy_literal_OH_predicted_over_measured": 0.3854608345139881
+        },
+        "NIR_total_H2O_wt_percent": null,
+        "NIR_OH_H2O_equivalent_wt_percent": null
+      }
+    },
+    {
+      "sample": "M51",
+      "P_MPa": 50.0,
+      "fluid_H2O_mole_fraction": 0.98,
+      "fluid_H2O_sigma": 0.03,
+      "KFT_H2O_wt_percent": 2.24,
+      "KFT_sigma_wt_percent": 0.11,
+      "MIR_H2O_wt_percent": null,
+      "MIR_sigma_wt_percent": null,
+      "NIR_molecular_H2O_wt_percent": 0.96,
+      "NIR_molecular_sigma_wt_percent": 0.1,
+      "NIR_OH_H2O_equivalent_wt_percent": 1.38,
+      "NIR_OH_sigma_wt_percent": 0.14,
+      "NIR_total_H2O_wt_percent": 2.34,
+      "NIR_total_sigma_wt_percent": 0.17,
+      "FeO_loss_relative_percent": null,
+      "FeII_over_total_Fe": 0.66,
+      "T_K": 1523.15,
+      "P_Pa": 50000000.0,
+      "log_phi_H2O": -0.003354743490282911,
+      "f_H2O_Pa": 48835892.99134479,
+      "predicted_H2O_equivalent_wt_percent": 1.8202440102796023,
+      "comparisons": {
+        "KFT_H2O_wt_percent": {
+          "predicted_over_measured": 0.8126089331605366,
+          "difference_wt_percent": -0.41975598972039796,
+          "legacy_literal_OH_predicted_over_measured": 0.4063044665802683
+        },
+        "NIR_total_H2O_wt_percent": {
+          "predicted_over_measured": 0.7778820556750438,
+          "difference_wt_percent": -0.5197559897203976,
+          "legacy_literal_OH_predicted_over_measured": 0.3889410278375219
+        },
+        "NIR_OH_H2O_equivalent_wt_percent": {
+          "predicted_over_measured": 1.3190173987533351,
+          "difference_wt_percent": 0.44024401027960236,
+          "legacy_literal_OH_predicted_over_measured": 0.6595086993766676
+        }
+      }
+    },
+    {
+      "sample": "M50",
+      "P_MPa": 50.0,
+      "fluid_H2O_mole_fraction": 0.67,
+      "fluid_H2O_sigma": 0.06,
+      "KFT_H2O_wt_percent": 2.43,
+      "KFT_sigma_wt_percent": 0.12,
+      "MIR_H2O_wt_percent": null,
+      "MIR_sigma_wt_percent": null,
+      "NIR_molecular_H2O_wt_percent": 0.73,
+      "NIR_molecular_sigma_wt_percent": 0.08,
+      "NIR_OH_H2O_equivalent_wt_percent": 1.17,
+      "NIR_OH_sigma_wt_percent": 0.13,
+      "NIR_total_H2O_wt_percent": 1.9,
+      "NIR_total_sigma_wt_percent": 0.15,
+      "FeO_loss_relative_percent": null,
+      "FeII_over_total_Fe": 0.7,
+      "T_K": 1523.15,
+      "P_Pa": 50000000.0,
+      "log_phi_H2O": -0.003943141257350041,
+      "f_H2O_Pa": 33368164.860985022,
+      "predicted_H2O_equivalent_wt_percent": 1.5046178341547582,
+      "comparisons": {
+        "KFT_H2O_wt_percent": {
+          "predicted_over_measured": 0.619184293890847,
+          "difference_wt_percent": -0.9253821658452419,
+          "legacy_literal_OH_predicted_over_measured": 0.3095921469454235
+        },
+        "NIR_total_H2O_wt_percent": {
+          "predicted_over_measured": 0.7919041232393464,
+          "difference_wt_percent": -0.39538216584524166,
+          "legacy_literal_OH_predicted_over_measured": 0.3959520616196732
+        },
+        "NIR_OH_H2O_equivalent_wt_percent": {
+          "predicted_over_measured": 1.2859981488502208,
+          "difference_wt_percent": 0.3346178341547583,
+          "legacy_literal_OH_predicted_over_measured": 0.6429990744251104
+        }
+      }
+    },
+    {
+      "sample": "M49",
+      "P_MPa": 50.0,
+      "fluid_H2O_mole_fraction": 0.31,
+      "fluid_H2O_sigma": 0.08,
+      "KFT_H2O_wt_percent": 1.25,
+      "KFT_sigma_wt_percent": 0.12,
+      "MIR_H2O_wt_percent": null,
+      "MIR_sigma_wt_percent": null,
+      "NIR_molecular_H2O_wt_percent": 0.44,
+      "NIR_molecular_sigma_wt_percent": 0.05,
+      "NIR_OH_H2O_equivalent_wt_percent": 0.79,
+      "NIR_OH_sigma_wt_percent": 0.08,
+      "NIR_total_H2O_wt_percent": 1.23,
+      "NIR_total_sigma_wt_percent": 0.1,
+      "FeO_loss_relative_percent": 6.04,
+      "FeII_over_total_Fe": 0.75,
+      "T_K": 1523.15,
+      "P_Pa": 50000000.0,
+      "log_phi_H2O": 6.816341389520586e-06,
+      "f_H2O_Pa": 15500105.653651621,
+      "predicted_H2O_equivalent_wt_percent": 1.0254804213172477,
+      "comparisons": {
+        "KFT_H2O_wt_percent": {
+          "predicted_over_measured": 0.8203843370537982,
+          "difference_wt_percent": -0.2245195786827523,
+          "legacy_literal_OH_predicted_over_measured": 0.4101921685268991
+        },
+        "NIR_total_H2O_wt_percent": {
+          "predicted_over_measured": 0.8337239197701201,
+          "difference_wt_percent": -0.20451957868275228,
+          "legacy_literal_OH_predicted_over_measured": 0.41686195988506003
+        },
+        "NIR_OH_H2O_equivalent_wt_percent": {
+          "predicted_over_measured": 1.2980764826800604,
+          "difference_wt_percent": 0.23548042131724767,
+          "legacy_literal_OH_predicted_over_measured": 0.6490382413400302
+        }
+      }
+    },
+    {
+      "sample": "M48",
+      "P_MPa": 50.0,
+      "fluid_H2O_mole_fraction": 0.2,
+      "fluid_H2O_sigma": 0.08,
+      "KFT_H2O_wt_percent": 0.77,
+      "KFT_sigma_wt_percent": 0.11,
+      "MIR_H2O_wt_percent": 0.7,
+      "MIR_sigma_wt_percent": 0.13,
+      "NIR_molecular_H2O_wt_percent": 0.34,
+      "NIR_molecular_sigma_wt_percent": 0.04,
+      "NIR_OH_H2O_equivalent_wt_percent": 0.51,
+      "NIR_OH_sigma_wt_percent": 0.05,
+      "NIR_total_H2O_wt_percent": 0.85,
+      "NIR_total_sigma_wt_percent": 0.06,
+      "FeO_loss_relative_percent": 12.47,
+      "FeII_over_total_Fe": 0.79,
+      "T_K": 1523.15,
+      "P_Pa": 50000000.0,
+      "log_phi_H2O": 0.0029196168625814645,
+      "f_H2O_Pa": 10029238.830948044,
+      "predicted_H2O_equivalent_wt_percent": 0.8248861858599346,
+      "comparisons": {
+        "KFT_H2O_wt_percent": {
+          "predicted_over_measured": 1.0712807608570578,
+          "difference_wt_percent": 0.054886185859934544,
+          "legacy_literal_OH_predicted_over_measured": 0.5356403804285289
+        },
+        "NIR_total_H2O_wt_percent": {
+          "predicted_over_measured": 0.9704543363058054,
+          "difference_wt_percent": -0.025113814140065416,
+          "legacy_literal_OH_predicted_over_measured": 0.4852271681529027
+        },
+        "NIR_OH_H2O_equivalent_wt_percent": {
+          "predicted_over_measured": 1.617423893843009,
+          "difference_wt_percent": 0.31488618585993455,
+          "legacy_literal_OH_predicted_over_measured": 0.8087119469215045
+        }
+      }
+    },
+    {
+      "sample": "M47",
+      "P_MPa": 50.0,
+      "fluid_H2O_mole_fraction": 0.18,
+      "fluid_H2O_sigma": 0.08,
+      "KFT_H2O_wt_percent": 0.82,
+      "KFT_sigma_wt_percent": 0.12,
+      "MIR_H2O_wt_percent": 0.73,
+      "MIR_sigma_wt_percent": 0.12,
+      "NIR_molecular_H2O_wt_percent": 0.34,
+      "NIR_molecular_sigma_wt_percent": 0.04,
+      "NIR_OH_H2O_equivalent_wt_percent": 0.51,
+      "NIR_OH_sigma_wt_percent": 0.05,
+      "NIR_total_H2O_wt_percent": 0.85,
+      "NIR_total_sigma_wt_percent": 0.07,
+      "FeO_loss_relative_percent": 10.6,
+      "FeII_over_total_Fe": 0.75,
+      "T_K": 1523.15,
+      "P_Pa": 50000000.0,
+      "log_phi_H2O": 0.0035463712771724165,
+      "f_H2O_Pa": 9031974.003828203,
+      "predicted_H2O_equivalent_wt_percent": 0.7828010208821244,
+      "comparisons": {
+        "KFT_H2O_wt_percent": {
+          "predicted_over_measured": 0.954635391319664,
+          "difference_wt_percent": -0.03719897911787551,
+          "legacy_literal_OH_predicted_over_measured": 0.477317695659832
+        },
+        "NIR_total_H2O_wt_percent": {
+          "predicted_over_measured": 0.9209423775083817,
+          "difference_wt_percent": -0.06719897911787553,
+          "legacy_literal_OH_predicted_over_measured": 0.46047118875419085
+        },
+        "NIR_OH_H2O_equivalent_wt_percent": {
+          "predicted_over_measured": 1.5349039625139695,
+          "difference_wt_percent": 0.27280102088212443,
+          "legacy_literal_OH_predicted_over_measured": 0.7674519812569848
+        }
+      }
+    },
+    {
+      "sample": "M6",
+      "P_MPa": 100.0,
+      "fluid_H2O_mole_fraction": 1.0,
+      "fluid_H2O_sigma": 0.05,
+      "KFT_H2O_wt_percent": 2.8,
+      "KFT_sigma_wt_percent": 0.13,
+      "MIR_H2O_wt_percent": null,
+      "MIR_sigma_wt_percent": null,
+      "NIR_molecular_H2O_wt_percent": 1.46,
+      "NIR_molecular_sigma_wt_percent": 0.16,
+      "NIR_OH_H2O_equivalent_wt_percent": 1.68,
+      "NIR_OH_sigma_wt_percent": 0.17,
+      "NIR_total_H2O_wt_percent": 3.14,
+      "NIR_total_sigma_wt_percent": 0.23,
+      "FeO_loss_relative_percent": null,
+      "FeII_over_total_Fe": 0.64,
+      "T_K": 1523.15,
+      "P_Pa": 100000000.0,
+      "log_phi_H2O": -0.0010106893245684333,
+      "f_H2O_Pa": 99898982.12498619,
+      "predicted_H2O_equivalent_wt_percent": 2.603398051760602,
+      "comparisons": {
+        "KFT_H2O_wt_percent": {
+          "predicted_over_measured": 0.9297850184859293,
+          "difference_wt_percent": -0.19660194823939792,
+          "legacy_literal_OH_predicted_over_measured": 0.46489250924296466
+        },
+        "NIR_total_H2O_wt_percent": {
+          "predicted_over_measured": 0.82910765979637,
+          "difference_wt_percent": -0.5366019482393982,
+          "legacy_literal_OH_predicted_over_measured": 0.414553829898185
+        },
+        "NIR_OH_H2O_equivalent_wt_percent": {
+          "predicted_over_measured": 1.5496416974765488,
+          "difference_wt_percent": 0.923398051760602,
+          "legacy_literal_OH_predicted_over_measured": 0.7748208487382744
+        }
+      }
+    },
+    {
+      "sample": "M7",
+      "P_MPa": 100.0,
+      "fluid_H2O_mole_fraction": 0.6,
+      "fluid_H2O_sigma": 0.08,
+      "KFT_H2O_wt_percent": 2.97,
+      "KFT_sigma_wt_percent": 0.12,
+      "MIR_H2O_wt_percent": null,
+      "MIR_sigma_wt_percent": null,
+      "NIR_molecular_H2O_wt_percent": 1.49,
+      "NIR_molecular_sigma_wt_percent": 0.15,
+      "NIR_OH_H2O_equivalent_wt_percent": 1.6,
+      "NIR_OH_sigma_wt_percent": 0.16,
+      "NIR_total_H2O_wt_percent": 3.08,
+      "NIR_total_sigma_wt_percent": 0.22,
+      "FeO_loss_relative_percent": null,
+      "FeII_over_total_Fe": 0.66,
+      "T_K": 1523.15,
+      "P_Pa": 100000000.0,
+      "log_phi_H2O": -0.0010700045648897177,
+      "f_H2O_Pa": 59935834.06115237,
+      "predicted_H2O_equivalent_wt_percent": 2.0165236534241204,
+      "comparisons": {
+        "KFT_H2O_wt_percent": {
+          "predicted_over_measured": 0.6789641930720943,
+          "difference_wt_percent": -0.9534763465758798,
+          "legacy_literal_OH_predicted_over_measured": 0.33948209653604716
+        },
+        "NIR_total_H2O_wt_percent": {
+          "predicted_over_measured": 0.6547154718909481,
+          "difference_wt_percent": -1.0634763465758796,
+          "legacy_literal_OH_predicted_over_measured": 0.32735773594547407
+        },
+        "NIR_OH_H2O_equivalent_wt_percent": {
+          "predicted_over_measured": 1.2603272833900752,
+          "difference_wt_percent": 0.41652365342412034,
+          "legacy_literal_OH_predicted_over_measured": 0.6301636416950376
+        }
+      }
+    },
+    {
+      "sample": "M8",
+      "P_MPa": 100.0,
+      "fluid_H2O_mole_fraction": 0.49,
+      "fluid_H2O_sigma": 0.05,
+      "KFT_H2O_wt_percent": 2.26,
+      "KFT_sigma_wt_percent": 0.12,
+      "MIR_H2O_wt_percent": 2.06,
+      "MIR_sigma_wt_percent": 0.23,
+      "NIR_molecular_H2O_wt_percent": 0.94,
+      "NIR_molecular_sigma_wt_percent": 0.1,
+      "NIR_OH_H2O_equivalent_wt_percent": 1.27,
+      "NIR_OH_sigma_wt_percent": 0.13,
+      "NIR_total_H2O_wt_percent": 2.21,
+      "NIR_total_sigma_wt_percent": 0.17,
+      "FeO_loss_relative_percent": null,
+      "FeII_over_total_Fe": 0.71,
+      "T_K": 1523.15,
+      "P_Pa": 100000000.0,
+      "log_phi_H2O": 0.0007763549799042202,
+      "f_H2O_Pa": 49038056.16465032,
+      "predicted_H2O_equivalent_wt_percent": 1.824007699607379,
+      "comparisons": {
+        "KFT_H2O_wt_percent": {
+          "predicted_over_measured": 0.8070830529236191,
+          "difference_wt_percent": -0.4359923003926207,
+          "legacy_literal_OH_predicted_over_measured": 0.4035415264618096
+        },
+        "NIR_total_H2O_wt_percent": {
+          "predicted_over_measured": 0.8253428505010765,
+          "difference_wt_percent": -0.3859923003926209,
+          "legacy_literal_OH_predicted_over_measured": 0.41267142525053824
+        },
+        "NIR_OH_H2O_equivalent_wt_percent": {
+          "predicted_over_measured": 1.4362265351239205,
+          "difference_wt_percent": 0.5540076996073791,
+          "legacy_literal_OH_predicted_over_measured": 0.7181132675619603
+        }
+      }
+    },
+    {
+      "sample": "M9",
+      "P_MPa": 100.0,
+      "fluid_H2O_mole_fraction": 0.12,
+      "fluid_H2O_sigma": 0.06,
+      "KFT_H2O_wt_percent": 1.2,
+      "KFT_sigma_wt_percent": 0.12,
+      "MIR_H2O_wt_percent": 1.31,
+      "MIR_sigma_wt_percent": 0.2,
+      "NIR_molecular_H2O_wt_percent": 0.0,
+      "NIR_molecular_sigma_wt_percent": null,
+      "NIR_OH_H2O_equivalent_wt_percent": 0.78,
+      "NIR_OH_sigma_wt_percent": 0.09,
+      "NIR_total_H2O_wt_percent": 0.78,
+      "NIR_total_sigma_wt_percent": 0.09,
+      "FeO_loss_relative_percent": 13.33,
+      "FeII_over_total_Fe": 0.84,
+      "T_K": 1523.15,
+      "P_Pa": 100000000.0,
+      "log_phi_H2O": 0.017519197592855,
+      "f_H2O_Pa": 12212082.706150495,
+      "predicted_H2O_equivalent_wt_percent": 0.9102378955677556,
+      "comparisons": {
+        "KFT_H2O_wt_percent": {
+          "predicted_over_measured": 0.7585315796397963,
+          "difference_wt_percent": -0.28976210443224437,
+          "legacy_literal_OH_predicted_over_measured": 0.37926578981989817
+        },
+        "NIR_total_H2O_wt_percent": {
+          "predicted_over_measured": 1.166971660984302,
+          "difference_wt_percent": 0.13023789556775556,
+          "legacy_literal_OH_predicted_over_measured": 0.583485830492151
+        },
+        "NIR_OH_H2O_equivalent_wt_percent": {
+          "predicted_over_measured": 1.166971660984302,
+          "difference_wt_percent": 0.13023789556775556,
+          "legacy_literal_OH_predicted_over_measured": 0.583485830492151
+        }
+      }
+    },
+    {
+      "sample": "M10",
+      "P_MPa": 100.0,
+      "fluid_H2O_mole_fraction": 0.08,
+      "fluid_H2O_sigma": 0.05,
+      "KFT_H2O_wt_percent": 0.75,
+      "KFT_sigma_wt_percent": 0.11,
+      "MIR_H2O_wt_percent": 0.84,
+      "MIR_sigma_wt_percent": 0.17,
+      "NIR_molecular_H2O_wt_percent": 0.0,
+      "NIR_molecular_sigma_wt_percent": null,
+      "NIR_OH_H2O_equivalent_wt_percent": 0.55,
+      "NIR_OH_sigma_wt_percent": 0.06,
+      "NIR_total_H2O_wt_percent": 0.55,
+      "NIR_total_sigma_wt_percent": 0.06,
+      "FeO_loss_relative_percent": 16.84,
+      "FeII_over_total_Fe": 0.88,
+      "T_K": 1523.15,
+      "P_Pa": 100000000.0,
+      "log_phi_H2O": 0.020415930154449452,
+      "f_H2O_Pa": 8165006.086290081,
+      "predicted_H2O_equivalent_wt_percent": 0.7442833441720077,
+      "comparisons": {
+        "KFT_H2O_wt_percent": {
+          "predicted_over_measured": 0.9923777922293436,
+          "difference_wt_percent": -0.005716655827992301,
+          "legacy_literal_OH_predicted_over_measured": 0.4961888961146718
+        },
+        "NIR_total_H2O_wt_percent": {
+          "predicted_over_measured": 1.3532424439491049,
+          "difference_wt_percent": 0.19428334417200765,
+          "legacy_literal_OH_predicted_over_measured": 0.6766212219745524
+        },
+        "NIR_OH_H2O_equivalent_wt_percent": {
+          "predicted_over_measured": 1.3532424439491049,
+          "difference_wt_percent": 0.19428334417200765,
+          "legacy_literal_OH_predicted_over_measured": 0.6766212219745524
+        }
+      }
+    }
+  ],
+  "source_sha256": "e114a959b266cdb2893bfe52b40185f53f353a766d49b42e67bfc9e25e116d50",
+  "limitations": [
+    "This independent basalt comparison has T1523.15K and P500/1000bar. It does not by itself validate BSE peridotite at2173.15K and270bar.",
+    "All10 dry oxides are retained in the mole denominator. Fe is represented by starting FeO-total: run-specific Fe redox and reported Fe loss are preserved but not fitted away.",
+    "KFT measures total H2O-equivalent water. NIR glass OH and molecularH2O partitions are retained separately; quenched-glass speciation is not declared in-situ melt speciation.",
+    "Ideal partial pressure and Zhang-Duan2009 fugacity are separate evaluations, neither reproduces the original Pitzer-Sterner/Aranovich-Newton recipe.",
+    "The numerical spread of unfitted residuals is an observed discrepancy, not a statistical prediction interval or bound on unmeasured T/P/composition/speciation errors.",
+    "No H2 molecular standard, metal model or native MELTS water term is changed; accepted coupled material domain remains unestablished."
+  ],
+  "accepted_coupled_material_domain": null
+}
