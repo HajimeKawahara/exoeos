@@ -1,0 +1,265 @@
+{
+  "schema": "m2_solid_independent_transcription_archive_v1",
+  "date": "2026-09-27",
+  "scope": "Preserved independent expression transcriptions and finite native comparisons. No new native run or formal stability calculation was performed while assembling this archive.",
+  "provider_review_commit": "38475d56a7cbf0b00aa1e51ef6d6e61e4c4291fc",
+  "native_trials_commit": "2268924b0a5ea6238d1540a4e12c0afc42c92574",
+  "native_trials_url": "https://github.com/HajimeKawahara/exogibbs/tree/2268924b0a5ea6238d1540a4e12c0afc42c92574/results/m2_stability_search/20260927/explicit_coordinates",
+  "sources": [
+    {
+      "file": "rhomsghiorso.c",
+      "source_kind": "published_source_transcription",
+      "upstream_commit": "705a0fb315e5054d18275a580562f6121c8e458c",
+      "url": "https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/rhomsghiorso.c",
+      "sha256": "9c06e35c78c8e522bb05d6d1933fa34806ddc927c2002980872d5fbeb00cec5e"
+    },
+    {
+      "file": "clinopyroxene.c",
+      "source_kind": "published_source_transcription",
+      "upstream_commit": "705a0fb315e5054d18275a580562f6121c8e458c",
+      "url": "https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/clinopyroxene.c",
+      "sha256": "0a50a5171ec75f77fc439bebcd1b96f70962859eaf3c0f532d072d847fa585a0"
+    },
+    {
+      "file": "orthopyroxene.c",
+      "source_kind": "published_source_transcription",
+      "upstream_commit": "705a0fb315e5054d18275a580562f6121c8e458c",
+      "url": "https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/orthopyroxene.c",
+      "sha256": "cddc4cc48d3a829724a61589a33e96f0b909189ece1a045c6c64d775754596f7"
+    },
+    {
+      "file": "spinel.c",
+      "source_kind": "published_source_transcription",
+      "upstream_commit": "705a0fb315e5054d18275a580562f6121c8e458c",
+      "url": "https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/spinel.c",
+      "sha256": "85210623e96347735a0db09da4bc893d3702eac527042432796e980fbecf6df1"
+    }
+  ],
+  "plagioclase_binary": {
+    "source_kind": "pinned_native_binary_instruction_transcription",
+    "upstream_project": "https://github.com/magmasource/alphaMELTS",
+    "release_url": "https://github.com/magmasource/alphaMELTS/releases/download/v2.3.2/alphamelts-py-2.3.2-ubuntu_22_04-x86_64.zip",
+    "release_archive_sha256": "97ec2cdb53cae69822a41b5639d8b93edf95b2c361bc15e64e53b192ea9e1425",
+    "binary": "libalphamelts.so",
+    "binary_sha256": "c218ef6f7ba5aef4b0760f3176530d1335457d6e2716823a1d0de3a5d13301e5",
+    "symbol": "gmixPlg",
+    "symbol_bytes_sha256": "ea8e10b7d7ac9a5b8bb75473a91450ef92cdb188c21cbabc547bedce2d9997f3",
+    "thermodynamic_build_source_commit": null,
+    "binary_included": false
+  },
+  "original_artifacts": [
+    {
+      "path": "rhm/stage2-rhm-transcription.py",
+      "original_path": "/tmp/stage2-rhm-transcription.py",
+      "role": "original independent transcription or finite-check artifact",
+      "sha256": "35a64d3dc6e0ecf4db9a62307f3f46caa5a5cd8616815d41f4fa43c3ee07a4bf",
+      "bytes": 11946
+    },
+    {
+      "path": "rhm/stage2-rhm-parameters.json",
+      "original_path": "/tmp/stage2-rhm-parameters.json",
+      "role": "original independent transcription or finite-check artifact",
+      "sha256": "acf4ec2b8ffc1a7d7364fe922ef433084fe98ba91aada9b2d35fd6425885d72f",
+      "bytes": 38706
+    },
+    {
+      "path": "rhm/stage2-rhm-transcription.md",
+      "original_path": "/tmp/stage2-rhm-transcription.md",
+      "role": "original independent transcription or finite-check artifact",
+      "sha256": "9558e336ab835aa863f4c9ab04c2163124f415cad27caa7a9b8f2a0b9b1a2e10",
+      "bytes": 6983
+    },
+    {
+      "path": "rhm/stage2-rhm-validate.py",
+      "original_path": "/tmp/stage2-rhm-validate.py",
+      "role": "original independent transcription or finite-check artifact",
+      "sha256": "e57fd6fb66366ed88486723e9224069962aa4c2b3e7f74e9a9167e6d2adb03c3",
+      "bytes": 4002
+    },
+    {
+      "path": "rhm/stage2-rhm-validation.json",
+      "original_path": "/tmp/stage2-rhm-validation.json",
+      "role": "original independent transcription or finite-check artifact",
+      "sha256": "8a95099bd69248db62b8d9356e37b1582398fedac43e37b70b60d7adadeb12ee",
+      "bytes": 30403
+    },
+    {
+      "path": "plagioclase/stage2-plagioclase-disassemble.py",
+      "original_path": "/tmp/stage2-plagioclase-disassemble.py",
+      "role": "original independent transcription or finite-check artifact",
+      "sha256": "e21240833a08a8d439e8ca24f81a84b0b4be3744240dbffd32badbb0d4d598ce",
+      "bytes": 11246
+    },
+    {
+      "path": "plagioclase/stage2-plagioclase-disassembly.txt",
+      "original_path": "/tmp/stage2-plagioclase-disassembly.txt",
+      "role": "original independent transcription or finite-check artifact",
+      "sha256": "e4dc0a7e270e43215dfcd3ded374feec6616724819485e74251a61f9bb840fbc",
+      "bytes": 19671
+    },
+    {
+      "path": "plagioclase/stage2-plagioclase-instruction-audit.json",
+      "original_path": "/tmp/stage2-plagioclase-instruction-audit.json",
+      "role": "original independent transcription or finite-check artifact",
+      "sha256": "a2e67ea268598ae1f2d4d8babf956b0e54ad3d5f3b16cba1c7f1c62225234bd1",
+      "bytes": 15774
+    },
+    {
+      "path": "plagioclase/stage2-plagioclase-parameters.json",
+      "original_path": "/tmp/stage2-plagioclase-parameters.json",
+      "role": "original independent transcription or finite-check artifact",
+      "sha256": "edb902dd859dfe9ae82f3cf0ff1bce5c28accceafdcfc4c31938976a776f2aae",
+      "bytes": 7162
+    },
+    {
+      "path": "plagioclase/stage2-plagioclase-transcription.md",
+      "original_path": "/tmp/stage2-plagioclase-transcription.md",
+      "role": "original independent transcription or finite-check artifact",
+      "sha256": "c72f2b209d3b552cb336f343a8a2b61271418f17edae6de90a4d4884771890d1",
+      "bytes": 5967
+    },
+    {
+      "path": "plagioclase/stage2-plagioclase-validate.py",
+      "original_path": "/tmp/stage2-plagioclase-validate.py",
+      "role": "original independent transcription or finite-check artifact",
+      "sha256": "86bfbd897674ce8220429e1ec737528c743c29f8d20b2a8b96089c5ce842f476",
+      "bytes": 2197
+    },
+    {
+      "path": "plagioclase/stage2-plagioclase-validation.json",
+      "original_path": "/tmp/stage2-plagioclase-validation.json",
+      "role": "original independent transcription or finite-check artifact",
+      "sha256": "a096a915f581e2508e657d42891f2f087793698c4a2742ba2886d05d4ff9307d",
+      "bytes": 20025
+    },
+    {
+      "path": "pyx-spinel/stage2-pyx-spinel-prototype.py",
+      "original_path": "/tmp/stage2-pyx-spinel-prototype.py",
+      "role": "original independent transcription or finite-check artifact",
+      "sha256": "f9db37de4b6e21bdb1ef1b3373443b979dd88acf1ea4486a9d955b14a81b27c3",
+      "bytes": 7276
+    },
+    {
+      "path": "pyx-spinel/stage2-pyx-spinel-models.json",
+      "original_path": "/tmp/stage2-pyx-spinel-models.json",
+      "role": "original independent transcription or finite-check artifact",
+      "sha256": "b5d37e88e1226360f8685d8875c3e18ce8bc3f23265fed421c1f4954cb37e621",
+      "bytes": 143930
+    },
+    {
+      "path": "pyx-spinel/stage2-pyx-spinel-transcription.md",
+      "original_path": "/tmp/stage2-pyx-spinel-transcription.md",
+      "role": "original independent transcription or finite-check artifact",
+      "sha256": "f38c3cefb0794c2a90ff0d502191fdc8fdfd2f95b2102ffc17406338d8729b03",
+      "bytes": 4590
+    },
+    {
+      "path": "pyx-spinel/stage2-pyx-spinel-validate.py",
+      "original_path": "/tmp/stage2-pyx-spinel-validate.py",
+      "role": "original independent transcription or finite-check artifact",
+      "sha256": "a1070b86613e35d06e9afa75da3afd67c28b83ab8b4fc83b9dc896b8de06cf54",
+      "bytes": 10496
+    },
+    {
+      "path": "pyx-spinel/stage2-pyx-spinel-validation.json",
+      "original_path": "/tmp/stage2-pyx-spinel-validation.json",
+      "role": "original independent transcription or finite-check artifact",
+      "sha256": "fa213b6a94a732b8826925405f1b262896666657604c47a57d651c06f9591b32",
+      "bytes": 167187
+    },
+    {
+      "path": "inputs/native_standards/rhm-oxide.json",
+      "original_path": "/tmp/stage2-solid-standards/rhm-oxide.json",
+      "role": "fixed native pure-standard receipt",
+      "sha256": "d5a73b4fe3c28f34e83e4e1bd3139d5117de90b5698a4401abd3fb56c5bfb7d9",
+      "bytes": 2713
+    },
+    {
+      "path": "inputs/native_trials/phase_26_rhm-oxide.json",
+      "original_path": "/tmp/stage2-stability-supported-20260927/results/m2_stability_search/20260927/explicit_coordinates/phase_26_rhm-oxide.json",
+      "role": "byte-preserved prior finite native candidate archive",
+      "sha256": "bfa144b4f039f764d48fc44c35e6508578cd7eb6fd91c759c57eb682648aff4c",
+      "bytes": 401815
+    },
+    {
+      "path": "inputs/native_standards/plagioclase.json",
+      "original_path": "/tmp/stage2-solid-standards/plagioclase.json",
+      "role": "fixed native pure-standard receipt",
+      "sha256": "aaefe51fe287e95c72fef3e022def7704ddcdf77efed552d3581767b6607bebe",
+      "bytes": 2109
+    },
+    {
+      "path": "inputs/native_trials/phase_14_plagioclase.json",
+      "original_path": "/tmp/stage2-stability-supported-20260927/results/m2_stability_search/20260927/explicit_coordinates/phase_14_plagioclase.json",
+      "role": "byte-preserved prior finite native candidate archive",
+      "sha256": "db7c150a0361369812af49e528d9cf627cf5960ab0b321109ea159d14d8a96fc",
+      "bytes": 349741
+    },
+    {
+      "path": "inputs/native_standards/clinopyroxene.json",
+      "original_path": "/tmp/stage2-solid-standards/clinopyroxene.json",
+      "role": "fixed native pure-standard receipt",
+      "sha256": "8d60c94ccddf4484062784302a4723d5d24a632970c4bce3b7efec846c149872",
+      "bytes": 3659
+    },
+    {
+      "path": "inputs/native_trials/phase_05_clinopyroxene.json",
+      "original_path": "/tmp/stage2-stability-supported-20260927/results/m2_stability_search/20260927/explicit_coordinates/phase_05_clinopyroxene.json",
+      "role": "byte-preserved prior finite native candidate archive",
+      "sha256": "79aa29f92dd4489a9a27780b55d2b99968ae3fed9e63ae03a50d85805a636e4f",
+      "bytes": 459772
+    },
+    {
+      "path": "inputs/native_standards/orthopyroxene.json",
+      "original_path": "/tmp/stage2-solid-standards/orthopyroxene.json",
+      "role": "fixed native pure-standard receipt",
+      "sha256": "540315b09d97952fafbc2d3bcf1aa663e4f9709a549a87b573537ba527ce02ac",
+      "bytes": 3659
+    },
+    {
+      "path": "inputs/native_trials/phase_04_orthopyroxene.json",
+      "original_path": "/tmp/stage2-stability-supported-20260927/results/m2_stability_search/20260927/explicit_coordinates/phase_04_orthopyroxene.json",
+      "role": "byte-preserved prior finite native candidate archive",
+      "sha256": "a2bb0ddc13edc4849228e4282454c893702283d16cb2e169ddd961c4410eb0e9",
+      "bytes": 459967
+    },
+    {
+      "path": "inputs/native_standards/spinel.json",
+      "original_path": "/tmp/stage2-solid-standards/spinel.json",
+      "role": "fixed native pure-standard receipt",
+      "sha256": "a714f8ca401ccea1dccf110325927e6114ac3a96e5654e76c556af7307626498",
+      "bytes": 2734
+    },
+    {
+      "path": "inputs/native_trials/phase_25_spinel.json",
+      "original_path": "/tmp/stage2-stability-supported-20260927/results/m2_stability_search/20260927/explicit_coordinates/phase_25_spinel.json",
+      "role": "byte-preserved prior finite native candidate archive",
+      "sha256": "50f0ccebc05da03e702c5e890e242c87de1764425a4874de72b78092d7da875b",
+      "bytes": 407781
+    },
+    {
+      "path": "inputs/host_properties.json",
+      "original_path": "/tmp/stage2-liquid-global-fixed2-h1e24/host_properties.json",
+      "role": "fixed host and oxide-mass receipt used for transcription",
+      "sha256": "757dc5525674f8f338d150f9d898fef55e6742a68ec4fb8796ab4bb9da80c036",
+      "bytes": 23540
+    },
+    {
+      "path": "inputs/stage2-solid-standard-worker.py",
+      "original_path": "/tmp/stage2-solid-standard-worker.py",
+      "role": "historical native receipt producer; not invoked by replay",
+      "sha256": "2311d04bad49806e227a9819f0c952c7de54a6074b763debcd0629afc66b8e63",
+      "bytes": 1305
+    },
+    {
+      "path": "pyx-spinel/transcribe_parameters.py",
+      "original_path": "ExoEOS 38475d56a7cbf0b00aa1e51ef6d6e61e4c4291fc:examples/m2_solid_mixing/transcribe_parameters.py",
+      "role": "Macros dependency snapshot for original prototype",
+      "sha256": "ab676212275a328c49cdb23d56952ccf239e26cb55bc92731d8ca19e194e10c1",
+      "bytes": 20529
+    }
+  ],
+  "formal_global_bound_included": false,
+  "native_binary_uniform_error_bound_certified": false,
+  "global_empirical_stability_certified": false
+}

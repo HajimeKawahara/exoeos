@@ -1,0 +1,693 @@
+{
+  "scope": "Finite archived native compatibility only. Parameter values and polynomial topology came from symbolic instruction lifting; no finite-point fit was used.",
+  "parameter_sha256": "edb902dd859dfe9ae82f3cf0ff1bce5c28accceafdcfc4c31938976a776f2aae",
+  "archive_sha256": "db7c150a0361369812af49e528d9cf627cf5960ab0b321109ea159d14d8a96fc",
+  "T_K": 2173.15,
+  "P_bar": 267.20283416157343,
+  "comparison_count": 62,
+  "maximum_absolute_difference_J_mol": 1.4897523215040565e-09,
+  "records": [
+    {
+      "archive_trial_index": 0,
+      "fractions": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "native_mixing_gibbs_J_mol": -21562.104571824893,
+      "declared_mixing_gibbs_J_mol": -21562.104571824806,
+      "difference_J_mol": 8.731149137020111e-11
+    },
+    {
+      "archive_trial_index": 1,
+      "fractions": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "native_mixing_gibbs_J_mol": 0.0,
+      "declared_mixing_gibbs_J_mol": 0.0,
+      "difference_J_mol": 0.0
+    },
+    {
+      "archive_trial_index": 2,
+      "fractions": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "native_mixing_gibbs_J_mol": 0.0,
+      "declared_mixing_gibbs_J_mol": 0.0,
+      "difference_J_mol": 0.0
+    },
+    {
+      "archive_trial_index": 3,
+      "fractions": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "native_mixing_gibbs_J_mol": 0.0,
+      "declared_mixing_gibbs_J_mol": 0.0,
+      "difference_J_mol": 0.0
+    },
+    {
+      "archive_trial_index": 4,
+      "fractions": [
+        0.5,
+        0.5,
+        0.0
+      ],
+      "native_mixing_gibbs_J_mol": -11533.436475075781,
+      "declared_mixing_gibbs_J_mol": -11533.436475075618,
+      "difference_J_mol": 1.6370904631912708e-10
+    },
+    {
+      "archive_trial_index": 5,
+      "fractions": [
+        0.5,
+        0.0,
+        0.5
+      ],
+      "native_mixing_gibbs_J_mol": -19718.248331406154,
+      "declared_mixing_gibbs_J_mol": -19718.24833140668,
+      "difference_J_mol": -5.275069270282984e-10
+    },
+    {
+      "archive_trial_index": 6,
+      "fractions": [
+        0.0,
+        0.5,
+        0.5
+      ],
+      "native_mixing_gibbs_J_mol": -10902.762129314244,
+      "declared_mixing_gibbs_J_mol": -10902.762129313436,
+      "difference_J_mol": 8.076312951743603e-10
+    },
+    {
+      "archive_trial_index": 7,
+      "fractions": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "native_mixing_gibbs_J_mol": -21562.104571824893,
+      "declared_mixing_gibbs_J_mol": -21562.104571824806,
+      "difference_J_mol": 8.731149137020111e-11
+    },
+    {
+      "archive_trial_index": 8,
+      "fractions": [
+        0.33333334326744063,
+        0.33333332836627966,
+        0.33333332836627966
+      ],
+      "native_mixing_gibbs_J_mol": -21562.104640973732,
+      "declared_mixing_gibbs_J_mol": -21562.10464097356,
+      "difference_J_mol": 1.709850039333105e-10
+    },
+    {
+      "archive_trial_index": 9,
+      "fractions": [
+        0.33333332836627966,
+        0.33333334326744063,
+        0.33333332836627966
+      ],
+      "native_mixing_gibbs_J_mol": -21562.104452653788,
+      "declared_mixing_gibbs_J_mol": -21562.104452653606,
+      "difference_J_mol": 1.8189894035458565e-10
+    },
+    {
+      "archive_trial_index": 10,
+      "fractions": [
+        0.33333332836627966,
+        0.33333332836627966,
+        0.33333334326744063
+      ],
+      "native_mixing_gibbs_J_mol": -21562.10462184716,
+      "declared_mixing_gibbs_J_mol": -21562.104621847244,
+      "difference_J_mol": -8.36735125631094e-11
+    },
+    {
+      "archive_trial_index": 11,
+      "fractions": [
+        0.4473904880384604,
+        0.3509844976166884,
+        0.2016250143448512
+      ],
+      "native_mixing_gibbs_J_mol": -20272.870310361497,
+      "declared_mixing_gibbs_J_mol": -20272.870310361868,
+      "difference_J_mol": -3.710738383233547e-10
+    },
+    {
+      "archive_trial_index": 12,
+      "fractions": [
+        0.44739049627298366,
+        0.3509844923866119,
+        0.2016250113404044
+      ],
+      "native_mixing_gibbs_J_mol": -20272.870276530273,
+      "declared_mixing_gibbs_J_mol": -20272.8702765304,
+      "difference_J_mol": -1.2732925824820995e-10
+    },
+    {
+      "archive_trial_index": 13,
+      "fractions": [
+        0.4473904813718227,
+        0.35098450728777286,
+        0.2016250113404044
+      ],
+      "native_mixing_gibbs_J_mol": -20272.870209648274,
+      "declared_mixing_gibbs_J_mol": -20272.870209648427,
+      "difference_J_mol": -1.5279510989785194e-10
+    },
+    {
+      "archive_trial_index": 14,
+      "fractions": [
+        0.4473904813718227,
+        0.3509844923866119,
+        0.20162502624156536
+      ],
+      "native_mixing_gibbs_J_mol": -20272.870560751297,
+      "declared_mixing_gibbs_J_mol": -20272.8705607511,
+      "difference_J_mol": 1.964508555829525e-10
+    },
+    {
+      "archive_trial_index": 15,
+      "fractions": [
+        0.6267490853660205,
+        0.37325091463397947,
+        0.0
+      ],
+      "native_mixing_gibbs_J_mol": -11245.114681684412,
+      "declared_mixing_gibbs_J_mol": -11245.11468168425,
+      "difference_J_mol": 1.6189005691558123e-10
+    },
+    {
+      "archive_trial_index": 16,
+      "fractions": [
+        0.6267490909278924,
+        0.3732509090721075,
+        0.0
+      ],
+      "native_mixing_gibbs_J_mol": -11245.11464407947,
+      "declared_mixing_gibbs_J_mol": -11245.1146440792,
+      "difference_J_mol": 2.6921043172478676e-10
+    },
+    {
+      "archive_trial_index": 17,
+      "fractions": [
+        0.6267490760267315,
+        0.3732509239732685,
+        0.0
+      ],
+      "native_mixing_gibbs_J_mol": -11245.114744829014,
+      "declared_mixing_gibbs_J_mol": -11245.11474482924,
+      "difference_J_mol": -2.255546860396862e-10
+    },
+    {
+      "archive_trial_index": 18,
+      "fractions": [
+        0.6267490760267315,
+        0.3732509090721075,
+        1.4901160971803055e-08
+      ],
+      "native_mixing_gibbs_J_mol": -11245.119844533503,
+      "declared_mixing_gibbs_J_mol": -11245.119844533541,
+      "difference_J_mol": -3.8198777474462986e-11
+    },
+    {
+      "archive_trial_index": 19,
+      "fractions": [
+        0.4998869820932809,
+        0.3192666119056107,
+        0.1808464060011085
+      ],
+      "native_mixing_gibbs_J_mol": -19893.113428054377,
+      "declared_mixing_gibbs_J_mol": -19893.113428055596,
+      "difference_J_mol": -1.2187229003757238e-09
+    },
+    {
+      "archive_trial_index": 20,
+      "fractions": [
+        0.5645134357814637,
+        0.34676744903632734,
+        0.08871911518220882
+      ],
+      "native_mixing_gibbs_J_mol": -16833.961455276236,
+      "declared_mixing_gibbs_J_mol": -16833.961455276625,
+      "difference_J_mol": -3.892637323588133e-10
+    },
+    {
+      "archive_trial_index": 21,
+      "fractions": [
+        0.5945861873264946,
+        0.35956446628104155,
+        0.04584934639246399
+      ],
+      "native_mixing_gibbs_J_mol": -14727.87517115008,
+      "declared_mixing_gibbs_J_mol": -14727.875171150861,
+      "difference_J_mol": -7.803464541211724e-10
+    },
+    {
+      "archive_trial_index": 22,
+      "fractions": [
+        0.6093323366233603,
+        0.36583947329403643,
+        0.02482819008260329
+      ],
+      "native_mixing_gibbs_J_mol": -13418.712041062303,
+      "declared_mixing_gibbs_J_mol": -13418.712041062283,
+      "difference_J_mol": 2.000888343900442e-11
+    },
+    {
+      "archive_trial_index": 23,
+      "fractions": [
+        0.609332342444762,
+        0.36583946784260357,
+        0.02482818971263443
+      ],
+      "native_mixing_gibbs_J_mol": -13418.711983359419,
+      "declared_mixing_gibbs_J_mol": -13418.71198335954,
+      "difference_J_mol": -1.2187229003757238e-10
+    },
+    {
+      "archive_trial_index": 24,
+      "fractions": [
+        0.609332327543601,
+        0.36583948274376454,
+        0.02482818971263443
+      ],
+      "native_mixing_gibbs_J_mol": -13418.712069673464,
+      "declared_mixing_gibbs_J_mol": -13418.712069672865,
+      "difference_J_mol": 5.984475137665868e-10
+    },
+    {
+      "archive_trial_index": 25,
+      "fractions": [
+        0.609332327543601,
+        0.36583946784260357,
+        0.024828204613795403
+      ],
+      "native_mixing_gibbs_J_mol": -13418.713035627268,
+      "declared_mixing_gibbs_J_mol": -13418.713035627798,
+      "difference_J_mol": -5.293259164318442e-10
+    },
+    {
+      "archive_trial_index": 26,
+      "fractions": [
+        0.6192309180829694,
+        0.3545253370975573,
+        0.026243744819473357
+      ],
+      "native_mixing_gibbs_J_mol": -13448.408074452542,
+      "declared_mixing_gibbs_J_mol": -13448.408074452056,
+      "difference_J_mol": 4.856701707467437e-10
+    },
+    {
+      "archive_trial_index": 27,
+      "fractions": [
+        0.6192309237568707,
+        0.3545253318147182,
+        0.02624374442841109
+      ],
+      "native_mixing_gibbs_J_mol": -13448.408012243919,
+      "declared_mixing_gibbs_J_mol": -13448.4080122429,
+      "difference_J_mol": 1.0186340659856796e-09
+    },
+    {
+      "archive_trial_index": 28,
+      "fractions": [
+        0.6192309088557097,
+        0.35452534671587915,
+        0.02624374442841109
+      ],
+      "native_mixing_gibbs_J_mol": -13448.408110274933,
+      "declared_mixing_gibbs_J_mol": -13448.408110274468,
+      "difference_J_mol": 4.656612873077393e-10
+    },
+    {
+      "archive_trial_index": 29,
+      "fractions": [
+        0.6192309088557097,
+        0.3545253318147182,
+        0.026243759329572063
+      ],
+      "native_mixing_gibbs_J_mol": -13448.409058377147,
+      "declared_mixing_gibbs_J_mol": -13448.40905837724,
+      "difference_J_mol": -9.276845958083868e-11
+    },
+    {
+      "archive_trial_index": 30,
+      "fractions": [
+        0.6599006417838513,
+        0.3069568375045616,
+        0.03314252071158703
+      ],
+      "native_mixing_gibbs_J_mol": -13532.0190745648,
+      "declared_mixing_gibbs_J_mol": -13532.019074564165,
+      "difference_J_mol": 6.348273018375039e-10
+    },
+    {
+      "archive_trial_index": 31,
+      "fractions": [
+        0.6599006468517266,
+        0.3069568329305484,
+        0.03314252021772499
+      ],
+      "native_mixing_gibbs_J_mol": -13532.01899483148,
+      "declared_mixing_gibbs_J_mol": -13532.018994830865,
+      "difference_J_mol": 6.148184183984995e-10
+    },
+    {
+      "archive_trial_index": 32,
+      "fractions": [
+        0.6599006319505656,
+        0.30695684783170935,
+        0.03314252021772499
+      ],
+      "native_mixing_gibbs_J_mol": -13532.019144543447,
+      "declared_mixing_gibbs_J_mol": -13532.019144542366,
+      "difference_J_mol": 1.0804797057062387e-09
+    },
+    {
+      "archive_trial_index": 33,
+      "fractions": [
+        0.6599006319505656,
+        0.3069568329305484,
+        0.033142535118885964
+      ],
+      "native_mixing_gibbs_J_mol": -13532.020014015958,
+      "declared_mixing_gibbs_J_mol": -13532.020014015196,
+      "difference_J_mol": 7.621565600857139e-10
+    },
+    {
+      "archive_trial_index": 34,
+      "fractions": [
+        0.676314675672525,
+        0.2860676104396794,
+        0.037617713887795626
+      ],
+      "native_mixing_gibbs_J_mol": -13608.915070141666,
+      "declared_mixing_gibbs_J_mol": -13608.915070141747,
+      "difference_J_mol": -8.185452315956354e-11
+    },
+    {
+      "archive_trial_index": 35,
+      "fractions": [
+        0.6763146804958121,
+        0.2860676061769399,
+        0.03761771332724802
+      ],
+      "native_mixing_gibbs_J_mol": -13608.914983044378,
+      "declared_mixing_gibbs_J_mol": -13608.914983044833,
+      "difference_J_mol": -4.547473508864641e-10
+    },
+    {
+      "archive_trial_index": 36,
+      "fractions": [
+        0.6763146655946511,
+        0.28606762107810085,
+        0.03761771332724802
+      ],
+      "native_mixing_gibbs_J_mol": -13608.915156111121,
+      "declared_mixing_gibbs_J_mol": -13608.915156111532,
+      "difference_J_mol": -4.1109160520136356e-10
+    },
+    {
+      "archive_trial_index": 37,
+      "fractions": [
+        0.6763146655946511,
+        0.2860676061769399,
+        0.03761772822840899
+      ],
+      "native_mixing_gibbs_J_mol": -13608.915982257575,
+      "declared_mixing_gibbs_J_mol": -13608.915982258404,
+      "difference_J_mol": -8.294591680169106e-10
+    },
+    {
+      "archive_trial_index": 38,
+      "fractions": [
+        0.6790350928189992,
+        0.2800294113201485,
+        0.04093549586085228
+      ],
+      "native_mixing_gibbs_J_mol": -13757.85192377586,
+      "declared_mixing_gibbs_J_mol": -13757.851923775872,
+      "difference_J_mol": -1.2732925824820995e-11
+    },
+    {
+      "archive_trial_index": 39,
+      "fractions": [
+        0.679035097601749,
+        0.28002940714738517,
+        0.040935495250865865
+      ],
+      "native_mixing_gibbs_J_mol": -13757.851833825931,
+      "declared_mixing_gibbs_J_mol": -13757.851833826635,
+      "difference_J_mol": -7.039488991722465e-10
+    },
+    {
+      "archive_trial_index": 40,
+      "fractions": [
+        0.679035082700588,
+        0.28002942204854614,
+        0.040935495250865865
+      ],
+      "native_mixing_gibbs_J_mol": -13757.852012040094,
+      "declared_mixing_gibbs_J_mol": -13757.852012040572,
+      "difference_J_mol": -4.783942131325603e-10
+    },
+    {
+      "archive_trial_index": 41,
+      "fractions": [
+        0.679035082700588,
+        0.28002940714738517,
+        0.04093551015202684
+      ],
+      "native_mixing_gibbs_J_mol": -13757.852812050842,
+      "declared_mixing_gibbs_J_mol": -13757.852812050687,
+      "difference_J_mol": 1.546140993013978e-10
+    },
+    {
+      "archive_trial_index": 42,
+      "fractions": [
+        0.6735138220766921,
+        0.2737782738012744,
+        0.05270790412203348
+      ],
+      "native_mixing_gibbs_J_mol": -14425.315724811517,
+      "declared_mixing_gibbs_J_mol": -14425.315724811157,
+      "difference_J_mol": 3.601599019020796e-10
+    },
+    {
+      "archive_trial_index": 43,
+      "fractions": [
+        0.6735138269417151,
+        0.27377826972166025,
+        0.05270790333662451
+      ],
+      "native_mixing_gibbs_J_mol": -14425.315629076213,
+      "declared_mixing_gibbs_J_mol": -14425.315629074723,
+      "difference_J_mol": 1.4897523215040565e-09
+    },
+    {
+      "archive_trial_index": 44,
+      "fractions": [
+        0.6735138120405542,
+        0.2737782846228212,
+        0.05270790333662451
+      ],
+      "native_mixing_gibbs_J_mol": -14425.315805031918,
+      "declared_mixing_gibbs_J_mol": -14425.31580503088,
+      "difference_J_mol": 1.038642949424684e-09
+    },
+    {
+      "archive_trial_index": 45,
+      "fractions": [
+        0.6735138120405542,
+        0.27377826972166025,
+        0.052707918237785485
+      ],
+      "native_mixing_gibbs_J_mol": -14425.316531471908,
+      "declared_mixing_gibbs_J_mol": -14425.316531471883,
+      "difference_J_mol": 2.546585164964199e-11
+    },
+    {
+      "archive_trial_index": 46,
+      "fractions": [
+        0.6601279552347287,
+        0.2800457342608926,
+        0.05982631050437883
+      ],
+      "native_mixing_gibbs_J_mol": -14915.51929197833,
+      "declared_mixing_gibbs_J_mol": -14915.519291979253,
+      "difference_J_mol": -9.240466170012951e-10
+    },
+    {
+      "archive_trial_index": 47,
+      "fractions": [
+        0.6601279602992166,
+        0.28004573008788597,
+        0.05982630961289734
+      ],
+      "native_mixing_gibbs_J_mol": -14915.519195871428,
+      "declared_mixing_gibbs_J_mol": -14915.519195871077,
+      "difference_J_mol": 3.510649548843503e-10
+    },
+    {
+      "archive_trial_index": 48,
+      "fractions": [
+        0.6601279453980556,
+        0.28004574498904694,
+        0.05982630961289734
+      ],
+      "native_mixing_gibbs_J_mol": -14915.519356567413,
+      "declared_mixing_gibbs_J_mol": -14915.519356566921,
+      "difference_J_mol": 4.911271389573812e-10
+    },
+    {
+      "archive_trial_index": 49,
+      "fractions": [
+        0.6601279453980556,
+        0.28004573008788597,
+        0.05982632451405831
+      ],
+      "native_mixing_gibbs_J_mol": -14915.520050111227,
+      "declared_mixing_gibbs_J_mol": -14915.520050110548,
+      "difference_J_mol": 6.784830475226045e-10
+    },
+    {
+      "archive_trial_index": 50,
+      "fractions": [
+        0.6527498862521901,
+        0.2857941993915759,
+        0.061455914356233945
+      ],
+      "native_mixing_gibbs_J_mol": -15068.335392628796,
+      "declared_mixing_gibbs_J_mol": -15068.335392628296,
+      "difference_J_mol": 5.002220859751105e-10
+    },
+    {
+      "archive_trial_index": 51,
+      "fractions": [
+        0.65274989142662,
+        0.28579419513291054,
+        0.061455913440469474
+      ],
+      "native_mixing_gibbs_J_mol": -15068.335297760554,
+      "declared_mixing_gibbs_J_mol": -15068.335297760366,
+      "difference_J_mol": 1.8735590856522322e-10
+    },
+    {
+      "archive_trial_index": 52,
+      "fractions": [
+        0.652749876525459,
+        0.2857942100340715,
+        0.061455913440469474
+      ],
+      "native_mixing_gibbs_J_mol": -15068.335449124686,
+      "declared_mixing_gibbs_J_mol": -15068.335449124,
+      "difference_J_mol": 6.857590051367879e-10
+    },
+    {
+      "archive_trial_index": 53,
+      "fractions": [
+        0.652749876525459,
+        0.28579419513291054,
+        0.061455928341630446
+      ],
+      "native_mixing_gibbs_J_mol": -15068.33613753412,
+      "declared_mixing_gibbs_J_mol": -15068.336137534327,
+      "difference_J_mol": -2.0736479200422764e-10
+    },
+    {
+      "archive_trial_index": 54,
+      "fractions": [
+        0.6514258076763267,
+        0.28742142665738585,
+        0.061152765666287336
+      ],
+      "native_mixing_gibbs_J_mol": -15067.673989146017,
+      "declared_mixing_gibbs_J_mol": -15067.673989146524,
+      "difference_J_mol": -5.07498043589294e-10
+    },
+    {
+      "archive_trial_index": 55,
+      "fractions": [
+        0.6514258128704868,
+        0.2874214223744729,
+        0.06115276475504013
+      ],
+      "native_mixing_gibbs_J_mol": -15067.673894826323,
+      "declared_mixing_gibbs_J_mol": -15067.673894825692,
+      "difference_J_mol": 6.311893230304122e-10
+    },
+    {
+      "archive_trial_index": 56,
+      "fractions": [
+        0.6514257979693259,
+        0.28742143727563385,
+        0.06115276475504013
+      ],
+      "native_mixing_gibbs_J_mol": -15067.67404427845,
+      "declared_mixing_gibbs_J_mol": -15067.674044277932,
+      "difference_J_mol": 5.184119800105691e-10
+    },
+    {
+      "archive_trial_index": 57,
+      "fractions": [
+        0.6514257979693259,
+        0.2874214223744729,
+        0.061152779656201105
+      ],
+      "native_mixing_gibbs_J_mol": -15067.674734772183,
+      "declared_mixing_gibbs_J_mol": -15067.674734772276,
+      "difference_J_mol": -9.276845958083868e-11
+    },
+    {
+      "archive_trial_index": 58,
+      "fractions": [
+        0.6512256766417969,
+        0.2878696617126255,
+        0.06090466164557757
+      ],
+      "native_mixing_gibbs_J_mol": -15058.17086012289,
+      "declared_mixing_gibbs_J_mol": -15058.170860122804,
+      "difference_J_mol": 8.549250196665525e-11
+    },
+    {
+      "archive_trial_index": 59,
+      "fractions": [
+        0.6512256818389393,
+        0.28786965742303333,
+        0.0609046607380274
+      ],
+      "native_mixing_gibbs_J_mol": -15058.170765992254,
+      "declared_mixing_gibbs_J_mol": -15058.170765991606,
+      "difference_J_mol": 6.475602276623249e-10
+    },
+    {
+      "archive_trial_index": 60,
+      "fractions": [
+        0.6512256818389393,
+        0.28786965742303333,
+        0.0609046607380274
+      ],
+      "native_mixing_gibbs_J_mol": -15058.170765992254,
+      "declared_mixing_gibbs_J_mol": -15058.170765991606,
+      "difference_J_mol": 6.475602276623249e-10
+    },
+    {
+      "archive_trial_index": 61,
+      "fractions": [
+        0.6512256818389393,
+        0.28786965742303333,
+        0.0609046607380274
+      ],
+      "native_mixing_gibbs_J_mol": -15058.170765992254,
+      "declared_mixing_gibbs_J_mol": -15058.170765991606,
+      "difference_J_mol": 6.475602276623249e-10
+    }
+  ]
+}
