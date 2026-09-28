@@ -11,8 +11,9 @@ checkout. The keyword arguments are:
 
 | Argument | Required basis |
 | --- | --- |
-| `silicate_oxide_mass_fractions` | Normalized native-host oxide masses, including native H2O and excluding the added molecular H2; chemical-case or lowercase MELTS names |
-| `molecular_h2_mass_ppm` | Molecular-H2 mass divided by complete liquid mass, including native water and H2 |
+| `silicate_oxide_mass_fractions` | Normalized native-host oxide masses, including native H2O and excluding added molecular H2 and He; chemical-case or lowercase MELTS names |
+| `molecular_h2_mass_ppm` | Molecular-H2 mass divided by complete liquid mass, including native water, H2 and He |
+| `dissolved_helium_mass_ppm` | Dissolved-He mass divided by the same complete liquid mass; defaults to zero |
 | `water_mass_percent` | Native-H2O mass divided by that same complete liquid mass |
 | `alloy_atomic_fractions` | Fe, Si, O, H atomic fractions as a mapping or vector; `None` if absent/unsupplied |
 | `hydrogen_partial_pressure_Pa` | H2 fraction of the complete gas species set times total pressure |

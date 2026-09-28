@@ -21,6 +21,36 @@ def bse():
     return dict(zip(ledger["oxide_order"], ledger["oxide_mass_fractions"]))
 
 
+def test_added_helium_uses_the_full_liquid_mass_without_changing_reference_scope():
+    # Independent masses: 98 kg dry host, 2 kg native water, .1 kg H2, .2 kg He.
+    oxides = {name: value * .98 for name, value in bse().items()}
+    oxides["H2O"] = .02
+    total = 100.3
+    kwargs = dict(silicate_oxide_mass_fractions=oxides,
+                  molecular_h2_mass_ppm=.1 / total * 1e6,
+                  water_mass_percent=2. / total * 100.)
+    with pytest.raises(ValueError, match="complete-liquid"):
+        assess(2173.15, 2.7e7, **kwargs)
+    result = assess(2173.15, 2.7e7, **kwargs, dissolved_helium_mass_ppm=.2 / total * 1e6)
+    assert result["input"]["dissolved_helium_mass_ppm"] == .2 / total * 1e6
+    assert result["input"]["dry_silicate_oxide_mass_fractions"] == pytest.approx(bse())
+    assert result["material_admission"] == "not_established"
+    assert result["accepted_coupled_material_domain"] is None
+
+
+@pytest.mark.parametrize("helium", [-1., float("nan"), float("inf"), True, "1", None, 1e6])
+def test_invalid_or_host_exhausting_helium_is_rejected(helium):
+    with pytest.raises(ValueError):
+        assess(2173.15, 2.7e7, silicate_oxide_mass_fractions=bse(),
+               dissolved_helium_mass_ppm=helium)
+
+
+def test_zero_helium_is_the_legacy_default():
+    kwargs = dict(silicate_oxide_mass_fractions=bse(), molecular_h2_mass_ppm=0., water_mass_percent=0.)
+    assert assess(2173.15, 2.7e7, **kwargs) == assess(
+        2173.15, 2.7e7, **kwargs, dissolved_helium_mass_ppm=0.)
+
+
 def host(name):
     data = json.loads((PATH.parent / "hydrogen_reference.json").read_text())
     values = data["chaudhari_2025"]["hosts"][name]["table_1_oxide_weight_percent"]

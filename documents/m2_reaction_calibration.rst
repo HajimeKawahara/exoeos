@@ -130,12 +130,14 @@ errors are not bounded by this calculation.
 
 ``assess_sossi_water_state`` accepts actual T/P, native oxide mass
 fractions, H2O/H2 partial pressures from the complete gas denominator,
-and optional H2 mass ppm / water mass percent of the complete liquid.
+and optional H2/He mass ppm / water mass percent of the complete liquid.
 It reuses the actual-state material validator, including the native-water
-versus added-H2 denominator check and FeO-total host comparison. The
-reference is evaluated with ideal fugacities. When supplied, the H2 mass
-fraction permits arithmetic conversion of reference native-host ppm to
-complete-liquid ppm; this is not a fitted H2 solubility correction.
+versus added-H2/He denominator check and FeO-total host comparison. The
+reference is evaluated with ideal fugacities. The keyword
+``dissolved_helium_mass_ppm`` defaults to zero. When supplied, the H2 and He
+mass fractions permit arithmetic conversion of reference native-host ppm to
+complete-liquid ppm by the factor :math:`1-w_{\mathrm{H_2}}-w_{\mathrm{He}}`.
+This is not a fitted solubility correction or a wider material domain.
 
 A convex-combination witness distinguishes joint support in the two
 square-root-fugacity predictors from their separate minimum/maximum
