@@ -222,3 +222,25 @@ def test_inconsistent_input_cannot_produce_a_material_receipt(changes):
               "silicate_oxide_mass_fractions": bse(), **changes}
     with pytest.raises(ValueError):
         assess(**kwargs)
+
+
+def test_sodium_counts_in_complete_alloy_mass_without_automatic_admission():
+    x=np.array([.958,.001,.004,.024,.001,0.,0.,0.,.001,0.,.001,.01])
+    assert x.sum()==pytest.approx(1.)
+    inputs=dict(silicate_oxide_mass_fractions=bse(),metal_model='associated_k_na',
+                hydrogen_oxygen_model='schenck1961_abstract')
+    result=assess(2173.15,2.7e7,alloy_atomic_fractions=x,**inputs)
+    mapped=assess(2173.15,2.7e7,alloy_atomic_fractions=dict(zip(MODULE.SODIUM_ALLOY_COMPONENTS,x)),**inputs)
+    assert result['alloy_hydrogen_reference']==mapped['alloy_hydrogen_reference']
+    alloy=result['alloy_hydrogen_reference']
+    expected=100*x*MODULE.SODIUM_ALLOY_MOLAR_MASSES/(x@MODULE.SODIUM_ALLOY_MOLAR_MASSES)
+    assert alloy['mass_percent']['Na']==pytest.approx(expected[-1])
+    assert alloy['atomic_h_mass_ppm']==pytest.approx(expected[3]*1e4)
+    assert not alloy['condition_checks']['other_metal_solutes_free']
+    assert result['material_admission']=='not_established'
+    assert result['accepted_coupled_material_domain'] is None
+    path=result['constitutive_evidence']['additional_omitted_transfer_paths']['paths']['Na_to_metal']
+    assert path['conditional_model']['model_selector']=='associated_k_na'
+    assert not path['conditional_model']['empirical_BSE_calibration']
+    with pytest.raises(ValueError,match='every alloy element'):
+        assess(2173.15,2.7e7,alloy_atomic_fractions=np.r_[1.,np.zeros(10)],**inputs)

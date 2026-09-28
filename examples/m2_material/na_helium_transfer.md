@@ -20,9 +20,11 @@ PDF hashes, actual observation bases and unresolved quantities.
 [Steenstra et al. (2018)](https://doi.org/10.1038/s41598-018-25505-6) supplies a
 further quantitative Na candidate: its 1 GPa Fe-S/basalt exchange fit is
 `log10 K_Na = 5.44 - 14340/T`. It assumes ideal silicate NaO0.5 activity
-and adopts the K-S interaction for Na-S. Reconstructing its activity convention
-and converting to the shared source standard remains work in progress;
-the fit is not substituted for a low-pressure Na omission bound here.
+and adopts the K-S interaction for Na-S. The [Na reference replay](sodium_reference.md)
+now retains five numerical S-free censoring limits with matching silicate
+concentrations and compares two concentration conventions against three FeS
+exchange constants. Converting to a selected shared source standard remains
+work in progress; these are not low-pressure Na omission bounds.
 
 ## Small provider diagnostic
 

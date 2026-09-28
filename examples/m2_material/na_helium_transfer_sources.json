@@ -7,7 +7,7 @@
       "existing_model": "Na remains available to gas and silicate; associated_k has no Na metal component.",
       "insolubility_established": false,
       "missing": "A Na metal standard/activity law or a quantitative detection-limit-derived partition bound transferable to the declared state.",
-      "available": "A published 1 GPa Fe-S/basalt exchange fit with explicit silicate activity and S-interaction assumptions; conversion to the current source standard remains unimplemented."
+      "available": "Five numerical S-free reported censoring limits with matching silicate Na; three FeS exchange constants replayed under two explicit concentration bases. Low-pressure standard/activities are not yet selected."
     },
     "He_to_silicate": {
       "status": "not_evaluated_in_finite_equilibrium",
@@ -255,7 +255,7 @@
     "steenstra_2018": {
       "doi": "10.1038/s41598-018-25505-6",
       "url": "https://www.nature.com/articles/s41598-018-25505-6",
-      "access": "Primary publisher full text, Equations 2, 4 and 6; supplementary reconstruction pending.",
+      "access": "Primary Table1 and official Supplementary Tables S2-S4 retained and replayed; absolute common-standard reconstruction remains incomplete.",
       "exchange_reaction": "0.5 Fe(metal) + 0.5 Na2O(silicate) = Na(metal) + 0.5 FeO(silicate)",
       "log10_K_Na": "5.44 - 14340/T_K",
       "reported_parameter_errors": {
@@ -266,7 +266,18 @@
       "fit_family": "Fe-S / basalt experiments",
       "silicate_NaO_half_activity": "Assumed ideal in the published fit.",
       "Na_S_interaction": "Assumed equal to the measured K-S effect by the authors.",
-      "implementation_status": "Candidate exchange law identified; no conversion to a shared Na metal standard or 0.027 GPa source application yet."
+      "implementation_status": "Reference ratios, censoring bounds and balanced Henry-rebasing helper implemented; no selected absolute source standard or finite Na species.",
+      "replay_source": "sodium_reference_sources.json",
+      "replay_source_sha256": "cd94c23b86136c53d8523a431ce845c398809d4097825b60fe84fa1716f51a2f",
+      "S_free_Na_mass_ppm_reported_limits": {
+        "GGK1": 29,
+        "GGK2": 35,
+        "GGK7": 44,
+        "GGK8": 53,
+        "GGK9": 30
+      },
+      "limit_scope": "Reported LA-ICP-MS censoring thresholds at 1 GPa and 1683-1883 K in graphite-saturated Fe-C/Fe-C-Si; noise/confidence definition not specified, not a 0.027 GPa BSE bound.",
+      "concentration_convention": "The oxide-molecule reconstruction reproduces three FeS logK values within reported 2SE. A literal one-cation reconstruction differs by 0.264-0.308 dex; both are retained without fitting a correction."
     }
   },
   "coverage_policy": {
