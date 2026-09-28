@@ -1,0 +1,8 @@
+{
+  "actual_exit_code": 0,
+  "wall_seconds": 0.0013646427541971207,
+  "files": {
+    "replay.py": "6658923668bde737b3622ad65b9fe7368801470d4297e0fd58f883591935ef47",
+    "assessment.json": "fd6e26e434d408aa8d10495edb047aaa2c6f25878a85c84635cff8a0025053e7"
+  }
+}

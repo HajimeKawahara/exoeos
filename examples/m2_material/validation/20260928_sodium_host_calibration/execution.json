@@ -1,0 +1,17 @@
+{
+  "actual_exit_code": 0,
+  "validation_kind": "native supplied-composition and arithmetic reference replay",
+  "files": {
+    "replay.py": "4a0871167e6a0262476d15dbbc6b796c8c7fed767ad69233c0ffe71664fc3187",
+    "assessment.json": "f24cb74a1cd860a3eebcd0eff5f1e05fa3e0c7cc82c99c53c952138a91175370"
+  },
+  "focused_tests": {
+    "actual_exit_code": 0,
+    "passed": 18,
+    "log_sha256": "2ff158e0598d4e92245e9df28474438ab9988395c696e6ab3d61327663a2cf7b"
+  },
+  "preparation_notes": [
+    "Initial tests exposed two overly tight binary64 comparison thresholds; corrected thresholds cover arithmetic scale and the existing provider comparison tolerance. No model output was changed.",
+    "Trace preparation corrected a raw Fe column label before any assessment output was written."
+  ]
+}

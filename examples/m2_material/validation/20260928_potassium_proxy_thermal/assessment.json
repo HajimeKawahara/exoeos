@@ -1,0 +1,222 @@
+{
+  "assessment_id": "conditional_potassium_proxy_exchange_slope_v1",
+  "source_assessment_sha256": "68f3e854d268ff485d10b2f714caa9cfc8f0e07cec94df1efa191036b3c0a959",
+  "runner_sha256": "6658923668bde737b3622ad65b9fe7368801470d4297e0fd58f883591935ef47",
+  "primary_source": "https://doi.org/10.1038/s41598-018-25505-6",
+  "declared_log10_K_slope_K": -12530.0,
+  "original_fit": "log10 K_K = 4.41(13) - 12530(235)/T",
+  "coefficient_uncertainty_propagated": false,
+  "T_K": 2173.15,
+  "P_Pa": 26965451.525057938,
+  "rows": [
+    {
+      "run": "GGK1",
+      "projection": "remove_potassium_0.25",
+      "reference_temperature_K": 1683.0,
+      "constant_delta_gas_offset_rt": 4.851157257107818,
+      "declared_thermal_standard_shift_rt": -3.8665350063739297,
+      "continued_gas_offset_rt": 0.9846222507338886,
+      "frozen_trace_mole_fraction": 0.0001827118044418105,
+      "frozen_trace_to_global_K_inventory": 0.014349382797455587
+    },
+    {
+      "run": "GGK1",
+      "projection": "remove_potassium_0.5",
+      "reference_temperature_K": 1683.0,
+      "constant_delta_gas_offset_rt": 6.0820956703805855,
+      "declared_thermal_standard_shift_rt": -3.8665350063739297,
+      "continued_gas_offset_rt": 2.215560664006656,
+      "frozen_trace_mole_fraction": 5.335521155415471e-05,
+      "frozen_trace_to_global_K_inventory": 0.004190284022254412
+    },
+    {
+      "run": "GGK1",
+      "projection": "remove_potassium_0.9",
+      "reference_temperature_K": 1683.0,
+      "constant_delta_gas_offset_rt": 8.106508168408933,
+      "declared_thermal_standard_shift_rt": -3.8665350063739297,
+      "continued_gas_offset_rt": 4.239973162035003,
+      "frozen_trace_mole_fraction": 7.0466981603194355e-06,
+      "frozen_trace_to_global_K_inventory": 0.0005534167300764232
+    },
+    {
+      "run": "GGK1",
+      "projection": "add_aluminum_silica_0.9",
+      "reference_temperature_K": 1683.0,
+      "constant_delta_gas_offset_rt": 9.505874635242396,
+      "declared_thermal_standard_shift_rt": -3.8665350063739297,
+      "continued_gas_offset_rt": 5.639339628868466,
+      "frozen_trace_mole_fraction": 1.7387956079636103e-06,
+      "frozen_trace_to_global_K_inventory": 0.00013655737165657825
+    },
+    {
+      "run": "GGK2",
+      "projection": "remove_potassium_0.25",
+      "reference_temperature_K": 1783.0,
+      "constant_delta_gas_offset_rt": 5.2794942953775,
+      "declared_thermal_standard_shift_rt": -2.905074829893163,
+      "continued_gas_offset_rt": 2.374419465484337,
+      "frozen_trace_mole_fraction": 4.551822784050375e-05,
+      "frozen_trace_to_global_K_inventory": 0.0035748017351183484
+    },
+    {
+      "run": "GGK2",
+      "projection": "remove_potassium_0.5",
+      "reference_temperature_K": 1783.0,
+      "constant_delta_gas_offset_rt": 6.6037692127539,
+      "declared_thermal_standard_shift_rt": -2.905074829893163,
+      "continued_gas_offset_rt": 3.6986943828607366,
+      "frozen_trace_mole_fraction": 1.2107655521121347e-05,
+      "frozen_trace_to_global_K_inventory": 0.0009508820975364413
+    },
+    {
+      "run": "GGK2",
+      "projection": "remove_potassium_0.9",
+      "reference_temperature_K": 1783.0,
+      "constant_delta_gas_offset_rt": 8.936819312397194,
+      "declared_thermal_standard_shift_rt": -2.905074829893163,
+      "continued_gas_offset_rt": 6.031744482504031,
+      "frozen_trace_mole_fraction": 1.174435774782722e-06,
+      "frozen_trace_to_global_K_inventory": 9.223502857337677e-05
+    },
+    {
+      "run": "GGK2",
+      "projection": "add_aluminum_silica_0.9",
+      "reference_temperature_K": 1783.0,
+      "constant_delta_gas_offset_rt": 9.328767319511382,
+      "declared_thermal_standard_shift_rt": -2.905074829893163,
+      "continued_gas_offset_rt": 6.423692489618219,
+      "frozen_trace_mole_fraction": 7.936123457266395e-07,
+      "frozen_trace_to_global_K_inventory": 6.23268287257542e-05
+    },
+    {
+      "run": "GGK7",
+      "projection": "remove_potassium_0.25",
+      "reference_temperature_K": 1683.0,
+      "constant_delta_gas_offset_rt": 3.7717737929193973,
+      "declared_thermal_standard_shift_rt": -3.8665350063739297,
+      "continued_gas_offset_rt": -0.09476121345453237,
+      "frozen_trace_mole_fraction": 0.000537696103160177,
+      "frozen_trace_to_global_K_inventory": 0.04222829081304811
+    },
+    {
+      "run": "GGK7",
+      "projection": "remove_potassium_0.5",
+      "reference_temperature_K": 1683.0,
+      "constant_delta_gas_offset_rt": 4.8266496345977785,
+      "declared_thermal_standard_shift_rt": -3.8665350063739297,
+      "continued_gas_offset_rt": 0.9601146282238489,
+      "frozen_trace_mole_fraction": 0.00018724495788897087,
+      "frozen_trace_to_global_K_inventory": 0.014705396763228807
+    },
+    {
+      "run": "GGK7",
+      "projection": "remove_potassium_0.9",
+      "reference_temperature_K": 1683.0,
+      "constant_delta_gas_offset_rt": 6.496131082278225,
+      "declared_thermal_standard_shift_rt": -3.8665350063739297,
+      "continued_gas_offset_rt": 2.6295960759042956,
+      "frozen_trace_mole_fraction": 3.52665967130649e-05,
+      "frozen_trace_to_global_K_inventory": 0.002769683643294234
+    },
+    {
+      "run": "GGK7",
+      "projection": "add_aluminum_silica_0.9",
+      "reference_temperature_K": 1683.0,
+      "constant_delta_gas_offset_rt": 7.147254375346996,
+      "declared_thermal_standard_shift_rt": -3.8665350063739297,
+      "continued_gas_offset_rt": 3.2807193689730667,
+      "frozen_trace_mole_fraction": 1.839010878650716e-05,
+      "frozen_trace_to_global_K_inventory": 0.0014442783895141518
+    },
+    {
+      "run": "GGK8",
+      "projection": "remove_potassium_0.25",
+      "reference_temperature_K": 1783.0,
+      "constant_delta_gas_offset_rt": 4.552572979262697,
+      "declared_thermal_standard_shift_rt": -2.905074829893163,
+      "continued_gas_offset_rt": 1.6474981493695342,
+      "frozen_trace_mole_fraction": 9.41636450771608e-05,
+      "frozen_trace_to_global_K_inventory": 0.007395199193307993
+    },
+    {
+      "run": "GGK8",
+      "projection": "remove_potassium_0.5",
+      "reference_temperature_K": 1783.0,
+      "constant_delta_gas_offset_rt": 5.630783863608739,
+      "declared_thermal_standard_shift_rt": -2.905074829893163,
+      "continued_gas_offset_rt": 2.7257090337155763,
+      "frozen_trace_mole_fraction": 3.203481529602447e-05,
+      "frozen_trace_to_global_K_inventory": 0.0025158737221865606
+    },
+    {
+      "run": "GGK8",
+      "projection": "remove_potassium_0.9",
+      "reference_temperature_K": 1783.0,
+      "constant_delta_gas_offset_rt": 7.341392650095029,
+      "declared_thermal_standard_shift_rt": -2.905074829893163,
+      "continued_gas_offset_rt": 4.436317820201866,
+      "frozen_trace_mole_fraction": 5.790476023052802e-06,
+      "frozen_trace_to_global_K_inventory": 0.00045475855973353436
+    },
+    {
+      "run": "GGK8",
+      "projection": "add_aluminum_silica_0.9",
+      "reference_temperature_K": 1783.0,
+      "constant_delta_gas_offset_rt": 8.108250714021308,
+      "declared_thermal_standard_shift_rt": -2.905074829893163,
+      "continued_gas_offset_rt": 5.203175884128145,
+      "frozen_trace_mole_fraction": 2.6895030559128313e-06,
+      "frozen_trace_to_global_K_inventory": 0.00021122175987545847
+    },
+    {
+      "run": "GGK9",
+      "projection": "remove_potassium_0.25",
+      "reference_temperature_K": 1883.0,
+      "constant_delta_gas_offset_rt": 5.24549507679799,
+      "declared_thermal_standard_shift_rt": -2.0457346933997322,
+      "continued_gas_offset_rt": 3.199760383398258,
+      "frozen_trace_mole_fraction": 1.994088087224591e-05,
+      "frozen_trace_to_global_K_inventory": 0.0015660692193833893
+    },
+    {
+      "run": "GGK9",
+      "projection": "remove_potassium_0.5",
+      "reference_temperature_K": 1883.0,
+      "constant_delta_gas_offset_rt": 6.296024941551632,
+      "declared_thermal_standard_shift_rt": -2.0457346933997322,
+      "continued_gas_offset_rt": 4.2502902481519005,
+      "frozen_trace_mole_fraction": 6.97437051538906e-06,
+      "frozen_trace_to_global_K_inventory": 0.0005477364344484801
+    },
+    {
+      "run": "GGK9",
+      "projection": "remove_potassium_0.9",
+      "reference_temperature_K": 1883.0,
+      "constant_delta_gas_offset_rt": 7.955811339629445,
+      "declared_thermal_standard_shift_rt": -2.0457346933997322,
+      "continued_gas_offset_rt": 5.910076646229713,
+      "frozen_trace_mole_fraction": 1.3263829843447287e-06,
+      "frozen_trace_to_global_K_inventory": 0.00010416829518234853
+    },
+    {
+      "run": "GGK9",
+      "projection": "add_aluminum_silica_0.9",
+      "reference_temperature_K": 1883.0,
+      "constant_delta_gas_offset_rt": 8.590265184106531,
+      "declared_thermal_standard_shift_rt": -2.0457346933997322,
+      "continued_gas_offset_rt": 6.5445304907068,
+      "frozen_trace_mole_fraction": 7.032814106610769e-07,
+      "frozen_trace_to_global_K_inventory": 5.523263374657501e-05
+    }
+  ],
+  "finite_source_equilibrium_executed": false,
+  "physical_calibration_accepted": false,
+  "empirical_BSE_upper_bound": false,
+  "scope": [
+    "Only the central published FeS exchange slope is borrowed; the proxy constraint intercept is retained.",
+    "Native virtual standards have their own T/P dependence; no equation identifies exchange K with a mass partition ratio.",
+    "Silicate projection, reference alloy denominator, unmodeled Si/C activity differences, and low-pressure continuation remain explicit assumptions.",
+    "The frozen trace response is not a finite metal/silicate allocation or pressure closure."
+  ]
+}
