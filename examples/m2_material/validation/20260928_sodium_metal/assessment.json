@@ -1,0 +1,1280 @@
+{
+  "assessment_id": "finite_sodium_scalar_and_source_standard_v1",
+  "command": [
+    "examples/m2_material/validation/20260928_sodium_metal/replay.py",
+    "--physical-audit",
+    "/tmp/stage2-final-response-audit-20260927/OH_physical.json",
+    "--output",
+    "examples/m2_material/validation/20260928_sodium_metal/assessment.json"
+  ],
+  "source_physical_audit_sha256": "74613b7f112f91781cc071fcc56153564938590cba300b2971bc6dfe3032f8d8",
+  "original_closure_sha256": "f7b848f0c89740ac77010b56eccdaa6c5283c17216d6aeac24d2c99ea54b9235",
+  "sodium_standard_receipt": {
+    "model": "sodium_projected_reference_henry_v1",
+    "temperature_K": 2173.15,
+    "pressure_Pa": 26965451.525057938,
+    "common_R_J_mol_K": 8.31446261815324,
+    "projection": "remove_potassium_0.25",
+    "temperature_policy": "published_exchange_slope",
+    "native_component_standard_potentials_rt": {
+      "na2sio3": -121.38950570518786,
+      "sio2": -64.02282421194586,
+      "fe2sio4": -125.34244430830567
+    },
+    "virtual_component_weights": {
+      "na2sio3": 0.5,
+      "sio2": -0.25,
+      "fe2sio4": -0.25
+    },
+    "fe_metal_standard_rt": -8.083468321480398,
+    "fe_metal_reference_weight": 0.5,
+    "virtual_reference_rt": -17.395169883271247,
+    "delta_rt": 4.418500973441422,
+    "standard_rt": -12.976668909829826,
+    "intercept_A_rt": -10.775604464993394,
+    "inverse_temperature_B_K": 33019.07023353462,
+    "active_reference_runs": [
+      "GGK9"
+    ],
+    "reference_pressure_Pa": 1000000000.0,
+    "reference_temperature_K": [
+      1683.0,
+      1783.0,
+      1883.0
+    ],
+    "reference_calibration_sha256": "f24cb74a1cd860a3eebcd0eff5f1e05fa3e0c7cc82c99c53c952138a91175370",
+    "native_state_sha256": "64200fb326cc481e06442a27f94e26d9d8f44714f8ab67f10aa28382d99bcd57",
+    "native_state_model_id": "melts_v102_published_mixing_native_standard_states_v1",
+    "native_state_provenance": {
+      "model_selection": "melts_v102_published_mixing_native_standard_states_v1",
+      "native_standard_state_receipt_sha256": "6fef1c8ec7f8f02ba4003699c886b31f6a86d506a7f1b332043a5bc7bdf28a7c",
+      "mixing_provider_sha256": "10a87425f56e924b01d0767e4aac019f76ac0e14d6ada7df0e0e23f1c9f14a0b",
+      "native_composition_evaluated": false
+    },
+    "provider_sha256": "dc37ac664dd8ab7dfb6d2f1d636b4d22c48c3c7551d8e8097ca054ea1f7c4c0e",
+    "empirical_BSE_calibration": false,
+    "pressure_policy": "Re-evaluate the virtual native component standards and actual parent Fe-metal standard at each P; keep the declared dimensionless delta(T).",
+    "scope": "Minimum finite standard satisfying five projected S-free nondetection constraints. Larger delta is unconstrained; carbon removal, liquid projection, Na interactions and low-pressure/high-temperature continuation are assumptions, not measured uncertainty bounds."
+  },
+  "scalar_checks": [
+    {
+      "hydrogen_oxygen_model": "omitted",
+      "model_receipt": {
+        "phosphorus": {
+          "epsilon": [
+            7.3,
+            11.9,
+            8.107969807596769,
+            2.361013913113267
+          ],
+          "order": [
+            "P-P",
+            "P-Si",
+            "P-O",
+            "P-H"
+          ],
+          "reference_temperature_K": 1873.15,
+          "temperature_policy": "constant",
+          "sources": {
+            "self": "https://doi.org/10.2355/tetsutohagane1955.65.2_264",
+            "silicon": "https://doi.org/10.2355/isijinternational1966.23.51",
+            "oxygen": "https://doi.org/10.2355/tetsutohagane1955.48.14_1729",
+            "hydrogen": "https://doi.org/10.2355/tetsutohagane1955.52.13_1823"
+          },
+          "reported_errors_at_reference": {
+            "P-P": 0.1,
+            "P-Si": 0.6
+          },
+          "mass_percent_coefficients": {
+            "e_O_P": 0.06,
+            "e_H_P": 0.015
+          },
+          "reported_O_P_values_across_temperatures": [
+            0.05,
+            0.06,
+            0.07
+          ],
+          "measured_temperature_intervals_K": {
+            "P-P": [
+              1873.15,
+              1873.15
+            ],
+            "P-Si": [
+              1873.15,
+              1873.15
+            ],
+            "P-O": [
+              1813.15,
+              1898.15
+            ],
+            "P-H": [
+              1723.15,
+              1943.15
+            ]
+          },
+          "scope": "Integrable quadratic continuation of independently measured dilute coefficients; no validated simultaneous five-component error bound or pressure term."
+        },
+        "additional_matrix": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            -10.684950417596577,
+            6.033177645353518,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            -1.1316563535167607,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            4.6,
+            -3.8,
+            -8.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            -10.684950417596577,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            -6.015231346202516,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            6.033177645353518,
+            0.0,
+            0.0,
+            4.6,
+            0.0,
+            -6.015231346202516,
+            2.1498561995260337,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            -1.1316563535167607,
+            -3.8,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            -8.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.595656075282424,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "hydrogen_oxygen": {
+          "model": "omitted",
+          "epsilon_natural_log": 0.0
+        },
+        "temperature_policy_for_extra_P_H_cross_terms": "constant",
+        "zero_terms": "Unlisted additional terms are omitted by the declared continuation, not measured to be zero. The original Jung model used no further terms for its evaluated subsystems; H/P extensions have separately listed coefficients.",
+        "sodium_excess": {
+          "model": "sodium_pseudoiron_excess_v1",
+          "component_order": [
+            "Fe",
+            "Si",
+            "O",
+            "H",
+            "P",
+            "Mg",
+            "Ca",
+            "Al",
+            "Cr",
+            "Ti",
+            "MgO",
+            "CaO",
+            "AlO",
+            "CrO",
+            "TiO",
+            "Al2O",
+            "Cr2O",
+            "Ti2O",
+            "K",
+            "Na"
+          ],
+          "component_formulas": [
+            {
+              "Fe": 1.0
+            },
+            {
+              "Si": 1.0
+            },
+            {
+              "O": 1.0
+            },
+            {
+              "H": 1.0
+            },
+            {
+              "P": 1.0
+            },
+            {
+              "Mg": 1.0
+            },
+            {
+              "Ca": 1.0
+            },
+            {
+              "Al": 1.0
+            },
+            {
+              "Cr": 1.0
+            },
+            {
+              "Ti": 1.0
+            },
+            {
+              "Mg": 1.0,
+              "O": 1.0
+            },
+            {
+              "Ca": 1.0,
+              "O": 1.0
+            },
+            {
+              "Al": 1.0,
+              "O": 1.0
+            },
+            {
+              "Cr": 1.0,
+              "O": 1.0
+            },
+            {
+              "Ti": 1.0,
+              "O": 1.0
+            },
+            {
+              "Al": 2.0,
+              "O": 1.0
+            },
+            {
+              "Cr": 2.0,
+              "O": 1.0
+            },
+            {
+              "Ti": 2.0,
+              "O": 1.0
+            },
+            {
+              "K": 1.0
+            },
+            {
+              "Na": 1.0
+            }
+          ],
+          "parent_component_order": [
+            "Fe",
+            "Si",
+            "O",
+            "H",
+            "P",
+            "Mg",
+            "Ca",
+            "Al",
+            "Cr",
+            "Ti",
+            "MgO",
+            "CaO",
+            "AlO",
+            "CrO",
+            "TiO",
+            "Al2O",
+            "Cr2O",
+            "Ti2O",
+            "K"
+          ],
+          "parent_coordinate_map": "x_parent_Fe=x_Fe+x_Na; every other parent species unchanged",
+          "activity_identity": "ln(gamma_Na,Henry)=ln(gamma_Fe)",
+          "empirically_calibrated": false,
+          "scope": "S-free conditional continuation. Na-Si/C/O/H interactions beyond the inherited Fe environment are not measured or fitted."
+        }
+      },
+      "component_fractions": [
+        0.9706658,
+        0.001,
+        0.001,
+        0.02,
+        0.001,
+        0.0001,
+        1e-06,
+        1e-05,
+        0.004,
+        1e-06,
+        0.0001,
+        1e-06,
+        1e-05,
+        0.0001,
+        1e-06,
+        1e-07,
+        1e-05,
+        1e-07,
+        0.001,
+        0.001
+      ],
+      "standard_potentials_rt": [
+        -8.083468321480398,
+        -9.9,
+        -9.8,
+        -9.7,
+        -9.6,
+        -9.5,
+        -9.4,
+        -9.3,
+        -9.2,
+        -9.1,
+        -9.0,
+        -8.9,
+        -8.8,
+        -8.7,
+        -8.6,
+        -8.5,
+        -8.4,
+        -8.3,
+        -8.2,
+        -12.976668909829826
+      ],
+      "standard_scope": "Synthetic other standards; source-anchored Fe and Na only.",
+      "gibbs_RT": -8.30071795784287,
+      "maximum_ad_mu_difference_rt": 7.105427357601002e-15,
+      "euler_residual_rt": 3.552713678800501e-15,
+      "independent_parent_plus_split_residual_rt": 0.0,
+      "ln_gamma_Na_minus_ln_gamma_Fe": -1.5994150448506161e-15
+    },
+    {
+      "hydrogen_oxygen_model": "schenck1961_abstract",
+      "model_receipt": {
+        "phosphorus": {
+          "epsilon": [
+            7.3,
+            11.9,
+            8.107969807596769,
+            2.361013913113267
+          ],
+          "order": [
+            "P-P",
+            "P-Si",
+            "P-O",
+            "P-H"
+          ],
+          "reference_temperature_K": 1873.15,
+          "temperature_policy": "constant",
+          "sources": {
+            "self": "https://doi.org/10.2355/tetsutohagane1955.65.2_264",
+            "silicon": "https://doi.org/10.2355/isijinternational1966.23.51",
+            "oxygen": "https://doi.org/10.2355/tetsutohagane1955.48.14_1729",
+            "hydrogen": "https://doi.org/10.2355/tetsutohagane1955.52.13_1823"
+          },
+          "reported_errors_at_reference": {
+            "P-P": 0.1,
+            "P-Si": 0.6
+          },
+          "mass_percent_coefficients": {
+            "e_O_P": 0.06,
+            "e_H_P": 0.015
+          },
+          "reported_O_P_values_across_temperatures": [
+            0.05,
+            0.06,
+            0.07
+          ],
+          "measured_temperature_intervals_K": {
+            "P-P": [
+              1873.15,
+              1873.15
+            ],
+            "P-Si": [
+              1873.15,
+              1873.15
+            ],
+            "P-O": [
+              1813.15,
+              1898.15
+            ],
+            "P-H": [
+              1723.15,
+              1943.15
+            ]
+          },
+          "scope": "Integrable quadratic continuation of independently measured dilute coefficients; no validated simultaneous five-component error bound or pressure term."
+        },
+        "additional_matrix": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            -10.684950417596577,
+            6.033177645353518,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            120.655458872888,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            120.655458872888,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            -1.1316563535167607,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            4.6,
+            -3.8,
+            -8.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            -10.684950417596577,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            -6.015231346202516,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            6.033177645353518,
+            0.0,
+            0.0,
+            4.6,
+            0.0,
+            -6.015231346202516,
+            2.1498561995260337,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            -1.1316563535167607,
+            -3.8,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            -8.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.595656075282424,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "hydrogen_oxygen": {
+          "model": "schenck1961_abstract",
+          "epsilon_natural_log": 120.655458872888,
+          "epsilon_reference_natural_log": 120.655458872888,
+          "reference_temperature_K": 1883.15,
+          "temperature_policy": "constant",
+          "example_predicted_gamma_H": 1.512627528805452,
+          "example_reported_gamma_H": 1.52,
+          "source_sha256": "c9cace0f4772c5900d2fef797ca7f39fb88e5f5112c0db05f1e21f20ba624cad",
+          "scope": [
+            "Contemporary abstract equation and independent numerical example agree in base10; this is not a retrieval of the original concentration observations.",
+            "The1967 Tohoku retelling lists epsilon52.4 with e_O^H2.71; that pair is not substituted for the explicit1963 log10 convention.",
+            "A reciprocal quadratic continuation reproduces the dilute derivative; finite-concentration behavior is not uniquely determined by that derivative.",
+            "No H-H interaction, pressure response, uncertainty band or BSE applicability domain is inferred.",
+            "Other metal species retain their existing terms; zero added H-O returns the previous provider."
+          ],
+          "original_full_text_verified": false
+        },
+        "temperature_policy_for_extra_P_H_cross_terms": "constant",
+        "zero_terms": "Unlisted additional terms are omitted by the declared continuation, not measured to be zero. The original Jung model used no further terms for its evaluated subsystems; H/P extensions have separately listed coefficients.",
+        "sodium_excess": {
+          "model": "sodium_pseudoiron_excess_v1",
+          "component_order": [
+            "Fe",
+            "Si",
+            "O",
+            "H",
+            "P",
+            "Mg",
+            "Ca",
+            "Al",
+            "Cr",
+            "Ti",
+            "MgO",
+            "CaO",
+            "AlO",
+            "CrO",
+            "TiO",
+            "Al2O",
+            "Cr2O",
+            "Ti2O",
+            "K",
+            "Na"
+          ],
+          "component_formulas": [
+            {
+              "Fe": 1.0
+            },
+            {
+              "Si": 1.0
+            },
+            {
+              "O": 1.0
+            },
+            {
+              "H": 1.0
+            },
+            {
+              "P": 1.0
+            },
+            {
+              "Mg": 1.0
+            },
+            {
+              "Ca": 1.0
+            },
+            {
+              "Al": 1.0
+            },
+            {
+              "Cr": 1.0
+            },
+            {
+              "Ti": 1.0
+            },
+            {
+              "Mg": 1.0,
+              "O": 1.0
+            },
+            {
+              "Ca": 1.0,
+              "O": 1.0
+            },
+            {
+              "Al": 1.0,
+              "O": 1.0
+            },
+            {
+              "Cr": 1.0,
+              "O": 1.0
+            },
+            {
+              "Ti": 1.0,
+              "O": 1.0
+            },
+            {
+              "Al": 2.0,
+              "O": 1.0
+            },
+            {
+              "Cr": 2.0,
+              "O": 1.0
+            },
+            {
+              "Ti": 2.0,
+              "O": 1.0
+            },
+            {
+              "K": 1.0
+            },
+            {
+              "Na": 1.0
+            }
+          ],
+          "parent_component_order": [
+            "Fe",
+            "Si",
+            "O",
+            "H",
+            "P",
+            "Mg",
+            "Ca",
+            "Al",
+            "Cr",
+            "Ti",
+            "MgO",
+            "CaO",
+            "AlO",
+            "CrO",
+            "TiO",
+            "Al2O",
+            "Cr2O",
+            "Ti2O",
+            "K"
+          ],
+          "parent_coordinate_map": "x_parent_Fe=x_Fe+x_Na; every other parent species unchanged",
+          "activity_identity": "ln(gamma_Na,Henry)=ln(gamma_Fe)",
+          "empirically_calibrated": false,
+          "scope": "S-free conditional continuation. Na-Si/C/O/H interactions beyond the inherited Fe environment are not measured or fitted."
+        }
+      },
+      "component_fractions": [
+        0.9706658,
+        0.001,
+        0.001,
+        0.02,
+        0.001,
+        0.0001,
+        1e-06,
+        1e-05,
+        0.004,
+        1e-06,
+        0.0001,
+        1e-06,
+        1e-05,
+        0.0001,
+        1e-06,
+        1e-07,
+        1e-05,
+        1e-07,
+        0.001,
+        0.001
+      ],
+      "standard_potentials_rt": [
+        -8.083468321480398,
+        -9.9,
+        -9.8,
+        -9.7,
+        -9.6,
+        -9.5,
+        -9.4,
+        -9.3,
+        -9.2,
+        -9.1,
+        -9.0,
+        -8.9,
+        -8.8,
+        -8.7,
+        -8.6,
+        -8.5,
+        -8.4,
+        -8.3,
+        -8.2,
+        -12.976668909829826
+      ],
+      "standard_scope": "Synthetic other standards; source-anchored Fe and Na only.",
+      "gibbs_RT": -8.298302433140712,
+      "maximum_ad_mu_difference_rt": 7.105427357601002e-15,
+      "euler_residual_rt": 5.329070518200751e-15,
+      "independent_parent_plus_split_residual_rt": 0.0,
+      "ln_gamma_Na_minus_ln_gamma_Fe": 1.7694179454963432e-16
+    }
+  ],
+  "source_commit": "8dc6cb06dfd896c63339ce0e475620485bd4687f",
+  "files_sha256": {
+    "examples/m2_material/validation/20260928_sodium_metal/replay.py": "b8d50905082b74428cb457d78be1dd91d85b1027d3fe6b874771dd56edcebfda",
+    "examples/m2_material/sodium_metal.py": "dc37ac664dd8ab7dfb6d2f1d636b4d22c48c3c7551d8e8097ca054ea1f7c4c0e",
+    "examples/m2_material/potassium_reference.py": "2a9d26ee55cd6a32936bcc2ccab6a96751de93fcb1735c1f51110c392abaca60",
+    "examples/m2_material/associate_reference.py": "fae2fac6554e8c66d5f012bf8c3b1a443517a21a1ae4c098c13731e95fcacd71"
+  },
+  "actual_exit_code": 0,
+  "wall_seconds": 3.221784695982933,
+  "new_equilibrium_or_pressure_closure": false,
+  "physical_material_acceptance": false
+}
