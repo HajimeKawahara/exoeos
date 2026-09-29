@@ -184,3 +184,31 @@ def test_known_helium_does_not_fill_an_unsupplied_hydrogen_mass():
     assert result["native_host_mass_fraction_of_complete_liquid"] is None
     assert all(row["water_equivalent_mass_ppm_complete_liquid"] is None
                for row in result["branches"].values())
+
+
+def test_declared_fugacities_preserve_partial_pressures_and_control_the_predictors():
+    kwargs = state_arguments()
+    ideal = s.assess_sossi_water_state(**kwargs)
+    assert ideal == s.assess_sossi_water_state(**kwargs, water_fugacity_coefficient=1.,
+                                              hydrogen_fugacity_coefficient=1.)
+    coefficients = {"water_fugacity_coefficient": 1.25, "hydrogen_fugacity_coefficient": .8}
+    nonideal = s.assess_sossi_water_state(**kwargs, **coefficients)
+    same_fugacity = {**kwargs, "water_partial_pressure_Pa": 1.25*kwargs["water_partial_pressure_Pa"],
+                     "hydrogen_partial_pressure_Pa": .8*kwargs["hydrogen_partial_pressure_Pa"]}
+    equivalent = s.assess_sossi_water_state(**same_fugacity)
+    assert nonideal["gas_partial_pressures_Pa"] == ideal["gas_partial_pressures_Pa"]
+    assert nonideal["gas_fugacities_Pa"] == equivalent["gas_partial_pressures_Pa"]
+    assert nonideal["branches"] == equivalent["branches"]
+    assert nonideal["predictor_support"] == equivalent["predictor_support"]
+    assert nonideal["gas_fugacity_coefficients"] == {"H2O": 1.25, "H2": .8}
+    assert nonideal["accepted_coupled_material_domain"] is None
+    # Fugacity need not be bounded by total pressure; only partial pressures are.
+    large = s.assess_sossi_water_state(**kwargs, water_fugacity_coefficient=100.)
+    assert large["gas_fugacities_Pa"]["H2O"] > kwargs["pressure_Pa"]
+
+
+@pytest.mark.parametrize("coefficient", [0., -1., np.nan, np.inf, True, "1", None])
+@pytest.mark.parametrize("name", ["water_fugacity_coefficient", "hydrogen_fugacity_coefficient"])
+def test_invalid_fugacity_coefficients_do_not_produce_sossi_comparisons(name, coefficient):
+    with pytest.raises(ValueError):
+        s.assess_sossi_water_state(**state_arguments(), **{name: coefficient})

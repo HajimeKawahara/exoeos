@@ -73,6 +73,18 @@ nonnegative amounts with positive total. Under JAX tracing these numerical
 domain conditions are caller contracts, as in the underlying EOS. Eager
 calls check scalar T/P, composition, and the strictly stable density root.
 
+The existing material comparison functions accept explicit coefficients too:
+`assess_material_state` and `published_basalt_h2_extrapolation` accept
+`hydrogen_fugacity_coefficient=1.0`; `assess_sossi_water_state` additionally
+accepts `water_fugacity_coefficient=1.0`. Nonideal calls retain the supplied
+partial pressures and separately report the coefficients and actual
+fugacities. The illustrative Henry law and the square-root fugacity predictors
+use those fugacities. The coefficient-one defaults retain the existing report
+structure and values, apart from current evaluator provenance hashes.
+Fugacity may exceed total pressure; the sum-of-partial-pressures check still
+uses actual partial pressures. No measured model coefficient or chemical
+standard is refitted by this diagnostic extension.
+
 ## Full-simplex curvature for an independent verifier
 
 At a fixed T/P, define bmin = min(B), b = max(abs(B)), and

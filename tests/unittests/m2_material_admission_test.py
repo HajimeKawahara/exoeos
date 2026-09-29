@@ -236,6 +236,38 @@ def test_published_extrapolation_is_not_a_calibration_or_error_bound():
     assert zero["zero_reference_concentration"]
 
 
+def test_declared_hydrogen_fugacity_changes_henry_input_without_changing_pressure():
+    kwargs = dict(silicate_oxide_mass_fractions=bse(), hydrogen_partial_pressure_Pa=101325.,
+                  alloy_atomic_fractions=[.999, 0., 0., .001])
+    ideal = assess(1873.15, 101325., **kwargs)
+    assert ideal == assess(1873.15, 101325., **kwargs, hydrogen_fugacity_coefficient=1.)
+    nonideal = assess(1873.15, 101325., **kwargs, hydrogen_fugacity_coefficient=1.2)
+    assert nonideal["input"]["hydrogen_partial_pressure_Pa"] == 101325.
+    assert nonideal["input"]["hydrogen_fugacity_Pa"] == pytest.approx(1.2*101325.)
+    prediction = nonideal["published_h2_extrapolation"]
+    assert prediction["predicted_molecular_h2_mass_ppm"] == pytest.approx(
+        1.2*ideal["published_h2_extrapolation"]["predicted_molecular_h2_mass_ppm"])
+    assert prediction["hydrogen_fugacity_coefficient"] == 1.2
+    assert not prediction["supports_material_admission"]
+    assert not nonideal["alloy_hydrogen_reference"]["reference_conditions_supported"]
+    assert nonideal["alloy_hydrogen_reference"]["reference_equilibrium_atomic_h_mass_ppm"] is None
+    assert nonideal["accepted_coupled_material_domain"] is None
+
+
+@pytest.mark.parametrize("coefficient", [0., -1., np.nan, np.inf, True, "1", None])
+def test_invalid_hydrogen_fugacity_coefficient_fails(coefficient):
+    with pytest.raises(ValueError):
+        assess(2173.15, 1e5, silicate_oxide_mass_fractions=bse(),
+               hydrogen_partial_pressure_Pa=5e4, hydrogen_fugacity_coefficient=coefficient)
+    with pytest.raises(ValueError):
+        MODULE.published_basalt_h2_extrapolation(1e5, hydrogen_fugacity_coefficient=coefficient)
+
+
+def test_nonideal_coefficient_without_a_partial_pressure_is_not_a_state():
+    with pytest.raises(ValueError, match="partial pressure"):
+        assess(2173.15, 1e5, silicate_oxide_mass_fractions=bse(), hydrogen_fugacity_coefficient=1.1)
+
+
 @pytest.mark.parametrize("changes", [
     {"temperature_K": np.nan}, {"pressure_Pa": 0.},
     {"silicate_oxide_mass_fractions": {"SiO2": .5}},

@@ -15,7 +15,7 @@ from pathlib import Path
 
 import numpy as np
 
-from .material_admission import assess_material_state
+from .material_admission import assess_material_state, _fugacity_coefficient
 
 
 DATA_DIR = Path(__file__).with_name("water_data")
@@ -164,11 +164,13 @@ def _predictor_support(rows, target):
 def assess_sossi_water_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fractions,
                              water_partial_pressure_Pa, hydrogen_partial_pressure_Pa,
                              molecular_h2_mass_ppm=None, water_mass_percent=None,
-                             dissolved_helium_mass_ppm=0.0):
+                             dissolved_helium_mass_ppm=0.0,
+                             water_fugacity_coefficient=1.0, hydrogen_fugacity_coefficient=1.0):
     """Compare a supplied native host with the measured 1-bar water reference.
 
-    Partial pressures use the complete gas denominator and are interpreted
-    as ideal fugacities. Native oxides include H2O but exclude added H2/He.
+    Partial pressures use the complete gas denominator. Fugacity equals the
+    partial pressure times its supplied coefficient (one by default).
+    Native oxides include H2O but exclude added H2/He.
     H2/He ppm and water percent, when supplied, use complete-liquid mass.
     Predictions retain the experiment's H2O-equivalent/glass basis. Their
     optional complete-liquid conversion adds the supplied H2/He masses to
@@ -179,15 +181,21 @@ def assess_sossi_water_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_
     if any(isinstance(v, (bool, str)) or not np.isscalar(v) or not np.isreal(v)
            or not np.isfinite(v) or v < 0 for v in values):
         raise ValueError("Supply finite nonnegative gas partial pressures in Pa.")
+    coefficients = (_fugacity_coefficient(water_fugacity_coefficient, "phi_H2O"),
+                    _fugacity_coefficient(hydrogen_fugacity_coefficient, "phi_H2"))
+    fugacities = np.asarray(values, dtype=float) * np.asarray(coefficients)
+    if not np.all(np.isfinite(fugacities)):
+        raise ValueError("The supplied partial pressures and coefficients require finite fugacities.")
     reference = assess_material_state(
         temperature_K, pressure_Pa, silicate_oxide_mass_fractions=silicate_oxide_mass_fractions,
         molecular_h2_mass_ppm=molecular_h2_mass_ppm, water_mass_percent=water_mass_percent,
         dissolved_helium_mass_ppm=dissolved_helium_mass_ppm,
-        hydrogen_partial_pressure_Pa=hydrogen_partial_pressure_Pa)
+        hydrogen_partial_pressure_Pa=hydrogen_partial_pressure_Pa,
+        hydrogen_fugacity_coefficient=coefficients[1])
     pressure, temperature = reference["input"]["pressure_Pa"], reference["input"]["temperature_K"]
     if sum(values) > pressure * (1 + 1e-12):
         raise ValueError("H2 and H2O partial pressures cannot exceed total pressure.")
-    query = np.sqrt(np.asarray(values, dtype=float)/1e5)
+    query = np.sqrt(fugacities/1e5)
     rows, report = _observations(), calibration_report()
     support = _predictor_support(rows, query)
     host = reference["sossi_liquid_comparison"]["host_comparison"]
@@ -219,7 +227,7 @@ def assess_sossi_water_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_
             "internal_grouped_cv_rmse_ppm": branch["grouped_cross_validation"]["rmse_ppm"],
             "internal_grouped_cv_max_absolute_residual_ppm": branch["grouped_cross_validation"]["max_absolute_residual_ppm"],
             "prediction_error_bound": None}
-    return {"report_kind": "actual_state_sossi_water_comparison_v1",
+    result = {"report_kind": "actual_state_sossi_water_comparison_v1",
             "temperature_K": temperature, "pressure_Pa": pressure,
             "gas_partial_pressures_Pa": {"H2O": float(values[0]), "H2": float(values[1])},
             "gas_fugacity_assumption": "Ideal gas: supplied partial pressures equal fugacities.",
@@ -240,6 +248,12 @@ def assess_sossi_water_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_
             "provenance_sha256": report["provenance_sha256"],
             "runner_sha256": report["runner_sha256"],
             "material_reference_provenance": reference["provenance"]}
+    if coefficients != (1.0, 1.0):
+        result.update(
+            gas_fugacity_coefficients=dict(zip(("H2O", "H2"), coefficients)),
+            gas_fugacities_Pa=dict(zip(("H2O", "H2"), fugacities.tolist())),
+            gas_fugacity_assumption="Supplied fugacity coefficients multiply the unchanged full-gas partial pressures.")
+    return result
 
 
 def main():

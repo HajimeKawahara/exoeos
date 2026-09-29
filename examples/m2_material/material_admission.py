@@ -36,6 +36,15 @@ def _nonnegative(value, name):
     return float(value)
 
 
+def _fugacity_coefficient(value, name):
+    if isinstance(value, (bool, np.bool_, str)):
+        raise ValueError(f"{name} must be a finite positive coefficient, not a boolean or string.")
+    coefficient = _nonnegative(value, name)
+    if coefficient == 0:
+        raise ValueError(f"{name} must be strictly positive.")
+    return coefficient
+
+
 def _distance(value, bounds):
     """Return an absolute coordinate distance, never an uncertainty score."""
     return float(max(bounds[0] - value, value - bounds[1], 0.0))
@@ -65,19 +74,22 @@ def _composition_comparison(candidate, measured, *, explicit_zero=()):
 
 
 def published_basalt_h2_extrapolation(hydrogen_partial_pressure_Pa, *,
-                                      molecular_h2_mass_ppm=None):
-    """Reproduce the authors' 515 ppm/GPa pure-H2 illustration at ideal p_H2.
+                                      molecular_h2_mass_ppm=None,
+                                      hydrogen_fugacity_coefficient=1.0):
+    """Extend the authors' 515 ppm/GPa illustration using declared H2 fugacity.
 
     Chaudhari et al. (2025), pp. 14--16, convert the buffered basalt fit to
-    a pure-H2 illustrative law. Applying it to p_H2 in a mixture additionally
-    assumes ideal gas fugacity and Henry proportionality. It has no measured
+    a pure-H2 illustrative law. Applying it to f_H2 in a mixture additionally
+    assumes Henry proportionality; the default coefficient is ideal. It has no measured
     low-pressure/BSE calibration or quantified extrapolation error. It is
     neither an upper bound nor a replacement standard for the current model.
     """
     partial = _nonnegative(hydrogen_partial_pressure_Pa, "p_H2")
-    predicted = 515.0 * partial / 1e9
+    coefficient = _fugacity_coefficient(hydrogen_fugacity_coefficient, "phi_H2")
+    fugacity = _nonnegative(partial * coefficient, "f_H2")
+    predicted = 515.0 * fugacity / 1e9
     actual = None if molecular_h2_mass_ppm is None else _nonnegative(molecular_h2_mass_ppm, "H2 ppm")
-    return {
+    report = {
         "source_doi": "10.1007/s00410-025-02272-y",
         "source_locator": "Printed pages 14--16, low-pressure discussion and illustrative magma-ocean calculation",
         "kind": "published_extrapolation_with_ideal_gas_extension",
@@ -92,6 +104,14 @@ def published_basalt_h2_extrapolation(hydrogen_partial_pressure_Pa, *,
                         "The authors' basalt-based illustrative coefficient is transferred without a temperature or host correction."],
         "unresolved": ["BSE host dependence", "Temperature dependence", "Low-pressure calibration", "Extrapolation uncertainty"],
     }
+    if coefficient != 1.0:
+        report.update(
+            kind="published_extrapolation_with_declared_fugacity_extension",
+            hydrogen_fugacity_coefficient=coefficient, hydrogen_fugacity_Pa=fugacity)
+        report["assumptions"][0] = (
+            "H2 fugacity is the supplied partial pressure times its declared coefficient; "
+            "the illustrative slope is continued by Henry proportionality.")
+    return report
 
 
 def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fractions,
@@ -99,7 +119,8 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
                           dissolved_helium_mass_ppm=0.0,
                           alloy_atomic_fractions=None,
                           hydrogen_partial_pressure_Pa=None, buffer=None,
-                          liquid_model=None, metal_model=None, hydrogen_oxygen_model=None):
+                          liquid_model=None, metal_model=None, hydrogen_oxygen_model=None,
+                          hydrogen_fugacity_coefficient=1.0):
     """Return material evidence for a supplied state, without mutating it.
 
     Supply silicate oxides as a normalized name-to-mass-fraction mapping
@@ -116,6 +137,8 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
     The legacy Chaudhari/Kato checks remain source-specific reference comparisons;
     an unsupported reference condition is not an automatic rejection of a different
     constitutive model. Scenario offsets are recorded separately by the source.
+    An optional H2 fugacity coefficient changes the illustrative Henry input,
+    not the supplied partial pressure or any chemical standard potential.
     """
     for name, value, allowed in (
             ("liquid_model", liquid_model, (None, "native", "published", "published_water")),
@@ -159,6 +182,10 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
         if not np.isclose(water, expected_water, rtol=1e-10, atol=1e-10):
             raise ValueError("Native-water, H2 and He concentrations must use the same complete-liquid mass denominator.")
     partial = None if hydrogen_partial_pressure_Pa is None else _nonnegative(hydrogen_partial_pressure_Pa, "p_H2")
+    h2_coefficient = _fugacity_coefficient(hydrogen_fugacity_coefficient, "phi_H2")
+    if partial is None and h2_coefficient != 1.0:
+        raise ValueError("A nonideal H2 coefficient requires its partial pressure.")
+    fugacity = None if partial is None else _nonnegative(partial * h2_coefficient, "f_H2")
     if partial is not None and partial > pressure:
         raise ValueError("H2 partial pressure cannot exceed total pressure.")
     evidence = json.loads((DATA / "domain_evidence.json").read_text())["evidence"]
@@ -245,6 +272,8 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
             "silicon_below_2_5_mass_percent": wt_percent[1] < 2.5,
             "positive_iron_host": x[0] > 0,
         }
+        if h2_coefficient != 1.0:
+            conditions["reference_ideal_h2_fugacity_assumption"] = False
         alloy = {"status": "evaluated", "source_doi": kato["doi"],
                  "component_order": list(components), "atomic_fractions": x.tolist(),
                  "mass_percent": dict(zip(components, wt_percent.tolist())),
@@ -287,6 +316,9 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
                    "molecular_h2_mass_ppm": h2, "water_mass_percent": water,
                    "dissolved_helium_mass_ppm": helium,
                    "hydrogen_partial_pressure_Pa": partial, "buffer": buffer}
+    if h2_coefficient != 1.0:
+        input_state.update(hydrogen_fugacity_coefficient=h2_coefficient,
+                           hydrogen_fugacity_Pa=fugacity)
     constitutive = json.loads((DATA / "constitutive_evidence.json").read_text())
     constitutive["selected_models"] = {
         "liquid_model": liquid_model, "metal_model": metal_model,
@@ -330,7 +362,7 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
             "total_pressure_gap_Pa": min(row["pressure_Pa"] for row in observations) - ATM_PA,
             "interpretation": "Necessary-condition intersection of these two implemented reference families only; not proof that other physical domains cannot exist."},
         "published_h2_extrapolation": None if partial is None else published_basalt_h2_extrapolation(
-            partial, molecular_h2_mass_ppm=h2),
+            partial, molecular_h2_mass_ppm=h2, hydrogen_fugacity_coefficient=h2_coefficient),
         "unresolved": ["No common calibrated BSE/silicate-H2/Fe-Si-O-H domain is established.",
                        "Composition differences and source extrapolations have no quantified validity radius or error bound.",
                        "Phase stability, reaction standards and omitted-transfer errors require independent assessments."],
