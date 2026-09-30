@@ -1,0 +1,13 @@
+{
+  "created_utc": "2026-09-27T23:08:52.575002+00:00",
+  "actual_exit_code": 0,
+  "reference_and_scalar_tests_passed": 11,
+  "boundary_tests_after_extended_value_assertions_passed": 4,
+  "stdout": [
+    "...........                                                              [100%]\n11 passed in 0.58s\n",
+    "....                                                                     [100%]\n4 passed in 0.81s\n"
+  ],
+  "source_sha256": "32b5dc597d9962375186924d1b15a01cf3540a8090f834d4f256683412c508c0",
+  "scope": "Zero He preserves a water-only original host; positive He at zero dry mass is infeasible. Fixed-zero-dry-mass He insertion is positive infinity, not a smooth joint derivative.",
+  "original_execution_receipt_preserved": true
+}

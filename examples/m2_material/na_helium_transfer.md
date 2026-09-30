@@ -46,7 +46,23 @@ is `G_add/(RT) = n_He [mu_gas_standard/(RT) + ln(n_He/(M_dry a)) - 1]`,
 where fugacity is measured relative to one bar. Its dry-host derivative must
 be included as well as the He chemical potential. A composition-dependent
 coefficient additionally requires its composition derivatives. This scalar
-is a proposed integration, not an implemented source phase.
+is implemented by `helium_dissolution.make_helium_dissolution` as a separate
+provider scalar. ExoGibbs owns its opt-in finite-source connection and
+ExoInventory owns the finite budget and pressure response.
+
+Select `guillot2012_olivine`, `guillot2012_morb` or `guillot2012_rhyolite` and
+provide the actual shared He gas standard plus the dry mass per host component.
+Assign zero dry mass to native water and dissolved H2. `state` returns analytic
+G/RT and all host/He potentials; `energy_value_and_grad_rt` independently
+differentiates the scalar. Positive He requires positive dry-host mass. At
+zero He the energy and host shifts vanish; its insertion potential is negative
+infinity at positive dry mass and positive infinity at fixed zero dry mass.
+The latter is a one-sided limit, not a joint smooth derivative. Thus a He-free
+water-only host keeps its original energy and host potentials. An entirely
+absent phase has zero energy and undefined
+potentials. He contributes neither to the existing H2 mixing denominator nor
+to the dry-host mass. This trace-law completion supplies no new pressure-volume
+term or empirical finite-concentration bound.
 
 The [frozen OH illustration](validation/20260928_na_helium/frozen_oh.json)
 uses the archived 76-gas source, without changing it. For pHe = 45.8751 bar,
