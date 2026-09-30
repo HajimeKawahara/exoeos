@@ -93,3 +93,12 @@ that state, not a new equilibrium result. Ordinary tests require neither
 alphaMELTS nor a sibling provider; they cover unsupported T/P combinations,
 host mismatch, atomic/mass conversion, water denominators, exact absence and
 the distinction between a reference illustration and material admission.
+
+## Measured oxygen reaction standard
+
+The [oxygen-standard replay](oxygen_calibration.md) adds an independent
+low-pressure Fe-O/H2/H2O reaction check. It identifies a quantitative failure
+of the inherited O standard combined with the adopted Ma activities, and
+provides explicit alternative standard scenarios. This is stronger evidence
+than coordinate-domain mismatch; it does not itself validate the rest of
+the coupled material model or silently change this state-assessment API.
