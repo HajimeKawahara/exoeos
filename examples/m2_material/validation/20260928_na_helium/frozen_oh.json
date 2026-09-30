@@ -1,0 +1,124 @@
+{
+  "kind": "frozen_source_reference_illustration_not_a_coupled_bound",
+  "source_sha256": "f7b848f0c89740ac77010b56eccdaa6c5283c17216d6aeac24d2c99ea54b9235",
+  "source_archive": "ExoInventory PR 35, final_common_runtime_oh/closure.json",
+  "temperature_K": 2173.15,
+  "pressure_bar": 269.6545152505794,
+  "gas_species_count": 76,
+  "complete_gas_amount_mol": 5.8780131058154835e+23,
+  "He_partial_pressure_bar": 45.87511296696386,
+  "ideal_pHe_used_as_fugacity": true,
+  "dry_silicate_mass_kg": 9.660260839397085e+22,
+  "reconstructed_source_phase_mass_kg": {
+    "silicate": 9.678349204498961e+22,
+    "metal": 2.6265649862626257e+21,
+    "gas": 1.9981431687477618e+21,
+    "cloud": 0.0
+  },
+  "global_He_inventory_mol": 1e+23,
+  "global_He_inventory_mass_kg": 4.0026020000000003e+20,
+  "rows": [
+    {
+      "host": "olivine",
+      "temperature_K": 2173.15,
+      "S_cm3_STP_per_g_bar": 0.0005510139535079577,
+      "He_mol_per_kg_dry_host_per_bar_fugacity": 2.4583505942637806e-05,
+      "standard_volume_cm3_per_mol": 22413.969545014133,
+      "STP_assumption": {
+        "T_K": 273.15,
+        "P_Pa": 101325
+      },
+      "interpolation": "ln(S) linear in reciprocal absolute temperature",
+      "bracketing_simulated_rows": [
+        {
+          "host": "olivine",
+          "T_K": 1873.0,
+          "S": 0.000305
+        },
+        {
+          "host": "olivine",
+          "T_K": 2273.0,
+          "S": 0.000648
+        }
+      ],
+      "supports_material_admission": false,
+      "is_BSE_error_bound": false,
+      "source_data_sha256": "e1078b86b92735b85209883f67a9037532399ebd1cdf4e611e75e5369108ee8d",
+      "He_mol_frozen": 1.0894563111399873e+20,
+      "fraction_of_global_He": 0.0010894563111399874,
+      "He_mass_ppm_per_dry_host": 4.514018909404203
+    },
+    {
+      "host": "MORB",
+      "temperature_K": 2173.15,
+      "S_cm3_STP_per_g_bar": 0.001049909614655701,
+      "He_mol_per_kg_dry_host_per_bar_fugacity": 4.684175253058857e-05,
+      "standard_volume_cm3_per_mol": 22413.969545014133,
+      "STP_assumption": {
+        "T_K": 273.15,
+        "P_Pa": 101325
+      },
+      "interpolation": "ln(S) linear in reciprocal absolute temperature",
+      "bracketing_simulated_rows": [
+        {
+          "host": "MORB",
+          "T_K": 1673.0,
+          "S": 0.000596
+        },
+        {
+          "host": "MORB",
+          "T_K": 2273.0,
+          "S": 0.001141
+        }
+      ],
+      "supports_material_admission": false,
+      "is_BSE_error_bound": false,
+      "source_data_sha256": "e1078b86b92735b85209883f67a9037532399ebd1cdf4e611e75e5369108ee8d",
+      "He_mol_frozen": 2.0758651365018223e+20,
+      "fraction_of_global_He": 0.0020758651365018225,
+      "He_mass_ppm_per_dry_host": 8.601074117177813
+    },
+    {
+      "host": "rhyolite",
+      "temperature_K": 2173.15,
+      "S_cm3_STP_per_g_bar": 0.0025658016031856563,
+      "He_mol_per_kg_dry_host_per_bar_fugacity": 0.00011447332423793735,
+      "standard_volume_cm3_per_mol": 22413.969545014133,
+      "STP_assumption": {
+        "T_K": 273.15,
+        "P_Pa": 101325
+      },
+      "interpolation": "ln(S) linear in reciprocal absolute temperature",
+      "bracketing_simulated_rows": [
+        {
+          "host": "rhyolite",
+          "T_K": 1673.0,
+          "S": 0.00186
+        },
+        {
+          "host": "rhyolite",
+          "T_K": 2273.0,
+          "S": 0.00269
+        }
+      ],
+      "supports_material_admission": false,
+      "is_BSE_error_bound": false,
+      "source_data_sha256": "e1078b86b92735b85209883f67a9037532399ebd1cdf4e611e75e5369108ee8d",
+      "He_mol_frozen": 5.073063453162334e+20,
+      "fraction_of_global_He": 0.005073063453162334,
+      "He_mass_ppm_per_dry_host": 21.019571066801305
+    }
+  ],
+  "Na": {
+    "inventory_mol": 1.163488354656573e+22,
+    "inventory_mass_kg": 2.6748328833521428e+20,
+    "all_Na_mass_over_existing_metal_mass": 0.10183768143342983
+  },
+  "limitations": [
+    "Dry simulated hosts are not a wet-BSE empirical bracket.",
+    "Solvent mass and ideal gas fugacity remain fixed.",
+    "No finite He equilibrium or coupled pressure error was calculated.",
+    "Metal He and Na constitutive continuations remain unresolved."
+  ],
+  "replay_sha256": "72b6d2fd9c6b2a911cb59957f525b90f86db797afd418bafd2775a7920baf29c"
+}

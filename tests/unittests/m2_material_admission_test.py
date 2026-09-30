@@ -68,6 +68,9 @@ def test_constitutive_choices_do_not_misuse_legacy_reference_checks_as_acceptanc
     categories = set(evidence["categories"])
     assert len(evidence["systems"]) == 6
     assert all(categories <= set(system) for system in evidence["systems"].values())
+    omission = evidence["additional_omitted_transfer_paths"]
+    assert set(omission["paths"]) == {"Na_to_metal", "He_to_silicate", "He_to_metal"}
+    assert not omission["all_13_element_transfer_coverage_established"]
     for invalid in ({"liquid_model": "unknown"},
                     {"metal_model": "ma", "hydrogen_oxygen_model": "schenck1961_abstract"},
                     {"metal_model": "associated"}):

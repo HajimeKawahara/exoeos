@@ -50,6 +50,11 @@ domain exists. Every report keeps `material_admission="not_established"` and
 `accepted_coupled_material_domain=null`. Competing phases, reaction standards
 and omitted-transfer errors require independent assessments.
 
+The constitutive ledger separately records [Na and He transfer paths](na_helium_transfer.md).
+Completing the previous Mg/Al/Ca/K/Ti/Cr/P metal catalog does not establish
+coverage of all 13 inventory elements. Gas-only He is a declared reservoir
+restriction; chemical inertness does not establish insolubility in either melt.
+
 ## A published extrapolation comparison
 
 [Chaudhari et al. (2025)](https://doi.org/10.1007/s00410-025-02272-y), printed
