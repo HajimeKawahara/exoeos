@@ -1,0 +1,89 @@
+{
+  "schema": "m2_major_gas_virial_sources_v1",
+  "transcription_date": "2026-09-28",
+  "sources": [
+    {
+      "id": "Hodges2004",
+      "doi": "10.1063/1.1630960",
+      "url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=831920",
+      "pdf_sha256": "3a6059b5fc86b80a8fdb9ed45b4b32aa940bd744cbec402b6604211d0d09d132",
+      "location": "Eq. 24; Table IV (H2), Table VI (H2-H2O), Table VII (H2-H2O checks). H2-H2O c3 is +285.42, visually checked.",
+      "recommended_or_table_temperature_range_k": {
+        "H2-H2O": [
+          200,
+          2000
+        ]
+      },
+      "uncertainty": "H2-H2O estimated uncertainty 0.55 cm3/mol at 1000 K, 0.31 at 2000 K; no guaranteed bound at 2173.15 K. H2 correlation high-temperature uncertainty is not specified here."
+    },
+    {
+      "id": "Hodges2002",
+      "doi": "10.1063/1.1421065",
+      "url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=831761",
+      "pdf_sha256": "b7b3191994cd8b240c702fa70926c8c12e578c4a3b41aaae19318e7358096ec6",
+      "location": "Eq. 15; Tables VI and VII. Water-helium analytic correlation.",
+      "recommended_or_table_temperature_range_k": {
+        "He-H2O": [
+          100,
+          2000
+        ]
+      },
+      "uncertainty": "Estimated potential uncertainty 0.7 cm3/mol at 1000 K, 0.5 at 2000 K. Correlation fits computed values to 0.01 cm3/mol; these are distinct uncertainties."
+    },
+    {
+      "id": "HarveyLemmon2004",
+      "doi": "10.1063/1.1587731",
+      "url": "https://www.nist.gov/system/files/documents/srd/jpcrd646.pdf",
+      "pdf_sha256": "778c82ddc1e45ee7bb2a05a5355352526197d6c193ae4c5f97ed3910adff0980",
+      "location": "Eq. 6 and Tables 4 and 5. Coefficients multiplied by B0=1000 cm3/mol.",
+      "recommended_or_table_temperature_range_k": {
+        "H2O-H2O": [
+          310,
+          3000
+        ]
+      },
+      "uncertainty": "Measurements constrain 310-1170 K; high-temperature behavior uses a pair potential. Authors estimate uncertainty about 1 cm3/mol from 800 to 3000 K, not an exact bound."
+    },
+    {
+      "id": "HurlyMehl2007",
+      "doi": "10.6028/jres.112.006",
+      "url": "https://nvlpubs.nist.gov/nistpubs/jres/112/2/V112.N02.A01.pdf",
+      "pdf_sha256": "09edb262f6fd75fc8e05970b2c24381e81d15ca0c68e609b36677d26e9021aa0",
+      "location": "Table 5, p. 88: eight rows from 1000 to 3000 K and T*dB/dT; cubic Hermite interpolation uses these derivatives.",
+      "recommended_or_table_temperature_range_k": {
+        "He-He": [
+          1000,
+          3000
+        ]
+      },
+      "uncertainty": "This example uses only a subset of the 1-10000 K theoretical table. Interpolation error is distinct from the published potential uncertainty; no bound is assigned to the subset interpolation."
+    },
+    {
+      "id": "Garberoglio2012",
+      "doi": "10.1063/1.4757565",
+      "url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=911571",
+      "pdf_sha256": "0a8d0dc252467d3a269e263c38e0a6f59f3301ba97ec8a671f805e2be8b21555",
+      "location": "Table II: independent H2 values used to assess the older analytic correlation; not fitted by this example.",
+      "recommended_or_table_temperature_range_k": {
+        "H2-H2": [
+          15,
+          2000
+        ]
+      },
+      "uncertainty": "At 1000/1500/2000 K: B=15.96/15.05/14.22 cm3/mol and expanded U=0.05/0.04/0.03. Residual flexibility is not fully included in U."
+    }
+  ],
+  "unresolved_pairs": {
+    "H2-He": {
+      "doi": "10.1007/s10765-014-1729-7",
+      "primary_abstract": "https://www.nist.gov/publications/fully-quantum-cross-second-virial-coefficients-three-dimensional-he-h2-pair",
+      "status": "Primary abstract establishes 8-2000 K calculations; numerical table has not been acquired. Do not infer coefficients from this citation."
+    }
+  },
+  "limitations": [
+    "Second virials alone do not bound dense-gas truncation error.",
+    "No trace-species pair coefficients are assigned.",
+    "A supplied H2-He value is a sensitivity assumption, not source data.",
+    "No material-admission or phase-boundary flag is changed."
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "doi": "10.1016/j.cryogenics.2024.103817",
+  "paper_url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=935911",
+  "supplement_url": "https://ars.els-cdn.com/content/image/1-s2.0-S0011227524000377-mmc1.zip",
+  "primary_sha256": {
+    "Beckmueller2024.pdf": "8a74bf9a121875037f429bcc592e3209857fb239c020160158aa130e2f11cd8f",
+    "Beckmueller2024-supplement.zip": "2fd11903ed10d6ef76b074841a48cc39e2ca559cdd9e4d73444fad3e55b6530e",
+    "BIP.json": "922f213410a9a54bfa764a95b85fc4afc4ce514c3229445a9581b3d7e990fa38",
+    "dep.json": "1cf64026a7ddf859f7096ecce16deb6afd00b34d03af01835762ad1b0e25fc61"
+  },
+  "BIP": [
+    {
+      "betaT": 1.098,
+      "gammaT": 0.899,
+      "betaV": 0.952,
+      "gammaV": 1.117,
+      "type": "GERG",
+      "F": 1.0,
+      "function": "He-H2",
+      "Name1": "Helium",
+      "Name2": "Hydrogen",
+      "CAS1": "7440-59-7",
+      "CAS2": "1333-74-0",
+      "BibTeX": "//"
+    }
+  ],
+  "departure": [
+    {
+      "Name": "He-H2",
+      "aliases": [
+        "H2-He"
+      ],
+      "type": "Gaussian+Exponential",
+      "BibTeX": "Beckmueller",
+      "Npower": 2,
+      "n": [
+        -0.115,
+        -0.057,
+        0.136,
+        1.475,
+        -0.931,
+        0.043
+      ],
+      "t": [
+        4.529,
+        0.058,
+        4.528,
+        0.49,
+        0.685,
+        4.238
+      ],
+      "d": [
+        1,
+        1,
+        1,
+        1,
+        2,
+        3
+      ],
+      "l": [
+        1,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      "eta": [
+        0,
+        0,
+        2.01,
+        0.32,
+        0.19,
+        1.71
+      ],
+      "beta": [
+        0,
+        0,
+        2.04,
+        2.04,
+        1.97,
+        0.68
+      ],
+      "gamma": [
+        0,
+        0,
+        2.04,
+        0.15,
+        0.05,
+        0.35
+      ],
+      "epsilon": [
+        0,
+        0,
+        0.08,
+        2.35,
+        1.47,
+        1.59
+      ]
+    }
+  ],
+  "teqp_version": "0.23.1",
+  "component_order": [
+    "Helium",
+    "Hydrogen"
+  ],
+  "table_6_hydrogen_fraction": 0.4,
+  "table_6_pressure": [
+    {
+      "temperature_K": 25,
+      "density_mol_m3": 1000,
+      "pressure_MPa": 0.204638046
+    },
+    {
+      "temperature_K": 35,
+      "density_mol_m3": 40000,
+      "pressure_MPa": 25.89085492
+    },
+    {
+      "temperature_K": 75,
+      "density_mol_m3": 10000,
+      "pressure_MPa": 6.982336252
+    },
+    {
+      "temperature_K": 100,
+      "density_mol_m3": 60000,
+      "pressure_MPa": 213.5412698
+    }
+  ],
+  "implementation_relative_tolerance": 1e-06,
+  "cross_virial_reference_temperature_K": [
+    8,
+    2000
+  ],
+  "scope": "Author-supplied mixture coefficients; primary pure-fluid inputs are pinned separately at execution. A replay is not an empirical uncertainty bound."
+}
