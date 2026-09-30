@@ -53,6 +53,9 @@ class _Interval:
     def __truediv__(self, other):
         return self * _interval(other).reciprocal()
 
+    def __rtruediv__(self, other):
+        return _interval(other) * self.reciprocal()
+
     def log(self):
         if self.lo <= 0:
             raise ValueError("The composition box crosses a logarithmic endpoint.")
@@ -86,32 +89,33 @@ def _log_point(value):
 
 
 class _SecondOrder:
-    """Three composition derivatives with interval-valued coefficients."""
+    """Composition derivatives with interval-valued coefficients."""
 
-    def __init__(self, value, index=None):
+    def __init__(self, value, index=None, *, dimension=3):
         self.value = _interval(value)
-        self.gradient = [_interval(float(i == index)) for i in range(3)]
-        self.hessian = [[_interval(0.) for _ in range(3)] for _ in range(3)]
+        self.dimension = dimension
+        self.gradient = [_interval(float(i == index)) for i in range(dimension)]
+        self.hessian = [[_interval(0.) for _ in range(dimension)] for _ in range(dimension)]
 
     def __add__(self, other):
-        other = _second(other)
-        result = _SecondOrder(self.value + other.value)
+        other = _second(other, self.dimension)
+        result = _SecondOrder(self.value + other.value, dimension=self.dimension)
         result.gradient = [a + b for a, b in zip(self.gradient, other.gradient)]
         result.hessian = [[self.hessian[i][j] + other.hessian[i][j]
-                           for j in range(3)] for i in range(3)]
+                           for j in range(self.dimension)] for i in range(self.dimension)]
         return result
 
     __radd__ = __add__
 
     def __mul__(self, other):
-        other = _second(other)
-        result = _SecondOrder(self.value * other.value)
+        other = _second(other, self.dimension)
+        result = _SecondOrder(self.value * other.value, dimension=self.dimension)
         result.gradient = [self.gradient[i] * other.value + self.value * other.gradient[i]
-                           for i in range(3)]
+                           for i in range(self.dimension)]
         result.hessian = [[
             self.hessian[i][j] * other.value + self.gradient[i] * other.gradient[j]
             + self.gradient[j] * other.gradient[i] + self.value * other.hessian[i][j]
-            for j in range(3)] for i in range(3)]
+            for j in range(self.dimension)] for i in range(self.dimension)]
         return result
 
     __rmul__ = __mul__
@@ -120,17 +124,17 @@ class _SecondOrder:
         return self * -1
 
     def __sub__(self, other):
-        return self + -_second(other)
+        return self + -_second(other, self.dimension)
 
     def __rsub__(self, other):
-        return _second(other) + -self
+        return _second(other, self.dimension) + -self
 
     def transform(self, value, first, second):
-        result = _SecondOrder(value)
+        result = _SecondOrder(value, dimension=self.dimension)
         result.gradient = [first * item for item in self.gradient]
         result.hessian = [[first * self.hessian[i][j]
                            + second * self.gradient[i] * self.gradient[j]
-                           for j in range(3)] for i in range(3)]
+                           for j in range(self.dimension)] for i in range(self.dimension)]
         return result
 
     def reciprocal(self):
@@ -138,18 +142,22 @@ class _SecondOrder:
         return self.transform(inverse, -inverse * inverse, 2 * inverse * inverse * inverse)
 
     def __truediv__(self, other):
-        return self * _second(other).reciprocal()
+        return self * _second(other, self.dimension).reciprocal()
 
     def __rtruediv__(self, other):
-        return _second(other) * self.reciprocal()
+        return _second(other, self.dimension) * self.reciprocal()
 
     def log(self):
         inverse = self.value.reciprocal()
         return self.transform(self.value.log(), inverse, -inverse * inverse)
 
 
-def _second(value):
-    return value if isinstance(value, _SecondOrder) else _SecondOrder(value)
+def _second(value, dimension=3):
+    if isinstance(value, _SecondOrder):
+        if value.dimension != dimension:
+            raise ValueError("Interval derivative dimensions must agree.")
+        return value
+    return _SecondOrder(value, dimension=dimension)
 
 
 def _ma_excess(temperature_k, coefficients, solutes):
