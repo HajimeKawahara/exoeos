@@ -1,0 +1,71 @@
+{
+  "record_id": "water_absorptivity_and_independent_pressure_v1",
+  "normalization_evidence": [
+    {
+      "doi": "10.1016/j.epsl.2022.117894",
+      "url": "https://arxiv.org/pdf/2211.13344",
+      "locator": "Section2.2, Eq1, printedpp2-3",
+      "fact": "3550 cm^-1 absorptivity maps to total H2O-equivalent moles; mass concentration multiplies M_H2O=0.018015 kg/mol."
+    },
+    {
+      "doi": "10.1016/j.chemgeo.2025.123048",
+      "url": "https://arxiv.org/pdf/2510.05281v1",
+      "pdf_sha256": "481d6a752c1fa54d6d1466982cc08b81cbce889101e47943a432f5bba9575bb3",
+      "locator": "Eq1 and Section2.3; Eq18; Table4 secondrow",
+      "fact": "The same absorptivity literature is used, while Eq1 multiplies M_OH=0.017008 kg/mol. The fitted response in the author notebook is this mass-scaled value, not a mole fraction or literal two-OH-group mass."
+    }
+  ],
+  "inference": "Undo the published M_OH factor and restore M_H2O to recover H2O-equivalent mass. This is a dimensional reconstruction of the published calibration, not a new fit or a claim that literal OH groups contain one H2O molecule.",
+  "paper": {
+    "doi": "10.1016/j.chemgeo.2010.07.014",
+    "url": "https://repository.geologyscience.ru/server/api/core/bitstreams/8cdf92cb-f56c-4e6d-8752-d9900013e16a/content",
+    "pdf_sha256": "f5221e9d75688ce2ec9cb33e3f956e8c1a9adb5ea5d41af2306637f7c75cfa72",
+    "locator": "Table1 row2 printedp116; Table2 printedp117; Sections2.4-2.6 and3.2",
+    "original_fluid_EOS": "Pitzer-Sterner1994 pure H2O; Aranovich-Newton1999 H2O-CO2 activities; not reproduced by this replay"
+  },
+  "table": {
+    "name": "Shishkina2010_Table2_low_pressure.csv",
+    "sha256": "1955d679ea9dcb198e35523e9c6b8b7ffbff7f138372185a338f0b52b56238da",
+    "selection": "All14 Table2 observations at50 or100MPa, selected before comparing any predictions; no fitting. Larger-pressure observations are outside this low-pressure comparison.",
+    "temperature_K": 1523.15,
+    "concentrations": "Mass percent; the NIR OH column is H2O-equivalent, since Table2 footnoteh adds it directly to molecular H2O to obtain total H2O.",
+    "missing_values": "Blank is not analyzed or unreported; a measured0.00 is retained as zero, not missing.",
+    "uncertainties": "Reported1sigma for water and fluid fractions. Shared absorption/density systematics are not independent. KFT and NIR on the same capsule are not independent replications.",
+    "FeO_loss": "Blank means no deviation above5% reported, not exactly zero loss.",
+    "transcription_validation": "Checked against rendered original PDFpage3 and text; original uncertainties in parentheses converted to decimal units."
+  },
+  "starting_composition": {
+    "mass_percent": {
+      "SiO2": 50.17,
+      "TiO2": 0.92,
+      "Al2O3": 18.28,
+      "FeO": 9.37,
+      "MnO": 0.17,
+      "MgO": 7.0,
+      "CaO": 11.37,
+      "Na2O": 2.33,
+      "K2O": 0.23,
+      "P2O5": 0.15
+    },
+    "molar_mass_g_mol": {
+      "SiO2": 60.0843,
+      "TiO2": 79.866,
+      "Al2O3": 101.9613,
+      "FeO": 71.844,
+      "MnO": 70.9374,
+      "MgO": 40.3044,
+      "CaO": 56.0774,
+      "Na2O": 61.9789,
+      "K2O": 94.196,
+      "P2O5": 141.9445
+    }
+  },
+  "limitations": [
+    "This independent basalt comparison has T1523.15K and P500/1000bar. It does not by itself validate BSE peridotite at2173.15K and270bar.",
+    "All10 dry oxides are retained in the mole denominator. Fe is represented by starting FeO-total: run-specific Fe redox and reported Fe loss are preserved but not fitted away.",
+    "KFT measures total H2O-equivalent water. NIR glass OH and molecularH2O partitions are retained separately; quenched-glass speciation is not declared in-situ melt speciation.",
+    "Ideal partial pressure and Zhang-Duan2009 fugacity are separate evaluations, neither reproduces the original Pitzer-Sterner/Aranovich-Newton recipe.",
+    "The numerical spread of unfitted residuals is an observed discrepancy, not a statistical prediction interval or bound on unmeasured T/P/composition/speciation errors.",
+    "No H2 molecular standard, metal model or native MELTS water term is changed; accepted coupled material domain remains unestablished."
+  ]
+}
