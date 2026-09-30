@@ -1,0 +1,66 @@
+{
+  "record_id": "FeO_primary_sources_v1",
+  "Distin1971": {
+    "doi": "10.1179/cmq.1971.10.1.13",
+    "url": "https://www.tandfonline.com/doi/abs/10.1179/cmq.1971.10.1.13",
+    "locator": "Publisher primary abstract; P.A.Distin,S.G.Whiteway,C.R.Masson,Can.Metall.Quart.10(1),13\u201318",
+    "method": "Levitated iron in equilibrium with liquid iron oxide; sampled metal and oxide.",
+    "fit": "log10(O mass percent) = -6380/T_K +2.765",
+    "fit_temperature_domain_K": [
+      1800,
+      2230
+    ],
+    "observations": [
+      {
+        "temperature_C": 1785,
+        "O_mass_percent": 0.45
+      },
+      {
+        "temperature_C": 1880,
+        "O_mass_percent": 0.62
+      },
+      {
+        "temperature_C": 1960,
+        "O_mass_percent": 0.83
+      }
+    ],
+    "reported_uncertainty_mass_percent": 0.02,
+    "uncertainty_scope": "Abstract reports \u00b10.02 wt%; confidence level and individual covariance unavailable."
+  },
+  "Frost2010": {
+    "doi": "10.1029/2009JB006302",
+    "url": "https://www.nhm.uio.no/english/about/organization/research-collections/people/emeriti/rtronnes/1/epmd/a-agu/jgr10-frost-fe-feo-core.pdf",
+    "pdf_sha256": "1367aac6316194ad58fb5fa319fd525192ec4abfdb447be7ec3f391533d03fcb",
+    "locator": "Section4.1, Eqs6\u20139, PDFpage7; visually checked original equations.",
+    "components": [
+      "Fe",
+      "FeO"
+    ],
+    "interaction_J_mol": {
+      "FeO_Fe": [
+        135943,
+        -31.122,
+        -0.059
+      ],
+      "Fe_FeO": [
+        83307,
+        -8.978,
+        -0.09
+      ]
+    },
+    "expression": "W = constant + temperature_coefficient*T_K + pressure_coefficient*P_bar",
+    "pressure_coefficient_sigma_J_mol_bar": [
+      0.006,
+      0.02
+    ],
+    "pressure_fit_conditions": "12\u201324.5GPa,2373\u20132473K coexistence; ambient mixing inherited from KowalskiSpencer1995; FeO1.5 neglected above2000K."
+  },
+  "limitations": [
+    "Measured high-temperature saturation excludes a claim that2173K Fe\u2013O has no direct binary evidence.",
+    "The Distin binary saturation fit does not certify arbitrary Fe\u2013Si\u2013O\u2013H or13-element alloy stability.",
+    "The Frost two-associated-species approximation has visible residuals against the3 Distin measurements, larger than reported0.02wt% at some points; it is not silently treated as exact.",
+    "Only composition-dependent binary activity after equal infinite-dilution anchors is compared to Ma; this does not establish agreement of absolute standards.",
+    "Reported pressure term is excess mixing only. Pure-component pressure volumes and Si/H effects are not included and must not be declared bounded by it.",
+    "Neither a common empirical material domain nor a complete multicomponent phase-stability result is established."
+  ]
+}
