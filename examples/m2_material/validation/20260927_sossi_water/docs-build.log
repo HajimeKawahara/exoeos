@@ -1,0 +1,68 @@
+make: Entering directory '/tmp/stage2-material-20260927/documents'
+Running Sphinx v7.4.7
+loading translations [en]... done
+making output directory... done
+building [mo]: targets for 0 po files that are out of date
+writing output... 
+building [html]: targets for 13 source files that are out of date
+updating environment: [new config] 13 added, 0 changed, 0 removed
+reading sources... [  8%] cns_provider_scope
+reading sources... [ 15%] fe_si_o_h_reference
+reading sources... [ 23%] fe_si_o_reference
+reading sources... [ 31%] index
+reading sources... [ 38%] m2_material_contract
+reading sources... [ 46%] m2_reaction_calibration
+reading sources... [ 54%] melts_liquid_evaluator
+reading sources... [ 62%] melts_silicate_reference
+reading sources... [ 69%] tutorials/fixed_composition_cho_eos_comparison
+reading sources... [ 77%] tutorials/peng_robinson_eos
+reading sources... [ 85%] tutorials/peng_robinson_fixed_state_reference
+reading sources... [ 92%] tutorials/zhang_duan_eos
+reading sources... [100%] tutorials/zhang_duan_high_pressure_h2o_co2
+
+looking for now-outdated files... none found
+pickling environment... done
+checking consistency... done
+preparing documents... done
+copying assets... 
+copying downloadable files... [ 11%] thermodynamic_state_contract.md
+copying downloadable files... [ 22%] examples/m2_material/material_admission.md
+copying downloadable files... [ 33%] examples/m2_material/domain_evidence.json
+copying downloadable files... [ 44%] examples/m2_material/material_contract.json
+copying downloadable files... [ 56%] tutorials/fixed_composition_cho_eos_comparison.ipynb
+copying downloadable files... [ 67%] tutorials/peng_robinson_eos.ipynb
+copying downloadable files... [ 78%] tutorials/peng_robinson_fixed_state_reference.ipynb
+copying downloadable files... [ 89%] tutorials/zhang_duan_eos.ipynb
+copying downloadable files... [100%] tutorials/zhang_duan_high_pressure_h2o_co2.ipynb
+
+copying static files... done
+copying extra files... done
+copying assets: done
+writing output... [  8%] cns_provider_scope
+writing output... [ 15%] fe_si_o_h_reference
+writing output... [ 23%] fe_si_o_reference
+writing output... [ 31%] index
+writing output... [ 38%] m2_material_contract
+writing output... [ 46%] m2_reaction_calibration
+writing output... [ 54%] melts_liquid_evaluator
+writing output... [ 62%] melts_silicate_reference
+writing output... [ 69%] tutorials/fixed_composition_cho_eos_comparison
+writing output... [ 77%] tutorials/peng_robinson_eos
+writing output... [ 85%] tutorials/peng_robinson_fixed_state_reference
+writing output... [ 92%] tutorials/zhang_duan_eos
+writing output... [100%] tutorials/zhang_duan_high_pressure_h2o_co2
+
+generating indices... genindex done
+writing additional pages... search done
+copying images... [ 20%] tutorials/fixed_composition_cho_eos_comparison_files/fixed_composition_cho_eos_comparison_6_0.png
+copying images... [ 40%] tutorials/fixed_composition_cho_eos_comparison_files/fixed_composition_cho_eos_comparison_9_0.png
+copying images... [ 60%] tutorials/peng_robinson_eos_files/peng_robinson_eos_4_0.png
+copying images... [ 80%] tutorials/zhang_duan_eos_files/zhang_duan_eos_5_0.png
+copying images... [100%] tutorials/zhang_duan_high_pressure_h2o_co2_files/zhang_duan_high_pressure_h2o_co2_6_0.png
+
+dumping search index in English (code: en)... done
+dumping object inventory... done
+build succeeded.
+
+The HTML pages are in _build/html.
+make: Leaving directory '/tmp/stage2-material-20260927/documents'
