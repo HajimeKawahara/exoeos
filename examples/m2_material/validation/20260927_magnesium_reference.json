@@ -1,0 +1,730 @@
+{
+  "report_kind": "itoh1997_deoxidation_reference_v1",
+  "observed_sample_count": 37,
+  "summary": {
+    "1873.0": {
+      "sample_count": 28,
+      "rmse_log10_K": 0.42394940030745815,
+      "max_absolute_residual_log10_K": 0.8597023564999375
+    },
+    "2023.0": {
+      "sample_count": 9,
+      "rmse_log10_K": 0.8378164391522274,
+      "max_absolute_residual_log10_K": 2.0794819187542046
+    }
+  },
+  "observations": [
+    {
+      "run_id": 1,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.0002,
+      "O_mass_percent": 0.0006799999999999999,
+      "log10_f_Mg": -0.13397328777362524,
+      "log10_f_O": 0.005558220181526935,
+      "log10_activity_product": -6.994876159221881,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": -0.20553285970239354
+    },
+    {
+      "run_id": 2,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.00011999999999999999,
+      "O_mass_percent": 0.0007,
+      "log10_f_Mg": -0.12952704324612926,
+      "log10_f_O": 0.004591770208222094,
+      "log10_activity_product": -7.200655986976025,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": -0.4113126874565376
+    },
+    {
+      "run_id": 3,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.00064,
+      "O_mass_percent": 0.00095,
+      "log10_f_Mg": -0.12231055739455432,
+      "log10_f_O": 0.09244517479978631,
+      "log10_activity_product": -6.245961803322032,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.5433814961974548
+    },
+    {
+      "run_id": 4,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.00151,
+      "O_mass_percent": 0.00081,
+      "log10_f_Mg": -0.18765869823812073,
+      "log10_f_O": 0.09368672207688178,
+      "log10_activity_product": -6.0065100099894195,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.7828332895300676
+    },
+    {
+      "run_id": 5,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 5e-05,
+      "O_mass_percent": 0.00173,
+      "log10_f_Mg": 0.31646539935931617,
+      "log10_f_O": 0.0256211113988254,
+      "log10_activity_product": -6.7208973817770445,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.06844591774244257
+    },
+    {
+      "run_id": 6,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.00022,
+      "O_mass_percent": 0.00078,
+      "log10_f_Mg": -0.12709509065670063,
+      "log10_f_O": 0.01622375707421246,
+      "log10_activity_product": -6.876354050069802,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": -0.0870107505503146
+    },
+    {
+      "run_id": 7,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.00014,
+      "O_mass_percent": 0.0010199999999999999,
+      "log10_f_Mg": -0.07475185178857469,
+      "log10_f_O": 0.026044856914041598,
+      "log10_activity_product": -6.893978787434378,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": -0.10463548791489075
+    },
+    {
+      "run_id": 8,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.00151,
+      "O_mass_percent": 0.00044,
+      "log10_f_Mg": -0.15941784474105716,
+      "log10_f_O": -0.16539549180459162,
+      "log10_activity_product": -6.502383712766292,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.2869595867531949
+    },
+    {
+      "run_id": 9,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.00014,
+      "O_mass_percent": 0.00061,
+      "log10_f_Mg": -0.13300733112653504,
+      "log10_f_O": -0.0005080127068873633,
+      "log10_activity_product": -7.202057473144417,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": -0.4127141736249298
+    },
+    {
+      "run_id": 10,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.00013000000000000002,
+      "O_mass_percent": 0.0017100000000000001,
+      "log10_f_Mg": 0.29231948777362493,
+      "log10_f_O": 0.06568420056059796,
+      "log10_activity_product": -6.295056848966786,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.4942864505527007
+    },
+    {
+      "run_id": 11,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.00018,
+      "O_mass_percent": 0.0016,
+      "log10_f_Mg": 0.20645549172450567,
+      "log10_f_O": 0.08171480758142013,
+      "log10_activity_product": -6.252437212934844,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.5369060865846436
+    },
+    {
+      "run_id": 12,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.0018,
+      "O_mass_percent": 0.00033999999999999997,
+      "log10_f_Mg": -0.1412541890016017,
+      "log10_f_O": -0.2911965386011746,
+      "log10_activity_product": -6.6456993054572155,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.14364399406227157
+    },
+    {
+      "run_id": 13,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.00042,
+      "O_mass_percent": 0.00081,
+      "log10_f_Mg": -0.1333657691404165,
+      "log10_f_O": 0.0352332490122797,
+      "log10_activity_product": -6.566398210851586,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.22294508866790075
+    },
+    {
+      "run_id": 14,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.0017800000000000001,
+      "O_mass_percent": 0.0007599999999999999,
+      "log10_f_Mg": -0.20211002584089705,
+      "log10_f_O": 0.059452339241857666,
+      "log10_activity_product": -6.011424092009354,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.7779192075101333
+    },
+    {
+      "run_id": 15,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.00018999999999999998,
+      "O_mass_percent": 0.00156,
+      "log10_f_Mg": 0.17830323587826957,
+      "log10_f_O": 0.08271331310731442,
+      "log10_activity_product": -6.267105251707125,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.5222380478123618
+    },
+    {
+      "run_id": 16,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.00022,
+      "O_mass_percent": 0.0012900000000000001,
+      "log10_f_Mg": 0.02208898750667355,
+      "log10_f_O": 0.06817755782167645,
+      "log10_activity_product": -6.456721063550194,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.33262223596929275
+    },
+    {
+      "run_id": 17,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 5.9999999999999995e-05,
+      "O_mass_percent": 0.0013599999999999999,
+      "log10_f_Mg": 0.07028093710624635,
+      "log10_f_O": 0.020560775333689253,
+      "log10_activity_product": -6.9974681288062035,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": -0.20812482928671638
+    },
+    {
+      "run_id": 18,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.00014,
+      "O_mass_percent": 0.0012699999999999999,
+      "log10_f_Mg": 0.019026322263747772,
+      "log10_f_O": 0.04223563107314463,
+      "log10_activity_product": -6.688806290028913,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.10053700949057376
+    },
+    {
+      "run_id": 19,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 7e-05,
+      "O_mass_percent": 0.00165,
+      "log10_f_Mg": 0.25319663160704714,
+      "log10_f_O": 0.033378272744260515,
+      "log10_activity_product": -6.650843111420529,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.13850018809895825
+    },
+    {
+      "run_id": 20,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 2e-05,
+      "O_mass_percent": 0.00246,
+      "log10_f_Mg": 1.0885840696209277,
+      "log10_f_O": 0.016724433208755995,
+      "log10_activity_product": -6.202726394402956,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.5866169051165313
+    },
+    {
+      "run_id": 21,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.00015,
+      "O_mass_percent": 0.0010400000000000001,
+      "log10_f_Mg": -0.06951325573945558,
+      "log10_f_O": 0.029275539482114234,
+      "log10_activity_product": -6.847113117902881,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": -0.057769818383393456
+    },
+    {
+      "run_id": 22,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 5e-05,
+      "O_mass_percent": 0.00123,
+      "log10_f_Mg": 0.007863397223705005,
+      "log10_f_O": 0.0141123073411639,
+      "log10_activity_product": -7.189149179659714,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": -0.3998058801402271
+    },
+    {
+      "run_id": 23,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 7e-05,
+      "O_mass_percent": 0.00109,
+      "log10_f_Mg": -0.04825066278697293,
+      "log10_f_O": 0.015293418072610768,
+      "log10_activity_product": -7.1504327067594815,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": -0.3610894072399944
+    },
+    {
+      "run_id": 24,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 2e-05,
+      "O_mass_percent": 0.00151,
+      "log10_f_Mg": 0.1617170819006937,
+      "log10_f_O": 0.008077110197544042,
+      "log10_activity_product": -7.350198864944612,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": -0.5608555654251246
+    },
+    {
+      "run_id": 25,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 4e-05,
+      "O_mass_percent": 0.00156,
+      "log10_f_Mg": 0.19269279914575488,
+      "log10_f_O": 0.01732020886278696,
+      "log10_activity_product": -6.994802402309034,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": -0.20545910278954693
+    },
+    {
+      "run_id": 26,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 0.00307,
+      "O_mass_percent": 0.00073,
+      "log10_f_Mg": -0.259772998291511,
+      "log10_f_O": -0.020329180325681095,
+      "log10_activity_product": -5.92964094301955,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.8597023564999375
+    },
+    {
+      "run_id": 27,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 5.9999999999999995e-05,
+      "O_mass_percent": 0.00146,
+      "log10_f_Mg": 0.12699686449546144,
+      "log10_f_O": 0.02332637490656699,
+      "log10_activity_product": -6.907172654429891,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": -0.1178293549104037
+    },
+    {
+      "run_id": 28,
+      "T_K": 1873.0,
+      "Mg_mass_percent": 5.9999999999999995e-05,
+      "O_mass_percent": 0.00103,
+      "log10_f_Mg": -0.0667809986118528,
+      "log10_f_O": 0.011434296743192733,
+      "log10_activity_product": -7.264358226779843,
+      "log10_K": -6.789343299519487,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": -0.4750149272603563
+    },
+    {
+      "run_id": 29,
+      "T_K": 2023.0,
+      "Mg_mass_percent": 0.00018,
+      "O_mass_percent": 0.0010400000000000001,
+      "log10_f_Mg": -0.14166621927829967,
+      "log10_f_O": 0.006254601977261479,
+      "log10_activity_product": -6.863105772898952,
+      "log10_K": -6.603282254078103,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": -0.2598235188208493
+    },
+    {
+      "run_id": 30,
+      "T_K": 2023.0,
+      "Mg_mass_percent": 0.00016,
+      "O_mass_percent": 0.00271,
+      "log10_f_Mg": 0.4749057583786448,
+      "log10_f_O": 0.07043492496292633,
+      "log10_activity_product": -5.817570043128098,
+      "log10_K": -6.603282254078103,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.7857122109500043
+    },
+    {
+      "run_id": 31,
+      "T_K": 2023.0,
+      "Mg_mass_percent": 5e-05,
+      "O_mass_percent": 0.00346,
+      "log10_f_Mg": 1.1046654602076107,
+      "log10_f_O": 0.030935958749382104,
+      "log10_activity_product": -5.626352477914212,
+      "log10_K": -6.603282254078103,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.9769297761638907
+    },
+    {
+      "run_id": 32,
+      "T_K": 2023.0,
+      "Mg_mass_percent": 0.00055,
+      "O_mass_percent": 0.0008900000000000001,
+      "log10_f_Mg": -0.15958931833910045,
+      "log10_f_O": -0.003477742980721704,
+      "log10_activity_product": -6.4733143651806655,
+      "log10_K": -6.603282254078103,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.12996788889743716
+    },
+    {
+      "run_id": 33,
+      "T_K": 2023.0,
+      "Mg_mass_percent": 0.00056,
+      "O_mass_percent": 0.00054,
+      "log10_f_Mg": -0.13220728976767182,
+      "log10_f_O": -0.05127227404844292,
+      "log10_activity_product": -6.702897776986945,
+      "log10_K": -6.603282254078103,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": -0.09961552290884246
+    },
+    {
+      "run_id": 34,
+      "T_K": 2023.0,
+      "Mg_mass_percent": 0.00021,
+      "O_mass_percent": 0.00205,
+      "log10_f_Mg": 0.10336399950568417,
+      "log10_f_O": 0.05873557941176468,
+      "log10_activity_product": -6.203927265292878,
+      "log10_K": -6.603282254078103,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.399354988785225
+    },
+    {
+      "run_id": 35,
+      "T_K": 2023.0,
+      "Mg_mass_percent": 5.9999999999999995e-05,
+      "O_mass_percent": 0.00428,
+      "log10_f_Mg": 2.017530899456251,
+      "log10_f_O": 0.04907374582303508,
+      "log10_activity_product": -4.523800335323898,
+      "log10_K": -6.603282254078103,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 2.0794819187542046
+    },
+    {
+      "run_id": 36,
+      "T_K": 2023.0,
+      "Mg_mass_percent": 0.0006799999999999999,
+      "O_mass_percent": 0.0008699999999999999,
+      "log10_f_Mg": -0.16388427820069212,
+      "log10_f_O": -0.008781304399406886,
+      "log10_activity_product": -6.400637417275244,
+      "log10_K": -6.603282254078103,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.20264483680285839
+    },
+    {
+      "run_id": 37,
+      "T_K": 2023.0,
+      "Mg_mass_percent": 0.00149,
+      "O_mass_percent": 0.0007099999999999999,
+      "log10_f_Mg": -0.17849295412753344,
+      "log10_f_O": -0.09346088188334173,
+      "log10_activity_product": -6.247509218879526,
+      "log10_K": -6.603282254078103,
+      "coordinate_distances_T_K_Mg_wt_percent_O_wt_percent": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inside_observed_coordinate_envelope": true,
+      "joint_composition_domain_established": false,
+      "accepted_coupled_material_domain": null,
+      "reaction_residual_log10_K": 0.3557730351985766
+    }
+  ],
+  "refitted_parameter_count": 0,
+  "interpretation": "Published second-order coefficients are replayed without refitting; substantial raw-point residuals remain. These residuals are not a confidence interval or transfer error bound. No high-O FeSiOH constitutive model is installed.",
+  "provenance_sha256": "97cd73a8377e1fed6da38b7b3e101940630391be8530c440304dabc4360ea574",
+  "runner_sha256": "c9943e41c71df919bc364a3632a6cf337295386778fb0f95992a336135488721",
+  "data_sha256": {
+    "Itoh1997_Table2.csv": "3ef07a5d399c2664dfef159346aecc53daf2af5f6285b362c8c757746a23d1d3",
+    "JANAF_Mg-008.txt": "2efaf6db392a6ee21a2720b84bad3cd2e9b4cbbdd2afce0a1145fbecdae796d8"
+  },
+  "accepted_coupled_material_domain": null
+}
