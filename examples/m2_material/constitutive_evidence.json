@@ -701,7 +701,7 @@
   },
   "additional_omitted_transfer_paths": {
     "source_path": "na_helium_transfer_sources.json",
-    "source_sha256": "e1078b86b92735b85209883f67a9037532399ebd1cdf4e611e75e5369108ee8d",
+    "source_sha256": "3faca86ae8d1c1595e40cfdc4fa8a39967849723dfdbc05c3e02ea3ac7af0a75",
     "previous_omitted_metal_catalog": [
       "Mg",
       "Al",
@@ -720,7 +720,7 @@
         "existing_model": "Na remains available to gas and silicate; associated_k has no Na metal component.",
         "insolubility_established": false,
         "missing": "A Na metal standard/activity law or a quantitative detection-limit-derived partition bound transferable to the declared state.",
-        "available": "A published 1 GPa Fe-S/basalt exchange fit with explicit silicate activity and S-interaction assumptions; conversion to the current source standard remains unimplemented."
+        "available": "Five numerical S-free reported censoring limits with matching silicate Na; three FeS exchange constants replayed under two explicit concentration bases. Low-pressure standard/activities are not yet selected."
       },
       "He_to_silicate": {
         "status": "not_evaluated_in_finite_equilibrium",

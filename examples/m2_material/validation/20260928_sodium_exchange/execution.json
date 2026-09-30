@@ -1,0 +1,49 @@
+{
+  "scope": "Native-free primary-reference replay. No source model/species or BSE closure changed.",
+  "source_parent_commit": "a2a1e8584bb9f7f55bb954552d214660589ce2b1",
+  "executions": [
+    {
+      "command": [
+        "taskset",
+        "-c",
+        "40",
+        "/home/kawahara/anaconda3/envs/myenv39/bin/python",
+        "-m",
+        "pytest",
+        "tests/unittests/m2_sodium_reference_test.py",
+        "tests/unittests/m2_helium_reference_test.py",
+        "tests/unittests/m2_material_admission_test.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.6938315834850073,
+      "log": "/tmp/stage2-sodium-reference-validation-0.log",
+      "log_sha256": "52ca591da4434ddb373d3ab04bb06dd81bd0d0e1d61dfe1ac1987f51641297b6"
+    },
+    {
+      "command": [
+        "taskset",
+        "-c",
+        "40",
+        "/home/kawahara/anaconda3/envs/myenv39/bin/python",
+        "/tmp/stage2-sodium-exchange-eos-20260928/examples/m2_material/validation/20260928_sodium_exchange/replay.py",
+        "/tmp/stage2-sodium-exchange-eos-20260928/examples/m2_material/validation/20260928_sodium_exchange/replay.json"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.048856524750590324,
+      "log": "/tmp/stage2-sodium-reference-validation-1.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "empirical_BSE_omission_bound_established": false,
+  "focused_tests_passed": 40,
+  "independent_read_only_review": "Omitted-transfer agent checked analytical method, Na censoring status, both concentration bases and Henry standard signs; no major scientific-scope issue.",
+  "ast_and_local_links_passed": true,
+  "file_sha256": {
+    "examples/m2_material/sodium_reference.py": "d4fc9774156163828054e6d157c12f1e74c5bbccceb0ab671d9b06b5a9b54a71",
+    "examples/m2_material/sodium_reference_sources.json": "cd94c23b86136c53d8523a431ce845c398809d4097825b60fe84fa1716f51a2f",
+    "tests/unittests/m2_sodium_reference_test.py": "1897097944831fff5b79d3f932ee73022c4b48ad0ca3e8afd91af59a226a030a",
+    "examples/m2_material/validation/20260928_sodium_exchange/replay.py": "15611dab32140a1f57a0e91fb63b94a72f7a6c0e4e34f983090f58c420719b2f",
+    "examples/m2_material/validation/20260928_sodium_exchange/replay.json": "512dd1b98985f1042a4ef16d575a09d6ff5517dc73bdb9095dedf54b2cd50290"
+  }
+}
