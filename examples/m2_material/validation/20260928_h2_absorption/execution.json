@@ -1,0 +1,21 @@
+{
+  "commands": [
+    {
+      "command": "taskset -c 40 /home/kawahara/anaconda3/envs/myenv39/bin/pytest tests/unittests/m2_h2_absorption_scenario_test.py -q",
+      "exit_code": 0,
+      "tests_passed": 2
+    },
+    {
+      "command": "taskset -c 40 /home/kawahara/anaconda3/envs/myenv39/bin/python -m examples.m2_material.h2_absorption_scenario --base-scenario /tmp/m2-actual-oh-scenarios-20260927-verified/sakao1959_o_kato_h.json --output-dir examples/m2_material/validation/20260928_h2_absorption",
+      "exit_code": 0
+    }
+  ],
+  "file_sha256": {
+    "examples/m2_material/validation/20260928_h2_absorption/receipt.json": "68ba1c6839a460ad11589dc20d206bae897ffd6db46a461f44d91cb0db19cff7",
+    "examples/m2_material/validation/20260928_h2_absorption/scenario.json": "8b1ecac04e081db4833056cd747bdb5e6334012d6439addeceb2dd8d11bd309d",
+    "examples/m2_material/h2_absorption_scenario.py": "d65aba1ac32bef16c81117d5d788463ef890f46b6a4a0a996fbc75f1f55f9d42",
+    "examples/m2_material/water_data/Chaudhari2025_absorption_sources.json": "5e20e4e8186d55d3b76dad6166b49d0bf9ad844b1862a423ab1a5255fdf2915b",
+    "tests/unittests/m2_h2_absorption_scenario_test.py": "b6e5f53d685e94ee0870fdae6c48fd5942e31da2da35de90e84bf79ddc2a3572"
+  },
+  "scope": "Reference transformation only; no finite equilibrium or pressure closure is run."
+}

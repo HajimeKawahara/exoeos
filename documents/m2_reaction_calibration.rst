@@ -61,6 +61,103 @@ available CSV contains twelve of the original fourteen samples, so its
 replay does not claim to reproduce the complete original experiment.
 See `Sossi et al. (2023) <https://doi.org/10.1016/j.epsl.2022.117894>`_.
 
+Full Sossi table and shared-background calibration
+--------------------------------------------------
+
+``sossi_water_calibration.py`` adds a separate reconstruction from all
+fourteen original Table 1 samples. The later twelve-row CSV omits Per-4
+and Per-5; Per-5 supplies the background subtracted from every measurement
+in Eq.2. ``water_data/Sossi2023_Table1.csv`` preserves raw and corrected
+rounded concentrations for both absorption calibrations. Its provenance
+records the inspected PDF hash, table hash, source locations and CC-BY
+attribution. Historical data and validation reports remain unchanged.
+
+Using the eleven samples selected for Eq.11, equal-weight least squares
+on the rounded corrected table gives:
+
+.. list-table:: Independent reconstruction in H2O-equivalent mass ppm
+   :header-rows: 1
+
+   * - IR calibration
+     - H2O coefficient (ppm / sqrt(bar))
+     - H2 coefficient (ppm / sqrt(bar))
+     - Group-out RMSE (ppm)
+     - Maximum group-out residual (ppm)
+   * - epsilon = 6.3
+     - 526.4113
+     - 182.9914
+     - 4.2342
+     - 9.2211
+   * - epsilon = 5.1
+     - 649.9559
+     - 226.2909
+     - 5.2374
+     - 11.3964
+
+The small differences from the published coefficients are retained. This
+is a new reconstruction using the rounded table, not the authors' original
+unrounded regression. The two IR branches measure the same glasses and
+are not independent observations. No conversion through the ambiguous
+pooled OH column is performed. The H2-fugacity term measures incorporation
+as OH expressed in equivalent H2O mass, not dissolved molecular H2.
+
+Validation leaves each distinct gas-fugacity pair out before fitting.
+Per-7, Per-TS1 and Per-TS2 share a gas condition, so they always leave the
+training set together. There are nine groups and eleven held-out sample
+predictions. This is internal cross-validation of a preselected functional
+form, conditional on the common Per-5 correction and spectroscopy. It is
+not external validation, a maximum future error, or a BSE transfer test.
+
+Let :math:`D` be the two-column square-root-fugacity design and :math:`C`
+the operator subtracting the same raw Per-5 value from every selected raw
+concentration :math:`y`. The coefficient response is
+:math:`L=(D^T D)^{-1}D^T C`. For arbitrary raw measurement covariance
+with published marginal SDs :math:`s_i`, each linear statistic obeys
+
+.. math::
+
+   \operatorname{sd}(l\cdot y)\leq\sum_i |l_i|s_i.
+
+The new report propagates the shared background before applying this
+bound. The coefficient SD upper bounds are (98.75, 66.83) and
+(143.94, 98.76) ppm / sqrt(bar), respectively. They are deliberately
+conservative over unknown raw correlations, not fitted confidence
+intervals. The covariance under independent raw errors is also reported
+as an explicitly unverified comparison; even that case creates positive
+off-diagonal corrected-data covariance from the common background.
+Predictor uncertainty, background-selection bias and unmeasured model
+errors are not bounded by this calculation.
+
+``assess_sossi_water_state`` accepts actual T/P, native oxide mass
+fractions, H2O/H2 partial pressures from the complete gas denominator,
+and optional H2/He mass ppm / water mass percent of the complete liquid.
+It reuses the actual-state material validator, including the native-water
+versus added-H2/He denominator check and FeO-total host comparison. The
+reference is evaluated with ideal fugacities. The keyword
+``dissolved_helium_mass_ppm`` defaults to zero. When supplied, the H2 and He
+mass fractions permit arithmetic conversion of reference native-host ppm to
+complete-liquid ppm by the factor :math:`1-w_{\mathrm{H_2}}-w_{\mathrm{He}}`.
+This is not a fitted solubility correction or a wider material domain.
+
+A convex-combination witness distinguishes joint support in the two
+square-root-fugacity predictors from their separate minimum/maximum
+ranges. It is a geometric check only. Total pressure different from
+1 bar, temperature different from nominal 2173 K, a changed reported
+host, or predictors outside that hull each produce an explicit
+extrapolation reason. The observed temperature scatter is not promoted
+to a calibrated temperature law. The experimental flowing carbon-bearing
+gas also differs from M2's finite carbon-free inventory. No coordinate
+match certifies phase stability or a complete physical model.
+
+The result retains unknown pressure/composition/temperature transfer
+errors and ``accepted_coupled_material_domain=null``. In particular,
+the current several-hundred-bar BSE closures remain extrapolations.
+Native MELTS water and the inherited H2/alloy models are unchanged.
+
+Reproduce to a new file with::
+
+   python -m examples.m2_material.sossi_water_calibration --output /tmp/sossi-reference.json
+
 Reproduction and uncertainty
 ----------------------------
 

@@ -1,0 +1,1078 @@
+{
+  "scope": "Finite archived native compatibility only; local order minimization and finite probes are not a formal global bound.",
+  "parameter_sha256": "acf4ec2b8ffc1a7d7364fe922ef433084fe98ba91aada9b2d35fd6425885d72f",
+  "archive_sha256": "bfa144b4f039f764d48fc44c35e6508578cd7eb6fd91c759c57eb682648aff4c",
+  "T_K": 2173.15,
+  "P_bar": 267.20283416157343,
+  "pure_reference_J_mol": [
+    -7568.009140061324,
+    -1829.0082067565181,
+    -7568.009140061324,
+    -1829.0082067565181
+  ],
+  "high_temperature_identity_margin_J_mol": 588.3572349100868,
+  "source_symbolic_checks": [
+    "Every source H coefficient is expanded after the exact Mn-free site substitution.",
+    "Every logarithmic coefficient in source S is reconstructed exactly before dropping zero Mn occupations.",
+    "H is affine in source pressure; V is its exact symbolic derivative.",
+    "All eight pinned SRO spline ordinates are exactly equal rational numbers."
+  ],
+  "finite_comparison_count": 62,
+  "maximum_absolute_difference_J_mol": 1.396301740896888e-09,
+  "records": [
+    {
+      "archive_trial_index": 0,
+      "fractions": [
+        0.25,
+        0.25,
+        0.25,
+        0.25
+      ],
+      "native_mixing_gibbs_J_mol": -34505.52986740088,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -34505.52986740083,
+      "difference_J_mol": 5.093170329928398e-11,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 1,
+      "fractions": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "native_mixing_gibbs_J_mol": -9.313225746154785e-10,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -2.7284841053187847e-12,
+      "difference_J_mol": 9.285940905101597e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 2,
+      "fractions": [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "native_mixing_gibbs_J_mol": -1.3969838619232178e-09,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -6.821210263296962e-13,
+      "difference_J_mol": 1.396301740896888e-09,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 3,
+      "fractions": [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "native_mixing_gibbs_J_mol": -9.313225746154785e-10,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -2.7284841053187847e-12,
+      "difference_J_mol": 9.285940905101597e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 4,
+      "fractions": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "native_mixing_gibbs_J_mol": -1.3969838619232178e-09,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -6.821210263296962e-13,
+      "difference_J_mol": 1.396301740896888e-09,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 5,
+      "fractions": [
+        0.5,
+        0.5,
+        0.0,
+        0.0
+      ],
+      "native_mixing_gibbs_J_mol": -22340.231768456055,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -22340.231768455462,
+      "difference_J_mol": 5.929905455559492e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 6,
+      "fractions": [
+        0.5,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "native_mixing_gibbs_J_mol": -9093.148817938287,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -9093.148817937472,
+      "difference_J_mol": 8.149072527885437e-10,
+      "order_parameters": [
+        0.20179240617690233,
+        0.20179239618299172
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 7,
+      "fractions": [
+        0.5,
+        0.0,
+        0.0,
+        0.5
+      ],
+      "native_mixing_gibbs_J_mol": -21955.15864873235,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -21955.158648731627,
+      "difference_J_mol": 7.239577826112509e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 8,
+      "fractions": [
+        0.0,
+        0.5,
+        0.5,
+        0.0
+      ],
+      "native_mixing_gibbs_J_mol": -22340.231768456055,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -22340.231768455462,
+      "difference_J_mol": 5.929905455559492e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 9,
+      "fractions": [
+        0.0,
+        0.5,
+        0.0,
+        0.5
+      ],
+      "native_mixing_gibbs_J_mol": -5968.864743395941,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -5968.864743394715,
+      "difference_J_mol": 1.2259988579899073e-09,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 10,
+      "fractions": [
+        0.0,
+        0.0,
+        0.5,
+        0.5
+      ],
+      "native_mixing_gibbs_J_mol": -21955.15864873235,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -21955.158648731627,
+      "difference_J_mol": 7.239577826112509e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 11,
+      "fractions": [
+        0.25,
+        0.25,
+        0.25,
+        0.25
+      ],
+      "native_mixing_gibbs_J_mol": -34505.52986740088,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -34505.52986740083,
+      "difference_J_mol": 5.093170329928398e-11,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 12,
+      "fractions": [
+        0.25000001117587073,
+        0.24999999627470976,
+        0.24999999627470976,
+        0.24999999627470976
+      ],
+      "native_mixing_gibbs_J_mol": -34505.52988624014,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -34505.529886239856,
+      "difference_J_mol": 2.837623469531536e-10,
+      "order_parameters": [
+        -2.653705198979277e-09,
+        -2.6537053571524327e-09
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 13,
+      "fractions": [
+        0.24999999627470976,
+        0.25000001117587073,
+        0.24999999627470976,
+        0.24999999627470976
+      ],
+      "native_mixing_gibbs_J_mol": -34505.5298567228,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -34505.52985672254,
+      "difference_J_mol": 2.6193447411060333e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 14,
+      "fractions": [
+        0.24999999627470976,
+        0.24999999627470976,
+        0.25000001117587073,
+        0.24999999627470976
+      ],
+      "native_mixing_gibbs_J_mol": -34505.52988624014,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -34505.529886239856,
+      "difference_J_mol": 2.837623469531536e-10,
+      "order_parameters": [
+        -8.746637341582226e-10,
+        -8.746636820242045e-10
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 15,
+      "fractions": [
+        0.24999999627470976,
+        0.24999999627470976,
+        0.24999999627470976,
+        0.25000001117587073
+      ],
+      "native_mixing_gibbs_J_mol": -34505.52984040114,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -34505.52984040102,
+      "difference_J_mol": 1.2369127944111824e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 16,
+      "fractions": [
+        0.4519608169794083,
+        0.0,
+        0.012092083692550548,
+        0.5359470993280411
+      ],
+      "native_mixing_gibbs_J_mol": -22756.899855972268,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -22756.899855971853,
+      "difference_J_mol": 4.147295840084553e-10,
+      "order_parameters": [
+        0.0,
+        6.114883964751088e-09
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 17,
+      "fractions": [
+        0.4519608251458284,
+        0.0,
+        0.012092083512364463,
+        0.5359470913418071
+      ],
+      "native_mixing_gibbs_J_mol": -22756.899884015555,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -22756.899884015453,
+      "difference_J_mol": 1.0186340659856796e-10,
+      "order_parameters": [
+        -5.634774279267677e-09,
+        -2.4334655803978483e-08
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 18,
+      "fractions": [
+        0.45196081024466744,
+        1.4901160971803055e-08,
+        0.012092083512364463,
+        0.5359470913418071
+      ],
+      "native_mixing_gibbs_J_mol": -22756.908437563572,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -22756.908437563226,
+      "difference_J_mol": 3.4560798667371273e-10,
+      "order_parameters": [
+        0.0,
+        1.7878280248757026e-08
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 19,
+      "fractions": [
+        0.45196081024466744,
+        0.0,
+        0.012092098413525435,
+        0.5359470913418071
+      ],
+      "native_mixing_gibbs_J_mol": -22756.900719656842,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -22756.90071965639,
+      "difference_J_mol": 4.511093720793724e-10,
+      "order_parameters": [
+        -5.241845274365507e-13,
+        6.465427451869975e-10
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 20,
+      "fractions": [
+        0.45196081024466744,
+        0.0,
+        0.012092083512364463,
+        0.535947106242968
+      ],
+      "native_mixing_gibbs_J_mol": -22756.8998128369,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -22756.899812836415,
+      "difference_J_mol": 4.838511813431978e-10,
+      "order_parameters": [
+        0.0,
+        3.4407123453685836e-09
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 21,
+      "fractions": [
+        0.3332437486476879,
+        0.20258027671077425,
+        0.0,
+        0.4641759746415379
+      ],
+      "native_mixing_gibbs_J_mol": -27443.951115879696,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -27443.951115879267,
+      "difference_J_mol": 4.2928149923682213e-10,
+      "order_parameters": [
+        0.0,
+        2.013172966080188e-09
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 22,
+      "fractions": [
+        0.4050342235074212,
+        0.08007612068120047,
+        0.007312313574878696,
+        0.5075773422364996
+      ],
+      "native_mixing_gibbs_J_mol": -27075.347847994417,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -27075.347847994126,
+      "difference_J_mol": 2.9103830456733704e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 23,
+      "fractions": [
+        0.43230989658070906,
+        0.03353257411029102,
+        0.010090513257600464,
+        0.5240670160513995
+      ],
+      "native_mixing_gibbs_J_mol": -25530.69341568416,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -25530.693415684185,
+      "difference_J_mol": -2.546585164964199e-11,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 24,
+      "fractions": [
+        0.44324797466067706,
+        0.01486770211452665,
+        0.011204625637878015,
+        0.5306796975869182
+      ],
+      "native_mixing_gibbs_J_mol": -24389.28721224307,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -24389.287212242973,
+      "difference_J_mol": 9.822542779147625e-11,
+      "order_parameters": [
+        0.0,
+        1.957992143837722e-09
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 25,
+      "fractions": [
+        0.44787159646549335,
+        0.0069778965643386434,
+        0.011675570739641464,
+        0.5334749362305264
+      ],
+      "native_mixing_gibbs_J_mol": -23699.32137962687,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23699.321379626537,
+      "difference_J_mol": 3.310560714453459e-10,
+      "order_parameters": [
+        5.184994984315889e-10,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 26,
+      "fractions": [
+        0.4499307368918214,
+        0.0034641538210770746,
+        0.011885307205675976,
+        0.5347198020814256
+      ],
+      "native_mixing_gibbs_J_mol": -23305.904937013984,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23305.90493701381,
+      "difference_J_mol": 1.7462298274040222e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 27,
+      "fractions": [
+        0.4508959525445268,
+        0.0018170978689854007,
+        0.011983620519994529,
+        0.5353033290664932
+      ],
+      "native_mixing_gibbs_J_mol": -23084.12148760399,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23084.121487604076,
+      "difference_J_mol": -8.731149137020111e-11,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 28,
+      "fractions": [
+        0.45137149737455406,
+        0.001005622277403947,
+        0.012032057766340452,
+        0.5355908225817015
+      ],
+      "native_mixing_gibbs_J_mol": -22957.913368186215,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -22957.913368186175,
+      "difference_J_mol": 4.001776687800884e-11,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 29,
+      "fractions": [
+        0.4513715055497557,
+        0.0010056222624190076,
+        0.012032057587048822,
+        0.5355908146007765
+      ],
+      "native_mixing_gibbs_J_mol": -22957.91339439596,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -22957.91339439572,
+      "difference_J_mol": 2.4010660126805305e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 30,
+      "fractions": [
+        0.4513714906485947,
+        0.0010056371635799794,
+        0.012032057587048822,
+        0.5355908146007765
+      ],
+      "native_mixing_gibbs_J_mol": -22957.91589825251,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -22957.91589825216,
+      "difference_J_mol": 3.5288394428789616e-10,
+      "order_parameters": [
+        -1.1190403947848805e-10,
+        2.098988171539882e-09
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 31,
+      "fractions": [
+        0.4513714906485947,
+        0.0010056222624190076,
+        0.012032072488209793,
+        0.5355908146007765
+      ],
+      "native_mixing_gibbs_J_mol": -22957.91423106962,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -22957.91423106932,
+      "difference_J_mol": 2.9831426218152046e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 32,
+      "fractions": [
+        0.4513714906485947,
+        0.0010056222624190076,
+        0.012032057587048822,
+        0.5355908295019375
+      ],
+      "native_mixing_gibbs_J_mol": -22957.913321963046,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -22957.913321962795,
+      "difference_J_mol": 2.510205376893282e-10,
+      "order_parameters": [
+        -5.343306946702962e-10,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 33,
+      "fractions": [
+        0.31806878676013806,
+        0.0011362545542846446,
+        0.24560570943444357,
+        0.4351892492511337
+      ],
+      "native_mixing_gibbs_J_mol": -27587.288262877148,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -27587.288262876944,
+      "difference_J_mol": 2.0372681319713593e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 34,
+      "fractions": [
+        0.4272591894441086,
+        0.0010292515469910724,
+        0.05428175987292938,
+        0.517429799135971
+      ],
+      "native_mixing_gibbs_J_mol": -24745.266903677722,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -24745.266903677595,
+      "difference_J_mol": 1.2732925824820995e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 35,
+      "fractions": [
+        0.440891109372489,
+        0.0010158927133237614,
+        0.03039584410840293,
+        0.5276971538057843
+      ],
+      "native_mixing_gibbs_J_mol": -23862.068121925462,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23862.06812192524,
+      "difference_J_mol": 2.219167072325945e-10,
+      "order_parameters": [
+        7.236447434901757e-09,
+        -1.0367161670316769e-08
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 36,
+      "fractions": [
+        0.4408911177038606,
+        0.0010158926981857805,
+        0.030395843655469566,
+        0.5276971459424841
+      ],
+      "native_mixing_gibbs_J_mol": -23862.06813533604,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23862.06813533581,
+      "difference_J_mol": 2.3283064365386963e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 37,
+      "fractions": [
+        0.4408911028026996,
+        0.0010159075993467523,
+        0.030395843655469566,
+        0.5276971459424841
+      ],
+      "native_mixing_gibbs_J_mol": -23862.070642576553,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23862.070642576407,
+      "difference_J_mol": 1.4551915228366852e-10,
+      "order_parameters": [
+        0.0,
+        -1.9746071348272648e-11
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 38,
+      "fractions": [
+        0.4408911028026996,
+        0.0010158926981857805,
+        0.030395858556630538,
+        0.5276971459424841
+      ],
+      "native_mixing_gibbs_J_mol": -23862.068739317823,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23862.068739317732,
+      "difference_J_mol": 9.094947017729282e-11,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 39,
+      "fractions": [
+        0.4408911028026996,
+        0.0010158926981857805,
+        0.030395843655469566,
+        0.527697160843645
+      ],
+      "native_mixing_gibbs_J_mol": -23862.068070305977,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23862.068070305733,
+      "difference_J_mol": 2.4374458007514477e-10,
+      "order_parameters": [
+        0.0,
+        -5.748493336684663e-10
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 40,
+      "fractions": [
+        0.4041603793387002,
+        0.0010843740985035388,
+        0.029365331131337265,
+        0.565389915431459
+      ],
+      "native_mixing_gibbs_J_mol": -23577.12357917102,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23577.123579170868,
+      "difference_J_mol": 1.5279510989785194e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 41,
+      "fractions": [
+        0.4041603882174023,
+        0.0010843740823451057,
+        0.02936533069375974,
+        0.5653899070064928
+      ],
+      "native_mixing_gibbs_J_mol": -23577.123636267148,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23577.123636267097,
+      "difference_J_mol": 5.093170329928398e-11,
+      "order_parameters": [
+        -8.514669512413844e-16,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 42,
+      "fractions": [
+        0.40416037331624133,
+        0.0010843889835060775,
+        0.02936533069375974,
+        0.5653899070064928
+      ],
+      "native_mixing_gibbs_J_mol": -23577.126036351314,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23577.12603635108,
+      "difference_J_mol": 2.3283064365386963e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 43,
+      "fractions": [
+        0.40416037331624133,
+        0.0010843740823451057,
+        0.02936534559492071,
+        0.5653899070064928
+      ],
+      "native_mixing_gibbs_J_mol": -23577.124232673785,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23577.124232673694,
+      "difference_J_mol": 9.094947017729282e-11,
+      "order_parameters": [
+        -4.028878416401287e-10,
+        -5.545015636050061e-09
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 44,
+      "fractions": [
+        0.40416037331624133,
+        0.0010843740823451057,
+        0.02936533069375974,
+        0.5653899219076538
+      ],
+      "native_mixing_gibbs_J_mol": -23577.123499702197,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23577.12349970206,
+      "difference_J_mol": 1.382431946694851e-10,
+      "order_parameters": [
+        0.0,
+        8.974163041935796e-09
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 45,
+      "fractions": [
+        0.39229206021038926,
+        0.0011613314165782294,
+        0.029198882477699167,
+        0.5773477258953333
+      ],
+      "native_mixing_gibbs_J_mol": -23463.84096174757,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23463.84096174723,
+      "difference_J_mol": 3.383320290595293e-10,
+      "order_parameters": [
+        0.0,
+        -4.769844599018936e-10
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 46,
+      "fractions": [
+        0.3922920692659431,
+        0.001161331399273043,
+        0.02919888204260192,
+        0.5773477172921819
+      ],
+      "native_mixing_gibbs_J_mol": -23463.841033978853,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23463.84103397838,
+      "difference_J_mol": 4.729372449219227e-10,
+      "order_parameters": [
+        0.0,
+        2.961615476202897e-09
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 47,
+      "fractions": [
+        0.39229205436478215,
+        0.0011613463004340149,
+        0.02919888204260192,
+        0.5773477172921819
+      ],
+      "native_mixing_gibbs_J_mol": -23463.843375231372,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23463.84337523129,
+      "difference_J_mol": 8.36735125631094e-11,
+      "order_parameters": [
+        6.483454227402134e-10,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 48,
+      "fractions": [
+        0.39229205436478215,
+        0.001161331399273043,
+        0.029198896943762893,
+        0.5773477172921819
+      ],
+      "native_mixing_gibbs_J_mol": -23463.841626178008,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23463.84162617777,
+      "difference_J_mol": 2.3646862246096134e-10,
+      "order_parameters": [
+        -5.673278927721576e-10,
+        -3.048857975459552e-09
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 49,
+      "fractions": [
+        0.39229205436478215,
+        0.001161331399273043,
+        0.02919888204260192,
+        0.5773477321933429
+      ],
+      "native_mixing_gibbs_J_mol": -23463.8408742107,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23463.84087421037,
+      "difference_J_mol": 3.2741809263825417e-10,
+      "order_parameters": [
+        1.5737360691603374e-10,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 50,
+      "fractions": [
+        0.39180199702741164,
+        0.001218598862553934,
+        0.029221272269416447,
+        0.577758131840618
+      ],
+      "native_mixing_gibbs_J_mol": -23469.26688425755,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23469.26688425735,
+      "difference_J_mol": 2.000888343900442e-10,
+      "order_parameters": [
+        0.0,
+        6.036600240769883e-09
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 51,
+      "fractions": [
+        0.391802006090268,
+        0.0012185988443953963,
+        0.029221271833985565,
+        0.577758123231351
+      ],
+      "native_mixing_gibbs_J_mol": -23469.266956985462,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23469.26695698511,
+      "difference_J_mol": 3.5288394428789616e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 52,
+      "fractions": [
+        0.391801991189107,
+        0.001218613745556368,
+        0.029221271833985565,
+        0.577758123231351
+      ],
+      "native_mixing_gibbs_J_mol": -23469.269273294834,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23469.269273294656,
+      "difference_J_mol": 1.7826096154749393e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 53,
+      "fractions": [
+        0.391801991189107,
+        0.0012185988443953963,
+        0.029221286735146536,
+        0.577758123231351
+      ],
+      "native_mixing_gibbs_J_mol": -23469.267548762262,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23469.26754876213,
+      "difference_J_mol": 1.3096723705530167e-10,
+      "order_parameters": [
+        0.0,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 54,
+      "fractions": [
+        0.391801991189107,
+        0.0012185988443953963,
+        0.029221271833985565,
+        0.577758138132512
+      ],
+      "native_mixing_gibbs_J_mol": -23469.266796290176,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23469.266796290034,
+      "difference_J_mol": 1.418811734765768e-10,
+      "order_parameters": [
+        1.297685151956854e-09,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 55,
+      "fractions": [
+        0.3918156614443203,
+        0.001504678768704687,
+        0.0292812887367193,
+        0.5773983710502557
+      ],
+      "native_mixing_gibbs_J_mol": -23518.95625130646,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23518.956251306237,
+      "difference_J_mol": 2.219167072325945e-10,
+      "order_parameters": [
+        6.501752189240605e-10,
+        0.0
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 56,
+      "fractions": [
+        0.391815670506973,
+        0.0015046787462832266,
+        0.0292812883003941,
+        0.5773983624463497
+      ],
+      "native_mixing_gibbs_J_mol": -23518.956323406426,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23518.956323406186,
+      "difference_J_mol": 2.4010660126805305e-10,
+      "order_parameters": [
+        0.0,
+        7.448897166122381e-09
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 57,
+      "fractions": [
+        0.39181565560581205,
+        0.0015046936474441984,
+        0.0292812883003941,
+        0.5773983624463497
+      ],
+      "native_mixing_gibbs_J_mol": -23518.958534904523,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23518.958534904283,
+      "difference_J_mol": 2.4010660126805305e-10,
+      "order_parameters": [
+        3.886900005803906e-10,
+        2.0804388911095753e-08
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 58,
+      "fractions": [
+        0.39181565560581205,
+        0.0015046787462832266,
+        0.029281303201555073,
+        0.5773983624463497
+      ],
+      "native_mixing_gibbs_J_mol": -23518.956914695213,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23518.956914695067,
+      "difference_J_mol": 1.4551915228366852e-10,
+      "order_parameters": [
+        1.2883300729391151e-09,
+        1.1492837566931669e-08
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 59,
+      "fractions": [
+        0.39181565560581205,
+        0.0015046787462832266,
+        0.0292812883003941,
+        0.5773983773475106
+      ],
+      "native_mixing_gibbs_J_mol": -23518.956162787275,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23518.95616278695,
+      "difference_J_mol": 3.2378011383116245e-10,
+      "order_parameters": [
+        0.0,
+        7.792578320045983e-09
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 60,
+      "fractions": [
+        0.39181565560581205,
+        0.0015046936474441984,
+        0.0292812883003941,
+        0.5773983624463497
+      ],
+      "native_mixing_gibbs_J_mol": -23518.958534904523,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23518.958534904283,
+      "difference_J_mol": 2.4010660126805305e-10,
+      "order_parameters": [
+        3.886900005803906e-10,
+        2.0804388911095753e-08
+      ],
+      "finite_optimizer_success": true
+    },
+    {
+      "archive_trial_index": 61,
+      "fractions": [
+        0.39181565560581205,
+        0.0015046936474441984,
+        0.0292812883003941,
+        0.5773983624463497
+      ],
+      "native_mixing_gibbs_J_mol": -23518.958534904523,
+      "declared_locally_minimized_mixing_gibbs_J_mol": -23518.958534904283,
+      "difference_J_mol": 2.4010660126805305e-10,
+      "order_parameters": [
+        3.886900005803906e-10,
+        2.0804388911095753e-08
+      ],
+      "finite_optimizer_success": true
+    }
+  ]
+}

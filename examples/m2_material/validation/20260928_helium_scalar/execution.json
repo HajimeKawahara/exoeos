@@ -1,0 +1,13 @@
+{
+  "created_utc": "2026-09-27T23:01:47.634896+00:00",
+  "test_command": "taskset -c 40 env JAX_ENABLE_X64=1 /home/kawahara/anaconda3/envs/myenv39/bin/python -m pytest -q tests/unittests/m2_helium_reference_test.py tests/unittests/m2_helium_dissolution_test.py",
+  "actual_exit_code": 0,
+  "passed": 11,
+  "stdout": "...........                                                              [100%]\n11 passed in 0.57s\n",
+  "source_hashes": {
+    "helium_dissolution.py": "4be9d33c669e75ff106359cbf287391584f943c411d790434d907cab3ed6c454",
+    "helium_reference.py": "560ae087bdd087e6bb827012395cc0280f01ceb3d968494509e7453ba6f36cde",
+    "na_helium_transfer_sources.json": "e1078b86b92735b85209883f67a9037532399ebd1cdf4e611e75e5369108ee8d"
+  },
+  "scope": "Provider scalar and analytic finite-host limits only; no native, finite BSE source or pressure closure was run."
+}

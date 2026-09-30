@@ -1,0 +1,26 @@
+{
+  "report_kind": "sossi_water_validation_receipt_v1",
+  "implementation_commit": "dc8b6f32b3eb37ec950d5341215e5987149f545e",
+  "base_commit": "4bee4e10a504c595e7a50896d439f7eba1c595a9",
+  "fresh_report_command": "PYTHONPATH=src /home/kawahara/anaconda3/envs/myenv39/bin/python -m examples.m2_material.sossi_water_calibration --output examples/m2_material/validation/20260927_sossi_water/calibration.json",
+  "native_model_runs": 0,
+  "files": {
+    "examples/m2_material/sossi_water_calibration.py": "1e673ca3c15fc9471c5cd8bd4dd0285996bf9f43157dad3435f5394fbcaa1f7a",
+    "examples/m2_material/material_admission.py": "18e6f527e48b7363d3fe362a581f87f3aa813b05971561d00090cd39a49d080e",
+    "examples/m2_material/domain_evidence.json": "4c471c7e36ce4fa05b66e919892c4dd780add2ce5ee869b448990dc71bb029a8",
+    "examples/m2_material/hydrogen_reference.json": "5922d909964bf1c04a0c915e4cd02a8e03b40650bac0011ede6e6a93e10578aa",
+    "examples/m2_material/water_data/Sossi2023_Table1.csv": "5907d9d2312aabad091ca3413bb21e56f62619ba277c2b296506c67ef26f7cfd",
+    "examples/m2_material/water_data/sossi2023_provenance.json": "133549e98c2f49188c051fd23d88dd388ef3712faadec8de0a1c0224d60f8a73",
+    "examples/m2_material/validation/20260927_sossi_water/calibration.json": "a125db14678552c7ab72853ada36ae4a5122ac2c029caf1669873154bbd9dec8",
+    "examples/m2_material/validation/20260927_sossi_water/docs-build.log": "c4c98f679dcfedf1089dfc2c2a4a4cf65de2c6b4eb3f8e6fe919e167c2f94f1e",
+    "examples/m2_material/validation/20260927_sossi_water/final-focused-tests.log": "ace7b7a5b2947802fafef449277bed303506526554b03c80f2cb2f466cfb62f0",
+    "examples/m2_material/validation/20260927_sossi_water/unit-tests.log": "4fabf055a37b5349cad21b991593ea8c7a2118f20a45e582dc275ce19019d1f1"
+  },
+  "validation": {
+    "unit_suite": "463 passed; run before a provenance-only report-field addition",
+    "final_source_focused_tests": "13 passed after the provenance field addition",
+    "sphinx_html": "exit 0; zero warning/error matches; rendered sources unchanged after build"
+  },
+  "physical_model_changes": false,
+  "accepted_coupled_material_domain": null
+}

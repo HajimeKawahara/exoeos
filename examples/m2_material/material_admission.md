@@ -11,8 +11,9 @@ checkout. The keyword arguments are:
 
 | Argument | Required basis |
 | --- | --- |
-| `silicate_oxide_mass_fractions` | Normalized native-host oxide masses, including native H2O and excluding the added molecular H2; chemical-case or lowercase MELTS names |
-| `molecular_h2_mass_ppm` | Molecular-H2 mass divided by complete liquid mass, including native water and H2 |
+| `silicate_oxide_mass_fractions` | Normalized native-host oxide masses, including native H2O and excluding added molecular H2 and He; chemical-case or lowercase MELTS names |
+| `molecular_h2_mass_ppm` | Molecular-H2 mass divided by complete liquid mass, including native water, H2 and He |
+| `dissolved_helium_mass_ppm` | Dissolved-He mass divided by the same complete liquid mass; defaults to zero |
 | `water_mass_percent` | Native-H2O mass divided by that same complete liquid mass |
 | `alloy_atomic_fractions` | Fe, Si, O, H atomic fractions as a mapping or vector; `None` if absent/unsupplied |
 | `hydrogen_partial_pressure_Pa` | H2 fraction of the complete gas species set times total pressure |
@@ -49,6 +50,11 @@ reference domain for those families*, without proving that no physical common
 domain exists. Every report keeps `material_admission="not_established"` and
 `accepted_coupled_material_domain=null`. Competing phases, reaction standards
 and omitted-transfer errors require independent assessments.
+
+The constitutive ledger separately records [Na and He transfer paths](na_helium_transfer.md).
+Completing the previous Mg/Al/Ca/K/Ti/Cr/P metal catalog does not establish
+coverage of all 13 inventory elements. Gas-only He is a declared reservoir
+restriction; chemical inertness does not establish insolubility in either melt.
 
 ## A published extrapolation comparison
 
@@ -93,3 +99,12 @@ that state, not a new equilibrium result. Ordinary tests require neither
 alphaMELTS nor a sibling provider; they cover unsupported T/P combinations,
 host mismatch, atomic/mass conversion, water denominators, exact absence and
 the distinction between a reference illustration and material admission.
+
+## Measured oxygen reaction standard
+
+The [oxygen-standard replay](oxygen_calibration.md) adds an independent
+low-pressure Fe-O/H2/H2O reaction check. It identifies a quantitative failure
+of the inherited O standard combined with the adopted Ma activities, and
+provides explicit alternative standard scenarios. This is stronger evidence
+than coordinate-domain mismatch; it does not itself validate the rest of
+the coupled material model or silently change this state-assessment API.

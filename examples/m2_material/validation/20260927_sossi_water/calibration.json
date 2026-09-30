@@ -1,0 +1,909 @@
+{
+  "report_kind": "sossi2023_shared_baseline_calibration_v1",
+  "observed_sample_count": 14,
+  "fit_excluded_samples": [
+    "Per-1",
+    "Per-2",
+    "Per-5"
+  ],
+  "source_doi": "10.1016/j.epsl.2022.117894",
+  "data_sha256": "5907d9d2312aabad091ca3413bb21e56f62619ba277c2b296506c67ef26f7cfd",
+  "provenance_sha256": "133549e98c2f49188c051fd23d88dd388ef3712faadec8de0a1c0224d60f8a73",
+  "runner_sha256": "1e673ca3c15fc9471c5cd8bd4dd0285996bf9f43157dad3435f5394fbcaa1f7a",
+  "coefficient_fit": "Equal-weight linear least squares on published rounded corrected Table 1 concentrations; a fresh reconstruction, not the authors' unrounded regression.",
+  "uncertainty_scope": "Concentration measurement marginals with fixed predictors and selected Per-5 background. Unknown correlations are not set to zero in the SD upper bound. Fugacity, temperature, composition, baseline-selection bias and transfer errors remain unbounded.",
+  "concentration_basis": "H2O-equivalent mass / glass mass; H2-induced OH is included, dissolved molecular H2 is not measured by this band.",
+  "branches_are_independent_observations": false,
+  "branches": {
+    "basalt_epsilon_6.3": {
+      "coefficient_order": [
+        "sqrt_f_H2O_bar",
+        "sqrt_f_H2_bar"
+      ],
+      "coefficients_ppmw_per_sqrt_bar": [
+        526.4113120696231,
+        182.99142505620134
+      ],
+      "coefficient_table_rounding_offset_ppmw_per_sqrt_bar": [
+        -0.010631838116637482,
+        -0.1631611472937209
+      ],
+      "raw_measurement_coefficient_operator": [
+        [
+          0.0,
+          0.0,
+          0.562613832754619,
+          0.1603135418208741,
+          -10.281249992765526,
+          0.8168327675014727,
+          1.288377404315548,
+          1.7847544677544633,
+          2.5078561793101977,
+          2.1764793586842175,
+          0.10631838116678026,
+          -1.6990507491737437,
+          1.288377404315548,
+          1.288377404315548
+        ],
+        [
+          0.0,
+          0.0,
+          -0.3299619113135474,
+          -0.09423448381805286,
+          1.0565979196160327,
+          -0.4784790453883265,
+          -0.7474011454477081,
+          -1.0119512003609152,
+          -1.2689147154417564,
+          -0.4731292595512142,
+          1.6316114729374467,
+          3.210664659663457,
+          -0.7474011454477081,
+          -0.7474011454477081
+        ]
+      ],
+      "raw_sample_order": [
+        "Per-1",
+        "Per-2",
+        "Per-3",
+        "Per-4",
+        "Per-5",
+        "Per-6",
+        "Per-7",
+        "Per-8",
+        "Per-9",
+        "Per-10",
+        "Per-11",
+        "Per-12",
+        "Per-TS1",
+        "Per-TS2"
+      ],
+      "coefficient_sd_upper_ppmw_per_sqrt_bar": [
+        98.74627767197791,
+        66.83011937719806
+      ],
+      "coefficient_covariance_if_raw_errors_independent": [
+        [
+          1394.720504316972,
+          -627.8480194321589
+        ],
+        [
+          -627.8480194321588,
+          835.9155645223248
+        ]
+      ],
+      "independence_is_established": false,
+      "baseline_sample": "Per-5",
+      "baseline_water_mass_ppm": 32.5,
+      "baseline_reported_sigma_ppm": 2.3,
+      "max_table_rounding_difference_ppm": 0.10000000000000853,
+      "fitted_sample_count": 11,
+      "fit_rmse_ppm": 2.75429566763527,
+      "fit_max_absolute_residual_ppm": 5.473634792071479,
+      "grouped_cross_validation": {
+        "method": "Leave one distinct calculated gas-fugacity pair out; all three time-series replicates stay together.",
+        "conditional_on_shared_baseline": "Per-5",
+        "scope": "Internal cross-validation of the fixed Eq.11 functional form, conditional on the common baseline and spectroscopy; not independent external validation.",
+        "group_count": 9,
+        "sample_count": 11,
+        "rmse_ppm": 4.23419489174725,
+        "max_absolute_residual_ppm": 9.221128891935336,
+        "folds": [
+          {
+            "held_out_samples": [
+              "Per-3"
+            ],
+            "training_samples": [
+              "Per-4",
+              "Per-6",
+              "Per-7",
+              "Per-8",
+              "Per-9",
+              "Per-10",
+              "Per-11",
+              "Per-12",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              524.8032947319865,
+              183.93449549503856
+            ],
+            "predicted_water_mass_ppm": [
+              14.641880906547163
+            ],
+            "residual_ppm": [
+              -2.858119093452837
+            ]
+          },
+          {
+            "held_out_samples": [
+              "Per-4"
+            ],
+            "training_samples": [
+              "Per-3",
+              "Per-6",
+              "Per-7",
+              "Per-8",
+              "Per-9",
+              "Per-10",
+              "Per-11",
+              "Per-12",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              526.1657778103175,
+              183.13575343871014
+            ],
+            "predicted_water_mass_ppm": [
+              4.168412234444966
+            ],
+            "residual_ppm": [
+              -1.5315877655550345
+            ]
+          },
+          {
+            "held_out_samples": [
+              "Per-6"
+            ],
+            "training_samples": [
+              "Per-3",
+              "Per-4",
+              "Per-7",
+              "Per-8",
+              "Per-9",
+              "Per-10",
+              "Per-11",
+              "Per-12",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              527.4637495131492,
+              182.3749350188956
+            ],
+            "predicted_water_mass_ppm": [
+              21.38843685684312
+            ],
+            "residual_ppm": [
+              1.28843685684312
+            ]
+          },
+          {
+            "held_out_samples": [
+              "Per-7",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "training_samples": [
+              "Per-3",
+              "Per-4",
+              "Per-6",
+              "Per-8",
+              "Per-9",
+              "Per-10",
+              "Per-11",
+              "Per-12"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              530.339101682833,
+              180.71287340964372
+            ],
+            "predicted_water_mass_ppm": [
+              34.349544266572074,
+              34.349544266572074,
+              34.349544266572074
+            ],
+            "residual_ppm": [
+              -0.35045573342792835,
+              3.149544266572075,
+              0.24954426657207307
+            ]
+          },
+          {
+            "held_out_samples": [
+              "Per-8"
+            ],
+            "training_samples": [
+              "Per-3",
+              "Per-4",
+              "Per-6",
+              "Per-7",
+              "Per-9",
+              "Per-10",
+              "Per-11",
+              "Per-12",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              515.0530333652811,
+              189.43153991600852
+            ],
+            "predicted_water_mass_ppm": [
+              47.83594325743137
+            ],
+            "residual_ppm": [
+              -6.364056742568636
+            ]
+          },
+          {
+            "held_out_samples": [
+              "Per-9"
+            ],
+            "training_samples": [
+              "Per-3",
+              "Per-4",
+              "Per-6",
+              "Per-7",
+              "Per-8",
+              "Per-10",
+              "Per-11",
+              "Per-12",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              519.1967885882617,
+              186.64179986075555
+            ],
+            "predicted_water_mass_ppm": [
+              77.12323077340665
+            ],
+            "residual_ppm": [
+              -2.8767692265933533
+            ]
+          },
+          {
+            "held_out_samples": [
+              "Per-10"
+            ],
+            "training_samples": [
+              "Per-3",
+              "Per-4",
+              "Per-6",
+              "Per-7",
+              "Per-8",
+              "Per-9",
+              "Per-11",
+              "Per-12",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              536.5817816230176,
+              180.78053952223752
+            ],
+            "predicted_water_mass_ppm": [
+              107.97289961322807
+            ],
+            "residual_ppm": [
+              4.6728996132280685
+            ]
+          },
+          {
+            "held_out_samples": [
+              "Per-11"
+            ],
+            "training_samples": [
+              "Per-3",
+              "Per-4",
+              "Per-6",
+              "Per-7",
+              "Per-8",
+              "Per-9",
+              "Per-10",
+              "Per-12",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              526.878276705174,
+              190.15768218369638
+            ],
+            "predicted_water_mass_ppm": [
+              109.19213455308306
+            ],
+            "residual_ppm": [
+              4.392134553083068
+            ]
+          },
+          {
+            "held_out_samples": [
+              "Per-12"
+            ],
+            "training_samples": [
+              "Per-3",
+              "Per-4",
+              "Per-6",
+              "Per-7",
+              "Per-8",
+              "Per-9",
+              "Per-10",
+              "Per-11",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              542.0784780216939,
+              153.38547240066265
+            ],
+            "predicted_water_mass_ppm": [
+              86.67887110806467
+            ],
+            "residual_ppm": [
+              -9.221128891935336
+            ]
+          }
+        ]
+      },
+      "all_observation_residuals": [
+        {
+          "sample": "Per-1",
+          "included_in_fit": false,
+          "predicted_water_mass_ppm": 0.0,
+          "observed_corrected_water_mass_ppm": 2.9,
+          "residual_ppm": -2.9
+        },
+        {
+          "sample": "Per-2",
+          "included_in_fit": false,
+          "predicted_water_mass_ppm": 0.0,
+          "observed_corrected_water_mass_ppm": 5.1,
+          "residual_ppm": -5.1
+        },
+        {
+          "sample": "Per-3",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 14.68135382405253,
+          "observed_corrected_water_mass_ppm": 17.5,
+          "residual_ppm": -2.818646175947471
+        },
+        {
+          "sample": "Per-4",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 4.170129010642441,
+          "observed_corrected_water_mass_ppm": 5.7,
+          "residual_ppm": -1.5298709893575593
+        },
+        {
+          "sample": "Per-5",
+          "included_in_fit": false,
+          "predicted_water_mass_ppm": 0.956413247214239,
+          "observed_corrected_water_mass_ppm": 0.0,
+          "residual_ppm": 0.956413247214239
+        },
+        {
+          "sample": "Per-6",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 21.350920765662345,
+          "observed_corrected_water_mass_ppm": 20.1,
+          "residual_ppm": 1.2509207656623431
+        },
+        {
+          "sample": "Per-7",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 34.128314751259616,
+          "observed_corrected_water_mass_ppm": 34.7,
+          "residual_ppm": -0.5716852487403941
+        },
+        {
+          "sample": "Per-8",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 48.726365207928524,
+          "observed_corrected_water_mass_ppm": 54.2,
+          "residual_ppm": -5.473634792071479
+        },
+        {
+          "sample": "Per-9",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 77.94514567700003,
+          "observed_corrected_water_mass_ppm": 80.0,
+          "residual_ppm": -2.0548543229999723
+        },
+        {
+          "sample": "Per-10",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 106.54391131058674,
+          "observed_corrected_water_mass_ppm": 103.3,
+          "residual_ppm": 3.243911310586739
+        },
+        {
+          "sample": "Per-11",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 107.67842819927652,
+          "observed_corrected_water_mass_ppm": 104.8,
+          "residual_ppm": 2.8784281992765273
+        },
+        {
+          "sample": "Per-12",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 92.78496389189607,
+          "observed_corrected_water_mass_ppm": 95.9,
+          "residual_ppm": -3.1150361081039364
+        },
+        {
+          "sample": "Per-TS1",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 34.128314751259616,
+          "observed_corrected_water_mass_ppm": 31.2,
+          "residual_ppm": 2.9283147512596095
+        },
+        {
+          "sample": "Per-TS2",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 34.128314751259616,
+          "observed_corrected_water_mass_ppm": 34.1,
+          "residual_ppm": 0.028314751259607362
+        }
+      ]
+    },
+    "peridotite_epsilon_5.1": {
+      "coefficient_order": [
+        "sqrt_f_H2O_bar",
+        "sqrt_f_H2_bar"
+      ],
+      "coefficients_ppmw_per_sqrt_bar": [
+        649.95594535001,
+        226.29085791936907
+      ],
+      "coefficient_table_rounding_offset_ppmw_per_sqrt_bar": [
+        0.031225402971926997,
+        0.203906711908445
+      ],
+      "raw_measurement_coefficient_operator": [
+        [
+          0.0,
+          0.0,
+          0.562613832754619,
+          0.1603135418208741,
+          -10.281249992765526,
+          0.8168327675014727,
+          1.288377404315548,
+          1.7847544677544633,
+          2.5078561793101977,
+          2.1764793586842175,
+          0.10631838116678026,
+          -1.6990507491737437,
+          1.288377404315548,
+          1.288377404315548
+        ],
+        [
+          0.0,
+          0.0,
+          -0.3299619113135474,
+          -0.09423448381805286,
+          1.0565979196160327,
+          -0.4784790453883265,
+          -0.7474011454477081,
+          -1.0119512003609152,
+          -1.2689147154417564,
+          -0.4731292595512142,
+          1.6316114729374467,
+          3.210664659663457,
+          -0.7474011454477081,
+          -0.7474011454477081
+        ]
+      ],
+      "raw_sample_order": [
+        "Per-1",
+        "Per-2",
+        "Per-3",
+        "Per-4",
+        "Per-5",
+        "Per-6",
+        "Per-7",
+        "Per-8",
+        "Per-9",
+        "Per-10",
+        "Per-11",
+        "Per-12",
+        "Per-TS1",
+        "Per-TS2"
+      ],
+      "coefficient_sd_upper_ppmw_per_sqrt_bar": [
+        143.9377743601462,
+        98.76332312356905
+      ],
+      "coefficient_covariance_if_raw_errors_independent": [
+        [
+          2937.5541135971216,
+          -1358.5659626046697
+        ],
+        [
+          -1358.5659626046697,
+          1842.1611758142458
+        ]
+      ],
+      "independence_is_established": false,
+      "baseline_sample": "Per-5",
+      "baseline_water_mass_ppm": 40.2,
+      "baseline_reported_sigma_ppm": 3.2,
+      "max_table_rounding_difference_ppm": 0.10000000000000853,
+      "fitted_sample_count": 11,
+      "fit_rmse_ppm": 3.4094915826833114,
+      "fit_max_absolute_residual_ppm": 6.732471432834423,
+      "grouped_cross_validation": {
+        "method": "Leave one distinct calculated gas-fugacity pair out; all three time-series replicates stay together.",
+        "conditional_on_shared_baseline": "Per-5",
+        "scope": "Internal cross-validation of the fixed Eq.11 functional form, conditional on the common baseline and spectroscopy; not independent external validation.",
+        "group_count": 9,
+        "sample_count": 11,
+        "rmse_ppm": 5.237440424764303,
+        "max_absolute_residual_ppm": 11.396423001722297,
+        "folds": [
+          {
+            "held_out_samples": [
+              "Per-3"
+            ],
+            "training_samples": [
+              "Per-4",
+              "Per-6",
+              "Per-7",
+              "Per-8",
+              "Per-9",
+              "Per-10",
+              "Per-11",
+              "Per-12",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              647.9182679020277,
+              227.48591553479378
+            ],
+            "predicted_water_mass_ppm": [
+              18.078195256939022
+            ],
+            "residual_ppm": [
+              -3.621804743060977
+            ]
+          },
+          {
+            "held_out_samples": [
+              "Per-4"
+            ],
+            "training_samples": [
+              "Per-3",
+              "Per-6",
+              "Per-7",
+              "Per-8",
+              "Per-9",
+              "Per-10",
+              "Per-11",
+              "Per-12",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              649.6428509649752,
+              226.47489906414657
+            ],
+            "predicted_water_mass_ppm": [
+              5.146987288293234
+            ],
+            "residual_ppm": [
+              -1.9530127117067657
+            ]
+          },
+          {
+            "held_out_samples": [
+              "Per-6"
+            ],
+            "training_samples": [
+              "Per-3",
+              "Per-4",
+              "Per-7",
+              "Per-8",
+              "Per-9",
+              "Per-10",
+              "Per-11",
+              "Per-12",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              651.2715100025451,
+              225.52023491777555
+            ],
+            "predicted_water_mass_ppm": [
+              26.410567921459936
+            ],
+            "residual_ppm": [
+              1.6105679214599355
+            ]
+          },
+          {
+            "held_out_samples": [
+              "Per-7",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "training_samples": [
+              "Per-3",
+              "Per-4",
+              "Per-6",
+              "Per-8",
+              "Per-9",
+              "Per-10",
+              "Per-11",
+              "Per-12"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              654.6061588787865,
+              223.59322063828807
+            ],
+            "predicted_water_mass_ppm": [
+              42.403118877330975,
+              42.403118877330975,
+              42.403118877330975
+            ],
+            "residual_ppm": [
+              -0.4968811226690235,
+              3.8031188773309736,
+              0.30311887733097365
+            ]
+          },
+          {
+            "held_out_samples": [
+              "Per-8"
+            ],
+            "training_samples": [
+              "Per-3",
+              "Per-4",
+              "Per-6",
+              "Per-7",
+              "Per-9",
+              "Per-10",
+              "Per-11",
+              "Per-12",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              635.9854687274337,
+              234.21208229126685
+            ],
+            "predicted_water_mass_ppm": [
+              59.07232573164317
+            ],
+            "residual_ppm": [
+              -7.827674268356837
+            ]
+          },
+          {
+            "held_out_samples": [
+              "Per-9"
+            ],
+            "training_samples": [
+              "Per-3",
+              "Per-4",
+              "Per-6",
+              "Per-7",
+              "Per-8",
+              "Per-10",
+              "Per-11",
+              "Per-12",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              641.0113204253248,
+              230.8166223091605
+            ],
+            "predicted_water_mass_ppm": [
+              95.23335810144197
+            ],
+            "residual_ppm": [
+              -3.566641898558032
+            ]
+          },
+          {
+            "held_out_samples": [
+              "Per-10"
+            ],
+            "training_samples": [
+              "Per-3",
+              "Per-4",
+              "Per-6",
+              "Per-7",
+              "Per-8",
+              "Per-9",
+              "Per-11",
+              "Per-12",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              662.7715303069377,
+              223.5049696924977
+            ],
+            "predicted_water_mass_ppm": [
+              133.3882180094165
+            ],
+            "residual_ppm": [
+              5.888218009416505
+            ]
+          },
+          {
+            "held_out_samples": [
+              "Per-11"
+            ],
+            "training_samples": [
+              "Per-3",
+              "Per-4",
+              "Per-6",
+              "Per-7",
+              "Per-8",
+              "Per-9",
+              "Per-10",
+              "Per-12",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              650.5271776416661,
+              235.05725513638112
+            ],
+            "predicted_water_mass_ppm": [
+              134.8728460251814
+            ],
+            "residual_ppm": [
+              5.3728460251813885
+            ]
+          },
+          {
+            "held_out_samples": [
+              "Per-12"
+            ],
+            "training_samples": [
+              "Per-3",
+              "Per-4",
+              "Per-6",
+              "Per-7",
+              "Per-8",
+              "Per-9",
+              "Per-10",
+              "Per-11",
+              "Per-TS1",
+              "Per-TS2"
+            ],
+            "coefficients_ppmw_per_sqrt_bar": [
+              669.3190463889874,
+              189.70076534116336
+            ],
+            "predicted_water_mass_ppm": [
+              107.1035769982777
+            ],
+            "residual_ppm": [
+              -11.396423001722297
+            ]
+          }
+        ]
+      },
+      "all_observation_residuals": [
+        {
+          "sample": "Per-1",
+          "included_in_fit": false,
+          "predicted_water_mass_ppm": 0.0,
+          "observed_corrected_water_mass_ppm": 3.5,
+          "residual_ppm": -3.5
+        },
+        {
+          "sample": "Per-2",
+          "included_in_fit": false,
+          "predicted_water_mass_ppm": 0.0,
+          "observed_corrected_water_mass_ppm": 6.3,
+          "residual_ppm": -6.3
+        },
+        {
+          "sample": "Per-3",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 18.12821528590523,
+          "observed_corrected_water_mass_ppm": 21.7,
+          "residual_ppm": -3.5717847140947683
+        },
+        {
+          "sample": "Per-4",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 5.149176445070422,
+          "observed_corrected_water_mass_ppm": 7.1,
+          "residual_ppm": -1.9508235549295776
+        },
+        {
+          "sample": "Per-5",
+          "included_in_fit": false,
+          "predicted_water_mass_ppm": 1.180956196037905,
+          "observed_corrected_water_mass_ppm": 0.0,
+          "residual_ppm": 1.180956196037905
+        },
+        {
+          "sample": "Per-6",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 26.363672171254247,
+          "observed_corrected_water_mass_ppm": 24.8,
+          "residual_ppm": 1.5636721712542467
+        },
+        {
+          "sample": "Per-7",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 42.1411994299118,
+          "observed_corrected_water_mass_ppm": 42.9,
+          "residual_ppm": -0.7588005700881979
+        },
+        {
+          "sample": "Per-8",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 60.16752856716559,
+          "observed_corrected_water_mass_ppm": 66.9,
+          "residual_ppm": -6.732471432834423
+        },
+        {
+          "sample": "Per-9",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 96.25237488774042,
+          "observed_corrected_water_mass_ppm": 98.8,
+          "residual_ppm": -2.5476251122595954
+        },
+        {
+          "sample": "Per-10",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 131.58758128376564,
+          "observed_corrected_water_mass_ppm": 127.5,
+          "residual_ppm": 4.087581283765644
+        },
+        {
+          "sample": "Per-11",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 133.0211470236942,
+          "observed_corrected_water_mass_ppm": 129.5,
+          "residual_ppm": 3.5211470236941977
+        },
+        {
+          "sample": "Per-12",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 114.65011680569398,
+          "observed_corrected_water_mass_ppm": 118.5,
+          "residual_ppm": -3.8498831943060168
+        },
+        {
+          "sample": "Per-TS1",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 42.1411994299118,
+          "observed_corrected_water_mass_ppm": 38.6,
+          "residual_ppm": 3.5411994299117993
+        },
+        {
+          "sample": "Per-TS2",
+          "included_in_fit": true,
+          "predicted_water_mass_ppm": 42.1411994299118,
+          "observed_corrected_water_mass_ppm": 42.1,
+          "residual_ppm": 0.04119942991179926
+        }
+      ]
+    }
+  },
+  "accepted_coupled_material_domain": null,
+  "constitutive_model_changed": false
+}

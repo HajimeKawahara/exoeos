@@ -1,0 +1,518 @@
+{
+  "schema": "m2_sodium_reference_replay_v1",
+  "observations": [
+    {
+      "run": "GGK1",
+      "temperature_K": 1683.0,
+      "pressure_GPa": 1.0,
+      "metal_host": "Basalt\u2009+\u2009Fe",
+      "metal_S_wt_percent": 0.0,
+      "metal_Si_wt_percent": 0.01,
+      "carbon_mole_fraction_calculated": 0.19,
+      "carbon_wt_percent_from_EPMA_total": "7.00(18)",
+      "silicate_Na_mass_ppm": {
+        "raw": "974(66)",
+        "value": 974.0,
+        "reported_two_standard_errors": 66.0,
+        "censored_upper": false
+      },
+      "metal_Na_mass_ppm": {
+        "raw": "<29",
+        "value": 29.0,
+        "reported_two_standard_errors": null,
+        "censored_upper": true
+      },
+      "selected_measurement": "LA-ICP-MS",
+      "mass_partition_ratio": 0.029774127310061602,
+      "ratio_kind": "reported_censoring_upper_at_central_silicate",
+      "mass_partition_upper_at_reported_silicate_lower": 0.031938325991189426,
+      "published_Na_status": "b.d.l. c",
+      "excluded_from_detected_fit": true,
+      "status_note": null,
+      "alloy_x_Na": 6.133843525198201e-05,
+      "alloy_x_Fe": 0.8096946323605617,
+      "concentration_bases": {
+        "one_cation": {
+          "K_D": 0.010945001773279306,
+          "log10_K_D": -1.9607841637328376,
+          "x_Na_silicate": 0.002432783900774277,
+          "x_FeO_silicate": 0.15257894697636334,
+          "log10_K": null,
+          "published_log10_K": null,
+          "published_two_standard_errors": null,
+          "residual_dex": null
+        },
+        "oxide_molecules": {
+          "K_D": 0.020781340870126702,
+          "log10_K_D": -1.6823264339824164,
+          "x_Na_silicate": 0.0013496403981737102,
+          "x_FeO_silicate": 0.16929305614408624,
+          "log10_K": null,
+          "published_log10_K": null,
+          "published_two_standard_errors": null,
+          "residual_dex": null
+        }
+      }
+    },
+    {
+      "run": "GGK2",
+      "temperature_K": 1783.0,
+      "pressure_GPa": 1.0,
+      "metal_host": "Basalt\u2009+\u2009Fe",
+      "metal_S_wt_percent": 0.0,
+      "metal_Si_wt_percent": 0.02,
+      "carbon_mole_fraction_calculated": 0.2,
+      "carbon_wt_percent_from_EPMA_total": "7.41(26)",
+      "silicate_Na_mass_ppm": {
+        "raw": "1034(84)",
+        "value": 1034.0,
+        "reported_two_standard_errors": 84.0,
+        "censored_upper": false
+      },
+      "metal_Na_mass_ppm": {
+        "raw": "<35",
+        "value": 35.0,
+        "reported_two_standard_errors": null,
+        "censored_upper": true
+      },
+      "selected_measurement": "LA-ICP-MS",
+      "mass_partition_ratio": 0.033849129593810444,
+      "ratio_kind": "reported_censoring_upper_at_central_silicate",
+      "mass_partition_upper_at_reported_silicate_lower": 0.03684210526315789,
+      "published_Na_status": "b.d.l.",
+      "excluded_from_detected_fit": true,
+      "status_note": null,
+      "alloy_x_Na": 7.347833862845757e-05,
+      "alloy_x_Fe": 0.7991760475905817,
+      "concentration_bases": {
+        "one_cation": {
+          "K_D": 0.014430814837842984,
+          "log10_K_D": -1.8407091457195524,
+          "x_Na_silicate": 0.0025510720450102123,
+          "x_FeO_silicate": 0.20060925201949423,
+          "log10_K": null,
+          "published_log10_K": null,
+          "published_two_standard_errors": null,
+          "residual_dex": null
+        },
+        "oxide_molecules": {
+          "K_D": 0.02736324664663647,
+          "log10_K_D": -1.5628323748953652,
+          "x_Na_silicate": 0.0014190548349580679,
+          "x_FeO_silicate": 0.2231810971959008,
+          "log10_K": null,
+          "published_log10_K": null,
+          "published_two_standard_errors": null,
+          "residual_dex": null
+        }
+      }
+    },
+    {
+      "run": "GGK3",
+      "temperature_K": 1883.0,
+      "pressure_GPa": 1.0,
+      "metal_host": "Basalt\u2009+\u2009Fe",
+      "metal_S_wt_percent": 0.0,
+      "metal_Si_wt_percent": 0.01,
+      "carbon_mole_fraction_calculated": 0.21,
+      "carbon_wt_percent_from_EPMA_total": "7.55(30)",
+      "silicate_Na_mass_ppm": {
+        "raw": "869(35)",
+        "value": 869.0,
+        "reported_two_standard_errors": 35.0,
+        "censored_upper": false
+      },
+      "metal_Na_mass_ppm": {
+        "raw": "48(17)",
+        "value": 48.0,
+        "reported_two_standard_errors": 17.0,
+        "censored_upper": false
+      },
+      "selected_measurement": "LA-ICP-MS",
+      "mass_partition_ratio": 0.05523590333716916,
+      "ratio_kind": "central",
+      "mass_partition_upper_at_reported_silicate_lower": null,
+      "published_Na_status": "b.d.l.",
+      "excluded_from_detected_fit": true,
+      "status_note": "Table S4 gives 48(17) ppm but Table1 says b.d.l.; preserved, not used as a detected fit point.",
+      "alloy_x_Na": 9.960068331784158e-05,
+      "alloy_x_Fe": 0.7884480785461782,
+      "concentration_bases": {
+        "one_cation": {
+          "K_D": 0.022072505266566816,
+          "log10_K_D": -1.6561483708846938,
+          "x_Na_silicate": 0.002114034514080043,
+          "x_FeO_silicate": 0.1730516993038759,
+          "log10_K": null,
+          "published_log10_K": null,
+          "published_two_standard_errors": null,
+          "residual_dex": null
+        },
+        "oxide_molecules": {
+          "K_D": 0.04200034455692298,
+          "log10_K_D": -1.3767471467793244,
+          "x_Na_silicate": 0.001167722425928738,
+          "x_FeO_silicate": 0.19117601796595954,
+          "log10_K": null,
+          "published_log10_K": null,
+          "published_two_standard_errors": null,
+          "residual_dex": null
+        }
+      }
+    },
+    {
+      "run": "GGK4",
+      "temperature_K": 1683.0,
+      "pressure_GPa": 1.0,
+      "metal_host": "Basalt\u2009+\u2009FeS",
+      "metal_S_wt_percent": 33.31,
+      "metal_Si_wt_percent": 0.03,
+      "carbon_mole_fraction_calculated": 0.03,
+      "carbon_wt_percent_from_EPMA_total": "-",
+      "silicate_Na_mass_ppm": {
+        "raw": "1593(258)",
+        "value": 1593.0,
+        "reported_two_standard_errors": 258.0,
+        "censored_upper": false
+      },
+      "metal_Na_mass_ppm": {
+        "raw": "76(15)",
+        "value": 76.0,
+        "reported_two_standard_errors": 15.0,
+        "censored_upper": false
+      },
+      "selected_measurement": "LA-ICP-MS",
+      "mass_partition_ratio": 0.04770872567482737,
+      "ratio_kind": "central",
+      "mass_partition_upper_at_reported_silicate_lower": null,
+      "published_Na_status": "\u22123.12(9)",
+      "excluded_from_detected_fit": false,
+      "status_note": null,
+      "alloy_x_Na": 0.0001363051747900402,
+      "alloy_x_Fe": 0.43140478276111904,
+      "concentration_bases": {
+        "one_cation": {
+          "K_D": 0.01211375738537137,
+          "log10_K_D": -1.9167211286461012,
+          "x_Na_silicate": 0.003826088570788036,
+          "x_FeO_silicate": 0.049880184244870104,
+          "log10_K": -3.427611015807722,
+          "published_log10_K": -3.12,
+          "published_two_standard_errors": 0.09,
+          "residual_dex": -0.3076110158077219
+        },
+        "oxide_molecules": {
+          "K_D": 0.022704948087956634,
+          "log10_K_D": -1.6438794867222637,
+          "x_Na_silicate": 0.0021782199490843817,
+          "x_FeO_silicate": 0.05679430069430022,
+          "log10_K": -3.1547693738838847,
+          "published_log10_K": -3.12,
+          "published_two_standard_errors": 0.09,
+          "residual_dex": -0.03476937388388457
+        }
+      }
+    },
+    {
+      "run": "GGK5b",
+      "temperature_K": 1783.0,
+      "pressure_GPa": 1.0,
+      "metal_host": "Basalt\u2009+\u2009FeS",
+      "metal_S_wt_percent": 33.9,
+      "metal_Si_wt_percent": 0.01,
+      "carbon_mole_fraction_calculated": 0.03,
+      "carbon_wt_percent_from_EPMA_total": "-",
+      "silicate_Na_mass_ppm": {
+        "raw": "676(36)",
+        "value": 676.0,
+        "reported_two_standard_errors": 36.0,
+        "censored_upper": false
+      },
+      "metal_Na_mass_ppm": {
+        "raw": "135(46)",
+        "value": 135.0,
+        "reported_two_standard_errors": 46.0,
+        "censored_upper": false
+      },
+      "selected_measurement": "LA-ICP-MS",
+      "mass_partition_ratio": 0.1997041420118343,
+      "ratio_kind": "central",
+      "mass_partition_upper_at_reported_silicate_lower": null,
+      "published_Na_status": "\u22122.51(15)",
+      "excluded_from_detected_fit": false,
+      "status_note": null,
+      "alloy_x_Na": 0.00024289026647824775,
+      "alloy_x_Fe": 0.4139622797548126,
+      "concentration_bases": {
+        "one_cation": {
+          "K_D": 0.04596559679500757,
+          "log10_K_D": -1.337567096841823,
+          "x_Na_silicate": 0.0016188217036900612,
+          "x_FeO_silicate": 0.03885119579222799,
+          "log10_K": -2.773630511868148,
+          "published_log10_K": -2.51,
+          "published_two_standard_errors": 0.15,
+          "residual_dex": -0.26363051186814834
+        },
+        "oxide_molecules": {
+          "K_D": 0.08739328906860737,
+          "log10_K_D": -1.0585219155620778,
+          "x_Na_silicate": 0.0008956506625200723,
+          "x_FeO_silicate": 0.04299065075750711,
+          "log10_K": -2.494585330588403,
+          "published_log10_K": -2.51,
+          "published_two_standard_errors": 0.15,
+          "residual_dex": 0.015414669411596638
+        }
+      }
+    },
+    {
+      "run": "GGK6",
+      "temperature_K": 1883.0,
+      "pressure_GPa": 1.0,
+      "metal_host": "Basalt\u2009+\u2009FeS",
+      "metal_S_wt_percent": 33.83,
+      "metal_Si_wt_percent": 0.01,
+      "carbon_mole_fraction_calculated": 0.04,
+      "carbon_wt_percent_from_EPMA_total": "-",
+      "silicate_Na_mass_ppm": {
+        "raw": "0.12(1)",
+        "value": 890.2347095291045,
+        "reported_two_standard_errors": 74.18622579409204,
+        "censored_upper": false
+      },
+      "metal_Na_mass_ppm": {
+        "raw": "293(116)",
+        "value": 293.0,
+        "reported_two_standard_errors": 116.0,
+        "censored_upper": false
+      },
+      "selected_measurement": "EPMA",
+      "mass_partition_ratio": 0.3291266863263333,
+      "ratio_kind": "central",
+      "mass_partition_upper_at_reported_silicate_lower": null,
+      "published_Na_status": "\u22122.22(18)",
+      "excluded_from_detected_fit": false,
+      "status_note": null,
+      "alloy_x_Na": 0.0005158392462821786,
+      "alloy_x_Fe": 0.36876031819330746,
+      "concentration_bases": {
+        "one_cation": {
+          "K_D": 0.07306164486670555,
+          "log10_K_D": -1.136310554564667,
+          "x_Na_silicate": 0.0021185160829629746,
+          "x_FeO_silicate": 0.03320151033357274,
+          "log10_K": -2.500931447107072,
+          "published_log10_K": -2.22,
+          "published_two_standard_errors": 0.18,
+          "residual_dex": -0.28093144710707163
+        },
+        "oxide_molecules": {
+          "K_D": 0.13927878739491237,
+          "log10_K_D": -0.8561150229791139,
+          "x_Na_silicate": 0.0011659252233865295,
+          "x_FeO_silicate": 0.03654489919972678,
+          "log10_K": -2.2207359155215185,
+          "published_log10_K": -2.22,
+          "published_two_standard_errors": 0.18,
+          "residual_dex": -0.0007359155215183044
+        }
+      }
+    },
+    {
+      "run": "GGK7",
+      "temperature_K": 1683.0,
+      "pressure_GPa": 1.0,
+      "metal_host": "Basalt\u2009+\u2009Fe\u2009\u2212\u200917% Si",
+      "metal_S_wt_percent": 0.0,
+      "metal_Si_wt_percent": 14.16,
+      "carbon_mole_fraction_calculated": 0.07,
+      "carbon_wt_percent_from_EPMA_total": "4.09(51)",
+      "silicate_Na_mass_ppm": {
+        "raw": "1768(200)",
+        "value": 1768.0,
+        "reported_two_standard_errors": 200.0,
+        "censored_upper": false
+      },
+      "metal_Na_mass_ppm": {
+        "raw": "<44",
+        "value": 44.0,
+        "reported_two_standard_errors": null,
+        "censored_upper": true
+      },
+      "selected_measurement": "LA-ICP-MS",
+      "mass_partition_ratio": 0.024886877828054297,
+      "ratio_kind": "reported_censoring_upper_at_central_silicate",
+      "mass_partition_upper_at_reported_silicate_lower": 0.02806122448979592,
+      "published_Na_status": "b.d.l.",
+      "excluded_from_detected_fit": true,
+      "status_note": null,
+      "alloy_x_Na": 9.05794364738865e-05,
+      "alloy_x_Fe": 0.6836586490025839,
+      "concentration_bases": {
+        "one_cation": {
+          "K_D": 0.0037506108500621523,
+          "log10_K_D": -2.42589799435049,
+          "x_Na_silicate": 0.004230856699915578,
+          "x_FeO_silicate": 0.020981702588087386,
+          "log10_K": null,
+          "published_log10_K": null,
+          "published_two_standard_errors": null,
+          "residual_dex": null
+        },
+        "oxide_molecules": {
+          "K_D": 0.007041727293034476,
+          "log10_K_D": -2.152320797985461,
+          "x_Na_silicate": 0.002400512207503413,
+          "x_FeO_silicate": 0.02380928344744682,
+          "log10_K": null,
+          "published_log10_K": null,
+          "published_two_standard_errors": null,
+          "residual_dex": null
+        }
+      }
+    },
+    {
+      "run": "GGK8",
+      "temperature_K": 1783.0,
+      "pressure_GPa": 1.0,
+      "metal_host": "Basalt\u2009+\u2009Fe\u2009\u2212\u200917% Si",
+      "metal_S_wt_percent": 0.0,
+      "metal_Si_wt_percent": 15.31,
+      "carbon_mole_fraction_calculated": 0.08,
+      "carbon_wt_percent_from_EPMA_total": "3.92(26)",
+      "silicate_Na_mass_ppm": {
+        "raw": "2882(884)",
+        "value": 2882.0,
+        "reported_two_standard_errors": 884.0,
+        "censored_upper": false
+      },
+      "metal_Na_mass_ppm": {
+        "raw": "<53",
+        "value": 53.0,
+        "reported_two_standard_errors": null,
+        "censored_upper": true
+      },
+      "selected_measurement": "LA-ICP-MS",
+      "mass_partition_ratio": 0.01839000693962526,
+      "ratio_kind": "reported_censoring_upper_at_central_silicate",
+      "mass_partition_upper_at_reported_silicate_lower": 0.026526526526526525,
+      "published_Na_status": "b.d.l.",
+      "excluded_from_detected_fit": true,
+      "status_note": null,
+      "alloy_x_Na": 0.00010652104244190259,
+      "alloy_x_Fe": 0.6679513136747214,
+      "concentration_bases": {
+        "one_cation": {
+          "K_D": 0.0006026605168131012,
+          "log10_K_D": -3.219927260318861,
+          "x_Na_silicate": 0.0067510917858463,
+          "x_FeO_silicate": 0.0009744678090027551,
+          "log10_K": null,
+          "published_log10_K": null,
+          "published_two_standard_errors": null,
+          "residual_dex": null
+        },
+        "oxide_molecules": {
+          "K_D": 0.0011398894200060823,
+          "log10_K_D": -2.943137277269225,
+          "x_Na_silicate": 0.003774192455317638,
+          "x_FeO_silicate": 0.0010895508961672527,
+          "log10_K": null,
+          "published_log10_K": null,
+          "published_two_standard_errors": null,
+          "residual_dex": null
+        }
+      }
+    },
+    {
+      "run": "GGK9",
+      "temperature_K": 1883.0,
+      "pressure_GPa": 1.0,
+      "metal_host": "Basalt\u2009+\u2009Fe\u2009\u2212\u200917% Si",
+      "metal_S_wt_percent": 0.0,
+      "metal_Si_wt_percent": 11.76,
+      "carbon_mole_fraction_calculated": 0.11,
+      "carbon_wt_percent_from_EPMA_total": "3.85(25)",
+      "silicate_Na_mass_ppm": {
+        "raw": "2053(104)",
+        "value": 2053.0,
+        "reported_two_standard_errors": 104.0,
+        "censored_upper": false
+      },
+      "metal_Na_mass_ppm": {
+        "raw": "<30",
+        "value": 30.0,
+        "reported_two_standard_errors": null,
+        "censored_upper": true
+      },
+      "selected_measurement": "LA-ICP-MS",
+      "mass_partition_ratio": 0.014612761811982464,
+      "ratio_kind": "reported_censoring_upper_at_central_silicate",
+      "mass_partition_upper_at_reported_silicate_lower": 0.01539250897896357,
+      "published_Na_status": "b.d.l.",
+      "excluded_from_detected_fit": true,
+      "status_note": null,
+      "alloy_x_Na": 6.019527977195621e-05,
+      "alloy_x_Fe": 0.6967493737355839,
+      "concentration_bases": {
+        "one_cation": {
+          "K_D": 0.0003688518254312141,
+          "log10_K_D": -3.4331480628962843,
+          "x_Na_silicate": 0.004766389833828666,
+          "x_FeO_silicate": 0.0005943396522321531,
+          "log10_K": null,
+          "published_log10_K": null,
+          "published_two_standard_errors": null,
+          "residual_dex": null
+        },
+        "oxide_molecules": {
+          "K_D": 0.000702363582763116,
+          "log10_K_D": -3.153438014492385,
+          "x_Na_silicate": 0.002629053709108245,
+          "x_FeO_silicate": 0.0006556538267521046,
+          "log10_K": null,
+          "published_log10_K": null,
+          "published_two_standard_errors": null,
+          "residual_dex": null
+        }
+      }
+    }
+  ],
+  "atomic_masses_g_per_mol": {
+    "Fe": 55.845,
+    "O": 15.999,
+    "Si": 28.085,
+    "Na": 22.98976928,
+    "Mg": 24.305,
+    "Al": 26.9815385,
+    "Ca": 40.078,
+    "K": 39.0983,
+    "Mn": 54.938044,
+    "Cr": 51.9961,
+    "Ti": 47.867,
+    "S": 32.06,
+    "Ni": 58.6934,
+    "Pt": 195.084,
+    "C": 12.011,
+    "Cu": 63.546,
+    "Cd": 112.414,
+    "In": 114.818,
+    "Sn": 118.71
+  },
+  "scope": "Primary reference replay and reported censoring diagnostics; no source species, solver, native call or calibrated BSE bound.",
+  "within_reported_FeS_errors": {
+    "one_cation": false,
+    "oxide_molecules": true
+  },
+  "experimental_pressure_GPa": 1.0,
+  "declared_source_pressure_GPa": null,
+  "detection_limit_confidence_definition": null,
+  "absolute_common_standard_calibrated": false,
+  "supports_material_admission": false,
+  "file_sha256": {
+    "sodium_reference.py": "d4fc9774156163828054e6d157c12f1e74c5bbccceb0ab671d9b06b5a9b54a71",
+    "sodium_reference_sources.json": "cd94c23b86136c53d8523a431ce845c398809d4097825b60fe84fa1716f51a2f",
+    "replay.py": "15611dab32140a1f57a0e91fb63b94a72f7a6c0e4e34f983090f58c420719b2f"
+  }
+}

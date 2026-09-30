@@ -1,0 +1,164 @@
+{
+  "record_id": "m2_oxygen_reaction_reference_v1",
+  "reaction": "O(metal) + H2(g) = H2O(g)",
+  "solute_standard": "Henry mass percent O in pure liquid Fe; f_O -> 1 at infinite dilution",
+  "gas_ratio": "f_H2O/f_H2; identical gas standard pressures cancel in this reaction",
+  "sakao1959": {
+    "doi": "10.2320/jinstmet1952.23.11_671",
+    "pdf_url": "https://www.jstage.jst.go.jp/article/jinstmet1952/23/11/23_11_671/_pdf/-char/en",
+    "pdf_sha256": "7d52940af897e299402caa6dbcaecd826df656012470b0c7108e8f118f39266e",
+    "table": "Table 1, p671; 23 observations, manually transcribed and visually checked",
+    "data_file": "Sakao1959_Table1.csv",
+    "data_sha256": "66deecc45edbcb727e31f446e9fb69a99711d9dfe179d3f0cae87e9aa02c8a3f",
+    "log10_K": "7040/T - 3.224",
+    "log10_f_O": "(-1750/T + 0.76) * O_mass_percent",
+    "fit_locator": "Equations 5-6, p671",
+    "observed_temperature_C": [
+      1551,
+      1600,
+      1651
+    ],
+    "temperature_note": "Preserve the Table 1 labels 1551 and 1651, despite rounded nominal 1550/1650 in text; convert by +273.15. Kelvin convention in original regression is not re-fitted.",
+    "observed_O_mass_percent": [
+      0.0118,
+      0.1975
+    ],
+    "total_pressure_Pa": 101325.0,
+    "gas_note": "Table 1 H2O/H2 ratios already include the authors water-vapor nonideality correction; Ar-diluted mixture at 1 atm, not pure H2 at 1 atm.",
+    "parameter_covariance": null
+  },
+  "matoba1965": {
+    "doi": "10.2355/tetsutohagane1955.51.2_163",
+    "pdf_url": "https://www.jstage.jst.go.jp/article/tetsutohagane1955/51/2/51_2_163/_pdf/-char/en",
+    "pdf_sha256": "37006f09f07b480f7aebadbd0662918276daa8ced851b1d50980ca5088b55528",
+    "log10_K": "7480/T - 3.421",
+    "log10_f_O": "(-10130/T + 4.94) * O_mass_percent",
+    "fit_locator": "Synopsis p163, visually checked in the PDF; Fe-O discussion pp165-166",
+    "observed_temperature_C": [
+      1550,
+      1607,
+      1663
+    ],
+    "observed_O_mass_percent_upper_approximate": 0.19,
+    "total_pressure_Pa": 101325.0,
+    "raw_points_digitized": false,
+    "reported_temperature_error_K": 5.0,
+    "hydrogen_effect": "The authors assume the effect of dissolved H on f_O negligible; no FeSiOH calibration.",
+    "parameter_covariance": null
+  },
+  "inherited_standard": {
+    "source": {
+      "repository": "https://github.com/ExoInteriors/GlobalChemicalEquilibrium_Release",
+      "commit": "31558873d8da460c3cd11986b574cb347621b43d",
+      "version": "Young_2023_Version",
+      "license": "GPL-3.0; source used for offline reference evaluation only",
+      "files": {
+        "Young_2023_Version/Equations.py": "9ee5b8c5da458325df9a4dccbf121b972d59821421b96a1fdc500a7f0dbef191",
+        "Young_2023_Version/Gibbs_Young_Version.py": "de26349e1b71c60b7f5fb60ba35a8f11d04d69e811795e7dd880be0370e91d03",
+        "Young_2023_Version/chem_input.dat": "7b7927bd8cf6923274624ebce1fa79259d6a5777b4f49c7a23d5f658e4084aef"
+      },
+      "gas_constant_J_mol_K": 8.314462618153,
+      "log10_to_ln": 2.302585093,
+      "standard_pressure_bar": 1.0,
+      "shomate_coefficient_order": [
+        "DH",
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "shomate_units": "t=T_K/1000; enthalpy in kJ/mol, entropy in J/(mol K), output mu0 in J/mol",
+      "original_conditions": {
+        "T_AMOI": 2350,
+        "T_SME": 3000,
+        "Mplanet_Mearth": 0.5
+      },
+      "thermochemistry_provenance": {
+        "Shomate": "Chase (1998) / NIST, as transcribed in the pinned source; no independent NIST download",
+        "metal_Si": "Corgne et al. (2008) reaction fit, as used by the pinned source",
+        "metal_O": "Badro et al. (2015) reaction fit with the sign selected in the pinned source",
+        "metal_H": "Okuchi (1997) fit, as used by the pinned source",
+        "silicate_H2": "Hirschmann fit evaluated at 1 bar in the pinned source",
+        "silicate_H2O": "Moore et al. (1998) fit, as used by the pinned source",
+        "silicate_Na_Fe": "Empirical Magma-code reactions R0/R5 selected by the pinned source",
+        "silicate_CO_CO2": "G17=5200+119.77*T J/mol; G16=G17+RT*log_to_ln*log10(3), as used by the pinned source"
+      },
+      "notes": [
+        "Preserve all 25 components and 18 reactions of this version; the general GCE network also includes SiH4.",
+        "Source reaction R14 uses -ln(1e4/Pstd), not the ordinary -ln(P/Pstd); this is an additional closure prescription.",
+        "Source reactions R1, R3, R4 and R6 use T_SME; the remaining reactions use T_AMOI.",
+        "The two frozen cases set both source temperatures equal and evaluate 1 bar standards; they are not source planetary solutions.",
+        "No calibrated joint T/P/composition domain is established. Liquid standard continuations do not establish liquid-phase stability.",
+        "The source MgO liquid coefficients list 3105-5000 K; both frozen temperatures extrapolate these formal endmember coefficients.",
+        "GRT is dimensionless Delta G/(R*T), despite the source output-file header saying J/mol. Natural-log equilibrium constants equal -GRT.",
+        "R3 follows Equations.py: 0.5 Si(metal)+O(metal) -> 0.5 SiO2(silicate); the Gibbs script's reaction comment points the other way.",
+        "The source activities use gamma_Fe=1 and the GCE O coefficient variant; the completed ExoEOS Fe-Si-O model is a distinct model.",
+        "Na2SiO3 and FeSiO3 standards must be reconstructed from the selected empirical reactions, not substituted from the unused source standard formulas."
+      ]
+    },
+    "consumer_archive_repository": "https://github.com/HajimeKawahara/exogibbs",
+    "consumer_archive_path": "examples/metal_silicate/reference.json",
+    "consumer_archive_sha256": "0c7146ab1c5935daae25f4371a34847e1469dfc637b02afe3f5984d4aeb22092",
+    "coefficient_selection": "Four Shomate rows from the pinned 2350 K case; these rows also cover the steel reference temperatures. Not a live consumer dependency.",
+    "shomate": {
+      "FeO_silicate": [
+        -249.5321,
+        68.1992,
+        -4.501232e-10,
+        1.195227e-10,
+        -1.064302e-11,
+        -3.09268e-10,
+        -281.4326,
+        137.8377,
+        -249.5321
+      ],
+      "Fe_metal": [
+        12.4,
+        46.024,
+        -1.884667e-08,
+        6.09475e-09,
+        -6.640301e-10,
+        -8.246121e-09,
+        -10.80543,
+        72.54094,
+        12.39502
+      ],
+      "H2_gas": [
+        0.0,
+        18.563083,
+        12.257357,
+        -2.859786,
+        0.268238,
+        1.97799,
+        -1.147438,
+        156.288133,
+        0.0
+      ],
+      "H2O_gas": [
+        -241.83,
+        41.96426,
+        8.622053,
+        -1.49978,
+        0.098119,
+        -11.15764,
+        -272.1797,
+        219.7809,
+        -241.8264
+      ]
+    },
+    "oxygen_source_standard_RT": "-ln(10)*(2.736 - 11439/T) + gRT(FeO_silicate) - gRT(Fe_metal)",
+    "source_ln_gamma_O_infinite": "4.29 - 16500/T",
+    "formal_shift_owner": "MaFeSiOLiquid.standard_state_shift_RT",
+    "oxygen_sign_provenance": "Schlichting & Young (2022), DOI 10.3847/PSJ/ac68e6, Appendix p18, reaction R4 discussion: inherited sign follows their corrected Badro fit. The alternative measured anchor is a model change, not a silent sign fix."
+  },
+  "atomic_molar_masses_g_mol": {
+    "Fe": 55.845,
+    "O": 15.999
+  },
+  "uncertainty_policy": "Published fit differences and replay residuals are descriptive; neither is a confidence interval or a high-T/P/FeSiOH error bound.",
+  "accepted_coupled_material_domain": null
+}

@@ -1,0 +1,23 @@
+{
+  "actual_exit_code": 0,
+  "validation": {
+    "feo_scalar_tests": {
+      "passed": 2,
+      "seconds": 0.44
+    },
+    "feo_reference_cli": {
+      "exit_code": 0
+    },
+    "water_capacity_cli": {
+      "exit_code": 0
+    }
+  },
+  "files_sha256": {
+    "examples/m2_material/feo_reference.py": "c2c69f3e9702b25662a9299d7317ebf9d0ba710d7dfcd7debcd594df2a087acc",
+    "examples/m2_material/steel_data/feo_reference_sources.json": "2fde6c49e8e976dc76d924262c426b92556922bfb46ef90f164030904749a5b6",
+    "examples/m2_material/validation/20260928_feo_reference/comparison.json": "891dc859c6dbac2e328e7ffd5c4c2f16c8d3c95456612aec71d74c073151708e",
+    "examples/m2_material/water_capacity_scenarios.py": "20629778c8682485f60d6a847e293a7eea0c3230eb4da249aaa91978379c5165",
+    "examples/m2_material/validation/20260928_water_reconstruction/capacity_scenario_manifest.json": "631dd7aff7428fc60d989d984b88760fc8038e02bedecb8e3fec26bd0d9fc13a"
+  },
+  "scope": "New primary binary reference/model comparison and finite water capacity scenarios; no new equilibrium or modification of archived results."
+}

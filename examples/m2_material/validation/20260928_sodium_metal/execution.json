@@ -1,0 +1,41 @@
+{
+  "actual_provider_execution_exit_code": 0,
+  "files": {
+    "assessment.json": "ba59993f1aa071bd5be1ca39c91564684b82e76f0259e90127713d307d62a49b",
+    "replay.py": "b8d50905082b74428cb457d78be1dd91d85b1027d3fe6b874771dd56edcebfda",
+    "assessment_after_interval_review.json": "7764dc864dc3368ea2bc44a24dad09f0271c677d02fe5b49bb1245d4b28144c2"
+  },
+  "tests": [
+    {
+      "label": "related",
+      "actual_exit_code": 0,
+      "output": "...........................................                              [100%]\n43 passed in 33.44s\n",
+      "sha256": "41ad320941c32e7d58d4c6a747f2c42c9625fd14e647c4ce5d96c4bc88f0e1ca"
+    },
+    {
+      "label": "endpoints",
+      "actual_exit_code": 0,
+      "output": "........                                                                 [100%]\n8 passed in 14.39s\n",
+      "sha256": "b3a606d382bc5f069fcbdec217a7d6e894bae09a33a2511ecef55a9bc54afc01"
+    },
+    {
+      "label": "outward_review",
+      "actual_exit_code": 0,
+      "output": "..                                                                       [100%]\n2 passed, 6 deselected in 7.44s\n",
+      "sha256": "69bc60cc565d554fae8d18151e36675357ec9f55b1928296ef7ab0d709c7abc3"
+    }
+  ],
+  "independent_review": "Phase-stability reviewer confirmed scalar/atom/reference contracts. Removed optional binary64 inward simplex tightening from the conservative full20 interval helper.",
+  "historical_preparation_failures": [
+    {
+      "kind": "test collection used old installed exoeos; fixed by explicit local PYTHONPATH",
+      "log_sha256": "e6f8e658a54e26e8409214998d82ba544eb17ff90eb1d9533d761628a0399c14"
+    },
+    {
+      "kind": "standalone replay inherited unavailable CUDA backend; fixed by explicit JAX_PLATFORMS=cpu",
+      "log_sha256": "a8ca039328a4eb58859295c9ba813bac5844d8c5dd02514918eff8cbb384e89a"
+    }
+  ],
+  "original_assessment_preserved": true,
+  "new_source_equilibrium_executed": false
+}

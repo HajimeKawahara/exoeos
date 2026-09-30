@@ -1,0 +1,328 @@
+{
+  "schema": "m2_associated_metal_primary_inputs_v1",
+  "source": "https://doi.org/10.1007/s11663-004-0050-4",
+  "source_locations": [
+    "Table I, p.495",
+    "Table II, p.496",
+    "Section V, p.501",
+    "Appendix II, pp.504\u2013506"
+  ],
+  "retrieval_note": "Numerical facts transcribed from the primary paper reproduced at https://www.scribd.com/document/1075781008/A-Thermodynamic-Model-for-Deoxidation-Equilibria-in-Steel; same-author model description https://doi.org/10.2355/isijinternational.44.527. Full papers are not redistributed.",
+  "standard_convention": "Mole-fraction infinite-dilution Henry reference; gamma relative to each stated pure phase.",
+  "gamma_order": [
+    "coefficient_1_over_T",
+    "constant"
+  ],
+  "henry": {
+    "O": {
+      "pure_phase": "0.5 O2(g)",
+      "ln_gamma": [
+        -15280.0,
+        3.5
+      ]
+    },
+    "Mg": {
+      "pure_phase": "Mg(g)",
+      "ln_gamma": [
+        13774.8,
+        0.0
+      ]
+    },
+    "Ca": {
+      "pure_phase": "Ca(g)",
+      "ln_gamma": [
+        14894.9,
+        0.0
+      ]
+    },
+    "Al": {
+      "pure_phase": "Al(l)",
+      "ln_gamma": [
+        -7596.7,
+        1.2
+      ]
+    },
+    "Cr": {
+      "pure_phase": "Cr(cr)",
+      "ln_gamma": [
+        0.0,
+        0.0
+      ]
+    },
+    "Ti": {
+      "pure_phase": "Ti(l)",
+      "ln_gamma": [
+        -5898.7,
+        0.0
+      ]
+    }
+  },
+  "self_epsilon": {
+    "Mg": [
+      0.0,
+      0.0
+    ],
+    "Ca": [
+      0.0,
+      0.0
+    ],
+    "Al": [
+      3802.7,
+      0.4
+    ],
+    "Cr": [
+      0.0,
+      0.0
+    ],
+    "Ti": [
+      3467.6,
+      0.0
+    ]
+  },
+  "association_delta_g_J_mol": {
+    "MgO": -218272.0,
+    "CaO": -305828.0,
+    "AlO": -108614.0,
+    "CrO": -41840.0,
+    "TiO": -96145.0,
+    "Al2O": -179912.0,
+    "Cr2O": -62760.0,
+    "Ti2O": -142256.0
+  },
+  "cross_epsilon": {
+    "Ca,Al": [
+      -13072.0,
+      0.0
+    ],
+    "Ca,Si": [
+      -23220.0,
+      0.0
+    ],
+    "Si,Al": [
+      13111.0,
+      0.0
+    ]
+  },
+  "pure_phase_janaf": {
+    "Al": {
+      "phase": "liquid",
+      "url": "https://janaf.nist.gov/tables/Al-003.html",
+      "hf298": 10.562,
+      "rows": [
+        [
+          2100,
+          96.957,
+          55.169
+        ],
+        [
+          2200,
+          98.434,
+          58.344
+        ],
+        [
+          2300,
+          99.845,
+          61.519
+        ],
+        [
+          2400,
+          101.196,
+          64.694
+        ]
+      ]
+    },
+    "Cr": {
+      "phase": "crystal",
+      "url": "https://janaf.nist.gov/tables/Cr-002.html",
+      "hf298": 0.0,
+      "rows": [
+        [
+          2100,
+          87.046,
+          66.411
+        ],
+        [
+          2200,
+          89.634,
+          71.975
+        ],
+        [
+          2300,
+          92.209,
+          77.769
+        ],
+        [
+          2400,
+          94.774,
+          83.795
+        ]
+      ]
+    },
+    "Ti": {
+      "phase": "liquid",
+      "url": "https://janaf.nist.gov/tables/Ti-004.html",
+      "hf298": 13.652,
+      "rows": [
+        [
+          2100,
+          101.249,
+          63.493
+        ],
+        [
+          2200,
+          103.446,
+          68.216
+        ],
+        [
+          2300,
+          105.546,
+          72.94
+        ],
+        [
+          2400,
+          107.557,
+          77.664
+        ]
+      ]
+    }
+  },
+  "atomic_janaf": {
+    "Al": {
+      "url": "https://janaf.nist.gov/tables/Al-005.html",
+      "species": "Al(g)",
+      "formation_enthalpy_298_kJ_mol": 329.699,
+      "entropy_298_J_mol_K": 164.553,
+      "data": [
+        [
+          2100,
+          205.419,
+          187.513,
+          37.603
+        ],
+        [
+          2200,
+          206.386,
+          188.349,
+          39.682
+        ],
+        [
+          2300,
+          207.311,
+          189.153,
+          41.762
+        ],
+        [
+          2400,
+          208.196,
+          189.928,
+          43.841
+        ]
+      ]
+    },
+    "Cr": {
+      "url": "https://janaf.nist.gov/tables/Cr-005.html",
+      "species": "Cr(g)",
+      "formation_enthalpy_298_kJ_mol": 397.48,
+      "entropy_298_J_mol_K": 174.311,
+      "data": [
+        [
+          2100,
+          215.84,
+          197.201,
+          39.142
+        ],
+        [
+          2200,
+          217.024,
+          198.075,
+          41.688
+        ],
+        [
+          2300,
+          218.186,
+          198.925,
+          44.301
+        ],
+        [
+          2400,
+          219.328,
+          199.751,
+          46.984
+        ]
+      ]
+    },
+    "Ti": {
+      "url": "https://janaf.nist.gov/tables/Ti-006.html",
+      "species": "Ti(g)",
+      "formation_enthalpy_298_kJ_mol": 473.629,
+      "entropy_298_J_mol_K": 180.297,
+      "data": [
+        [
+          2100,
+          224.028,
+          204.769,
+          40.443
+        ],
+        [
+          2200,
+          225.208,
+          205.672,
+          42.979
+        ],
+        [
+          2300,
+          226.361,
+          206.546,
+          45.573
+        ],
+        [
+          2400,
+          227.489,
+          207.396,
+          48.225
+        ]
+      ]
+    }
+  },
+  "atomic_excerpt_origin_sha256": "4a9d51e8dd58f513b334b5025f0de49476ec5359e1ca811f9e9fd3daab829518",
+  "janaf_scope": "2100\u20132400 K Hermite interpolation of Hf298+dH\u2212T*S. Original paper used FactSage5.1; replacing pure standards is a declared choice. Cr remains metastable crystal above 2130 K.",
+  "measurement_limits": [
+    "Mg/Ca binary coefficients at one temperature; authors assume purely enthalpic 1/T continuation.",
+    "Authors prefer closed-container Mg experiments Han1997 and Seo/Kim2000 over conflicting Itoh1997 series.",
+    "Measured subsystem models do not establish a simultaneous Fe-Si-O-H-P-Mg-Ca-Al-Cr-Ti error bound.",
+    "Ma/P host is retained; O standard and nonideality differ from original complete Jung host."
+  ],
+  "extra_cross": {
+    "P,Al": {
+      "epsilon": 4.6,
+      "reported_error": 0.7,
+      "temperature_K": 1873.15,
+      "source": "https://doi.org/10.2355/isijinternational1966.23.51"
+    },
+    "P,Cr": {
+      "epsilon": -3.8,
+      "reported_error": 0.7,
+      "temperature_K": 1873.15,
+      "source": "https://doi.org/10.2355/isijinternational1966.23.51"
+    },
+    "P,Ti": {
+      "epsilon": -8.0,
+      "reported_error": 2.0,
+      "temperature_K": 1873.15,
+      "source": "https://doi.org/10.2355/isijinternational1966.23.51"
+    },
+    "H,Cr": {
+      "mass_percent_e_H_Cr": -0.0056,
+      "solute_molar_mass_g_mol": 51.9961,
+      "temperature_interval_K": [
+        1823.15,
+        1943.15
+      ],
+      "max_Cr_mass_percent": 20.0,
+      "source": "https://doi.org/10.2355/tetsutohagane1955.53.2_101",
+      "pdf": "https://tetsutohagane.net/articles/search/files/53/2/KJ00002650099.pdf"
+    }
+  },
+  "gas_standard_pressure_Pa": 100000.0,
+  "gas_standard_pressure_evidence": "Primary Jung et al. (2004), Appendix II, p.504, Figs. IIb and IIc: equilibrium Ca and Mg partial pressures are explicitly reported in bar. The Table I gas references are used on that 1 bar convention; no 1 atm conversion is applied."
+}

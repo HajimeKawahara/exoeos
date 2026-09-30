@@ -1,0 +1,24 @@
+{
+  "archive_type": "independent_native_compatibility_and_callback_controls",
+  "native_controls_source_commit": "f6967cb",
+  "property_implementation_commit": "d797ab639a4e58617730ad899191fc028cc8967f",
+  "native_controls_actual_process_exit_code": 0,
+  "pytest_actual_process_exit_code": 0,
+  "pytest_result": "460 passed in 73.69s",
+  "native_uniform_error_bound_certified": false,
+  "empirical_calibration_domain_established": false,
+  "files": {
+    "native_controls.json": {
+      "sha256": "4da06670b592acf077709c50a13403ba6f08bf08bb178907ee42cacb8506726f",
+      "bytes": 1990332
+    },
+    "native_controls.log": {
+      "sha256": "4fdffce6b7b5cff10a06bd6aeacff4397f80d79577f74d9183bf0962cd0a7e21",
+      "bytes": 1209
+    },
+    "pytest_full.log": {
+      "sha256": "c340740d9f8ed0ce0a2cf8b6e7aa1b70b5830a1b8ece3aaf9d44a705aacd6bb0",
+      "bytes": 591
+    }
+  }
+}

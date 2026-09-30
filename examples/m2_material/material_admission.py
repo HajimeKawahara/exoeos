@@ -3,7 +3,7 @@
 This diagnostic does not change any constitutive law or accept a coupled
 physical domain. Experimental conditions, model extrapolations, and nominal
 software limits remain separate. Concentrations use the complete phase mass;
-the dry silicate comparison removes H2 and water before normalization.
+the dry silicate comparison removes H2, He and water before normalization.
 """
 
 import argparse
@@ -18,6 +18,14 @@ DATA = Path(__file__).resolve().parent
 ATM_PA = 101325.0
 ALLOY_COMPONENTS = ("Fe", "Si", "O", "H")
 ALLOY_MOLAR_MASSES = np.array([0.055845, 0.0280855, 0.0159994, 0.00100794])
+PHOSPHORUS_MOLAR_MASS = 0.030973761998
+EXTENDED_ALLOY_COMPONENTS = ALLOY_COMPONENTS + ("P", "Mg", "Ca", "Al", "Cr", "Ti")
+POTASSIUM_ALLOY_COMPONENTS = EXTENDED_ALLOY_COMPONENTS + ("K",)
+SODIUM_ALLOY_COMPONENTS = POTASSIUM_ALLOY_COMPONENTS + ("Na",)
+EXTENDED_ALLOY_MOLAR_MASSES = np.r_[ALLOY_MOLAR_MASSES, PHOSPHORUS_MOLAR_MASS,
+                                   .024305, .040078, .0269815385, .0519961, .047867]
+POTASSIUM_ALLOY_MOLAR_MASSES = np.r_[EXTENDED_ALLOY_MOLAR_MASSES, .0390983]
+SODIUM_ALLOY_MOLAR_MASSES = np.r_[POTASSIUM_ALLOY_MOLAR_MASSES, .02298976928]
 OXIDES = ("SiO2", "TiO2", "Al2O3", "Cr2O3", "FeO", "Fe2O3", "MgO", "CaO",
           "Na2O", "K2O", "P2O5", "MnO", "NiO", "CoO", "H2O", "CO2")
 
@@ -88,18 +96,36 @@ def published_basalt_h2_extrapolation(hydrogen_partial_pressure_Pa, *,
 
 def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fractions,
                           molecular_h2_mass_ppm=None, water_mass_percent=None,
+                          dissolved_helium_mass_ppm=0.0,
                           alloy_atomic_fractions=None,
-                          hydrogen_partial_pressure_Pa=None, buffer=None):
+                          hydrogen_partial_pressure_Pa=None, buffer=None,
+                          liquid_model=None, metal_model=None, hydrogen_oxygen_model=None):
     """Return material evidence for a supplied state, without mutating it.
 
-    Supply native silicate oxides as a normalized name-to-mass-fraction mapping
-    (including native water, excluding the added molecular-H2 contribution),
-    H2 mass ppm and native-water mass percent relative to the complete liquid,
-    and optional alloy atomic fractions as a mapping or in Fe, Si, O, H order.
+    Supply silicate oxides as a normalized name-to-mass-fraction mapping
+    (including equivalent water, excluding added molecular H2 and He),
+    H2/He mass ppm and equivalent-water mass percent relative to the complete liquid,
+    and optional alloy atomic fractions as a mapping or in Fe, Si, O, H order,
+    optionally followed by P, or P, Mg, Ca, Al, Cr, Ti. For an associated alloy,
+    the caller first counts all species into atomic amounts. The complete
+    supplied alloy sets the mass basis.
     Oxide names accept chemical case or lowercase native MELTS labels. ``None`` denotes
     an absent/unsupplied alloy, not a zero-composition calibration. This example
     owns no equilibrium or planetary inventory calculation.
+    Optional model selectors document the source recipe, not physical acceptance.
+    The legacy Chaudhari/Kato checks remain source-specific reference comparisons;
+    an unsupported reference condition is not an automatic rejection of a different
+    constitutive model. Scenario offsets are recorded separately by the source.
     """
+    for name, value, allowed in (
+            ("liquid_model", liquid_model, (None, "native", "published", "published_water")),
+            ("metal_model", metal_model, (None, "ma", "phosphorus", "associated", "associated_k", "associated_k_na")),
+            ("hydrogen_oxygen_model", hydrogen_oxygen_model,
+             (None, "omitted", "schenck1961_abstract"))):
+        if value not in allowed:
+            raise ValueError(f"Unknown {name}; declare an existing source model or leave unspecified.")
+    if hydrogen_oxygen_model == "schenck1961_abstract" and metal_model not in ("associated", "associated_k", "associated_k_na"):
+        raise ValueError("The declared H-O option requires an associated metal model.")
     temperature = _nonnegative(temperature_K, "T")
     pressure = _nonnegative(pressure_Pa, "P")
     if temperature == 0 or pressure == 0:
@@ -122,13 +148,16 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
         raise ValueError("A positive dry silicate host mass is required.")
     oxides = {name: value / dry_fraction for name, value in native_oxides.items() if name not in ("H2O", "CO2")}
     h2 = None if molecular_h2_mass_ppm is None else _nonnegative(molecular_h2_mass_ppm, "H2 ppm")
+    if isinstance(dissolved_helium_mass_ppm, (bool, np.bool_)):
+        raise ValueError("He ppm must be a finite nonnegative number, not a boolean.")
+    helium = _nonnegative(dissolved_helium_mass_ppm, "He ppm")
     water = None if water_mass_percent is None else _nonnegative(water_mass_percent, "H2O mass percent")
-    if (0.0 if h2 is None else h2 * 1e-6) + (0.0 if water is None else water / 100.0) >= 1.0:
-        raise ValueError("A positive dry host mass must remain after H2 and water.")
+    if (0.0 if h2 is None else h2 * 1e-6) + helium * 1e-6 + (0.0 if water is None else water / 100.0) >= 1.0:
+        raise ValueError("A positive dry host mass must remain after H2, He and water.")
     if h2 is not None and water is not None:
-        expected_water = 100.0 * native_oxides.get("H2O", 0.0) * (1.0 - h2 * 1e-6)
+        expected_water = 100.0 * native_oxides.get("H2O", 0.0) * (1.0 - (h2 + helium) * 1e-6)
         if not np.isclose(water, expected_water, rtol=1e-10, atol=1e-10):
-            raise ValueError("Native-water and H2 concentrations must use the same complete-liquid mass denominator.")
+            raise ValueError("Native-water, H2 and He concentrations must use the same complete-liquid mass denominator.")
     partial = None if hydrogen_partial_pressure_Pa is None else _nonnegative(hydrogen_partial_pressure_Pa, "p_H2")
     if partial is not None and partial > pressure:
         raise ValueError("H2 partial pressure cannot exceed total pressure.")
@@ -172,15 +201,36 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
     alloy = {"status": "not_supplied", "reference_conditions_supported": False,
              "interpretation": "Metal absence does not calibrate an incipient alloy or its activity model."}
     if alloy_atomic_fractions is not None:
+        components = ALLOY_COMPONENTS
         if isinstance(alloy_atomic_fractions, dict):
-            if set(alloy_atomic_fractions) != set(ALLOY_COMPONENTS):
-                raise ValueError("Supply exactly Fe, Si, O and H alloy atomic fractions.")
-            alloy_atomic_fractions = [alloy_atomic_fractions[name] for name in ALLOY_COMPONENTS]
+            if set(alloy_atomic_fractions) == set(SODIUM_ALLOY_COMPONENTS):
+                components = SODIUM_ALLOY_COMPONENTS
+            elif set(alloy_atomic_fractions) == set(POTASSIUM_ALLOY_COMPONENTS):
+                components = POTASSIUM_ALLOY_COMPONENTS
+            elif set(alloy_atomic_fractions) == set(EXTENDED_ALLOY_COMPONENTS):
+                components = EXTENDED_ALLOY_COMPONENTS
+            elif set(alloy_atomic_fractions) == set(ALLOY_COMPONENTS + ("P",)):
+                components += ("P",)
+            elif set(alloy_atomic_fractions) != set(ALLOY_COMPONENTS):
+                raise ValueError("Supply Fe, Si, O, H, optionally with P, all six additional metals, or those metals and K, optionally with Na.")
+            alloy_atomic_fractions = [alloy_atomic_fractions[name] for name in components]
         x = np.asarray(alloy_atomic_fractions)
-        if (x.shape != (4,) or not np.isrealobj(x) or not np.all(np.isfinite(x))
+        if x.shape == (5,):
+            components = ALLOY_COMPONENTS + ("P",)
+        elif x.shape == (10,):
+            components = EXTENDED_ALLOY_COMPONENTS
+        elif x.shape == (11,):
+            components = POTASSIUM_ALLOY_COMPONENTS
+        elif x.shape == (12,):
+            components = SODIUM_ALLOY_COMPONENTS
+        if (x.shape not in ((4,), (5,), (10,), (11,), (12,)) or not np.isrealobj(x) or not np.all(np.isfinite(x))
                 or np.any(x < 0) or not np.isclose(x.sum(), 1.0, rtol=0.0, atol=1e-10)):
-            raise ValueError("Alloy atomic fractions must be finite, nonnegative and sum to one in Fe, Si, O, H order.")
-        mass = x * ALLOY_MOLAR_MASSES
+            raise ValueError("Alloy atomic fractions must be finite, nonnegative and sum to one in the declared 4, 5, 10, 11 or 12 element order.")
+        expected_size = {"ma": 4, "phosphorus": 5, "associated": 10, "associated_k": 11, "associated_k_na": 12}.get(metal_model)
+        if expected_size is not None and len(x) != expected_size:
+            raise ValueError("Count every alloy element in the selected metal model before the mass comparison.")
+        masses = SODIUM_ALLOY_MOLAR_MASSES[:len(components)]
+        mass = x * masses
         wt_percent = mass / mass.sum() * 100.0
         fe_si = x[1] > 0
         temperature_bounds = (kato["silicon_interaction"]["combined_pure_iron_regression_temperature_K"] if fe_si
@@ -190,12 +240,14 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
             "pure_h2_reference_total_pressure": pressure == ATM_PA,
             "pure_h2_reference_partial_pressure": partial == ATM_PA,
             "oxygen_free": x[2] == 0,
+            "phosphorus_free": len(x) == 4 or x[4] == 0,
+            "other_metal_solutes_free": len(x) < 10 or np.all(x[5:] == 0),
             "silicon_below_2_5_mass_percent": wt_percent[1] < 2.5,
             "positive_iron_host": x[0] > 0,
         }
         alloy = {"status": "evaluated", "source_doi": kato["doi"],
-                 "component_order": list(ALLOY_COMPONENTS), "atomic_fractions": x.tolist(),
-                 "mass_percent": dict(zip(ALLOY_COMPONENTS, wt_percent.tolist())),
+                 "component_order": list(components), "atomic_fractions": x.tolist(),
+                 "mass_percent": dict(zip(components, wt_percent.tolist())),
                  "atomic_h_mass_ppm": float(wt_percent[3] * 1e4),
                  "reference_temperature_K": temperature_bounds,
                  "temperature_distance_K": _distance(temperature, temperature_bounds),
@@ -203,7 +255,7 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
                  "hydrogen_partial_pressure_distance_Pa": None if partial is None else abs(partial - ATM_PA),
                  "condition_checks": {name: bool(value) for name, value in conditions.items()},
                  "reference_conditions_supported": bool(all(conditions.values())),
-                 "finite_concentration_calibration": "Not established: the reference is a dilute-H law, with no measured O-H or finite-H interaction domain."}
+                 "finite_concentration_calibration": "Not established by this implemented dilute-H reference: O-H, P-H, other metal-solute and finite-H interaction domains are not included in this reference assessment."}
         dilute_values = [1e4 * 10**(-1874.0 / value - 1.601 - .033 * wt_percent[1])
                          for value in temperature_bounds]
         alloy["dilute_regression_atomic_h_mass_ppm_range"] = dilute_values
@@ -233,12 +285,29 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
                    "silicate_oxide_mass_fractions": native_oxides,
                    "dry_silicate_oxide_mass_fractions": oxides,
                    "molecular_h2_mass_ppm": h2, "water_mass_percent": water,
+                   "dissolved_helium_mass_ppm": helium,
                    "hydrogen_partial_pressure_Pa": partial, "buffer": buffer}
+    constitutive = json.loads((DATA / "constitutive_evidence.json").read_text())
+    constitutive["selected_models"] = {
+        "liquid_model": liquid_model, "metal_model": metal_model,
+        "hydrogen_oxygen_model": hydrogen_oxygen_model,
+        "unspecified_meaning": "Not supplied; no model or standard-offset choice is inferred from concentrations."}
+    constitutive["actual_comparison_coordinates"] = {
+        **input_state,
+        "alloy_atomic_fractions": (dict(zip(alloy["component_order"], alloy["atomic_fractions"]))
+                                   if alloy["status"] == "evaluated" else None),
+        "alloy_mass_percent": alloy.get("mass_percent"),
+        "concentration_basis": "Complete supplied phase mass, with all counted alloy atoms. Dry-oxide normalization is descriptive only. Reference-specific host/speciation restrictions still apply."}
     return {
         "report_kind": "actual_state_material_evidence",
         "input": input_state,
         "accepted_coupled_material_domain": None,
         "material_admission": "not_established",
+        "reference_assessment_scope": {
+            "legacy_checks": "Chaudhari silicate and Kato Fe/Fe-Si-H source conditions only; native_water keys are retained historical aliases for equivalent-water mass comparisons.",
+            "reference_conditions_are_constitutive_acceptance": False,
+            "not_established_means": "This diagnostic makes no coupled physical acceptance decision. It does not reject a declared model solely because these reference families have no simultaneous measured overlap."},
+        "constitutive_evidence": constitutive,
         "nominal_melts": {
             "inside_nominal_limits": (_distance(temperature, melts["temperature_K"]) == 0
                                       and _distance(pressure, melts["pressure_Pa"]) == 0),
@@ -266,7 +335,8 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
                        "Composition differences and source extrapolations have no quantified validity radius or error bound.",
                        "Phase stability, reaction standards and omitted-transfer errors require independent assessments."],
         "provenance": {name: hashlib.sha256((DATA / name).read_bytes()).hexdigest()
-                       for name in ("domain_evidence.json", "hydrogen_reference.json", "material_admission.py")},
+                       for name in ("domain_evidence.json", "hydrogen_reference.json", "constitutive_evidence.json",
+                                    "material_admission.py")},
     }
 
 

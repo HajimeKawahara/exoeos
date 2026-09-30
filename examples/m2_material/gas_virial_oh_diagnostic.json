@@ -1,0 +1,185 @@
+{
+  "schema": "m2_major_gas_virial_diagnostic_v1",
+  "input_closure_sha256": "f7b848f0c89740ac77010b56eccdaa6c5283c17216d6aeac24d2c99ea54b9235",
+  "input_run_index": 0,
+  "input_root_index": 0,
+  "code_sha256": "81c7a5b6f182f6c49d3f4fd8dfedbec53427add52071196b0fd650fe96d35388",
+  "sources_sha256": "aa88f50111621db9ab1906b21070e068b4884d96fb263e8102de48e3699cce51",
+  "known_pairs": {
+    "temperature_k": 2173.15,
+    "pressure_pa": 26965451.525057938,
+    "components": [
+      "H2",
+      "He",
+      "H2O"
+    ],
+    "original_mole_fractions": [
+      0.7649356517549216,
+      0.17012551384253258,
+      0.06414086374627233
+    ],
+    "conditioned_mole_fractions": [
+      0.7655465354262035,
+      0.1702613774256149,
+      0.06419208714818152
+    ],
+    "omitted_gas_mole_fraction": 0.0007979706562734057,
+    "pair_coefficients_cm3_mol": {
+      "H2-H2": 13.822665125019423,
+      "H2-H2O": 15.101915835094848,
+      "He-H2O": 14.912020442021864,
+      "H2O-H2O": 8.410740342101473,
+      "He-He": 7.764905512829819,
+      "H2-He": null
+    },
+    "known_part_of_conditioned_B_cm3_mol": 10.170923142590205,
+    "H2_He_weight_in_conditioned_B": 0.2606860152101454,
+    "uncovered_pair_weight_in_original_B": 0.001595304555378485,
+    "water_cross_pairs_extrapolated": true,
+    "full_mixture_physical_error_bound": null,
+    "state_scope": "conditioned_three_component_second_virial_scenario",
+    "state": null
+  },
+  "explicit_coefficient_scenarios": [
+    {
+      "temperature_k": 2173.15,
+      "pressure_pa": 26965451.525057938,
+      "components": [
+        "H2",
+        "He",
+        "H2O"
+      ],
+      "original_mole_fractions": [
+        0.7649356517549216,
+        0.17012551384253258,
+        0.06414086374627233
+      ],
+      "conditioned_mole_fractions": [
+        0.7655465354262035,
+        0.1702613774256149,
+        0.06419208714818152
+      ],
+      "omitted_gas_mole_fraction": 0.0007979706562734057,
+      "pair_coefficients_cm3_mol": {
+        "H2-H2": 13.822665125019423,
+        "H2-H2O": 15.101915835094848,
+        "He-H2O": 14.912020442021864,
+        "H2O-H2O": 8.410740342101473,
+        "He-He": 7.764905512829819,
+        "H2-He": null
+      },
+      "known_part_of_conditioned_B_cm3_mol": 10.170923142590205,
+      "H2_He_weight_in_conditioned_B": 0.2606860152101454,
+      "uncovered_pair_weight_in_original_B": 0.001595304555378485,
+      "water_cross_pairs_extrapolated": true,
+      "full_mixture_physical_error_bound": null,
+      "state_scope": "conditioned_three_component_second_virial_scenario",
+      "state": {
+        "B_cm3_mol": 10.170923142590205,
+        "molar_density_mol_m3": 1470.404627280961,
+        "compressibility_factor": 1.0149553724525837,
+        "log_fugacity_coefficients": [
+          0.019125576124741462,
+          -0.008141665129987133,
+          0.028208990620815614
+        ],
+        "reduced_residual_gibbs": 0.015066101405049864
+      },
+      "supplied_H2_He_scenario_cm3_mol": 0.0
+    },
+    {
+      "temperature_k": 2173.15,
+      "pressure_pa": 26965451.525057938,
+      "components": [
+        "H2",
+        "He",
+        "H2O"
+      ],
+      "original_mole_fractions": [
+        0.7649356517549216,
+        0.17012551384253258,
+        0.06414086374627233
+      ],
+      "conditioned_mole_fractions": [
+        0.7655465354262035,
+        0.1702613774256149,
+        0.06419208714818152
+      ],
+      "omitted_gas_mole_fraction": 0.0007979706562734057,
+      "pair_coefficients_cm3_mol": {
+        "H2-H2": 13.822665125019423,
+        "H2-H2O": 15.101915835094848,
+        "He-H2O": 14.912020442021864,
+        "H2O-H2O": 8.410740342101473,
+        "He-He": 7.764905512829819,
+        "H2-He": null
+      },
+      "known_part_of_conditioned_B_cm3_mol": 10.170923142590205,
+      "H2_He_weight_in_conditioned_B": 0.2606860152101454,
+      "uncovered_pair_weight_in_original_B": 0.001595304555378485,
+      "water_cross_pairs_extrapolated": true,
+      "full_mixture_physical_error_bound": null,
+      "state_scope": "conditioned_three_component_second_virial_scenario",
+      "state": {
+        "B_cm3_mol": 12.777783294691657,
+        "molar_density_mol_m3": 1464.9721219018402,
+        "compressibility_factor": 1.0187190963064263,
+        "log_fugacity_coefficients": [
+          0.02028722767094889,
+          0.010562250230743992,
+          0.024348519475015158
+        ],
+        "reduced_residual_gibbs": 0.01889214241396739
+      },
+      "supplied_H2_He_scenario_cm3_mol": 10.0
+    },
+    {
+      "temperature_k": 2173.15,
+      "pressure_pa": 26965451.525057938,
+      "components": [
+        "H2",
+        "He",
+        "H2O"
+      ],
+      "original_mole_fractions": [
+        0.7649356517549216,
+        0.17012551384253258,
+        0.06414086374627233
+      ],
+      "conditioned_mole_fractions": [
+        0.7655465354262035,
+        0.1702613774256149,
+        0.06419208714818152
+      ],
+      "omitted_gas_mole_fraction": 0.0007979706562734057,
+      "pair_coefficients_cm3_mol": {
+        "H2-H2": 13.822665125019423,
+        "H2-H2O": 15.101915835094848,
+        "He-H2O": 14.912020442021864,
+        "H2O-H2O": 8.410740342101473,
+        "He-He": 7.764905512829819,
+        "H2-He": null
+      },
+      "known_part_of_conditioned_B_cm3_mol": 10.170923142590205,
+      "H2_He_weight_in_conditioned_B": 0.2606860152101454,
+      "uncovered_pair_weight_in_original_B": 0.001595304555378485,
+      "water_cross_pairs_extrapolated": true,
+      "full_mixture_physical_error_bound": null,
+      "state_scope": "conditioned_three_component_second_virial_scenario",
+      "state": {
+        "B_cm3_mol": 15.384643446793111,
+        "molar_density_mol_m3": 1459.6183144462398,
+        "compressibility_factor": 1.0224557073361646,
+        "log_fugacity_coefficients": [
+          0.021454402390915214,
+          0.029142747703159763,
+          0.020530519524130653
+        ],
+        "reduced_residual_gibbs": 0.022704124684402395
+      },
+      "supplied_H2_He_scenario_cm3_mol": 20.0
+    }
+  ],
+  "scenario_values_are_empirical_bounds": false,
+  "finite_equilibrium_recomputed": false
+}

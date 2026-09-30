@@ -1,0 +1,809 @@
+{
+  "report_kind": "measured_oxygen_standard_replay_v1",
+  "standard_provenance": {
+    "kind": "pinned_Young_source_Shomate_and_adopted_Ma"
+  },
+  "data_sha256": "66deecc45edbcb727e31f446e9fb69a99711d9dfe179d3f0cae87e9aa02c8a3f",
+  "provenance_sha256": "11da43e90b840c526abce908f69ab66229ecb46e1a75437796fbb2396dc9e752",
+  "runner_sha256": "af74fd487e9cff58aa1465e4594c39574bb0f7131994bb084b164a9bd7671a50",
+  "activity_provider_sha256": "32b526dc260d39a5071e25b198cc06fd331b1ceae89483d509702629ab5c7cde",
+  "execution": {
+    "numpy": "1.26.4",
+    "jax": "0.4.30",
+    "jax_enable_x64": true
+  },
+  "observed_sample_count": 23,
+  "refitted_parameter_count": 0,
+  "summary": {
+    "adopted_Ma": {
+      "rmse_log10_gas_ratio": 0.929445814047131,
+      "max_absolute_residual_log10_gas_ratio": 0.9758597550297621
+    },
+    "sakao1959_published_finite_O": {
+      "rmse_log10_gas_ratio": 0.006296028455956041,
+      "max_absolute_residual_log10_gas_ratio": 0.01986783139883641
+    },
+    "sakao1959_standard_only_Ma": {
+      "rmse_log10_gas_ratio": 0.0070205169455302315,
+      "max_absolute_residual_log10_gas_ratio": 0.01816709214917922
+    },
+    "matoba1965_published_finite_O": {
+      "rmse_log10_gas_ratio": 0.021313909991270495,
+      "max_absolute_residual_log10_gas_ratio": 0.04479639532912283
+    },
+    "matoba1965_standard_only_Ma": {
+      "rmse_log10_gas_ratio": 0.04140472971115674,
+      "max_absolute_residual_log10_gas_ratio": 0.05489030503149933
+    }
+  },
+  "observations": [
+    {
+      "observation": {
+        "heat_id": 140.0,
+        "temperature_C": 1551.0,
+        "corrected_H2O_H2_ratio": 0.2915,
+        "O_mass_percent": 0.0708,
+        "reported_K_apparent": 4.12
+      },
+      "T_K": 1824.15,
+      "O_mole_fraction": 0.002466945751131764,
+      "observed_log10_gas_ratio": -0.5353614409049672,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.4974676981459873,
+        "sakao1959_published_finite_O": -0.5287490446428247,
+        "sakao1959_standard_only_Ma": -0.5250910852874493,
+        "matoba1965_published_finite_O": -0.5138463789629186,
+        "matoba1965_standard_only_Ma": -0.4808828513154606
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.9621062572410202,
+        "sakao1959_published_finite_O": 0.006612396262142495,
+        "sakao1959_standard_only_Ma": 0.010270355617517879,
+        "matoba1965_published_finite_O": 0.021515061942048552,
+        "matoba1965_standard_only_Ma": 0.054478589589506576
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 146.0,
+        "temperature_C": 1551.0,
+        "corrected_H2O_H2_ratio": 0.2018,
+        "O_mass_percent": 0.0479,
+        "reported_K_apparent": 4.21
+      },
+      "T_K": 1824.15,
+      "O_mole_fraction": 0.0016699719685127521,
+      "observed_log10_gas_ratio": -0.6950788380991083,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.6637873419859632,
+        "sakao1959_published_finite_O": -0.6938816526079684,
+        "sakao1959_standard_only_Ma": -0.6914107291274252,
+        "matoba1965_published_finite_O": -0.6695002084833072,
+        "matoba1965_standard_only_Ma": -0.6472024951554365
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.9687085038868549,
+        "sakao1959_published_finite_O": 0.001197185491139896,
+        "sakao1959_standard_only_Ma": 0.003668108971683126,
+        "matoba1965_published_finite_O": 0.02557862961580115,
+        "matoba1965_standard_only_Ma": 0.047876342943671824
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 147.0,
+        "temperature_C": 1551.0,
+        "corrected_H2O_H2_ratio": 0.104,
+        "O_mass_percent": 0.0246,
+        "reported_K_apparent": 4.23
+      },
+      "T_K": 1824.15,
+      "O_mole_fraction": 0.0008581447818803184,
+      "observed_log10_gas_ratio": -0.9829666607012196,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.9497468340693658,
+        "sakao1959_published_finite_O": -0.9786371822368621,
+        "sakao1959_standard_only_Ma": -0.9773702212108277,
+        "matoba1965_published_finite_O": -0.9446113914850047,
+        "matoba1965_standard_only_Ma": -0.933161987238839
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.9667801733681461,
+        "sakao1959_published_finite_O": 0.004329478464357495,
+        "sakao1959_standard_only_Ma": 0.005596439490391902,
+        "matoba1965_published_finite_O": 0.038355269216214904,
+        "matoba1965_standard_only_Ma": 0.0498046734623806
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 149.0,
+        "temperature_C": 1551.0,
+        "corrected_H2O_H2_ratio": 0.0505,
+        "O_mass_percent": 0.0118,
+        "reported_K_apparent": 4.28
+      },
+      "T_K": 1824.15,
+      "O_mole_fraction": 0.00041176160808436673,
+      "observed_log10_gas_ratio": -1.2967086218813386,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -2.2669080093748635,
+        "sakao1959_published_finite_O": -1.2951385901228145,
+        "sakao1959_standard_only_Ma": -1.2945313965163254,
+        "matoba1965_published_finite_O": -1.2558146175328408,
+        "matoba1965_standard_only_Ma": -1.2503231625443367
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.9701993874935249,
+        "sakao1959_published_finite_O": 0.0015700317585241041,
+        "sakao1959_standard_only_Ma": 0.002177225365013191,
+        "matoba1965_published_finite_O": 0.04089400434849777,
+        "matoba1965_standard_only_Ma": 0.04638545933700189
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 151.0,
+        "temperature_C": 1551.0,
+        "corrected_H2O_H2_ratio": 0.2959,
+        "O_mass_percent": 0.0696,
+        "reported_K_apparent": 4.25
+      },
+      "T_K": 1824.15,
+      "O_mole_fraction": 0.0024252054642850667,
+      "observed_log10_gas_ratio": -0.528855034839367,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.504714789869129,
+        "sakao1959_published_finite_O": -0.5359338416053474,
+        "sakao1959_standard_only_Ma": -0.532338177010591,
+        "matoba1965_published_finite_O": -0.5205344713781178,
+        "matoba1965_standard_only_Ma": -0.48812994303860235
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.9758597550297621,
+        "sakao1959_published_finite_O": -0.007078806765980383,
+        "sakao1959_standard_only_Ma": -0.0034831421712240296,
+        "matoba1965_published_finite_O": 0.008320563461249209,
+        "matoba1965_standard_only_Ma": 0.04072509180076467
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 154.0,
+        "temperature_C": 1551.0,
+        "corrected_H2O_H2_ratio": 0.3948,
+        "O_mass_percent": 0.0954,
+        "reported_K_apparent": 4.14
+      },
+      "T_K": 1824.15,
+      "O_mole_fraction": 0.0033220731142978967,
+      "observed_log10_gas_ratio": -0.4036228560024009,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.371577331523812,
+        "sakao1959_published_finite_O": -0.4041379605205306,
+        "sakao1959_standard_only_Ma": -0.39920071866527396,
+        "matoba1965_published_finite_O": -0.3994177380607543,
+        "matoba1965_standard_only_Ma": -0.35499248469328526
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.9679544755214111,
+        "sakao1959_published_finite_O": -0.0005151045181296943,
+        "sakao1959_standard_only_Ma": 0.00442213733712693,
+        "matoba1965_published_finite_O": 0.0042051179416465745,
+        "matoba1965_standard_only_Ma": 0.04863037130911563
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 159.0,
+        "temperature_C": 1551.0,
+        "corrected_H2O_H2_ratio": 0.499,
+        "O_mass_percent": 0.1235,
+        "reported_K_apparent": 4.04
+      },
+      "T_K": 1824.15,
+      "O_mole_fraction": 0.004297586822240081,
+      "observed_log10_gas_ratio": -0.3018994543766101,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.2635939961756375,
+        "sakao1959_published_finite_O": -0.29762113877796953,
+        "sakao1959_standard_only_Ma": -0.29121738331709945,
+        "matoba1965_published_finite_O": -0.3045320811346831,
+        "matoba1965_standard_only_Ma": -0.24700914934511076
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.9616945417990275,
+        "sakao1959_published_finite_O": 0.0042783155986405585,
+        "sakao1959_standard_only_Ma": 0.010682071059510634,
+        "matoba1965_published_finite_O": -0.00263262675807302,
+        "matoba1965_standard_only_Ma": 0.05489030503149933
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 162.0,
+        "temperature_C": 1551.0,
+        "corrected_H2O_H2_ratio": 0.589,
+        "O_mass_percent": 0.1469,
+        "reported_K_apparent": 4.01
+      },
+      "T_K": 1824.15,
+      "O_mole_fraction": 0.005108898175436588,
+      "observed_log10_gas_ratio": -0.22988470521289836,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.1916785054136374,
+        "sakao1959_published_finite_O": -0.22693111235874502,
+        "sakao1959_standard_only_Ma": -0.21930189255509935,
+        "matoba1965_published_finite_O": -0.24352779338826516,
+        "matoba1965_standard_only_Ma": -0.17509365858311066
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.961793800200739,
+        "sakao1959_published_finite_O": 0.0029535928541533363,
+        "sakao1959_standard_only_Ma": 0.010582812657799007,
+        "matoba1965_published_finite_O": -0.013643088175366802,
+        "matoba1965_standard_only_Ma": 0.054791046629787704
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 141.0,
+        "temperature_C": 1600.0,
+        "corrected_H2O_H2_ratio": 0.2911,
+        "O_mass_percent": 0.0859,
+        "reported_K_apparent": 3.39
+      },
+      "T_K": 1873.15,
+      "O_mole_fraction": 0.002991964927817528,
+      "observed_log10_gas_ratio": -0.5359577945611892,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.4728654113100024,
+        "sakao1959_published_finite_O": -0.5466004220534975,
+        "sakao1959_standard_only_Ma": -0.5440059878706347,
+        "matoba1965_published_finite_O": -0.5339348932383998,
+        "matoba1965_standard_only_Ma": -0.5061075547499552
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.9369076167488132,
+        "sakao1959_published_finite_O": -0.010642627492308265,
+        "sakao1959_standard_only_Ma": -0.008048193309445506,
+        "matoba1965_published_finite_O": 0.002022901322789372,
+        "matoba1965_standard_only_Ma": 0.029850239811234025
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 142.0,
+        "temperature_C": 1600.0,
+        "corrected_H2O_H2_ratio": 0.0503,
+        "O_mass_percent": 0.0146,
+        "reported_K_apparent": 3.45
+      },
+      "T_K": 1873.15,
+      "O_mole_fraction": 0.0005094322376277696,
+      "observed_log10_gas_ratio": -1.2984320149440727,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -2.2322383927308764,
+        "sakao1959_published_finite_O": -1.3038163392079556,
+        "sakao1959_standard_only_Ma": -1.3033789692915088,
+        "matoba1965_published_finite_O": -1.270206618576933,
+        "matoba1965_standard_only_Ma": -1.2654805361708292
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.9338063777868038,
+        "sakao1959_published_finite_O": -0.005384324263882911,
+        "sakao1959_standard_only_Ma": -0.004946954347436083,
+        "matoba1965_published_finite_O": 0.02822539636713972,
+        "matoba1965_standard_only_Ma": 0.03295147877324345
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 145.0,
+        "temperature_C": 1600.0,
+        "corrected_H2O_H2_ratio": 0.2017,
+        "O_mass_percent": 0.06,
+        "reported_K_apparent": 3.36
+      },
+      "T_K": 1873.15,
+      "O_mole_fraction": 0.0020911934860062477,
+      "observed_log10_gas_ratio": -0.6952941017872346,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.6249817316512314,
+        "sakao1959_published_finite_O": -0.6979291275892899,
+        "sakao1959_standard_only_Ma": -0.6961223082118637,
+        "matoba1965_published_finite_O": -0.6776555403165141,
+        "matoba1965_standard_only_Ma": -0.6582238750911842
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.9296876298639968,
+        "sakao1959_published_finite_O": -0.002635025802055324,
+        "sakao1959_standard_only_Ma": -0.0008282064246291077,
+        "matoba1965_published_finite_O": 0.017638561470720515,
+        "matoba1965_standard_only_Ma": 0.03707022669605042
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 150.0,
+        "temperature_C": 1600.0,
+        "corrected_H2O_H2_ratio": 0.0507,
+        "O_mass_percent": 0.0153,
+        "reported_K_apparent": 3.31
+      },
+      "T_K": 1873.15,
+      "O_mole_fraction": 0.0005338477673720093,
+      "observed_log10_gas_ratio": -1.294992040666664,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -2.2120007894661806,
+        "sakao1959_published_finite_O": -1.283599742767005,
+        "sakao1959_standard_only_Ma": -1.283141366026813,
+        "matoba1965_published_finite_O": -1.2501956453375411,
+        "matoba1965_standard_only_Ma": -1.2452429329061334
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.9170087487995167,
+        "sakao1959_published_finite_O": 0.01139229789965901,
+        "sakao1959_standard_only_Ma": 0.011850674639851011,
+        "matoba1965_published_finite_O": 0.04479639532912283,
+        "matoba1965_standard_only_Ma": 0.04974910776053054
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 153.0,
+        "temperature_C": 1600.0,
+        "corrected_H2O_H2_ratio": 0.1979,
+        "O_mass_percent": 0.0565,
+        "reported_K_apparent": 3.5
+      },
+      "T_K": 1873.15,
+      "O_mole_fraction": 0.0019693786111020717,
+      "observed_log10_gas_ratio": -0.7035542057936037,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.6505807213821506,
+        "sakao1959_published_finite_O": -0.7234220371924401,
+        "sakao1959_standard_only_Ma": -0.721721297942783,
+        "matoba1965_published_finite_O": -0.70212033391187,
+        "matoba1965_standard_only_Ma": -0.6838228648221034
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.9470265155885469,
+        "sakao1959_published_finite_O": -0.01986783139883641,
+        "sakao1959_standard_only_Ma": -0.01816709214917922,
+        "matoba1965_published_finite_O": 0.001433871881733717,
+        "matoba1965_standard_only_Ma": 0.01973134097150031
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 155.0,
+        "temperature_C": 1600.0,
+        "corrected_H2O_H2_ratio": 0.3956,
+        "O_mass_percent": 0.1209,
+        "reported_K_apparent": 3.27
+      },
+      "T_K": 1873.15,
+      "O_mole_fraction": 0.004207382918797616,
+      "observed_log10_gas_ratio": -0.40274371707485823,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.3294595319597324,
+        "sakao1959_published_finite_O": -0.40426621463451706,
+        "sakao1959_standard_only_Ma": -0.40060010852036476,
+        "matoba1965_published_finite_O": -0.40188184589736303,
+        "matoba1965_standard_only_Ma": -0.36270167539968523
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.9267158148848742,
+        "sakao1959_published_finite_O": -0.0015224975596588308,
+        "sakao1959_standard_only_Ma": 0.00214360855449347,
+        "matoba1965_published_finite_O": 0.0008618711774951993,
+        "matoba1965_standard_only_Ma": 0.040042041675173
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 160.0,
+        "temperature_C": 1600.0,
+        "corrected_H2O_H2_ratio": 0.502,
+        "O_mass_percent": 0.1566,
+        "reported_K_apparent": 3.21
+      },
+      "T_K": 1873.15,
+      "O_mole_fraction": 0.005444934833694705,
+      "observed_log10_gas_ratio": -0.29929628285498067,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.2222132215668466,
+        "sakao1959_published_finite_O": -0.2981216659761244,
+        "sakao1959_standard_only_Ma": -0.29335379812747897,
+        "matoba1965_published_finite_O": -0.3062240805184728,
+        "matoba1965_standard_only_Ma": -0.25545536500679944
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.922916938711866,
+        "sakao1959_published_finite_O": 0.0011746168788562827,
+        "sakao1959_standard_only_Ma": 0.005942484727501696,
+        "matoba1965_published_finite_O": -0.006927797663492108,
+        "matoba1965_standard_only_Ma": 0.04384091784818123
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 163.0,
+        "temperature_C": 1600.0,
+        "corrected_H2O_H2_ratio": 0.597,
+        "O_mass_percent": 0.1871,
+        "reported_K_apparent": 3.19
+      },
+      "T_K": 1873.15,
+      "O_mole_fraction": 0.006500491980308143,
+      "observed_log10_gas_ratio": -0.2240256688706309,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.1492977846432226,
+        "sakao1959_published_finite_O": -0.22615441771580327,
+        "sakao1959_standard_only_Ma": -0.22043836120385496,
+        "matoba1965_published_finite_O": -0.2432161288975025,
+        "matoba1965_standard_only_Ma": -0.18253992808317543
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.9252721157725917,
+        "sakao1959_published_finite_O": -0.0021287488451723624,
+        "sakao1959_standard_only_Ma": 0.003587307666775952,
+        "matoba1965_published_finite_O": -0.01919046002687158,
+        "matoba1965_standard_only_Ma": 0.04148574078745548
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 137.0,
+        "temperature_C": 1651.0,
+        "corrected_H2O_H2_ratio": 0.1053,
+        "O_mass_percent": 0.0396,
+        "reported_K_apparent": 2.66
+      },
+      "T_K": 1924.15,
+      "O_mole_fraction": 0.0013808882394134685,
+      "observed_log10_gas_ratio": -0.9775716288145134,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.8592467381527713,
+        "sakao1959_published_finite_O": -0.9734663043948891,
+        "sakao1959_standard_only_Ma": -0.9731171737627189,
+        "matoba1965_published_finite_O": -0.948730628278162,
+        "matoba1965_standard_only_Ma": -0.941444772962365
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.8816751093382579,
+        "sakao1959_published_finite_O": 0.004105324419624301,
+        "sakao1959_standard_only_Ma": 0.004454455051794537,
+        "matoba1965_published_finite_O": 0.028841000536351413,
+        "matoba1965_standard_only_Ma": 0.036126855852148476
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 143.0,
+        "temperature_C": 1651.0,
+        "corrected_H2O_H2_ratio": 0.2978,
+        "O_mass_percent": 0.1145,
+        "reported_K_apparent": 2.6
+      },
+      "T_K": 1924.15,
+      "O_mole_fraction": 0.003985292912762971,
+      "observed_log10_gas_ratio": -0.5260753065838426,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.408644264191788,
+        "sakao1959_published_finite_O": -0.5235529921329183,
+        "sakao1959_standard_only_Ma": -0.5225146998017356,
+        "matoba1965_published_finite_O": -0.5119375351778988,
+        "matoba1965_standard_only_Ma": -0.49084229900138165
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.8825689576079454,
+        "sakao1959_published_finite_O": 0.0025223144509243234,
+        "sakao1959_standard_only_Ma": 0.003560606782107012,
+        "matoba1965_published_finite_O": 0.014137771405943855,
+        "matoba1965_standard_only_Ma": 0.03523300758246095
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 144.0,
+        "temperature_C": 1651.0,
+        "corrected_H2O_H2_ratio": 0.2054,
+        "O_mass_percent": 0.077,
+        "reported_K_apparent": 2.67
+      },
+      "T_K": 1924.15,
+      "O_mole_fraction": 0.0026825642302752634,
+      "observed_log10_gas_ratio": -0.6873995607387406,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.5757028005050038,
+        "sakao1959_published_finite_O": -0.6902617847669723,
+        "sakao1959_standard_only_Ma": -0.6895732361149514,
+        "matoba1965_published_finite_O": -0.6720774597403368,
+        "matoba1965_standard_only_Ma": -0.6579008353145974
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.8883032397662631,
+        "sakao1959_published_finite_O": -0.0028622240282316636,
+        "sakao1959_standard_only_Ma": -0.0021736753762107153,
+        "matoba1965_published_finite_O": 0.01532210099840381,
+        "matoba1965_standard_only_Ma": 0.029498725424143224
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 148.0,
+        "temperature_C": 1651.0,
+        "corrected_H2O_H2_ratio": 0.0501,
+        "O_mass_percent": 0.0185,
+        "reported_K_apparent": 2.71
+      },
+      "T_K": 1924.15,
+      "O_mole_fraction": 0.0006454507814932004,
+      "observed_log10_gas_ratio": -1.3001622741327543,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -2.186803244999198,
+        "sakao1959_published_finite_O": -1.3008354701002218,
+        "sakao1959_standard_only_Ma": -1.3006736806091457,
+        "matoba1965_published_finite_O": -1.2724037108818653,
+        "matoba1965_standard_only_Ma": -1.2690012798087917
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.8866409708664438,
+        "sakao1959_published_finite_O": -0.0006731959674675103,
+        "sakao1959_standard_only_Ma": -0.0005114064763913628,
+        "matoba1965_published_finite_O": 0.02775856325088899,
+        "matoba1965_standard_only_Ma": 0.031160994323962576
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 152.0,
+        "temperature_C": 1651.0,
+        "corrected_H2O_H2_ratio": 0.2951,
+        "O_mass_percent": 0.1132,
+        "reported_K_apparent": 2.61
+      },
+      "T_K": 1924.15,
+      "O_mole_fraction": 0.003940172253435405,
+      "observed_log10_gas_ratio": -0.5300307905000405,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.4134212657228957,
+        "sakao1959_published_finite_O": -0.5283177117024342,
+        "sakao1959_standard_only_Ma": -0.5272917013328433,
+        "matoba1965_published_finite_O": -0.5164745339875987,
+        "matoba1965_standard_only_Ma": -0.49561930053248937
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.8833904752228552,
+        "sakao1959_published_finite_O": 0.0017130787976062933,
+        "sakao1959_standard_only_Ma": 0.0027390891671972284,
+        "matoba1965_published_finite_O": 0.013556256512441855,
+        "matoba1965_standard_only_Ma": 0.03441148996755117
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 156.0,
+        "temperature_C": 1651.0,
+        "corrected_H2O_H2_ratio": 0.3989,
+        "O_mass_percent": 0.157,
+        "reported_K_apparent": 2.54
+      },
+      "T_K": 1924.15,
+      "O_mole_fraction": 0.00545878854336961,
+      "observed_log10_gas_ratio": -0.39913596369016047,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.2774957857689972,
+        "sakao1959_published_finite_O": -0.39281225778487827,
+        "sakao1959_standard_only_Ma": -0.39136622137894483,
+        "matoba1965_published_finite_O": -0.3886415179776902,
+        "matoba1965_standard_only_Ma": -0.3596938205785909
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.8783598220788368,
+        "sakao1959_published_finite_O": 0.006323705905282195,
+        "sakao1959_standard_only_Ma": 0.007769742311215633,
+        "matoba1965_published_finite_O": 0.010494445712470268,
+        "matoba1965_standard_only_Ma": 0.03944214311156957
+      }
+    },
+    {
+      "observation": {
+        "heat_id": 161.0,
+        "temperature_C": 1651.0,
+        "corrected_H2O_H2_ratio": 0.506,
+        "O_mass_percent": 0.1975,
+        "reported_K_apparent": 2.56
+      },
+      "T_K": 1924.15,
+      "O_mole_fraction": 0.0068600548255799984,
+      "observed_log10_gas_ratio": -0.2958494831602009,
+      "predicted_log10_gas_ratio": {
+        "adopted_Ma": -1.1834830224131985,
+        "sakao1959_published_finite_O": -0.2991992566105535,
+        "sakao1959_standard_only_Ma": -0.29735345802314606,
+        "matoba1965_published_finite_O": -0.30212289432071077,
+        "matoba1965_standard_only_Ma": -0.2656810572227921
+      },
+      "residual_log10_gas_ratio": {
+        "adopted_Ma": -0.8876335392529976,
+        "sakao1959_published_finite_O": -0.0033497734503526444,
+        "sakao1959_standard_only_Ma": -0.0015039748629451788,
+        "matoba1965_published_finite_O": -0.00627341116050989,
+        "matoba1965_standard_only_Ma": 0.03016842593740876
+      }
+    }
+  ],
+  "standard_scenarios": [
+    {
+      "role": "explicit_measured_O_standard_scenario",
+      "reference": "sakao1959",
+      "T_K": 1873.15,
+      "log10_K": 0.5343749299308649,
+      "log10_f_O_per_mass_percent": -0.17425513172997353,
+      "measured_temperatures_K": [
+        1824.15,
+        1873.15,
+        1924.15
+      ],
+      "inside_measured_temperature_envelope": true,
+      "temperature_distance_K": 0.0,
+      "temperature_transfer_error_bound": null,
+      "P_Pa": 101325.0,
+      "reaction": "O(metal) + H2(g) = H2O(g)",
+      "concentration_basis": "Henry mass percent O in pure liquid Fe at infinite dilution",
+      "input_standards_rt": {
+        "oxygen_standard_rt": -29.802921938842346,
+        "oxygen_lngamma_infinite_dilution": 8.808691242025464,
+        "hydrogen_gas_standard_rt": -19.270587164247278,
+        "water_gas_standard_rt": -42.71160015717605
+      },
+      "mass_percent_per_O_mole_fraction_at_infinite_dilution": 28.648939027665865,
+      "adopted_Henry_O_standard_rt": -24.349347107098758,
+      "target_Henry_O_standard_rt": -22.210569245200226,
+      "adopted_log10_K": -0.3944844935085045,
+      "adopted_minus_reference_log10_K": -0.9288594234393694,
+      "standard_offsets_rt": {
+        "O_metal": 2.1387778618985323
+      },
+      "target_O_standard_rt": -27.664144076943813,
+      "reference_total_pressure_Pa": 101325.0,
+      "pressure_distance_Pa": 0.0,
+      "pressure_transfer_error_bound": null,
+      "FeSiOH_composition_transfer_error_bound": null,
+      "published_fit_covariance": null,
+      "excess_Gibbs_model_changed": false,
+      "baseline_replaced": false,
+      "accepted_coupled_material_domain": null
+    },
+    {
+      "role": "explicit_measured_O_standard_scenario",
+      "reference": "matoba1965",
+      "T_K": 1873.15,
+      "log10_K": 0.572273363051544,
+      "log10_f_O_per_mass_percent": -0.46800256252836103,
+      "measured_temperatures_K": [
+        1823.15,
+        1880.15,
+        1936.15
+      ],
+      "inside_measured_temperature_envelope": true,
+      "temperature_distance_K": 0.0,
+      "temperature_transfer_error_bound": null,
+      "P_Pa": 101325.0,
+      "reaction": "O(metal) + H2(g) = H2O(g)",
+      "concentration_basis": "Henry mass percent O in pure liquid Fe at infinite dilution",
+      "input_standards_rt": {
+        "oxygen_standard_rt": -29.802921938842346,
+        "oxygen_lngamma_infinite_dilution": 8.808691242025464,
+        "hydrogen_gas_standard_rt": -19.270587164247278,
+        "water_gas_standard_rt": -42.71160015717605
+      },
+      "mass_percent_per_O_mole_fraction_at_infinite_dilution": 28.648939027665865,
+      "adopted_Henry_O_standard_rt": -24.349347107098758,
+      "target_Henry_O_standard_rt": -22.123304878048717,
+      "adopted_log10_K": -0.3944844935085045,
+      "adopted_minus_reference_log10_K": -0.9667578565600485,
+      "standard_offsets_rt": {
+        "O_metal": 2.226042229050041
+      },
+      "target_O_standard_rt": -27.576879709792305,
+      "reference_total_pressure_Pa": 101325.0,
+      "pressure_distance_Pa": 0.0,
+      "pressure_transfer_error_bound": null,
+      "FeSiOH_composition_transfer_error_bound": null,
+      "published_fit_covariance": null,
+      "excess_Gibbs_model_changed": false,
+      "baseline_replaced": false,
+      "accepted_coupled_material_domain": null
+    },
+    {
+      "role": "explicit_measured_O_standard_scenario",
+      "reference": "sakao1959",
+      "T_K": 2173.15,
+      "log10_K": 0.015537077514207187,
+      "log10_f_O_per_mass_percent": -0.04528265421162825,
+      "measured_temperatures_K": [
+        1824.15,
+        1873.15,
+        1924.15
+      ],
+      "inside_measured_temperature_envelope": false,
+      "temperature_distance_K": 249.0,
+      "temperature_transfer_error_bound": null,
+      "P_Pa": 101325.0,
+      "reaction": "O(metal) + H2(g) = H2O(g)",
+      "concentration_basis": "Henry mass percent O in pure liquid Fe at infinite dilution",
+      "input_standards_rt": {
+        "oxygen_standard_rt": -27.309388586778844,
+        "oxygen_lngamma_infinite_dilution": 7.592665025423924,
+        "hydrogen_gas_standard_rt": -19.744841160745402,
+        "water_gas_standard_rt": -41.22061795898748
+      },
+      "mass_percent_per_O_mole_fraction_at_infinite_dilution": 28.648939027665865,
+      "adopted_Henry_O_standard_rt": -23.0718399716368,
+      "target_Henry_O_standard_rt": -21.440001355169173,
+      "adopted_log10_K": -0.6931614289743191,
+      "adopted_minus_reference_log10_K": -0.7086985064885263,
+      "standard_offsets_rt": {
+        "O_metal": 1.6318386164676255
+      },
+      "target_O_standard_rt": -25.67754997031122,
+      "reference_total_pressure_Pa": 101325.0,
+      "pressure_distance_Pa": 0.0,
+      "pressure_transfer_error_bound": null,
+      "FeSiOH_composition_transfer_error_bound": null,
+      "published_fit_covariance": null,
+      "excess_Gibbs_model_changed": false,
+      "baseline_replaced": false,
+      "accepted_coupled_material_domain": null
+    },
+    {
+      "role": "explicit_measured_O_standard_scenario",
+      "reference": "matoba1965",
+      "T_K": 2173.15,
+      "log10_K": 0.0210081448588455,
+      "log10_f_O_per_mass_percent": 0.27856383590640377,
+      "measured_temperatures_K": [
+        1823.15,
+        1880.15,
+        1936.15
+      ],
+      "inside_measured_temperature_envelope": false,
+      "temperature_distance_K": 237.0,
+      "temperature_transfer_error_bound": null,
+      "P_Pa": 101325.0,
+      "reaction": "O(metal) + H2(g) = H2O(g)",
+      "concentration_basis": "Henry mass percent O in pure liquid Fe at infinite dilution",
+      "input_standards_rt": {
+        "oxygen_standard_rt": -27.309388586778844,
+        "oxygen_lngamma_infinite_dilution": 7.592665025423924,
+        "hydrogen_gas_standard_rt": -19.744841160745402,
+        "water_gas_standard_rt": -41.22061795898748
+      },
+      "mass_percent_per_O_mole_fraction_at_infinite_dilution": 28.648939027665865,
+      "adopted_Henry_O_standard_rt": -23.0718399716368,
+      "target_Henry_O_standard_rt": -21.42740375705864,
+      "adopted_log10_K": -0.6931614289743191,
+      "adopted_minus_reference_log10_K": -0.7141695738331646,
+      "standard_offsets_rt": {
+        "O_metal": 1.6444362145781568
+      },
+      "target_O_standard_rt": -25.664952372200688,
+      "reference_total_pressure_Pa": 101325.0,
+      "pressure_distance_Pa": 0.0,
+      "pressure_transfer_error_bound": null,
+      "FeSiOH_composition_transfer_error_bound": null,
+      "published_fit_covariance": null,
+      "excess_Gibbs_model_changed": false,
+      "baseline_replaced": false,
+      "accepted_coupled_material_domain": null
+    }
+  ],
+  "finding": "The inherited O standard plus adopted Ma activities does not reproduce the measured low-pressure Fe-O/H2/H2O equilibrium. Replacing only its O standard substantially reduces the measured residual; finite-composition and transfer errors remain.",
+  "uncertainty_scope": "Residuals and alternative published fits are descriptive, not statistical or extrapolation bounds. Matoba supplies an independent experiment's fit, not digitized independent raw observations.",
+  "material_admission": "adopted_oxygen_reaction_reference_failed",
+  "accepted_coupled_material_domain": null
+}

@@ -1,0 +1,297 @@
+{
+  "record_id": "m2_sodium_helium_omission_evidence_v1",
+  "scope": "Previously unaudited transfer paths; no new equilibrium species, empirical admission or omission-error guarantee.",
+  "paths": {
+    "Na_to_metal": {
+      "status": "not_evaluated",
+      "existing_model": "Na remains available to gas and silicate; associated_k has no Na metal component.",
+      "insolubility_established": false,
+      "missing": "A Na metal standard/activity law or a quantitative detection-limit-derived partition bound transferable to the declared state.",
+      "available": "Five numerical S-free reported censoring limits with matching silicate Na; three FeS exchange constants replayed under two explicit concentration bases. Low-pressure standard/activities are not yet selected."
+    },
+    "He_to_silicate": {
+      "status": "not_evaluated_in_finite_equilibrium",
+      "existing_model": "He is an explicitly gas-only inert component. Chemical inertness does not imply zero physical solubility.",
+      "insolubility_established": false,
+      "available": "Measured low-pressure solubility, composition-dependent ionic-porosity law and high-temperature dry-host simulations.",
+      "missing": "Declared BSE host/temperature/pressure continuation and a finite He budget response."
+    },
+    "He_to_metal": {
+      "status": "not_evaluated_in_finite_equilibrium",
+      "existing_model": "No dissolved He metal component.",
+      "insolubility_established": false,
+      "available": "Nonzero high-pressure metal/silicate partition observations.",
+      "missing": "Low-pressure standard/partition continuation and its uncertainty for the actual alloy."
+    }
+  },
+  "references": {
+    "gessmann_wood_2002": {
+      "doi": "10.1016/S0012-821X(02)00593-9",
+      "url": "https://repository.geologyscience.ru/server/api/core/bitstreams/cab9b952-60b4-44d9-b912-b4abc7fdc4c5/content",
+      "retrieved_pdf_sha256": "9eafb5ab2cf71bf5bc7263ba547f0c5b08706cf1fa4633fde179029167aff19f",
+      "retrieved_pdf_bytes": 648267,
+      "redistributed_pdf": false,
+      "locations": "Tables 1, 2a and 4; discussion of Na analysis and below-detection metal products.",
+      "Na_bearing_S_free_runs": [
+        {
+          "run": 3,
+          "T_K": 1873.15,
+          "P_GPa": 2.5
+        },
+        {
+          "run": 11,
+          "T_K": 1888.15,
+          "P_GPa": 2.5
+        },
+        {
+          "run": 12,
+          "T_K": 1973.15,
+          "P_GPa": 2.5
+        }
+      ],
+      "reported_result": "Na and K in these S-free metals are below detection; the retained paper gives no numerical Na detection limit for these runs.",
+      "Na_detection_limit_mass_ppm": null,
+      "starting_Sil_Na2O_mass_percent": 9.23,
+      "exclusion": "The 2173.15 K, 24 GPa run 35 used a Na-free starting silicate and is not a Na observation. Sulfur-rich observations are not a bound for the sulfur-free source."
+    },
+    "jambon_1986": {
+      "doi": "10.1016/0016-7037(86)90193-6",
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/0016703786901936",
+      "access": "Primary publisher abstract; full point table not retained.",
+      "host": "basalt",
+      "T_K": 1673.15,
+      "P_bar": 1.0,
+      "He_S_cm3_STP_g_bar": 0.00056,
+      "reported_sigma": 0.00011,
+      "units": "cm3 STP / g melt / bar",
+      "scope": "Independent low-pressure scale comparison; not a measured 2173 K BSE value."
+    },
+    "guillot_sator_2012": {
+      "arxiv": "1112.2055",
+      "url": "https://arxiv.org/pdf/1112.2055",
+      "retrieved_pdf_sha256": "041291e1236f22664ec94a58988d05cfb5a8fe4ea44ec84f681e5e864733a0c5",
+      "retrieved_pdf_bytes": 919624,
+      "redistributed_pdf": false,
+      "location": "Appendix C, PDF page 35; values visually checked.",
+      "type": "molecular dynamics model, not new experimental observations",
+      "S_units": "cm3 STP / g dry melt / bar",
+      "pressure": "approximately zero pressure Henry limit",
+      "He_rows": [
+        {
+          "host": "olivine",
+          "T_K": 1673.0,
+          "S": 0.000188
+        },
+        {
+          "host": "olivine",
+          "T_K": 1873.0,
+          "S": 0.000305
+        },
+        {
+          "host": "olivine",
+          "T_K": 2273.0,
+          "S": 0.000648
+        },
+        {
+          "host": "MORB",
+          "T_K": 1673.0,
+          "S": 0.000596
+        },
+        {
+          "host": "MORB",
+          "T_K": 2273.0,
+          "S": 0.001141
+        },
+        {
+          "host": "rhyolite",
+          "T_K": 1673.0,
+          "S": 0.00186
+        },
+        {
+          "host": "rhyolite",
+          "T_K": 2273.0,
+          "S": 0.00269
+        },
+        {
+          "host": "enstatite",
+          "T_K": 1673.0,
+          "S": 0.000199
+        },
+        {
+          "host": "enstatite",
+          "T_K": 1873.0,
+          "S": 0.000315
+        }
+      ],
+      "cautions": [
+        "Some low-temperature pure-host simulations are supercooled melts.",
+        "Host alternatives are not an empirical bracket for wet BSE.",
+        "MORB low-pressure agreement partly follows model calibration to existing noble-gas data."
+      ]
+    },
+    "iacono_marziano_2010": {
+      "doi": "10.1016/j.chemgeo.2010.10.017",
+      "url": "https://hal.science/insu-00536899/document",
+      "retrieved_pdf_sha256": "164d3a47f757d3d732bd964a5ea0db831a03d045348d883b3d7731447409213c",
+      "retrieved_pdf_bytes": 303987,
+      "redistributed_pdf": false,
+      "locations": "Equations 4-10, Tables 3-4 and Section 4.4.",
+      "law": "ln(x_g/f_g) = alpha_g*IP + beta_g; IP uses composition-dependent partial filled volumes and the Lange-Carmichael melt volume.",
+      "He_alpha": 0.341,
+      "He_beta": -38.45,
+      "pooled_model_reported_standard_error_fraction": 0.22,
+      "scope": "The pooled Ar/Ne/He fit error is not a 2173 K BSE extrapolation bound. He-bearing references include synthetic melts at about 108-198 MPa and 1473-1873 K; most other He data are near atmospheric pressure.",
+      "next_reconstruction": "Requires the original molar-volume convention and validation of fugacity units against retained measurements before finite-source use."
+    },
+    "bouhifd_2013": {
+      "doi": "10.1038/ngeo1959",
+      "url": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fngeo1959/MediaObjects/41561_2013_BFngeo1959_MOESM167_ESM.pdf",
+      "retrieved_pdf_sha256": "c0797ae90d4db060ef09c86420a1d5b1e34e2b24651d79c65a7d6b565d47137c",
+      "retrieved_pdf_bytes": 588192,
+      "redistributed_pdf": false,
+      "locations": "Supplementary Tables S2 and S3, PDF pages 6-7.",
+      "D_basis": "He mass fraction in metal divided by He mass fraction in silicate.",
+      "S2_same_run_Fe80Ni20": [
+        {
+          "P_GPa": 1.9,
+          "T_K": 2400,
+          "silicate_He_mass_ppm": 2367,
+          "silicate_sigma": 290,
+          "metal_He_mass_ppm": 4.0,
+          "metal_sigma": 1.5,
+          "reported_D": 0.0017,
+          "reported_D_sigma": 0.0008
+        },
+        {
+          "P_GPa": 4.1,
+          "T_K": 2400,
+          "silicate_He_mass_ppm": 2969,
+          "silicate_sigma": 330,
+          "metal_He_mass_ppm": 2.0,
+          "metal_sigma": 1.0,
+          "reported_D": 0.00067,
+          "reported_D_sigma": 0.00041
+        },
+        {
+          "P_GPa": 6.1,
+          "T_K": 2450,
+          "silicate_He_mass_ppm": 2500,
+          "silicate_sigma": 190,
+          "metal_He_mass_ppm": 2.0,
+          "metal_sigma": 1.0,
+          "reported_D": 0.0008,
+          "reported_D_sigma": 0.00046
+        },
+        {
+          "P_GPa": 8.0,
+          "T_K": 2500,
+          "silicate_He_mass_ppm": 2008,
+          "silicate_sigma": 380,
+          "metal_He_mass_ppm": 6.7,
+          "metal_sigma": 2.0,
+          "reported_D": 0.0033,
+          "reported_D_sigma": 0.0016
+        },
+        {
+          "P_GPa": 13.1,
+          "T_K": 2600,
+          "silicate_He_mass_ppm": 352,
+          "silicate_sigma": 35,
+          "metal_He_mass_ppm": 5.9,
+          "metal_sigma": 2.0,
+          "reported_D": 0.017,
+          "reported_D_sigma": 0.007
+        }
+      ],
+      "S3_pure_Fe": [
+        {
+          "P_GPa": 6.0,
+          "T_K": 2200,
+          "metal_He_mass_ppm": 1.6,
+          "metal_sigma": 0.5,
+          "silicate_He_mass_ppm_interpolated": 2500,
+          "reported_D": 0.00064
+        },
+        {
+          "P_GPa": 7.8,
+          "T_K": 2200,
+          "metal_He_mass_ppm": 3.5,
+          "metal_sigma": 1.0,
+          "silicate_He_mass_ppm_interpolated": 2050,
+          "reported_D": 0.0017
+        },
+        {
+          "P_GPa": 10.0,
+          "T_K": 2200,
+          "metal_He_mass_ppm": 5.3,
+          "metal_sigma": 2.0,
+          "silicate_He_mass_ppm_interpolated": 600,
+          "reported_D": 0.0088
+        },
+        {
+          "P_GPa": 11.3,
+          "T_K": 2300,
+          "metal_He_mass_ppm": 6.0,
+          "metal_sigma": 1.4,
+          "silicate_He_mass_ppm_interpolated": 600,
+          "reported_D": 0.01
+        },
+        {
+          "P_GPa": 13.8,
+          "T_K": 2450,
+          "metal_He_mass_ppm": 3.3,
+          "metal_sigma": 1.2,
+          "silicate_He_mass_ppm_interpolated": 350,
+          "reported_D": 0.0094
+        }
+      ],
+      "cautions": [
+        "Table S3 silicate concentrations are interpolated from separate experiments, not simultaneous phase pairs.",
+        "Metal analytical errors can reach 100 percent for low concentrations.",
+        "Nominal room-temperature pressure can differ by several GPa from heated laser spots.",
+        "No 0.027 GPa Fe-Si-O-H or associated-alloy partition bound is inferred."
+      ]
+    },
+    "steenstra_2018": {
+      "doi": "10.1038/s41598-018-25505-6",
+      "url": "https://www.nature.com/articles/s41598-018-25505-6",
+      "access": "Primary Table1 and official Supplementary Tables S2-S4 retained and replayed; absolute common-standard reconstruction remains incomplete.",
+      "exchange_reaction": "0.5 Fe(metal) + 0.5 Na2O(silicate) = Na(metal) + 0.5 FeO(silicate)",
+      "log10_K_Na": "5.44 - 14340/T_K",
+      "reported_parameter_errors": {
+        "intercept": 1.39,
+        "inverse_temperature_K": 2460
+      },
+      "experimental_pressure_GPa": 1.0,
+      "fit_family": "Fe-S / basalt experiments",
+      "silicate_NaO_half_activity": "Assumed ideal in the published fit.",
+      "Na_S_interaction": "Assumed equal to the measured K-S effect by the authors.",
+      "implementation_status": "Reference ratios, censoring bounds and balanced Henry-rebasing helper implemented; no selected absolute source standard or finite Na species.",
+      "replay_source": "sodium_reference_sources.json",
+      "replay_source_sha256": "cd94c23b86136c53d8523a431ce845c398809d4097825b60fe84fa1716f51a2f",
+      "S_free_Na_mass_ppm_reported_limits": {
+        "GGK1": 29,
+        "GGK2": 35,
+        "GGK7": 44,
+        "GGK8": 53,
+        "GGK9": 30
+      },
+      "limit_scope": "Reported LA-ICP-MS censoring thresholds at 1 GPa and 1683-1883 K in graphite-saturated Fe-C/Fe-C-Si; noise/confidence definition not specified, not a 0.027 GPa BSE bound.",
+      "concentration_convention": "The oxide-molecule reconstruction reproduces three FeS logK values within reported 2SE. A literal one-cation reconstruction differs by 0.264-0.308 dex; both are retained without fitting a correction."
+    }
+  },
+  "coverage_policy": {
+    "previous_omitted_metal_catalog": [
+      "Mg",
+      "Al",
+      "Ca",
+      "K",
+      "Ti",
+      "Cr",
+      "P"
+    ],
+    "catalog_complete_does_not_mean_all_inventory_paths_assessed": true,
+    "all_13_element_transfer_coverage_established": false,
+    "supports_material_admission": false
+  }
+}

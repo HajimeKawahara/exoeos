@@ -1,0 +1,49 @@
+{
+  "created_utc": "2026-09-27T23:43:32.626675+00:00",
+  "original_unmodified_diagnostic_commit": "44cd09f775495c56bf209b91be9854e5e44c7c77",
+  "original_assessment_sha256": "ffe82f3c9575eaf9baea9a57ce44c94fa0cd092c7b1b5e2a07c9aa9606799d47",
+  "replay_command": "python examples/m2_material/validation/20260928_helium_metal_box/threshold.py --output examples/m2_material/validation/20260928_helium_metal_box/threshold.json",
+  "replay_exit_code": 0,
+  "tests": {
+    "command": "taskset -c 46 env PYTHONPATH=src JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /home/kawahara/anaconda3/envs/myenv39/bin/python -m pytest -q tests/unittests/m2_helium_metal_threshold_test.py tests/unittests/m2_helium_metal_box_test.py tests/unittests/m2_helium_reference_test.py tests/unittests/m2_helium_dissolution_test.py",
+    "exit_code": 0,
+    "passed": 37,
+    "failed": 0,
+    "skipped": 0,
+    "log": "threshold_tests.log"
+  },
+  "checks": [
+    "Original five validation files and original box/scalar reference/doc bytes unchanged",
+    "Three ASTs",
+    "Three relative Markdown links",
+    "Original assessment and inverse-code hashes",
+    "git diff --check"
+  ],
+  "native_or_source_solver_run": false,
+  "files": {
+    "examples/m2_material/helium_metal_threshold.py": {
+      "sha256": "1686b21bcf3040b198d1ffea63d159576b615490d0c7bbfaa13e8aca3978f57a",
+      "bytes": 2908
+    },
+    "examples/m2_material/helium_metal_threshold.md": {
+      "sha256": "a7bf14c690b90ec9dd23dc511d3ad0ed6fee663b75aad24497ce2a7644bbba2d",
+      "bytes": 2684
+    },
+    "examples/m2_material/validation/20260928_helium_metal_box/threshold.py": {
+      "sha256": "114b5631c2df0d7a9e80ec8ddfb3b9851e7d5ba1c5d67ef26469c85a67a00ac9",
+      "bytes": 2865
+    },
+    "examples/m2_material/validation/20260928_helium_metal_box/threshold.json": {
+      "sha256": "2d9c5d206f3bb4c9a3a2a9145d1f4ed976a2038e65742e76fedae3319e1b12f3",
+      "bytes": 10426
+    },
+    "examples/m2_material/validation/20260928_helium_metal_box/threshold_tests.log": {
+      "sha256": "a6c246b3e679b7ec79d663b64390e099c79224c88900151254cc0873eb4c5b5b",
+      "bytes": 99
+    },
+    "tests/unittests/m2_helium_metal_threshold_test.py": {
+      "sha256": "e5f0f3fe5ee55fbac1f475a8fea69c637eaa7659e940bf063ff84a0e0b22034e",
+      "bytes": 2637
+    }
+  }
+}

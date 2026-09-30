@@ -1,0 +1,22 @@
+{
+  "full_suite": {
+    "commit": "38475d56a7cbf0b00aa1e51ef6d6e61e4c4291fc",
+    "command": "pytest tests/unittests -q",
+    "exit_code": 0,
+    "passed": 469,
+    "elapsed_seconds": 73.3
+  },
+  "final_provider_tests": {
+    "commit": "05155344aac453b23d643c1bc8867c11d089d236",
+    "command": "pytest tests/unittests/melts_solid_mixing_test.py -q",
+    "exit_code": 0,
+    "passed": 9
+  },
+  "symbolic_reproduction": {
+    "sympy_version": "1.14.0",
+    "all_20_expressions_equal_modulo_entropy_term_order": true,
+    "ordered_fragment_repeated_with_pythonhashseed_3_byte_identical": true,
+    "ordered_fragment_sha256": "86a63e0263c36f6583176e921a388c5a2b6aec75043e5d5918fe396472603d61",
+    "new_native_calls": 0
+  }
+}

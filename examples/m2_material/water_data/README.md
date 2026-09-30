@@ -12,3 +12,13 @@ No source values are corrected. The author notebook's `XOH` means its
 columns and pooled OH columns require clarification before physical atom
 conversion. The independent replay preserves this distinction; see
 [the model documentation](../../../documents/m2_reaction_calibration.rst).
+
+`Sossi2023_Table1.csv` is a separate transcription of all fourteen rows of
+the original [Sossi et al. (2023) Table 1](https://arxiv.org/pdf/2211.13344),
+attributed to Sossi, Tollan, Badro and Bower under the article's CC-BY license.
+`sossi2023_provenance.json` pins the inspected PDF and transcribed table.
+It includes Per-4 and the shared Per-5 background, absent from the later
+twelve-row CSV. Raw and corrected rounded values are both retained; no
+historical CSV or validation result is changed. The new
+`sossi_water_calibration.py` reconstructs Eq.11 and propagates the common
+background through its linear fit and prediction operators.

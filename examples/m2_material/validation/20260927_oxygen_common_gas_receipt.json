@@ -1,0 +1,136 @@
+{
+  "T_K": 2173.15,
+  "representative_P_bar": 267.20283416157343,
+  "common_R_J_mol_K": 8.31446261815324,
+  "gas_model": "m1_expanded",
+  "gas_species_count": 35,
+  "source_standards_rt": {
+    "O_metal": -16.414058535930526,
+    "H2_gas": -19.744841160744834,
+    "H2O_gas": -41.220617958986296
+  },
+  "actual_gas_standards_rt": {
+    "H2_gas": -19.747628372126396,
+    "H2O_gas": -41.22316206721143
+  },
+  "gas_gauge": [
+    -4.541156769990245,
+    -17.981569671633338,
+    -8.447040806194867,
+    -12.545856175800804,
+    1.8153736403492466,
+    -1.9681779289064742,
+    -15.353074494571606
+  ],
+  "actual_arguments": {
+    "oxygen_standard_rt": -27.309388586778372,
+    "oxygen_lngamma_infinite_dilution": 7.592665025423924,
+    "hydrogen_gas_standard_rt": -19.747628372126396,
+    "water_gas_standard_rt": -41.22316206721143
+  },
+  "Gibbs_head": "ab527ff0e23fd857bbafa934b27464fecb2a9ab6",
+  "EOS_native_head": "44b977847ea7ed1e16377907722277a3e75bc9d7",
+  "file_sha256": {
+    "/tmp/stage2-material-continuation-20260927/examples/m2_material/oxygen_calibration.py": "af74fd487e9cff58aa1465e4594c39574bb0f7131994bb084b164a9bd7671a50",
+    "/tmp/stage2-material-continuation-20260927/examples/m2_material/steel_data/oxygen_provenance.json": "11da43e90b840c526abce908f69ab66229ecb46e1a75437796fbb2396dc9e752",
+    "/tmp/stage2-material-continuation-20260927/examples/m2_material/steel_data/Sakao1959_Table1.csv": "66deecc45edbcb727e31f446e9fb69a99711d9dfe179d3f0cae87e9aa02c8a3f",
+    "/tmp/stage2-oxygen-scenario-20260927/examples/metal_silicate/m2_common_gas.py": "d9466af88628ee78051f979ce99f8f34cfd4abdfbbc8dcce725b0a29fa618cde",
+    "/tmp/stage2-oxygen-scenario-20260927/examples/metal_silicate/run_bse_common_gibbs.py": "379ed85df5b051e2f37eb198c4aa4605fc6c7bfb262f554cc93d77fbde4c8188",
+    "/tmp/stage2-candidate-eos-20260927/src/exoeos/ma_fe_si_o.py": "32b526dc260d39a5071e25b198cc06fd331b1ceae89483d509702629ab5c7cde",
+    "/tmp/stage2-candidate-eos-20260927/src/exoeos/ma_fe_si_o_h.py": "131931749adf57a63642a156d93827c3429941b4c442256bc098c9d0cb86765d",
+    "/tmp/m2-prepare-actual-oxygen-scenarios.py": "0e950a8458a1acc11fe932fd9e759b5207775a0a68fee98c096437d470c302fa"
+  },
+  "pressure_interpretation": "One-atmosphere measured standard reconstructed using actual source gas standards, then held as a constant RT offset for all pressures at fixed 2173.15 K. Representative P is recorded, no pressure upper bound or pressure calibration is asserted. This is a conditional model sensitivity.",
+  "scenarios": {
+    "sakao1959": {
+      "assessment": {
+        "role": "explicit_measured_O_standard_scenario",
+        "reference": "sakao1959",
+        "T_K": 2173.15,
+        "log10_K": 0.015537077514207187,
+        "log10_f_O_per_mass_percent": -0.04528265421162825,
+        "measured_temperatures_K": [
+          1824.15,
+          1873.15,
+          1924.15
+        ],
+        "inside_measured_temperature_envelope": false,
+        "temperature_distance_K": 249.0,
+        "temperature_transfer_error_bound": null,
+        "P_Pa": 26720283.416157342,
+        "reaction": "O(metal) + H2(g) = H2O(g)",
+        "concentration_basis": "Henry mass percent O in pure liquid Fe at infinite dilution",
+        "input_standards_rt": {
+          "oxygen_standard_rt": -27.309388586778372,
+          "oxygen_lngamma_infinite_dilution": 7.592665025423924,
+          "hydrogen_gas_standard_rt": -19.747628372126396,
+          "water_gas_standard_rt": -41.22316206721143
+        },
+        "mass_percent_per_O_mole_fraction_at_infinite_dilution": 28.648939027665865,
+        "adopted_Henry_O_standard_rt": -23.071839971636326,
+        "target_Henry_O_standard_rt": -21.43975825201213,
+        "adopted_log10_K": -0.6932670073337509,
+        "adopted_minus_reference_log10_K": -0.7088040848479581,
+        "standard_offsets_rt": {
+          "O_metal": 1.6320817196241961
+        },
+        "target_O_standard_rt": -25.677306867154176,
+        "reference_total_pressure_Pa": 101325.0,
+        "pressure_distance_Pa": 26618958.416157342,
+        "pressure_transfer_error_bound": null,
+        "FeSiOH_composition_transfer_error_bound": null,
+        "published_fit_covariance": null,
+        "excess_Gibbs_model_changed": false,
+        "baseline_replaced": false,
+        "accepted_coupled_material_domain": null
+      },
+      "scenario_file": "sakao1959.json",
+      "sha256": "1d50fa76bc385617a504a79a6c1c9aa5b59d7989a52a15a796f3f5876346be83"
+    },
+    "matoba1965": {
+      "assessment": {
+        "role": "explicit_measured_O_standard_scenario",
+        "reference": "matoba1965",
+        "T_K": 2173.15,
+        "log10_K": 0.0210081448588455,
+        "log10_f_O_per_mass_percent": 0.27856383590640377,
+        "measured_temperatures_K": [
+          1823.15,
+          1880.15,
+          1936.15
+        ],
+        "inside_measured_temperature_envelope": false,
+        "temperature_distance_K": 237.0,
+        "temperature_transfer_error_bound": null,
+        "P_Pa": 26720283.416157342,
+        "reaction": "O(metal) + H2(g) = H2O(g)",
+        "concentration_basis": "Henry mass percent O in pure liquid Fe at infinite dilution",
+        "input_standards_rt": {
+          "oxygen_standard_rt": -27.309388586778372,
+          "oxygen_lngamma_infinite_dilution": 7.592665025423924,
+          "hydrogen_gas_standard_rt": -19.747628372126396,
+          "water_gas_standard_rt": -41.22316206721143
+        },
+        "mass_percent_per_O_mole_fraction_at_infinite_dilution": 28.648939027665865,
+        "adopted_Henry_O_standard_rt": -23.071839971636326,
+        "target_Henry_O_standard_rt": -21.4271606539016,
+        "adopted_log10_K": -0.6932670073337509,
+        "adopted_minus_reference_log10_K": -0.7142751521925964,
+        "standard_offsets_rt": {
+          "O_metal": 1.6446793177347274
+        },
+        "target_O_standard_rt": -25.664709269043644,
+        "reference_total_pressure_Pa": 101325.0,
+        "pressure_distance_Pa": 26618958.416157342,
+        "pressure_transfer_error_bound": null,
+        "FeSiOH_composition_transfer_error_bound": null,
+        "published_fit_covariance": null,
+        "excess_Gibbs_model_changed": false,
+        "baseline_replaced": false,
+        "accepted_coupled_material_domain": null
+      },
+      "scenario_file": "matoba1965.json",
+      "sha256": "b6c95f9689a56133a62fcad9154abf8b0f7684f369a54919d44d5ddf04262f83"
+    }
+  }
+}

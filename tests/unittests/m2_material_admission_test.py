@@ -21,6 +21,36 @@ def bse():
     return dict(zip(ledger["oxide_order"], ledger["oxide_mass_fractions"]))
 
 
+def test_added_helium_uses_the_full_liquid_mass_without_changing_reference_scope():
+    # Independent masses: 98 kg dry host, 2 kg native water, .1 kg H2, .2 kg He.
+    oxides = {name: value * .98 for name, value in bse().items()}
+    oxides["H2O"] = .02
+    total = 100.3
+    kwargs = dict(silicate_oxide_mass_fractions=oxides,
+                  molecular_h2_mass_ppm=.1 / total * 1e6,
+                  water_mass_percent=2. / total * 100.)
+    with pytest.raises(ValueError, match="complete-liquid"):
+        assess(2173.15, 2.7e7, **kwargs)
+    result = assess(2173.15, 2.7e7, **kwargs, dissolved_helium_mass_ppm=.2 / total * 1e6)
+    assert result["input"]["dissolved_helium_mass_ppm"] == .2 / total * 1e6
+    assert result["input"]["dry_silicate_oxide_mass_fractions"] == pytest.approx(bse())
+    assert result["material_admission"] == "not_established"
+    assert result["accepted_coupled_material_domain"] is None
+
+
+@pytest.mark.parametrize("helium", [-1., float("nan"), float("inf"), True, "1", None, 1e6])
+def test_invalid_or_host_exhausting_helium_is_rejected(helium):
+    with pytest.raises(ValueError):
+        assess(2173.15, 2.7e7, silicate_oxide_mass_fractions=bse(),
+               dissolved_helium_mass_ppm=helium)
+
+
+def test_zero_helium_is_the_legacy_default():
+    kwargs = dict(silicate_oxide_mass_fractions=bse(), molecular_h2_mass_ppm=0., water_mass_percent=0.)
+    assert assess(2173.15, 2.7e7, **kwargs) == assess(
+        2173.15, 2.7e7, **kwargs, dissolved_helium_mass_ppm=0.)
+
+
 def host(name):
     data = json.loads((PATH.parent / "hydrogen_reference.json").read_text())
     values = data["chaudhari_2025"]["hosts"][name]["table_1_oxide_weight_percent"]
@@ -48,6 +78,34 @@ def test_bse_control_has_quantified_extrapolation_and_no_common_admission():
     assert result["published_h2_extrapolation"]["predicted_molecular_h2_mass_ppm"] == pytest.approx(.02575)
     assert result["accepted_coupled_material_domain"] is None
     assert result["material_admission"] == "not_established"
+
+
+def test_constitutive_choices_do_not_misuse_legacy_reference_checks_as_acceptance():
+    inputs = dict(silicate_oxide_mass_fractions=bse(),
+                  alloy_atomic_fractions=[.97, .001, .004, .024, .001, 0., 0., 0., 0., 0., 0.])
+    legacy = assess(2173.15, 2.7e7, **inputs)
+    selected = assess(2173.15, 2.7e7, **inputs, liquid_model="published_water",
+                      metal_model="associated_k", hydrogen_oxygen_model="schenck1961_abstract")
+    for key in ("silicate_hydrogen_references", "alloy_hydrogen_reference", "input",
+                "implemented_hydrogen_reference_overlap"):
+        assert selected[key] == legacy[key]
+    assert not selected["reference_assessment_scope"]["reference_conditions_are_constitutive_acceptance"]
+    assert selected["accepted_coupled_material_domain"] is None
+    evidence = selected["constitutive_evidence"]
+    assert evidence["selected_models"]["liquid_model"] == "published_water"
+    assert evidence["actual_comparison_coordinates"]["alloy_mass_percent"] == selected["alloy_hydrogen_reference"]["mass_percent"]
+    assert legacy["constitutive_evidence"]["selected_models"]["metal_model"] is None
+    categories = set(evidence["categories"])
+    assert len(evidence["systems"]) == 6
+    assert all(categories <= set(system) for system in evidence["systems"].values())
+    omission = evidence["additional_omitted_transfer_paths"]
+    assert set(omission["paths"]) == {"Na_to_metal", "He_to_silicate", "He_to_metal"}
+    assert not omission["all_13_element_transfer_coverage_established"]
+    for invalid in ({"liquid_model": "unknown"},
+                    {"metal_model": "ma", "hydrogen_oxygen_model": "schenck1961_abstract"},
+                    {"metal_model": "associated"}):
+        with pytest.raises(ValueError):
+            assess(2173.15, 2.7e7, **inputs, **invalid)
 
 
 def test_matching_a_measured_host_does_not_establish_a_coupled_domain():
@@ -108,6 +166,53 @@ def test_one_bar_is_not_the_one_atmosphere_hydrogen_reference():
     assert not alloy["reference_conditions_supported"]
 
 
+def test_phosphorus_uses_the_complete_mass_basis_without_four_component_admission():
+    fractions = {"Fe": .95, "Si": .04, "O": 0., "H": .001, "P": .009}
+    alloy = assess(1873.15, 101325., silicate_oxide_mass_fractions=bse(),
+                   alloy_atomic_fractions=fractions,
+                   hydrogen_partial_pressure_Pa=101325.)["alloy_hydrogen_reference"]
+    denominator = (.95 * .055845 + .04 * .0280855 + .001 * .00100794
+                   + .009 * .030973761998)
+    assert alloy["atomic_h_mass_ppm"] == pytest.approx(1e6 * .001 * .00100794 / denominator)
+    assert alloy["mass_percent"]["P"] == pytest.approx(100 * .009 * .030973761998 / denominator)
+    assert not alloy["condition_checks"]["phosphorus_free"]
+    assert not alloy["reference_conditions_supported"]
+    zero = assess(1873.15, 101325., silicate_oxide_mass_fractions=bse(),
+                  alloy_atomic_fractions=[.959, .04, 0., .001, 0.],
+                  hydrogen_partial_pressure_Pa=101325.)["alloy_hydrogen_reference"]
+    assert zero["reference_conditions_supported"]
+    assert zero["condition_checks"]["phosphorus_free"]
+
+
+def test_associated_metal_atomic_recount_keeps_all_ten_elements_in_mass_basis():
+    fractions = dict(zip(MODULE.EXTENDED_ALLOY_COMPONENTS,
+                         [.918, .001, .01, .03, .001, .001, .001, .001, .036, .001]))
+    x = np.array(list(fractions.values()))
+    assert x.sum() == pytest.approx(1.)
+    alloy = assess(1873.15, 101325., silicate_oxide_mass_fractions=bse(),
+                   alloy_atomic_fractions=fractions,
+                   hydrogen_partial_pressure_Pa=101325.)["alloy_hydrogen_reference"]
+    assert alloy["mass_percent"]["Cr"] == pytest.approx(
+        100*.036*.0519961/(x@MODULE.EXTENDED_ALLOY_MOLAR_MASSES))
+    assert alloy["atomic_h_mass_ppm"] == pytest.approx(
+        1e6*.03*.00100794/(x@MODULE.EXTENDED_ALLOY_MOLAR_MASSES))
+    assert not alloy["condition_checks"]["other_metal_solutes_free"]
+    assert not alloy["reference_conditions_supported"]
+
+
+def test_potassium_sensitivity_uses_the_full_eleven_element_mass_denominator():
+    x = np.array([.96, .001, .002, .02, .001, .001, .001, .001, .002, .001, .01])
+    fractions = dict(zip(MODULE.POTASSIUM_ALLOY_COMPONENTS, x))
+    assert x.sum() == pytest.approx(1.)
+    alloy = assess(1873.15, 101325., silicate_oxide_mass_fractions=bse(),
+                   alloy_atomic_fractions=fractions,
+                   hydrogen_partial_pressure_Pa=101325.)["alloy_hydrogen_reference"]
+    denominator = x @ MODULE.POTASSIUM_ALLOY_MOLAR_MASSES
+    assert alloy["mass_percent"]["K"] == pytest.approx(100*.01*.0390983/denominator)
+    assert alloy["atomic_h_mass_ppm"] == pytest.approx(1e6*.02*.00100794/denominator)
+    assert not alloy["reference_conditions_supported"]
+
+
 def test_sossi_comparison_uses_feo_total_without_changing_the_input_state():
     measured = {"SiO2": 46.53, "Al2O3": 4.37, "FeO": 8.44, "MgO": 38.05, "CaO": 2.06}
     # Re-express half of the same Fe atoms as Fe2O3, then normalize physical mass.
@@ -147,3 +252,25 @@ def test_inconsistent_input_cannot_produce_a_material_receipt(changes):
               "silicate_oxide_mass_fractions": bse(), **changes}
     with pytest.raises(ValueError):
         assess(**kwargs)
+
+
+def test_sodium_counts_in_complete_alloy_mass_without_automatic_admission():
+    x=np.array([.958,.001,.004,.024,.001,0.,0.,0.,.001,0.,.001,.01])
+    assert x.sum()==pytest.approx(1.)
+    inputs=dict(silicate_oxide_mass_fractions=bse(),metal_model='associated_k_na',
+                hydrogen_oxygen_model='schenck1961_abstract')
+    result=assess(2173.15,2.7e7,alloy_atomic_fractions=x,**inputs)
+    mapped=assess(2173.15,2.7e7,alloy_atomic_fractions=dict(zip(MODULE.SODIUM_ALLOY_COMPONENTS,x)),**inputs)
+    assert result['alloy_hydrogen_reference']==mapped['alloy_hydrogen_reference']
+    alloy=result['alloy_hydrogen_reference']
+    expected=100*x*MODULE.SODIUM_ALLOY_MOLAR_MASSES/(x@MODULE.SODIUM_ALLOY_MOLAR_MASSES)
+    assert alloy['mass_percent']['Na']==pytest.approx(expected[-1])
+    assert alloy['atomic_h_mass_ppm']==pytest.approx(expected[3]*1e4)
+    assert not alloy['condition_checks']['other_metal_solutes_free']
+    assert result['material_admission']=='not_established'
+    assert result['accepted_coupled_material_domain'] is None
+    path=result['constitutive_evidence']['additional_omitted_transfer_paths']['paths']['Na_to_metal']
+    assert path['conditional_model']['model_selector']=='associated_k_na'
+    assert not path['conditional_model']['empirical_BSE_calibration']
+    with pytest.raises(ValueError,match='every alloy element'):
+        assess(2173.15,2.7e7,alloy_atomic_fractions=np.r_[1.,np.zeros(10)],**inputs)

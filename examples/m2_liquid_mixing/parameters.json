@@ -1,0 +1,1492 @@
+{
+  "model_id": "melts_v34_regular_liquid_mixing_v1",
+  "component_order": [
+    "sio2",
+    "tio2",
+    "al2o3",
+    "fe2o3",
+    "mgcr2o4",
+    "fe2sio4",
+    "mnsi0.5o2",
+    "mg2sio4",
+    "nisi0.5o2",
+    "cosi0.5o2",
+    "casio3",
+    "na2sio3",
+    "kalsio4",
+    "ca3(po4)2",
+    "co2",
+    "so3",
+    "cl2o-1",
+    "f2o-1",
+    "h2o"
+  ],
+  "backend_R_J_mol_K": 8.3143,
+  "water_index": 18,
+  "unsupported_positive_indices": [
+    14,
+    15,
+    16,
+    17
+  ],
+  "pair_order": "lexicographic i<j in component_order",
+  "parameters": [
+    {
+      "label": "W(TiO2      ,SiO2      )",
+      "H_J_mol": "26266.7",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Al2O3     ,SiO2      )",
+      "H_J_mol": "-39120.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Fe2O3     ,SiO2      )",
+      "H_J_mol": "8110.3",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(MgCr2O4   ,SiO2      )",
+      "H_J_mol": "27886.3",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Fe2SiO4   ,SiO2      )",
+      "H_J_mol": "23660.9",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(MnSi0.5O2 ,SiO2      )",
+      "H_J_mol": "18393.9",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Mg2SiO4   ,SiO2      )",
+      "H_J_mol": "3421.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(NiSi0.5O2 ,SiO2      )",
+      "H_J_mol": "25197.4",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CoSi0.5O2 ,SiO2      )",
+      "H_J_mol": "14802.8",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CaSiO3    ,SiO2      )",
+      "H_J_mol": "-863.7",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Na2SiO3   ,SiO2      )",
+      "H_J_mol": "-99039.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(KAlSiO4   ,SiO2      )",
+      "H_J_mol": "-33921.7",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Ca3(PO4)2 ,SiO2      )",
+      "H_J_mol": "61891.6",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CO2       ,SiO2      )",
+      "H_J_mol": "66600.7",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(S         ,SiO2      )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Cl        ,SiO2      )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(F         ,SiO2      )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,SiO2      )",
+      "H_J_mol": "30967.3",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Al2O3     ,TiO2      )",
+      "H_J_mol": "-29449.8",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Fe2O3     ,TiO2      )",
+      "H_J_mol": "-84756.9",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(MgCr2O4   ,TiO2      )",
+      "H_J_mol": "-72303.4",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Fe2SiO4   ,TiO2      )",
+      "H_J_mol": "5209.1",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(MnSi0.5O2 ,TiO2      )",
+      "H_J_mol": "-16123.5",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Mg2SiO4   ,TiO2      )",
+      "H_J_mol": "-4178.3",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(NiSi0.5O2 ,TiO2      )",
+      "H_J_mol": "3614.8",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CoSi0.5O2 ,TiO2      )",
+      "H_J_mol": "-1640.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CaSiO3    ,TiO2      )",
+      "H_J_mol": "-35372.5",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Na2SiO3   ,TiO2      )",
+      "H_J_mol": "-15415.6",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(KAlSiO4   ,TiO2      )",
+      "H_J_mol": "-48094.6",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Ca3(PO4)2 ,TiO2      )",
+      "H_J_mol": "25938.8",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CO2       ,TiO2      )",
+      "H_J_mol": "25427.3",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(S         ,TiO2      )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Cl        ,TiO2      )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(F         ,TiO2      )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,TiO2      )",
+      "H_J_mol": "81879.1",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Fe2O3     ,Al2O3     )",
+      "H_J_mol": "-17089.4",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(MgCr2O4   ,Al2O3     )",
+      "H_J_mol": "-31770.3",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Fe2SiO4   ,Al2O3     )",
+      "H_J_mol": "-30509.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(MnSi0.5O2 ,Al2O3     )",
+      "H_J_mol": "-53874.9",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Mg2SiO4   ,Al2O3     )",
+      "H_J_mol": "-32880.3",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(NiSi0.5O2 ,Al2O3     )",
+      "H_J_mol": "2985.2",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CoSi0.5O2 ,Al2O3     )",
+      "H_J_mol": "-2677.4",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CaSiO3    ,Al2O3     )",
+      "H_J_mol": "-57917.9",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Na2SiO3   ,Al2O3     )",
+      "H_J_mol": "-130785.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(KAlSiO4   ,Al2O3     )",
+      "H_J_mol": "-25859.2",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Ca3(PO4)2 ,Al2O3     )",
+      "H_J_mol": "52220.8",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CO2       ,Al2O3     )",
+      "H_J_mol": "27043.7",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(S         ,Al2O3     )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Cl        ,Al2O3     )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(F         ,Al2O3     )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,Al2O3     )",
+      "H_J_mol": "-16098.1",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(MgCr2O4   ,Fe2O3     )",
+      "H_J_mol": "21605.9",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Fe2SiO4   ,Fe2O3     )",
+      "H_J_mol": "-179064.9",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(MnSi0.5O2 ,Fe2O3     )",
+      "H_J_mol": "3907.9",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Mg2SiO4   ,Fe2O3     )",
+      "H_J_mol": "-71518.6",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(NiSi0.5O2 ,Fe2O3     )",
+      "H_J_mol": "408.7",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CoSi0.5O2 ,Fe2O3     )",
+      "H_J_mol": "-223.7",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CaSiO3    ,Fe2O3     )",
+      "H_J_mol": "12076.6",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Na2SiO3   ,Fe2O3     )",
+      "H_J_mol": "-149662.2",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(KAlSiO4   ,Fe2O3     )",
+      "H_J_mol": "57555.9",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Ca3(PO4)2 ,Fe2O3     )",
+      "H_J_mol": "-4213.9",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CO2       ,Fe2O3     )",
+      "H_J_mol": "1688.8",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(S         ,Fe2O3     )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Cl        ,Fe2O3     )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(F         ,Fe2O3     )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,Fe2O3     )",
+      "H_J_mol": "31405.5",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Fe2SiO4   ,MgCr2O4   )",
+      "H_J_mol": "-82971.8",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(MnSi0.5O2 ,MgCr2O4   )",
+      "H_J_mol": "182.4",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Mg2SiO4   ,MgCr2O4   )",
+      "H_J_mol": "46049.2",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(NiSi0.5O2 ,MgCr2O4   )",
+      "H_J_mol": "-266.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CoSi0.5O2 ,MgCr2O4   )",
+      "H_J_mol": "-384.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CaSiO3    ,MgCr2O4   )",
+      "H_J_mol": "30704.7",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Na2SiO3   ,MgCr2O4   )",
+      "H_J_mol": "113646.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(KAlSiO4   ,MgCr2O4   )",
+      "H_J_mol": "75709.1",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Ca3(PO4)2 ,MgCr2O4   )",
+      "H_J_mol": "5341.8",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CO2       ,MgCr2O4   )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(S         ,MgCr2O4   )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Cl        ,MgCr2O4   )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(F         ,MgCr2O4   )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,MgCr2O4   )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(MnSi0.5O2 ,Fe2SiO4   )",
+      "H_J_mol": "-6823.9",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Mg2SiO4   ,Fe2SiO4   )",
+      "H_J_mol": "-37256.7",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(NiSi0.5O2 ,Fe2SiO4   )",
+      "H_J_mol": "-17019.8",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CoSi0.5O2 ,Fe2SiO4   )",
+      "H_J_mol": "-11746.3",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CaSiO3    ,Fe2SiO4   )",
+      "H_J_mol": "-12970.8",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Na2SiO3   ,Fe2SiO4   )",
+      "H_J_mol": "-90533.8",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(KAlSiO4   ,Fe2SiO4   )",
+      "H_J_mol": "23649.4",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Ca3(PO4)2 ,Fe2SiO4   )",
+      "H_J_mol": "87410.3",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CO2       ,Fe2SiO4   )",
+      "H_J_mol": "134680.2",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(S         ,Fe2SiO4   )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Cl        ,Fe2SiO4   )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(F         ,Fe2SiO4   )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,Fe2SiO4   )",
+      "H_J_mol": "28873.6",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Mg2SiO4   ,MnSi0.5O2 )",
+      "H_J_mol": "-13040.1",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(NiSi0.5O2 ,MnSi0.5O2 )",
+      "H_J_mol": "785.8",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CoSi0.5O2 ,MnSi0.5O2 )",
+      "H_J_mol": "-50.6",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CaSiO3    ,MnSi0.5O2 )",
+      "H_J_mol": "2934.6",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Na2SiO3   ,MnSi0.5O2 )",
+      "H_J_mol": "-15780.8",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(KAlSiO4   ,MnSi0.5O2 )",
+      "H_J_mol": "23727.4",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Ca3(PO4)2 ,MnSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CO2       ,MnSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(S         ,MnSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Cl        ,MnSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(F         ,MnSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,MnSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(NiSi0.5O2 ,Mg2SiO4   )",
+      "H_J_mol": "-21175.5",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CoSi0.5O2 ,Mg2SiO4   )",
+      "H_J_mol": "-14994.9",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CaSiO3    ,Mg2SiO4   )",
+      "H_J_mol": "-31731.9",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Na2SiO3   ,Mg2SiO4   )",
+      "H_J_mol": "-41876.9",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(KAlSiO4   ,Mg2SiO4   )",
+      "H_J_mol": "22323.1",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Ca3(PO4)2 ,Mg2SiO4   )",
+      "H_J_mol": "-23208.8",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CO2       ,Mg2SiO4   )",
+      "H_J_mol": "47406.1",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(S         ,Mg2SiO4   )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Cl        ,Mg2SiO4   )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(F         ,Mg2SiO4   )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,Mg2SiO4   )",
+      "H_J_mol": "35633.7",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CoSi0.5O2 ,NiSi0.5O2 )",
+      "H_J_mol": "258.9",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CaSiO3    ,NiSi0.5O2 )",
+      "H_J_mol": "7027.5",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Na2SiO3   ,NiSi0.5O2 )",
+      "H_J_mol": "-3647.8",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(KAlSiO4   ,NiSi0.5O2 )",
+      "H_J_mol": "4261.4",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Ca3(PO4)2 ,NiSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CO2       ,NiSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(S         ,NiSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Cl        ,NiSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(F         ,NiSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,NiSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CaSiO3    ,CoSi0.5O2 )",
+      "H_J_mol": "-26685.7",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Na2SiO3   ,CoSi0.5O2 )",
+      "H_J_mol": "531.2",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(KAlSiO4   ,CoSi0.5O2 )",
+      "H_J_mol": "265.7",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Ca3(PO4)2 ,CoSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CO2       ,CoSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(S         ,CoSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Cl        ,CoSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(F         ,CoSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,CoSi0.5O2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Na2SiO3   ,CaSiO3    )",
+      "H_J_mol": "-13247.1",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(KAlSiO4   ,CaSiO3    )",
+      "H_J_mol": "17111.1",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Ca3(PO4)2 ,CaSiO3    )",
+      "H_J_mol": "37070.3",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CO2       ,CaSiO3    )",
+      "H_J_mol": "44513.8",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(S         ,CaSiO3    )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Cl        ,CaSiO3    )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(F         ,CaSiO3    )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,CaSiO3    )",
+      "H_J_mol": "20374.6",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(KAlSiO4   ,Na2SiO3   )",
+      "H_J_mol": "6522.8",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Ca3(PO4)2 ,Na2SiO3   )",
+      "H_J_mol": "15571.9",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CO2       ,Na2SiO3   )",
+      "H_J_mol": "9846.7",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(S         ,Na2SiO3   )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Cl        ,Na2SiO3   )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(F         ,Na2SiO3   )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,Na2SiO3   )",
+      "H_J_mol": "-96937.6",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Ca3(PO4)2 ,KAlSiO4   )",
+      "H_J_mol": "17100.6",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CO2       ,KAlSiO4   )",
+      "H_J_mol": "1744.4",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(S         ,KAlSiO4   )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Cl        ,KAlSiO4   )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(F         ,KAlSiO4   )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,KAlSiO4   )",
+      "H_J_mol": "10374.2",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(CO2       ,Ca3(PO4)2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(S         ,Ca3(PO4)2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Cl        ,Ca3(PO4)2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(F         ,Ca3(PO4)2 )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,Ca3(PO4)2 )",
+      "H_J_mol": "43451.3",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(S         ,CO2       )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Cl        ,CO2       )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(F         ,CO2       )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,CO2       )",
+      "H_J_mol": "43128.4",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(Cl        ,S         )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(F         ,S         )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,S         )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(F         ,Cl        )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,Cl        )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    },
+    {
+      "label": "W(H2O       ,F         )",
+      "H_J_mol": "0.0",
+      "S_J_mol_K": "0.0",
+      "V_J_mol_bar": "0.0"
+    }
+  ],
+  "source": {
+    "repository": "https://github.com/magmasource/MAGMA",
+    "commit": "705a0fb315e5054d18275a580562f6121c8e458c",
+    "parameter_path": "includes/param_struct_data_v34.h",
+    "parameter_sha256": "ad78f9ac9a59c030aeee240893b00efc034ea81aed4d551abaed770215af7059",
+    "expression_path": "sources/liquid_v34.c",
+    "expression_sha256": "584ac446d03abf64ca7406768ad84975e1af346d159bc743c9adafd9441e91f6"
+  },
+  "scope": "Published rhyolite-MELTS v1.0.2 mixing expression, not standard states or a phase-equilibrium solver. The release binary build commit is not independently established; native compatibility must be measured separately.",
+  "element_order": [
+    "Al",
+    "C",
+    "Ca",
+    "Cl",
+    "Co",
+    "Cr",
+    "F",
+    "Fe",
+    "H",
+    "K",
+    "Mg",
+    "Mn",
+    "Na",
+    "Ni",
+    "O",
+    "P",
+    "S",
+    "Si",
+    "Ti"
+  ],
+  "component_element_matrix": [
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    [
+      2.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      3.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      3.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      4.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      2.0,
+      0.0,
+      0.0,
+      0.5,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.0,
+      0.0,
+      0.0,
+      0.0,
+      4.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      2.0,
+      0.0,
+      0.0,
+      0.5,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.0,
+      0.0,
+      0.0,
+      0.5,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      3.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.0,
+      0.0,
+      3.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      4.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      3.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      8.0,
+      2.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      3.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      2.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  ]
+}

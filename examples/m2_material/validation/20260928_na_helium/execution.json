@@ -1,0 +1,20 @@
+{
+  "created_utc": "2026-09-27T22:47:54.566773+00:00",
+  "replay_command": "python examples/m2_material/validation/20260928_na_helium/replay_frozen_oh.py --source /tmp/stage2-final-reclosed-h1e24-sakao-oh-16/closure.json --output examples/m2_material/validation/20260928_na_helium/frozen_oh.json",
+  "replay_exit_code": 0,
+  "targeted_tests": {
+    "command": "taskset -c 40 /home/kawahara/anaconda3/envs/myenv39/bin/python -m pytest -q tests/unittests/m2_helium_reference_test.py tests/unittests/m2_material_admission_test.py",
+    "exit_code": 0,
+    "passed": 30,
+    "log_sha256": "5e34bcc4bc792c5812abfe1958cd0415c13594f3ed6e0bd50771382470f8677b"
+  },
+  "validation": "AST, relative Markdown targets, source-record hash, git diff --check; primary tables visually checked; independent read-only science-scope review found no major issue.",
+  "native_or_source_solver_run": false,
+  "files_sha256": {
+    "examples/m2_material/helium_reference.py": "560ae087bdd087e6bb827012395cc0280f01ceb3d968494509e7453ba6f36cde",
+    "examples/m2_material/na_helium_transfer_sources.json": "e1078b86b92735b85209883f67a9037532399ebd1cdf4e611e75e5369108ee8d",
+    "examples/m2_material/constitutive_evidence.json": "172de4cda9dfccac95be207dadcb3b7b1db1d332db76ba777c7b6d9dbb479f08",
+    "examples/m2_material/validation/20260928_na_helium/frozen_oh.json": "f73d2972b8a0d4b581eac783804265ecd4a4ba83fb313dc4438857384929c238",
+    "examples/m2_material/validation/20260928_na_helium/replay_frozen_oh.py": "72b6d2fd9c6b2a911cb59957f525b90f86db797afd418bafd2775a7920baf29c"
+  }
+}
