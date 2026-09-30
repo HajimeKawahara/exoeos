@@ -1,0 +1,132 @@
+{
+  "assessment_id": "H2_absorption_dilute_amplitude_scenario_v1",
+  "scenario": {
+    "standard_offsets_rt": {
+      "O_metal": 1.6320817196241961,
+      "H_metal": -0.4445191104224264,
+      "H2_dissolved": 2.09848973665053
+    }
+  },
+  "standard_shift_key": "H2_dissolved",
+  "standard_shift_RT": 2.09848973665053,
+  "dilute_Henry_coefficient_ratio_new_over_old": 0.12264150943396226,
+  "reported_extinction_only_standard_shift_interval_RT": [
+    2.074622255243887,
+    2.121800815518977
+  ],
+  "equations": {
+    "Beer_Lambert": "c_new/c_old = epsilon_old/epsilon_new",
+    "dilute_standard": "mu0_new/RT = mu0_old/RT + ln(epsilon_new/epsilon_old)",
+    "finite_model_G": "G_new/RT = G_old/RT + n_H2_dissolved * standard_shift_RT",
+    "adopted_lnK_before": "-11.403 - 0.76 P_melt/GPa",
+    "adopted_lnK_after": "-11.403 - 0.76 P_melt/GPa - standard_shift_RT"
+  },
+  "concentration_receipts": [
+    {
+      "method": "table3_oxidation",
+      "sample": "PC-12",
+      "published_water_equivalent_difference_wt_percent": 1.04,
+      "stoichiometric_H2_mass_ppm": 1163.7427783525986,
+      "difference_minus_rounded_columns_wt_percent": -0.0030000000000001137
+    },
+    {
+      "method": "table3_oxidation",
+      "sample": "PC-13",
+      "published_water_equivalent_difference_wt_percent": 1.08,
+      "stoichiometric_H2_mass_ppm": 1208.5021159815446,
+      "difference_minus_rounded_columns_wt_percent": -0.004999999999999893
+    },
+    {
+      "method": "table3_oxidation",
+      "sample": "PC-14",
+      "published_water_equivalent_difference_wt_percent": 1.28,
+      "stoichiometric_H2_mass_ppm": 1432.2988041262752,
+      "difference_minus_rounded_columns_wt_percent": 0.0009999999999998899
+    },
+    {
+      "method": "table3_oxidation",
+      "sample": "PC-15",
+      "published_water_equivalent_difference_wt_percent": 0.735,
+      "stoichiometric_H2_mass_ppm": 822.4528289318845,
+      "difference_minus_rounded_columns_wt_percent": -0.002000000000000113
+    },
+    {
+      "method": "table3_oxidation",
+      "sample": "TZM-45",
+      "published_water_equivalent_difference_wt_percent": 0.02,
+      "stoichiometric_H2_mass_ppm": 22.37966881447305,
+      "difference_minus_rounded_columns_wt_percent": 0.0
+    },
+    {
+      "method": "table3_oxidation",
+      "sample": "TZM-46",
+      "published_water_equivalent_difference_wt_percent": 0.0075,
+      "stoichiometric_H2_mass_ppm": 8.392375805427392,
+      "difference_minus_rounded_columns_wt_percent": 3.469446951953614e-18
+    },
+    {
+      "method": "table4_KFT",
+      "sample": "PC-5",
+      "published_water_equivalent_difference_wt_percent": 0.14,
+      "stoichiometric_H2_mass_ppm": 156.65768170131136,
+      "difference_minus_rounded_columns_wt_percent": 5.551115123125783e-17
+    },
+    {
+      "method": "table4_KFT",
+      "sample": "PC-6",
+      "published_water_equivalent_difference_wt_percent": 0.29,
+      "stoichiometric_H2_mass_ppm": 324.5051978098592,
+      "difference_minus_rounded_columns_wt_percent": 0.0
+    },
+    {
+      "method": "table4_KFT",
+      "sample": "TZM-42",
+      "published_water_equivalent_difference_wt_percent": 0.047,
+      "stoichiometric_H2_mass_ppm": 52.592221714011664,
+      "difference_minus_rounded_columns_wt_percent": -6.938893903907228e-18
+    },
+    {
+      "method": "table4_KFT",
+      "sample": "TZM-44",
+      "published_water_equivalent_difference_wt_percent": 0.047,
+      "stoichiometric_H2_mass_ppm": 52.592221714011664,
+      "difference_minus_rounded_columns_wt_percent": -6.938893903907228e-18
+    }
+  ],
+  "fixed_dry_host_moles_remapping": [
+    {
+      "old_H2_mole_fraction": 1e-06,
+      "constant_Henry_scenario_x": 1.2264150943396226e-07,
+      "rescaling_solute_amount_at_fixed_host_x": 1.2264161703462626e-07
+    },
+    {
+      "old_H2_mole_fraction": 0.001,
+      "constant_Henry_scenario_x": 0.00012264150943396227,
+      "rescaling_solute_amount_at_fixed_host_x": 0.00012274920449073244
+    },
+    {
+      "old_H2_mole_fraction": 0.01,
+      "constant_Henry_scenario_x": 0.0012264150943396227,
+      "rescaling_solute_amount_at_fixed_host_x": 0.001237270391167793
+    },
+    {
+      "old_H2_mole_fraction": 0.04,
+      "constant_Henry_scenario_x": 0.004905660377358491,
+      "rescaling_solute_amount_at_fixed_host_x": 0.005084082909659758
+    }
+  ],
+  "source_sha256": "5e20e4e8186d55d3b76dad6166b49d0bf9ad844b1862a423ab1a5255fdf2915b",
+  "helper_sha256": "d65aba1ac32bef16c81117d5d788463ef890f46b6a4a0a996fbc75f1f55f9d42",
+  "adopted_by_default": false,
+  "accepted_coupled_material_domain": null,
+  "scope": [
+    "A measured spectroscopic recalibration motivates this amplitude scenario; unlike the water-capacity width, it is not chosen to cover residual spread.",
+    "The published coefficient is retained, not independently refitted; raw calibration-table observations and their rounding remain separate.",
+    "Absorption matrix, original experimental mole denominator, temperature dependence and peridotite transfer remain unverified by this conversion.",
+    "The quoted coefficient interval varies only the new absorption coefficient, not all measurement/systematic uncertainty or BSE extrapolation.",
+    "No gas standard, pressure slope, host mixing term, or original archive is changed.",
+    "Finite-composition continuation uses the existing molecular mole-fraction scalar; no claim of exact finite-glass mass-to-mole rescaling is made."
+  ],
+  "base_scenario_sha256": "9a70f5d73d1dab4150a4c1cce3eca0a29abbfd9257e5cb3f8f248bb820bb315e",
+  "base_scenario_path": "/tmp/m2-actual-oh-scenarios-20260927-verified/sakao1959_o_kato_h.json"
+}
