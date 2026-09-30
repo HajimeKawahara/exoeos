@@ -142,6 +142,19 @@ def test_associated_metal_atomic_recount_keeps_all_ten_elements_in_mass_basis():
     assert not alloy["reference_conditions_supported"]
 
 
+def test_potassium_sensitivity_uses_the_full_eleven_element_mass_denominator():
+    x = np.array([.96, .001, .002, .02, .001, .001, .001, .001, .002, .001, .01])
+    fractions = dict(zip(MODULE.POTASSIUM_ALLOY_COMPONENTS, x))
+    assert x.sum() == pytest.approx(1.)
+    alloy = assess(1873.15, 101325., silicate_oxide_mass_fractions=bse(),
+                   alloy_atomic_fractions=fractions,
+                   hydrogen_partial_pressure_Pa=101325.)["alloy_hydrogen_reference"]
+    denominator = x @ MODULE.POTASSIUM_ALLOY_MOLAR_MASSES
+    assert alloy["mass_percent"]["K"] == pytest.approx(100*.01*.0390983/denominator)
+    assert alloy["atomic_h_mass_ppm"] == pytest.approx(1e6*.02*.00100794/denominator)
+    assert not alloy["reference_conditions_supported"]
+
+
 def test_sossi_comparison_uses_feo_total_without_changing_the_input_state():
     measured = {"SiO2": 46.53, "Al2O3": 4.37, "FeO": 8.44, "MgO": 38.05, "CaO": 2.06}
     # Re-express half of the same Fe atoms as Fe2O3, then normalize physical mass.
