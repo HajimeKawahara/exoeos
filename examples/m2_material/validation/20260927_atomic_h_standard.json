@@ -1,0 +1,316 @@
+{
+  "T_K": 2173.15,
+  "representative_P_bar": 267.20283416157343,
+  "common_R_J_mol_K": 8.31446261815324,
+  "gas_model": "janaf",
+  "gas_species_count": 76,
+  "condensate_species_count": 26,
+  "atmosphere_element_order": [
+    "H",
+    "He",
+    "O",
+    "Mg",
+    "Si",
+    "Fe",
+    "Na",
+    "Al",
+    "Ca",
+    "K",
+    "Ti",
+    "Cr",
+    "P"
+  ],
+  "element_gauge_rt": [
+    -4.541156769990245,
+    -17.981569671633338,
+    -8.447040806194867,
+    -12.545856175800804,
+    1.8153736403492466,
+    -1.9681779289064742,
+    -15.353074494571606,
+    -4.379438618738327,
+    -11.597353506134155,
+    -17.168085958521534,
+    1.5049974757449087,
+    -1.796602415797923,
+    -4.9278073514325245
+  ],
+  "catalog_sha256": "956156c047f8ab8817cc824b357bf92d6537fddf6d79b25cdaf9aad57b2be358",
+  "actual_arguments": {
+    "oxygen_standard_rt": -27.309388586778372,
+    "oxygen_lngamma_infinite_dilution": 7.592665025423924,
+    "hydrogen_standard_rt": -3.1601586091569818,
+    "hydrogen_lngamma_infinite_dilution": 0.0,
+    "hydrogen_gas_standard_rt": -19.747628372126396,
+    "water_gas_standard_rt": -41.22316206721143
+  },
+  "Gibbs_head": "590ddd278c792006dc85cc1e14f0855b2b38c5fb",
+  "EOS_head": "f6967cbc5782cc6b230e07ea5953082ead8b54fb",
+  "file_sha256": {
+    "/tmp/m2-prepare-actual-oh-scenarios.py": "cabe3de5ad6dd85eccddb828913ae13fc3d51b14431e97220a77e582079d7579",
+    "/tmp/stage2-hydrogen-reference-20260927/examples/m2_material/hydrogen_standard_scenario.py": "22debdfe00f8982405d508f1c81d06d16b3200164ecff44ed9bca1a5b0d0e7fa",
+    "/tmp/stage2-hydrogen-reference-20260927/examples/m2_material/oxygen_calibration.py": "af74fd487e9cff58aa1465e4594c39574bb0f7131994bb084b164a9bd7671a50",
+    "/tmp/stage2-hydrogen-reference-20260927/examples/m2_material/hydrogen_reference.json": "5922d909964bf1c04a0c915e4cd02a8e03b40650bac0011ede6e6a93e10578aa",
+    "/tmp/stage2-hydrogen-reference-20260927/examples/m2_material/steel_data/oxygen_provenance.json": "11da43e90b840c526abce908f69ab66229ecb46e1a75437796fbb2396dc9e752",
+    "/tmp/stage2-physical-gibbs-20260927/examples/metal_silicate/m2_finite_gas.py": "dd68ca835f7eaedc5132c18c06112c87d481382ec0e47a2709bb34c410fc4cab",
+    "/tmp/stage2-physical-gibbs-20260927/examples/metal_silicate/m2_common_gas.py": "d9466af88628ee78051f979ce99f8f34cfd4abdfbbc8dcce725b0a29fa618cde",
+    "/tmp/stage2-physical-gibbs-20260927/examples/metal_silicate/run_bse_common_gibbs.py": "622603a4d71ac124e9581d6f776b8766105671fc64f373adb8838b7a603bcba4",
+    "/tmp/stage2-physical-gibbs-20260927/examples/metal_silicate/source.py": "df61525a449761d66193e37845b79adfffc54f24947db47a8de56a150287a07e",
+    "/tmp/stage2-physical-gibbs-20260927/examples/metal_silicate/reference.json": "0c7146ab1c5935daae25f4371a34847e1469dfc637b02afe3f5984d4aeb22092",
+    "/tmp/stage2-global-eos-20260927/src/exoeos/ma_fe_si_o.py": "32b526dc260d39a5071e25b198cc06fd331b1ceae89483d509702629ab5c7cde",
+    "/tmp/stage2-global-eos-20260927/src/exoeos/ma_fe_si_o_h.py": "131931749adf57a63642a156d93827c3429941b4c442256bc098c9d0cb86765d"
+  },
+  "H_scenario": {
+    "role": "explicit_measured_atomic_H_standard_scenario",
+    "reaction": "0.5 H2(g) = H(metal)",
+    "concentration_basis": "Henry atomic-H mass fraction in dilute pure liquid Fe",
+    "source_doi": "10.2355/tetsutohagane1955.56.5_521",
+    "source_data_sha256": "5922d909964bf1c04a0c915e4cd02a8e03b40650bac0011ede6e6a93e10578aa",
+    "T_K": 2173.15,
+    "P_Pa": 26720283.416157342,
+    "standard_pressure_Pa": 100000.0,
+    "reference_p_H2_Pa": 101325.0,
+    "reference_total_pressure_Pa": 101325.0,
+    "reference_H_mass_ppm": 34.40783268591349,
+    "input_standards_rt": {
+      "hydrogen_standard_rt": -3.1601586091569818,
+      "hydrogen_lngamma_infinite_dilution": 0.0,
+      "hydrogen_gas_standard_rt": -19.747628372126396
+    },
+    "H_mass_fraction_per_atomic_mole_fraction_at_infinite_dilution": 0.01804888530754768,
+    "adopted_Henry_H_standard_rt": 0.854512742767767,
+    "target_Henry_H_standard_rt": 0.4099936323453406,
+    "target_H_standard_rt": -3.604677719579408,
+    "standard_offsets_rt": {
+      "H_metal": -0.4445191104224264
+    },
+    "inside_measured_temperature_envelope": false,
+    "temperature_distance_K": 160.0,
+    "pressure_distance_Pa": 26618958.416157342,
+    "temperature_transfer_error_bound": null,
+    "pressure_transfer_error_bound": null,
+    "FeSiOH_composition_transfer_error_bound": null,
+    "excess_Gibbs_model_changed": false,
+    "baseline_replaced": false,
+    "accepted_coupled_material_domain": null
+  },
+  "O_scenarios": {
+    "sakao1959": {
+      "role": "explicit_measured_O_standard_scenario",
+      "reference": "sakao1959",
+      "T_K": 2173.15,
+      "log10_K": 0.015537077514207187,
+      "log10_f_O_per_mass_percent": -0.04528265421162825,
+      "measured_temperatures_K": [
+        1824.15,
+        1873.15,
+        1924.15
+      ],
+      "inside_measured_temperature_envelope": false,
+      "temperature_distance_K": 249.0,
+      "temperature_transfer_error_bound": null,
+      "P_Pa": 26720283.416157342,
+      "reaction": "O(metal) + H2(g) = H2O(g)",
+      "concentration_basis": "Henry mass percent O in pure liquid Fe at infinite dilution",
+      "input_standards_rt": {
+        "oxygen_standard_rt": -27.309388586778372,
+        "oxygen_lngamma_infinite_dilution": 7.592665025423924,
+        "hydrogen_gas_standard_rt": -19.747628372126396,
+        "water_gas_standard_rt": -41.22316206721143
+      },
+      "mass_percent_per_O_mole_fraction_at_infinite_dilution": 28.648939027665865,
+      "adopted_Henry_O_standard_rt": -23.071839971636326,
+      "target_Henry_O_standard_rt": -21.43975825201213,
+      "adopted_log10_K": -0.6932670073337509,
+      "adopted_minus_reference_log10_K": -0.7088040848479581,
+      "standard_offsets_rt": {
+        "O_metal": 1.6320817196241961
+      },
+      "target_O_standard_rt": -25.677306867154176,
+      "reference_total_pressure_Pa": 101325.0,
+      "pressure_distance_Pa": 26618958.416157342,
+      "pressure_transfer_error_bound": null,
+      "FeSiOH_composition_transfer_error_bound": null,
+      "published_fit_covariance": null,
+      "excess_Gibbs_model_changed": false,
+      "baseline_replaced": false,
+      "accepted_coupled_material_domain": null
+    },
+    "matoba1965": {
+      "role": "explicit_measured_O_standard_scenario",
+      "reference": "matoba1965",
+      "T_K": 2173.15,
+      "log10_K": 0.0210081448588455,
+      "log10_f_O_per_mass_percent": 0.27856383590640377,
+      "measured_temperatures_K": [
+        1823.15,
+        1880.15,
+        1936.15
+      ],
+      "inside_measured_temperature_envelope": false,
+      "temperature_distance_K": 237.0,
+      "temperature_transfer_error_bound": null,
+      "P_Pa": 26720283.416157342,
+      "reaction": "O(metal) + H2(g) = H2O(g)",
+      "concentration_basis": "Henry mass percent O in pure liquid Fe at infinite dilution",
+      "input_standards_rt": {
+        "oxygen_standard_rt": -27.309388586778372,
+        "oxygen_lngamma_infinite_dilution": 7.592665025423924,
+        "hydrogen_gas_standard_rt": -19.747628372126396,
+        "water_gas_standard_rt": -41.22316206721143
+      },
+      "mass_percent_per_O_mole_fraction_at_infinite_dilution": 28.648939027665865,
+      "adopted_Henry_O_standard_rt": -23.071839971636326,
+      "target_Henry_O_standard_rt": -21.4271606539016,
+      "adopted_log10_K": -0.6932670073337509,
+      "adopted_minus_reference_log10_K": -0.7142751521925964,
+      "standard_offsets_rt": {
+        "O_metal": 1.6446793177347274
+      },
+      "target_O_standard_rt": -25.664709269043644,
+      "reference_total_pressure_Pa": 101325.0,
+      "pressure_distance_Pa": 26618958.416157342,
+      "pressure_transfer_error_bound": null,
+      "FeSiOH_composition_transfer_error_bound": null,
+      "published_fit_covariance": null,
+      "excess_Gibbs_model_changed": false,
+      "baseline_replaced": false,
+      "accepted_coupled_material_domain": null
+    }
+  },
+  "scenario_files": {
+    "kato_h_only": {
+      "file": "kato_h_only.json",
+      "sha256": "093758861090d4bb30cea6252d3fbd49671579a58bbad3407d2bac9bb8991001"
+    },
+    "sakao1959_o_kato_h": {
+      "file": "sakao1959_o_kato_h.json",
+      "sha256": "9a70f5d73d1dab4150a4c1cce3eca0a29abbfd9257e5cb3f8f248bb820bb315e"
+    },
+    "matoba1965_o_kato_h": {
+      "file": "matoba1965_o_kato_h.json",
+      "sha256": "6a6c7d26fc428a334b1960eaa547cc99813cd541ce5fa09f727341e76bf49eeb"
+    }
+  },
+  "measured_H_replay": [
+    {
+      "observation": {
+        "T_K": 1873.15,
+        "p_H2_Pa": 101325.0,
+        "observed_H_mass_ppm": 25.0,
+        "reported_sigma_ppm": null,
+        "replicates_ppm": null
+      },
+      "source_arguments": {
+        "hydrogen_standard_rt": -2.3624621875091467,
+        "hydrogen_lngamma_infinite_dilution": 0.0,
+        "hydrogen_gas_standard_rt": -19.272996128800123
+      },
+      "scenario": {
+        "role": "explicit_measured_atomic_H_standard_scenario",
+        "reaction": "0.5 H2(g) = H(metal)",
+        "concentration_basis": "Henry atomic-H mass fraction in dilute pure liquid Fe",
+        "source_doi": "10.2355/tetsutohagane1955.56.5_521",
+        "source_data_sha256": "5922d909964bf1c04a0c915e4cd02a8e03b40650bac0011ede6e6a93e10578aa",
+        "T_K": 1873.15,
+        "P_Pa": 101325.0,
+        "standard_pressure_Pa": 100000.0,
+        "reference_p_H2_Pa": 101325.0,
+        "reference_total_pressure_Pa": 101325.0,
+        "reference_H_mass_ppm": 25.034920634252707,
+        "input_standards_rt": {
+          "hydrogen_standard_rt": -2.3624621875091467,
+          "hydrogen_lngamma_infinite_dilution": 0.0,
+          "hydrogen_gas_standard_rt": -19.272996128800123
+        },
+        "H_mass_fraction_per_atomic_mole_fraction_at_infinite_dilution": 0.01804888530754768,
+        "adopted_Henry_H_standard_rt": 1.652209164415602,
+        "target_Henry_H_standard_rt": 0.9653223112420939,
+        "target_H_standard_rt": -3.049349040682655,
+        "standard_offsets_rt": {
+          "H_metal": -0.6868868531735082
+        },
+        "inside_measured_temperature_envelope": true,
+        "temperature_distance_K": 0.0,
+        "pressure_distance_Pa": 0.0,
+        "temperature_transfer_error_bound": null,
+        "pressure_transfer_error_bound": null,
+        "FeSiOH_composition_transfer_error_bound": null,
+        "excess_Gibbs_model_changed": false,
+        "baseline_replaced": false,
+        "accepted_coupled_material_domain": null
+      },
+      "baseline_Ma_H_mass_ppm": 12.604707402349241,
+      "corrected_Ma_H_mass_ppm": 25.069065376930595,
+      "published_Henry_H_mass_ppm": 25.034920634252707,
+      "finite_atomic_fraction_conversion_minus_Henry_ppm": 0.03414474267788847,
+      "baseline_minus_observed_ppm": -12.395292597650759,
+      "corrected_minus_observed_ppm": 0.06906537693059533,
+      "scope": "The adopted Ma model has ln gamma_H=0 for every Fe-H composition. Exact x-to-mass conversion is separated from the dilute Henry fit; it is not a new H self-interaction."
+    },
+    {
+      "observation": {
+        "T_K": 1873.15,
+        "p_H2_Pa": 9211.363636363636,
+        "observed_H_mass_ppm": 7.34,
+        "reported_sigma_ppm": 0.18,
+        "replicates_ppm": [
+          7.26,
+          7.18,
+          7.16,
+          7.51,
+          7.61
+        ]
+      },
+      "source_arguments": {
+        "hydrogen_standard_rt": -2.3624621875091467,
+        "hydrogen_lngamma_infinite_dilution": 0.0,
+        "hydrogen_gas_standard_rt": -19.272996128800123
+      },
+      "scenario": {
+        "role": "explicit_measured_atomic_H_standard_scenario",
+        "reaction": "0.5 H2(g) = H(metal)",
+        "concentration_basis": "Henry atomic-H mass fraction in dilute pure liquid Fe",
+        "source_doi": "10.2355/tetsutohagane1955.56.5_521",
+        "source_data_sha256": "5922d909964bf1c04a0c915e4cd02a8e03b40650bac0011ede6e6a93e10578aa",
+        "T_K": 1873.15,
+        "P_Pa": 101325.0,
+        "standard_pressure_Pa": 100000.0,
+        "reference_p_H2_Pa": 101325.0,
+        "reference_total_pressure_Pa": 101325.0,
+        "reference_H_mass_ppm": 25.034920634252707,
+        "input_standards_rt": {
+          "hydrogen_standard_rt": -2.3624621875091467,
+          "hydrogen_lngamma_infinite_dilution": 0.0,
+          "hydrogen_gas_standard_rt": -19.272996128800123
+        },
+        "H_mass_fraction_per_atomic_mole_fraction_at_infinite_dilution": 0.01804888530754768,
+        "adopted_Henry_H_standard_rt": 1.652209164415602,
+        "target_Henry_H_standard_rt": 0.9653223112420939,
+        "target_H_standard_rt": -3.049349040682655,
+        "standard_offsets_rt": {
+          "H_metal": -0.6868868531735082
+        },
+        "inside_measured_temperature_envelope": true,
+        "temperature_distance_K": 0.0,
+        "pressure_distance_Pa": 0.0,
+        "temperature_transfer_error_bound": null,
+        "pressure_transfer_error_bound": null,
+        "FeSiOH_composition_transfer_error_bound": null,
+        "excess_Gibbs_model_changed": false,
+        "baseline_replaced": false,
+        "accepted_coupled_material_domain": null
+      },
+      "baseline_Ma_H_mass_ppm": 3.7986427433805536,
+      "corrected_Ma_H_mass_ppm": 7.5514136950472315,
+      "published_Henry_H_mass_ppm": 7.548312581831133,
+      "finite_atomic_fraction_conversion_minus_Henry_ppm": 0.0031011132160987387,
+      "baseline_minus_observed_ppm": -3.5413572566194462,
+      "corrected_minus_observed_ppm": 0.21141369504723162,
+      "scope": "The adopted Ma model has ln gamma_H=0 for every Fe-H composition. Exact x-to-mass conversion is separated from the dilute Henry fit; it is not a new H self-interaction."
+    }
+  ],
+  "measured_replay_scope": "At 1873.15 K use the existing common 35-species H/O standard subset; the six added JANAF atomic references are restricted to 2100-2400 K and are not extrapolated. H/H2O standards are identical between the 35/76 catalogs at 2173.15 K.",
+  "pressure_interpretation": "Measured near-atmospheric reaction standards held as constant RT shifts at 2173.15 K across all total pressures. This is a conditional sensitivity, not a pressure-calibrated law or uncertainty bound.",
+  "coupled_reference_domain_established": false
+}
