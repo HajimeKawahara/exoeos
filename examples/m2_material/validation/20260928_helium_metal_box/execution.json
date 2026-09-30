@@ -1,0 +1,65 @@
+{
+  "created_utc": "2026-09-27T23:36:55.520205+00:00",
+  "base_commit": "813131ab63822c556ae62c95ff69f119487d0340",
+  "implementation_state": "New example files on the unchanged integration base; exact executed file hashes below.",
+  "replay": {
+    "command": "python examples/m2_material/validation/20260928_helium_metal_box/replay.py --source /tmp/stage2-final-reclosed-h1e24-sakao-oh-16/closure.json --output examples/m2_material/validation/20260928_helium_metal_box/assessment.json",
+    "exit_code": 0,
+    "python_version": "3.9.19 (main, May  6 2024, 19:43:03) \n[GCC 11.2.0]"
+  },
+  "tests": {
+    "initial_attempt": {
+      "passed": 25,
+      "failed": 1,
+      "reason": "Existing JAX scalar test selected unavailable CUDA; no model failure.",
+      "log": "tests_initial_backend_failure.log"
+    },
+    "cpu_recheck": {
+      "command": "taskset -c 46 env PYTHONPATH=src JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /home/kawahara/anaconda3/envs/myenv39/bin/python -m pytest -q tests/unittests/m2_helium_metal_box_test.py tests/unittests/m2_helium_reference_test.py tests/unittests/m2_helium_dissolution_test.py",
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "log": "tests_cpu.log"
+    }
+  },
+  "checks": [
+    "3 Python ASTs",
+    "4 local Markdown links",
+    "5 replay recipe hashes",
+    "Retained primary SI PDF hash",
+    "git diff --check"
+  ],
+  "native_or_source_solver_run": false,
+  "public_delivery_parent_with_identical_used_reference_files": "af7594cf7797d269c807cb2ebe55bed4514cae94",
+  "files": {
+    "examples/m2_material/validation/20260928_helium_metal_box/assessment.json": {
+      "sha256": "ffe82f3c9575eaf9baea9a57ce44c94fa0cd092c7b1b5e2a07c9aa9606799d47",
+      "bytes": 93433
+    },
+    "examples/m2_material/validation/20260928_helium_metal_box/replay.py": {
+      "sha256": "fc7460f370f9344f9b761f5da3a2d323b1df059ad295cfdac1f7d746b05021a1",
+      "bytes": 7991
+    },
+    "examples/m2_material/validation/20260928_helium_metal_box/tests_cpu.log": {
+      "sha256": "95273e387ce2d9d7534cd697b346ccc5522522c308a8d7bb6b31c255d68ac8ab",
+      "bytes": 99
+    },
+    "examples/m2_material/validation/20260928_helium_metal_box/tests_initial_backend_failure.log": {
+      "sha256": "a60bd0889ce6e5ed2a4828859764cb9def5cc4e8a1f330ffc40004ea79fbf76c",
+      "bytes": 6038
+    },
+    "examples/m2_material/helium_metal_box.py": {
+      "sha256": "f96c7d9b011004baa8324415a082f84b9994bec8e06a3b73d95eab2029c0a931",
+      "bytes": 4648
+    },
+    "examples/m2_material/helium_metal_box.md": {
+      "sha256": "a750f9f2cc6551e773a0a9e7a2a613b3b6052aeb9cc5dbec1af042de9c92f628",
+      "bytes": 4154
+    },
+    "tests/unittests/m2_helium_metal_box_test.py": {
+      "sha256": "1b92da54c2ce6d914373856146d04c281cc28226e6956ea9ea0fa071ff40b8a7",
+      "bytes": 4317
+    }
+  }
+}

@@ -1,0 +1,240 @@
+{
+  "assessment_id": "fixed_host_He_metal_partition_break_even_v1",
+  "original_box_assessment_sha256": "ffe82f3c9575eaf9baea9a57ce44c94fa0cd092c7b1b5e2a07c9aa9606799d47",
+  "original_source_sha256": "f7b848f0c89740ac77010b56eccdaa6c5283c17216d6aeac24d2c99ea54b9235",
+  "target": {
+    "partitioned_He_amount_relative_to_total": 0.01,
+    "kind": "Engineering partition criterion applied only within the fixed box; not a probabilistic uncertainty."
+  },
+  "maximum_same_run_TableS2_central_D": 0.017,
+  "rows": [
+    {
+      "box_inputs": {
+        "total_helium_mol": 1e+23,
+        "other_gas_mol": 4.878013105815483e+23,
+        "pressure_bar": 269.6545152505794,
+        "dry_silicate_mass_kg": 9.660260839397085e+22,
+        "silicate_nonhelium_mass_kg": 9.678349204498961e+22,
+        "metal_nonhelium_mass_kg": 2.6265649862626257e+21,
+        "helium_molar_mass_kg": 0.004002602000000001,
+        "henry_mol_per_kg_dry_bar": 2.4583505942637806e-05
+      },
+      "target_metal_helium_fraction": 0.01,
+      "critical_mass_fraction_partition_D": 340.8498892950644,
+      "helium_mol": {
+        "gas": 9.889205796424076e+22,
+        "silicate": 1.0794203575921767e+20,
+        "metal": 1e+21
+      },
+      "He_partial_pressure_bar": 45.45251639468346,
+      "He_mass_fraction_total_silicate": 4.464057561814756e-06,
+      "He_mass_fraction_total_metal": 0.0015215735257513544,
+      "helium_budget_relative_residual": -1.1632640000000002e-16,
+      "remaining_gas_silicate_balance": {
+        "inputs": {
+          "total_helium_mol": 9.899999999999999e+22,
+          "other_gas_mol": 4.878013105815483e+23,
+          "pressure_bar": 269.6545152505794,
+          "dry_silicate_mass_kg": 9.660260839397085e+22,
+          "silicate_nonhelium_mass_kg": 9.678349204498961e+22,
+          "metal_nonhelium_mass_kg": 2.6265649862626257e+21,
+          "helium_molar_mass_kg": 0.004002602000000001,
+          "henry_mol_per_kg_dry_bar": 2.4583505942637806e-05,
+          "metal_silicate_mass_fraction_D": 0.0
+        },
+        "helium_mol": {
+          "gas": 9.889205796424076e+22,
+          "silicate": 1.0794203575921767e+20,
+          "metal": 0.0
+        },
+        "fraction_of_total_helium": {
+          "gas": 0.9989096764064725,
+          "silicate": 0.0010903235935274514,
+          "metal": 0.0
+        },
+        "He_partial_pressure_bar": 45.45251639468346,
+        "He_mass_fraction_total_silicate": 4.464057561814756e-06,
+        "He_mass_fraction_total_metal": 0.0,
+        "He_mass_fraction_ratio": 0.0,
+        "He_mass_per_kg_dry_silicate": 4.472436256088518e-06,
+        "helium_budget_residual_mol": -5341184.0,
+        "helium_budget_relative_residual": -5.3951353535353545e-17,
+        "numerics": {
+          "method": "monotone binary64 bisection to adjacent gas-fraction endpoints",
+          "gas_fraction_bracket": [
+            0.9989096764064724,
+            0.9989096764064725
+          ],
+          "iterations": 54
+        },
+        "coupled_source_equilibrium_performed": false,
+        "pressure_closure_performed": false,
+        "supports_material_admission": false,
+        "is_BSE_error_bound": false
+      },
+      "scope": "Fixed-box break-even D only; no empirical bound on the unknown low-pressure D.",
+      "critical_D_is_adopted_material_parameter": false,
+      "supports_material_admission": false,
+      "is_BSE_error_bound": false,
+      "pressure_closure_performed": false,
+      "host": "olivine",
+      "critical_D_over_maximum_TableS2_central_D": 20049.99348794496
+    },
+    {
+      "box_inputs": {
+        "total_helium_mol": 1e+23,
+        "other_gas_mol": 4.878013105815483e+23,
+        "pressure_bar": 269.6545152505794,
+        "dry_silicate_mass_kg": 9.660260839397085e+22,
+        "silicate_nonhelium_mass_kg": 9.678349204498961e+22,
+        "metal_nonhelium_mass_kg": 2.6265649862626257e+21,
+        "helium_molar_mass_kg": 0.004002602000000001,
+        "henry_mol_per_kg_dry_bar": 4.684175253058857e-05
+      },
+      "target_metal_helium_fraction": 0.01,
+      "critical_mass_fraction_partition_D": 179.0325668787444,
+      "helium_mol": {
+        "gas": 9.87944944876217e+22,
+        "silicate": 2.0550551237828713e+20,
+        "metal": 1e+21
+      },
+      "He_partial_pressure_bar": 45.41522678864759,
+      "He_mass_fraction_total_silicate": 8.49886449308348e-06,
+      "He_mass_fraction_total_metal": 0.0015215735257513544,
+      "helium_budget_relative_residual": 1.1796480000000001e-17,
+      "remaining_gas_silicate_balance": {
+        "inputs": {
+          "total_helium_mol": 9.899999999999999e+22,
+          "other_gas_mol": 4.878013105815483e+23,
+          "pressure_bar": 269.6545152505794,
+          "dry_silicate_mass_kg": 9.660260839397085e+22,
+          "silicate_nonhelium_mass_kg": 9.678349204498961e+22,
+          "metal_nonhelium_mass_kg": 2.6265649862626257e+21,
+          "helium_molar_mass_kg": 0.004002602000000001,
+          "henry_mol_per_kg_dry_bar": 4.684175253058857e-05,
+          "metal_silicate_mass_fraction_D": 0.0
+        },
+        "helium_mol": {
+          "gas": 9.87944944876217e+22,
+          "silicate": 2.0550551237828713e+20,
+          "metal": 0.0
+        },
+        "fraction_of_total_helium": {
+          "gas": 0.9979241867436537,
+          "silicate": 0.002075813256346335,
+          "metal": 0.0
+        },
+        "He_partial_pressure_bar": 45.41522678864759,
+        "He_mass_fraction_total_silicate": 8.49886449308348e-06,
+        "He_mass_fraction_total_metal": 0.0,
+        "He_mass_fraction_ratio": 0.0,
+        "He_mass_per_kg_dry_silicate": 8.514850566992498e-06,
+        "helium_budget_residual_mol": 7471104.0,
+        "helium_budget_relative_residual": 7.546569696969698e-17,
+        "numerics": {
+          "method": "monotone binary64 bisection to adjacent gas-fraction endpoints",
+          "gas_fraction_bracket": [
+            0.9979241867436536,
+            0.9979241867436537
+          ],
+          "iterations": 54
+        },
+        "coupled_source_equilibrium_performed": false,
+        "pressure_closure_performed": false,
+        "supports_material_admission": false,
+        "is_BSE_error_bound": false
+      },
+      "scope": "Fixed-box break-even D only; no empirical bound on the unknown low-pressure D.",
+      "critical_D_is_adopted_material_parameter": false,
+      "supports_material_admission": false,
+      "is_BSE_error_bound": false,
+      "pressure_closure_performed": false,
+      "host": "MORB",
+      "critical_D_over_maximum_TableS2_central_D": 10531.327463455553
+    },
+    {
+      "box_inputs": {
+        "total_helium_mol": 1e+23,
+        "other_gas_mol": 4.878013105815483e+23,
+        "pressure_bar": 269.6545152505794,
+        "dry_silicate_mass_kg": 9.660260839397085e+22,
+        "silicate_nonhelium_mass_kg": 9.678349204498961e+22,
+        "metal_nonhelium_mass_kg": 2.6265649862626257e+21,
+        "helium_molar_mass_kg": 0.004002602000000001,
+        "henry_mol_per_kg_dry_bar": 0.00011447332423793735
+      },
+      "target_metal_helium_fraction": 0.01,
+      "critical_mass_fraction_partition_D": 73.44262194135074,
+      "helium_mol": {
+        "gas": 9.849902892913096e+22,
+        "silicate": 5.0097107086903135e+20,
+        "metal": 1e+21
+      },
+      "He_partial_pressure_bar": 45.30222158954389,
+      "He_mass_fraction_total_silicate": 2.0717854095220636e-05,
+      "He_mass_fraction_total_metal": 0.0015215735257513544,
+      "helium_budget_relative_residual": 4.7185920000000004e-17,
+      "remaining_gas_silicate_balance": {
+        "inputs": {
+          "total_helium_mol": 9.899999999999999e+22,
+          "other_gas_mol": 4.878013105815483e+23,
+          "pressure_bar": 269.6545152505794,
+          "dry_silicate_mass_kg": 9.660260839397085e+22,
+          "silicate_nonhelium_mass_kg": 9.678349204498961e+22,
+          "metal_nonhelium_mass_kg": 2.6265649862626257e+21,
+          "helium_molar_mass_kg": 0.004002602000000001,
+          "henry_mol_per_kg_dry_bar": 0.00011447332423793735,
+          "metal_silicate_mass_fraction_D": 0.0
+        },
+        "helium_mol": {
+          "gas": 9.849902892913096e+22,
+          "silicate": 5.0097107086903135e+20,
+          "metal": 0.0
+        },
+        "fraction_of_total_helium": {
+          "gas": 0.9949396861528382,
+          "silicate": 0.005060313847161934,
+          "metal": 0.0
+        },
+        "He_partial_pressure_bar": 45.30222158954389,
+        "He_mass_fraction_total_silicate": 2.0717854095220636e-05,
+        "He_mass_fraction_total_metal": 0.0,
+        "He_mass_fraction_ratio": 0.0,
+        "He_mass_per_kg_dry_silicate": 2.0757077304008645e-05,
+        "helium_budget_residual_mol": 11010048.0,
+        "helium_budget_relative_residual": 1.1121260606060607e-16,
+        "numerics": {
+          "method": "monotone binary64 bisection to adjacent gas-fraction endpoints",
+          "gas_fraction_bracket": [
+            0.994939686152838,
+            0.9949396861528381
+          ],
+          "iterations": 54
+        },
+        "coupled_source_equilibrium_performed": false,
+        "pressure_closure_performed": false,
+        "supports_material_admission": false,
+        "is_BSE_error_bound": false
+      },
+      "scope": "Fixed-box break-even D only; no empirical bound on the unknown low-pressure D.",
+      "critical_D_is_adopted_material_parameter": false,
+      "supports_material_admission": false,
+      "is_BSE_error_bound": false,
+      "pressure_closure_performed": false,
+      "host": "rhyolite",
+      "critical_D_over_maximum_TableS2_central_D": 4320.154231844161
+    }
+  ],
+  "interpretation": "Dcrit is the imposed mass-fraction ratio needed for 1% of finite He to enter metal with all other box assumptions fixed. Its ratio to the largest Table S2 central value measures a conditional departure, not allowed or excluded material uncertainty.",
+  "empirical_low_pressure_D_bound": null,
+  "supports_material_admission": false,
+  "is_BSE_error_bound": false,
+  "atmospheric_mass_target_assessed": false,
+  "bottom_pressure_target_assessed": false,
+  "metal_appearance_boundary_target_assessed": false,
+  "input_and_code_sha256": {
+    "validation/20260928_helium_metal_box/threshold.py": "114b5631c2df0d7a9e80ec8ddfb3b9851e7d5ba1c5d67ef26469c85a67a00ac9",
+    "helium_metal_threshold.py": "1686b21bcf3040b198d1ffea63d159576b615490d0c7bbfaa13e8aca3978f57a",
+    "helium_metal_box.py": "f96c7d9b011004baa8324415a082f84b9994bec8e06a3b73d95eab2029c0a931"
+  }
+}
