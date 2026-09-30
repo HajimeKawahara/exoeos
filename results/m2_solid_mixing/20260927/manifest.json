@@ -1,0 +1,201 @@
+{
+  "schema": "sha256_archive_manifest_v1",
+  "self_excluded": "manifest.json",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 9865,
+      "sha256": "ff5e8af3a52dbc5c6e7d5d86217b7f0bf754603ea8aeb23b518954014890c5eb"
+    },
+    {
+      "path": "inputs/host_properties.json",
+      "bytes": 23540,
+      "sha256": "757dc5525674f8f338d150f9d898fef55e6742a68ec4fb8796ab4bb9da80c036"
+    },
+    {
+      "path": "inputs/native_standards/clinopyroxene.json",
+      "bytes": 3659,
+      "sha256": "8d60c94ccddf4484062784302a4723d5d24a632970c4bce3b7efec846c149872"
+    },
+    {
+      "path": "inputs/native_standards/orthopyroxene.json",
+      "bytes": 3659,
+      "sha256": "540315b09d97952fafbc2d3bcf1aa663e4f9709a549a87b573537ba527ce02ac"
+    },
+    {
+      "path": "inputs/native_standards/plagioclase.json",
+      "bytes": 2109,
+      "sha256": "aaefe51fe287e95c72fef3e022def7704ddcdf77efed552d3581767b6607bebe"
+    },
+    {
+      "path": "inputs/native_standards/rhm-oxide.json",
+      "bytes": 2713,
+      "sha256": "d5a73b4fe3c28f34e83e4e1bd3139d5117de90b5698a4401abd3fb56c5bfb7d9"
+    },
+    {
+      "path": "inputs/native_standards/spinel.json",
+      "bytes": 2734,
+      "sha256": "a714f8ca401ccea1dccf110325927e6114ac3a96e5654e76c556af7307626498"
+    },
+    {
+      "path": "inputs/native_trials/phase_04_orthopyroxene.json",
+      "bytes": 459967,
+      "sha256": "a2bb0ddc13edc4849228e4282454c893702283d16cb2e169ddd961c4410eb0e9"
+    },
+    {
+      "path": "inputs/native_trials/phase_05_clinopyroxene.json",
+      "bytes": 459772,
+      "sha256": "79aa29f92dd4489a9a27780b55d2b99968ae3fed9e63ae03a50d85805a636e4f"
+    },
+    {
+      "path": "inputs/native_trials/phase_14_plagioclase.json",
+      "bytes": 349741,
+      "sha256": "db7c150a0361369812af49e528d9cf627cf5960ab0b321109ea159d14d8a96fc"
+    },
+    {
+      "path": "inputs/native_trials/phase_25_spinel.json",
+      "bytes": 407781,
+      "sha256": "50f0ccebc05da03e702c5e890e242c87de1764425a4874de72b78092d7da875b"
+    },
+    {
+      "path": "inputs/native_trials/phase_26_rhm-oxide.json",
+      "bytes": 401815,
+      "sha256": "bfa144b4f039f764d48fc44c35e6508578cd7eb6fd91c759c57eb682648aff4c"
+    },
+    {
+      "path": "inputs/stage2-solid-standard-worker.py",
+      "bytes": 1305,
+      "sha256": "2311d04bad49806e227a9819f0c952c7de54a6074b763debcd0629afc66b8e63"
+    },
+    {
+      "path": "plagioclase/stage2-plagioclase-disassemble.py",
+      "bytes": 11246,
+      "sha256": "e21240833a08a8d439e8ca24f81a84b0b4be3744240dbffd32badbb0d4d598ce"
+    },
+    {
+      "path": "plagioclase/stage2-plagioclase-disassembly.txt",
+      "bytes": 19671,
+      "sha256": "e4dc0a7e270e43215dfcd3ded374feec6616724819485e74251a61f9bb840fbc"
+    },
+    {
+      "path": "plagioclase/stage2-plagioclase-instruction-audit.json",
+      "bytes": 15774,
+      "sha256": "a2e67ea268598ae1f2d4d8babf956b0e54ad3d5f3b16cba1c7f1c62225234bd1"
+    },
+    {
+      "path": "plagioclase/stage2-plagioclase-parameters.json",
+      "bytes": 7162,
+      "sha256": "edb902dd859dfe9ae82f3cf0ff1bce5c28accceafdcfc4c31938976a776f2aae"
+    },
+    {
+      "path": "plagioclase/stage2-plagioclase-transcription.md",
+      "bytes": 5967,
+      "sha256": "c72f2b209d3b552cb336f343a8a2b61271418f17edae6de90a4d4884771890d1"
+    },
+    {
+      "path": "plagioclase/stage2-plagioclase-validate.py",
+      "bytes": 2197,
+      "sha256": "86bfbd897674ce8220429e1ec737528c743c29f8d20b2a8b96089c5ce842f476"
+    },
+    {
+      "path": "plagioclase/stage2-plagioclase-validation.json",
+      "bytes": 20025,
+      "sha256": "a096a915f581e2508e657d42891f2f087793698c4a2742ba2886d05d4ff9307d"
+    },
+    {
+      "path": "provenance.json",
+      "bytes": 12854,
+      "sha256": "afa0d4f48ad3d4efa0e6dc085fa4e390f7a1a3aa6274af59619190dfdd1859ec"
+    },
+    {
+      "path": "pyx-spinel/stage2-pyx-spinel-models.json",
+      "bytes": 143930,
+      "sha256": "b5d37e88e1226360f8685d8875c3e18ce8bc3f23265fed421c1f4954cb37e621"
+    },
+    {
+      "path": "pyx-spinel/stage2-pyx-spinel-prototype.py",
+      "bytes": 7276,
+      "sha256": "f9db37de4b6e21bdb1ef1b3373443b979dd88acf1ea4486a9d955b14a81b27c3"
+    },
+    {
+      "path": "pyx-spinel/stage2-pyx-spinel-transcription.md",
+      "bytes": 4590,
+      "sha256": "f38c3cefb0794c2a90ff0d502191fdc8fdfd2f95b2102ffc17406338d8729b03"
+    },
+    {
+      "path": "pyx-spinel/stage2-pyx-spinel-validate.py",
+      "bytes": 10496,
+      "sha256": "a1070b86613e35d06e9afa75da3afd67c28b83ab8b4fc83b9dc896b8de06cf54"
+    },
+    {
+      "path": "pyx-spinel/stage2-pyx-spinel-validation.json",
+      "bytes": 167187,
+      "sha256": "fa213b6a94a732b8826925405f1b262896666657604c47a57d651c06f9591b32"
+    },
+    {
+      "path": "pyx-spinel/transcribe_parameters.py",
+      "bytes": 20529,
+      "sha256": "ab676212275a328c49cdb23d56952ccf239e26cb55bc92731d8ca19e194e10c1"
+    },
+    {
+      "path": "replay.py",
+      "bytes": 6431,
+      "sha256": "aab7c042ac94f3c009182e64fdb53d99b00c5be4ca698e8f6a63667db26de0d4"
+    },
+    {
+      "path": "rhm/stage2-rhm-parameters.json",
+      "bytes": 38706,
+      "sha256": "acf4ec2b8ffc1a7d7364fe922ef433084fe98ba91aada9b2d35fd6425885d72f"
+    },
+    {
+      "path": "rhm/stage2-rhm-transcription.md",
+      "bytes": 6983,
+      "sha256": "9558e336ab835aa863f4c9ab04c2163124f415cad27caa7a9b8f2a0b9b1a2e10"
+    },
+    {
+      "path": "rhm/stage2-rhm-transcription.py",
+      "bytes": 11946,
+      "sha256": "35a64d3dc6e0ecf4db9a62307f3f46caa5a5cd8616815d41f4fa43c3ee07a4bf"
+    },
+    {
+      "path": "rhm/stage2-rhm-validate.py",
+      "bytes": 4002,
+      "sha256": "e57fd6fb66366ed88486723e9224069962aa4c2b3e7f74e9a9167e6d2adb03c3"
+    },
+    {
+      "path": "rhm/stage2-rhm-validation.json",
+      "bytes": 30403,
+      "sha256": "8a95099bd69248db62b8d9356e37b1582398fedac43e37b70b60d7adadeb12ee"
+    },
+    {
+      "path": "validation/checks.json",
+      "bytes": 723,
+      "sha256": "34828ee1051102bc928db9b9a47aa042d21c7eddb18d40159c2faa1cc5ff46b7"
+    },
+    {
+      "path": "validation/stage2-solid-eos-full.log",
+      "bytes": 591,
+      "sha256": "c6eb0962f902c39f00288802ba57a454001e5fc26e85deebe5825ec647cc57e9"
+    },
+    {
+      "path": "validation/stage2-solid-eos-stable-targeted.log",
+      "bytes": 98,
+      "sha256": "b9e3ed3fbc1aea774b1124381f493c6bf92d988825e0a74ad5098f3203f387ed"
+    },
+    {
+      "path": "validation/stage2-solid-final-eos-targeted.log",
+      "bytes": 99,
+      "sha256": "a2b4cdb09af7e460b83c8e519f9c37588dce56c752938add2eb1bec7561c7315"
+    },
+    {
+      "path": "validation/stage2-solid-repro-ordered-stable-repeat.log",
+      "bytes": 61,
+      "sha256": "0f2262f0a5e44c09c3a0d9fdd5027b7f921879d0efcf2e559644493d30155bff"
+    },
+    {
+      "path": "validation/stage2-solid-repro-ordered-stable.log",
+      "bytes": 61,
+      "sha256": "0f2262f0a5e44c09c3a0d9fdd5027b7f921879d0efcf2e559644493d30155bff"
+    }
+  ]
+}

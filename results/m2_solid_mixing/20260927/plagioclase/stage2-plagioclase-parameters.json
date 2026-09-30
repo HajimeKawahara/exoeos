@@ -1,0 +1,406 @@
+{
+  "schema": "magma_site_mixing_polynomials_v1",
+  "upstream_commit": null,
+  "upstream_url": "https://github.com/magmasource/alphaMELTS",
+  "native_binary_sha256": "c218ef6f7ba5aef4b0760f3176530d1335457d6e2716823a1d0de3a5d13301e5",
+  "native_entropy_R_J_mol_K": 8.3143,
+  "oxide_order": [
+    "sio2",
+    "tio2",
+    "al2o3",
+    "fe2o3",
+    "cr2o3",
+    "feo",
+    "mno",
+    "mgo",
+    "nio",
+    "coo",
+    "cao",
+    "na2o",
+    "k2o",
+    "p2o5",
+    "h2o",
+    "co2",
+    "so3",
+    "cl2o-1",
+    "f2o-1"
+  ],
+  "models": {
+    "plagioclase": {
+      "phase": "plagioclase",
+      "expression_id": "alphamelts_2_3_2_pinned_binary_plagioclase_v1",
+      "source_file": "libalphamelts.so:gmixPlg",
+      "source_sha256": "c218ef6f7ba5aef4b0760f3176530d1335457d6e2716823a1d0de3a5d13301e5",
+      "source_kind": "pinned_native_binary_instruction_transcription",
+      "source_symbol_sha256": "ea8e10b7d7ac9a5b8bb75473a91450ef92cdb188c21cbabc547bedce2d9997f3",
+      "source_disassembly_audit": "stage2-plagioclase-instruction-audit.json",
+      "coordinate_order": [
+        "v0",
+        "v1"
+      ],
+      "coordinate_bounds": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "endmember_names": [
+        "albite",
+        "anorthite",
+        "sanidine"
+      ],
+      "native_endmember_indices": [
+        0,
+        1,
+        2
+      ],
+      "endmember_polynomials": [
+        [
+          [
+            1.0,
+            [
+              1,
+              0
+            ]
+          ]
+        ],
+        [
+          [
+            1.0,
+            [
+              0,
+              1
+            ]
+          ]
+        ],
+        [
+          [
+            -1.0,
+            [
+              1,
+              0
+            ]
+          ],
+          [
+            -1.0,
+            [
+              0,
+              1
+            ]
+          ],
+          [
+            1.0,
+            [
+              0,
+              0
+            ]
+          ]
+        ]
+      ],
+      "endmember_oxide_moles": [
+        [
+          3.0,
+          0.0,
+          0.5,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.5,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          3.0,
+          0.0,
+          0.5,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.5,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "H_polynomial": [
+        [
+          -13017.5,
+          [
+            2,
+            1
+          ]
+        ],
+        [
+          6498.5,
+          [
+            2,
+            0
+          ]
+        ],
+        [
+          -5093.5,
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          13017.5,
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          -6498.5,
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          -6498.5,
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          6498.5,
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "S_polynomial": [
+        [
+          -10.3,
+          [
+            2,
+            0
+          ]
+        ],
+        [
+          -10.3,
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          10.3,
+          [
+            1,
+            0
+          ]
+        ]
+      ],
+      "V_polynomial": [
+        [
+          0.13379999999999997,
+          [
+            3,
+            0
+          ]
+        ],
+        [
+          1.24385,
+          [
+            2,
+            1
+          ]
+        ],
+        [
+          -0.594,
+          [
+            2,
+            0
+          ]
+        ],
+        [
+          1.0063499999999999,
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          -1.46655,
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          0.4602,
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          -0.1037,
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          0.2074,
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          -0.1037,
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "entropy_sites": [
+        {
+          "multiplicity": 1.0,
+          "polynomial": [
+            [
+              1.0,
+              [
+                1,
+                0
+              ]
+            ]
+          ]
+        },
+        {
+          "multiplicity": 1.0,
+          "polynomial": [
+            [
+              1.0,
+              [
+                0,
+                1
+              ]
+            ]
+          ]
+        },
+        {
+          "multiplicity": 1.0,
+          "polynomial": [
+            [
+              -1.0,
+              [
+                1,
+                0
+              ]
+            ],
+            [
+              -1.0,
+              [
+                0,
+                1
+              ]
+            ],
+            [
+              1.0,
+              [
+                0,
+                0
+              ]
+            ]
+          ]
+        }
+      ],
+      "nonnegative_polynomials": [
+        [
+          [
+            -1.0,
+            [
+              1,
+              0
+            ]
+          ],
+          [
+            -1.0,
+            [
+              0,
+              1
+            ]
+          ],
+          [
+            1.0,
+            [
+              0,
+              0
+            ]
+          ]
+        ]
+      ],
+      "required_absent_elements": [],
+      "barrier": null,
+      "boundary_policy": "Continuous 0 log 0 entropy on the closed simplex; native endpoint clamping is excluded from this real-arithmetic declaration.",
+      "native_binary_uniform_error_bound": null,
+      "empirical_calibration_domain_established": false,
+      "native_standard_receipt_sha256": "aaefe51fe287e95c72fef3e022def7704ddcdf77efed552d3581767b6607bebe",
+      "parameter_domain": {
+        "T_K": {
+          "lower": 0,
+          "lower_inclusive": false,
+          "upper": null
+        },
+        "P_bar": {
+          "lower": 0,
+          "lower_inclusive": false,
+          "upper": null
+        }
+      },
+      "provenance_scope": "The declared equation is recovered from gmixPlg in exactly the pinned alphaMELTS 2.3.2 Ubuntu binary SHA. It is not asserted to be the published MAGMA feldspar.c equation, or equivalent to every native build. Sparse coefficients retain the audited binary64 constants; arithmetic/log/clamp uniform error is separate."
+    }
+  }
+}
