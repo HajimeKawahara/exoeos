@@ -86,3 +86,46 @@ H/P cross terms therefore need finite-response assessment. A frozen-potential
 trace demand is not a finite equilibrium or a bound on coupled errors. K metal
 transfer remains outside this model. Primary K non-detection at different
 pressure and host composition is not silently imported as a BSE error bound.
+
+## Optional hydrogen-oxygen interaction
+
+`make_associated_model(..., hydrogen_oxygen_model="schenck1961_abstract")`
+adds an explicit symmetric O/H entry to the same additional matrix. The default
+`"omitted"` retains the original scalar. A contemporary Japanese abstract of
+[Schenck and Wuensch (1961)](https://doi.org/10.1002/srin.196103272),
+[Tetsu-to-Hagane49(1),1963,p96](https://tetsutohagane.net/articles/search/files/49/1/KJ00002706857.pdf),
+states `d log10(gamma_H) / d x_O = 52.4` at1610C and independently illustrates
+`x_O=.00343, gamma_H=1.52`. The reconstructed value is1.513, establishing the
+base10 convention; using52.4 directly with natural logarithms gives1.197.
+The natural-log interaction is therefore `epsilon_HO=52.4*ln(10)`.
+
+The primary full concentration table and uncertainty remain unavailable.
+[The source record](hydrogen_oxygen_sources.json) preserves that distinction,
+the inspected PDF and page-image hashes, the explicit equation and example.
+The inconsistent1967 retelling of52.4 and mass-percent2.71 is not silently
+used as a modern natural-log conversion. This is a historical-reference
+continuation, not an independently refitted H/O data set.
+
+The additional extensive term is `N_species*epsilon_HO*x_H*x_O`, on the
+complete18-species denominator. It changes both potentials reciprocally.
+The existing temperature policy selects either a constant coefficient or
+`epsilon_HO(T)=epsilon_HO(1883.15K)*1883.15/T`; the distinct P reference remains
+1873.15K. Pressure response, H self interaction and empirical BSE errors
+are not supplied.
+
+The finite-K factory accepts the same option and retains this eighteen-species
+host normalization. Its extensive perspective contributes
+`N_19*epsilon_HO*x_H*x_O/(1-x_K)` in nineteen-species coordinates. It reduces
+exactly to the eighteen-species term at zero K; its curvature audit evaluates
+the actual perspective, including the nonconvex host when selected.
+
+At2173.15K the old declared box has curvature bounds -78.7129 (constant) and
+-63.2693 (enthalpic), so the old positive-curvature proof cannot be reused.
+A separate outward point calculation also proves negative O/H-direction
+curvature at one feasible point: approximately -112.8146 and -80.6125.
+This establishes nonconvexity of these declared continuations, not an unstable
+computed equilibrium, a negative insertion value, or experimental phase
+separation. Global insertion requires a proof that admits nonconvexity.
+[Saved box comparison](validation/20260928_hydrogen_oxygen/comparison.json)
+and [separate point calculation](validation/20260928_hydrogen_oxygen_curvature_v2/comparison.json)
+preserve both results. No source equilibrium or pressure closure was run here.

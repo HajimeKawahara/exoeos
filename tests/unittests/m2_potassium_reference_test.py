@@ -73,3 +73,18 @@ def test_nonconvex_host_retains_a_negative_bound_without_altering_the_scalar():
     energy = lambda y: total_solution_gibbs_RT(changed, T, 2.7e7,
         jnp.r_[1-jnp.sum(y), y], jnp.zeros(19))
     assert np.linalg.eigvalsh(np.asarray(jax.hessian(energy)(x[1:])))[0] >= bound
+
+
+def test_hydrogen_oxygen_option_preserves_the_host_perspective_and_receipt():
+    base, _ = M.make_associated_model(T)
+    changed, receipt = M.make_associated_model(
+        T, hydrogen_oxygen_model='schenck1961_abstract')
+    epsilon = 52.4*np.log(10.)
+    assert receipt['hydrogen_oxygen']['model'] == 'schenck1961_abstract'
+    assert M.associated_curvature_lower_bound(changed, T, LO, HI) < 0
+    for potassium in (0., .003):
+        x = HI*.1
+        x[-1] = potassium
+        x[0] = 1-x[1:].sum()
+        difference = float(changed.gex_RT(T, 2.7e7, x)-base.gex_RT(T, 2.7e7, x))
+        assert difference == pytest.approx(epsilon*x[2]*x[3]/(1-potassium), abs=1e-14)

@@ -35,9 +35,11 @@ FORMULAS = tuple([{name: 1.} for name in COMPONENTS[:10]] +
                  [{name: 2., 'O': 1.} for name in ('Al', 'Cr', 'Ti')] + [{'K': 1.}])
 
 
-def make_associated_model(temperature_k, *, temperature_policy='constant'):
+def make_associated_model(temperature_k, *, temperature_policy='constant',
+                          hydrogen_oxygen_model='omitted'):
     host, receipt = _associated().make_associated_model(
-        temperature_k, temperature_policy=temperature_policy)
+        temperature_k, temperature_policy=temperature_policy,
+        hydrogen_oxygen_model=hydrogen_oxygen_model)
     return PotassiumAssociatedLiquid(host), receipt
 
 
