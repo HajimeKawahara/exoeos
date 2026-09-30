@@ -47,3 +47,15 @@ unresolved. Negative least-squares coordinates are rejected without clipping.
 Signed oxide amounts are distinct and remain supported. A failed native
 candidate call retains its reason and marks all later candidates unavailable
 without calling the potentially invalidated native session again.
+
+For a composition already specified in the returned native endmember basis,
+`candidate_compositions=[{"phase": name, "endmember_moles": amounts}]` evaluates
+those finite nonnegative amounts directly. The output preserves their extensive
+scale and checks the native returned oxide masses against the basis matrix
+multiplied by the supplied amounts. This avoids a redundant least-squares
+inversion at exact-zero endpoints, where numerical roundoff can create tiny
+negative inferred coordinates. Negative inputs, including tiny negative values,
+are rejected without clipping. `oxide_mass_g` and `endmember_moles` are mutually
+exclusive; oxide requests retain their existing strict reconstruction checks.
+A direct coordinate request does not expand the native phase's physical domain
+or turn an unavailable native property into phase absence.

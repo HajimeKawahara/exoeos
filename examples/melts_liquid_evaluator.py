@@ -119,7 +119,7 @@ def source_provenance():
             "changed_tracked_file_sha256": hashes, "worker_command": sys.argv}
 
 
-def molar_candidate_properties(model, name, oxide_mass_g=None):
+def molar_candidate_properties(model, name, oxide_mass_g=None, *, endmember_moles=None):
     """Evaluate a solid on its native endmember basis, preserving oxide amounts.
 
     The oxide-to-endmember converter in some native phases changes the input
@@ -127,6 +127,8 @@ def molar_candidate_properties(model, name, oxide_mass_g=None):
     parsing display formulas or changing the pinned native model. The native
     molar API normalizes its input to one mole; restore the requested amount.
     """
+    if oxide_mass_g is not None and endmember_moles is not None:
+        raise ValueError("Supply oxide amounts or native endmember amounts, not both.")
     engine = model.engine
     count = len(engine.status.molwts[name])
     width = len(engine.status.molwts["bulk"])
@@ -143,13 +145,26 @@ def molar_candidate_properties(model, name, oxide_mass_g=None):
         raise ValueError("Invalid or singular native endmember oxide basis.")
     result = {"phase": name, "native_endmember_oxide_mass_g_per_mol": matrix.tolist(),
               "composition_basis_method": "Native unit endmembers through calcMolarProperties."}
-    if oxide_mass_g is None:
+    if oxide_mass_g is None and endmember_moles is None:
         return result
-    oxide = np.asarray(oxide_mass_g, dtype=float)
-    if oxide.shape != (width,) or not np.all(np.isfinite(oxide)) or oxide.sum() <= 0:
+    if endmember_moles is not None:
+        amounts = np.asarray(endmember_moles, dtype=float)
+        if amounts.shape != (count,) or not np.all(np.isfinite(amounts)):
+            raise ValueError("Native endmember amounts must be finite with the declared basis shape.")
+        # Coordinates are already known. Inverting the oxide map would add
+        # roundoff-sized negative entries at exact-zero endpoints. Do not clip
+        # those entries or reinterpret an oxide request as a different state.
+        oxide = matrix @ amounts
+        result["composition_input"] = "explicit_native_endmember_moles"
+    else:
+        oxide = np.asarray(oxide_mass_g, dtype=float)
+        if oxide.shape != (width,) or not np.all(np.isfinite(oxide)) or oxide.sum() <= 0:
+            raise ValueError("Candidate oxide amounts must be finite with positive mass.")
+        amounts, _, _, _ = np.linalg.lstsq(matrix, oxide, rcond=None)
+        require_match(matrix @ amounts, oxide, "candidate endmember reconstruction", atol=1e-9)
+        result["composition_input"] = "oxide_mass_g"
+    if not np.all(np.isfinite(oxide)) or oxide.sum() <= 0:
         raise ValueError("Candidate oxide amounts must be finite with positive mass.")
-    amounts, _, _, _ = np.linalg.lstsq(matrix, oxide, rcond=None)
-    require_match(matrix @ amounts, oxide, "candidate endmember reconstruction", atol=1e-9)
     if np.any(amounts < 0):
         raise ValueError("Candidate requires signed native endmember coordinates outside this evaluator's nonnegative search domain.")
     total = float(amounts.sum())
@@ -388,7 +403,8 @@ def _worker(runtime, request):
                              "reason": "Not evaluated after a native candidate failure: " + native_failure})
                 continue
             try:
-                rows.append(molar_candidate_properties(model, name, candidate.get("oxide_mass_g")))
+                rows.append(molar_candidate_properties(model, name, candidate.get("oxide_mass_g"),
+                    **({"endmember_moles": candidate["endmember_moles"]} if "endmember_moles" in candidate else {})))
             except ValueError as error:
                 rows.append({"phase": name, "status": "unavailable", "reason": str(error)})
             except RuntimeError as error:
@@ -418,8 +434,10 @@ def evaluate_liquid(temperature, pressure, component_moles, *, runtime, common_R
     if candidate_compositions is not None:
         if (not isinstance(candidate_compositions, list)
                 or any(not isinstance(row, dict) or not isinstance(row.get("phase"), str)
-                       or set(row) - {"phase", "oxide_mass_g"} for row in candidate_compositions)):
-            raise ValueError("Candidate compositions require phase and optional oxide_mass_g.")
+                       or set(row) - {"phase", "oxide_mass_g", "endmember_moles"}
+                       or ("oxide_mass_g" in row and "endmember_moles" in row)
+                       for row in candidate_compositions)):
+            raise ValueError("Candidate compositions require phase and at most one of oxide_mass_g or endmember_moles.")
         request["candidate_compositions"] = candidate_compositions
     with tempfile.TemporaryDirectory(prefix="exoeos-melts-liquid-") as directory:
         request_path, output = Path(directory) / "request.json", Path(directory) / "result.json"

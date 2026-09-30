@@ -174,7 +174,7 @@ def test_saturation_keeps_missing_and_changed_candidates(monkeypatch):
     json.dumps(result, allow_nan=False)
 
 
-def test_native_molar_basis_preserves_requested_atoms_and_extensive_energy():
+def test_native_molar_basis_preserves_requested_atoms_and_extensive_energy(monkeypatch):
     matrix = np.array([[60., 30.], [0., 40.], [20., 10.]])
 
     class Engine:
@@ -202,6 +202,22 @@ def test_native_molar_basis_preserves_requested_atoms_and_extensive_energy():
         evaluator.molar_candidate_properties(model, "solid", incompatible)
     with pytest.raises(ValueError, match="signed native endmember"):
         evaluator.molar_candidate_properties(model, "solid", matrix @ [.3, -.1])
+
+    def no_inverse(*args, **kwargs):
+        raise AssertionError("Explicit native coordinates must not invert the oxide map.")
+    monkeypatch.setattr(np.linalg, "lstsq", no_inverse)
+    for amounts in ([1., 0.], [0., 1.], [3., 1.]):
+        result = evaluator.molar_candidate_properties(model, "solid", endmember_moles=amounts)
+        np.testing.assert_array_equal(result["native_endmember_moles"], amounts)
+        np.testing.assert_allclose(result["oxide_mass_g"], matrix @ amounts)
+        np.testing.assert_allclose(result["returned_oxide_mass_g"], matrix @ amounts)
+        assert result["gibbs_J"] == pytest.approx(np.asarray(amounts) @ [-10., -20.])
+        assert result["composition_input"] == "explicit_native_endmember_moles"
+    for invalid in ([1., -1e-30], [1.], [0., 0.], [1., np.nan]):
+        with pytest.raises(ValueError):
+            evaluator.molar_candidate_properties(model, "solid", endmember_moles=invalid)
+    with pytest.raises(ValueError, match="not both"):
+        evaluator.molar_candidate_properties(model, "solid", matrix @ [.3, .1], endmember_moles=[.3, .1])
 
 
 def test_native_candidate_failure_preserves_catalog_and_stops_shared_state_use(monkeypatch):
@@ -361,3 +377,19 @@ def test_every_evaluation_uses_a_fresh_process_and_working_directory(monkeypatch
 def test_help_works_without_an_external_runtime():
     result = subprocess.run([sys.executable, str(EXAMPLE), "--help"], check=True, capture_output=True, text=True)
     assert "--runtime" in result.stdout and "--validate" in result.stdout
+
+
+def test_public_candidate_coordinate_request_is_serialized_and_conflicts_rejected(monkeypatch, tmp_path):
+    monkeypatch.setattr(evaluator, "check_runtime", lambda runtime: None)
+    def run(command, **kwargs):
+        request_path = Path(command[command.index("--input") + 1])
+        requested = json.loads(request_path.read_text())["candidate_compositions"]
+        assert requested == [{"phase": "olivine", "endmember_moles": [1., 0.]}]
+        Path(command[command.index("--output") + 1]).write_text(json.dumps({"provenance": {}}))
+        return SimpleNamespace(returncode=0, stdout="", stderr="")
+    monkeypatch.setattr(evaluator.subprocess, "run", run)
+    evaluator.evaluate_liquid(1473.15, 5e7, N, runtime=tmp_path,
+        candidate_compositions=[{"phase": "olivine", "endmember_moles": [1., 0.]}])
+    with pytest.raises(ValueError, match="at most one"):
+        evaluator.evaluate_liquid(1473.15, 5e7, N, runtime=tmp_path,
+            candidate_compositions=[{"phase": "olivine", "endmember_moles": [1., 0.], "oxide_mass_g": [1., 0.]}])
