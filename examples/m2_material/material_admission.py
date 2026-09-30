@@ -3,7 +3,7 @@
 This diagnostic does not change any constitutive law or accept a coupled
 physical domain. Experimental conditions, model extrapolations, and nominal
 software limits remain separate. Concentrations use the complete phase mass;
-the dry silicate comparison removes H2 and water before normalization.
+the dry silicate comparison removes H2, He and water before normalization.
 """
 
 import argparse
@@ -96,14 +96,15 @@ def published_basalt_h2_extrapolation(hydrogen_partial_pressure_Pa, *,
 
 def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fractions,
                           molecular_h2_mass_ppm=None, water_mass_percent=None,
+                          dissolved_helium_mass_ppm=0.0,
                           alloy_atomic_fractions=None,
                           hydrogen_partial_pressure_Pa=None, buffer=None,
                           liquid_model=None, metal_model=None, hydrogen_oxygen_model=None):
     """Return material evidence for a supplied state, without mutating it.
 
     Supply silicate oxides as a normalized name-to-mass-fraction mapping
-    (including equivalent water, excluding the added molecular-H2 contribution),
-    H2 mass ppm and equivalent-water mass percent relative to the complete liquid,
+    (including equivalent water, excluding added molecular H2 and He),
+    H2/He mass ppm and equivalent-water mass percent relative to the complete liquid,
     and optional alloy atomic fractions as a mapping or in Fe, Si, O, H order,
     optionally followed by P, or P, Mg, Ca, Al, Cr, Ti. For an associated alloy,
     the caller first counts all species into atomic amounts. The complete
@@ -147,13 +148,16 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
         raise ValueError("A positive dry silicate host mass is required.")
     oxides = {name: value / dry_fraction for name, value in native_oxides.items() if name not in ("H2O", "CO2")}
     h2 = None if molecular_h2_mass_ppm is None else _nonnegative(molecular_h2_mass_ppm, "H2 ppm")
+    if isinstance(dissolved_helium_mass_ppm, (bool, np.bool_)):
+        raise ValueError("He ppm must be a finite nonnegative number, not a boolean.")
+    helium = _nonnegative(dissolved_helium_mass_ppm, "He ppm")
     water = None if water_mass_percent is None else _nonnegative(water_mass_percent, "H2O mass percent")
-    if (0.0 if h2 is None else h2 * 1e-6) + (0.0 if water is None else water / 100.0) >= 1.0:
-        raise ValueError("A positive dry host mass must remain after H2 and water.")
+    if (0.0 if h2 is None else h2 * 1e-6) + helium * 1e-6 + (0.0 if water is None else water / 100.0) >= 1.0:
+        raise ValueError("A positive dry host mass must remain after H2, He and water.")
     if h2 is not None and water is not None:
-        expected_water = 100.0 * native_oxides.get("H2O", 0.0) * (1.0 - h2 * 1e-6)
+        expected_water = 100.0 * native_oxides.get("H2O", 0.0) * (1.0 - (h2 + helium) * 1e-6)
         if not np.isclose(water, expected_water, rtol=1e-10, atol=1e-10):
-            raise ValueError("Native-water and H2 concentrations must use the same complete-liquid mass denominator.")
+            raise ValueError("Native-water, H2 and He concentrations must use the same complete-liquid mass denominator.")
     partial = None if hydrogen_partial_pressure_Pa is None else _nonnegative(hydrogen_partial_pressure_Pa, "p_H2")
     if partial is not None and partial > pressure:
         raise ValueError("H2 partial pressure cannot exceed total pressure.")
@@ -281,6 +285,7 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
                    "silicate_oxide_mass_fractions": native_oxides,
                    "dry_silicate_oxide_mass_fractions": oxides,
                    "molecular_h2_mass_ppm": h2, "water_mass_percent": water,
+                   "dissolved_helium_mass_ppm": helium,
                    "hydrogen_partial_pressure_Pa": partial, "buffer": buffer}
     constitutive = json.loads((DATA / "constitutive_evidence.json").read_text())
     constitutive["selected_models"] = {

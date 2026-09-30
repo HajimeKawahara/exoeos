@@ -153,3 +153,34 @@ def test_missing_mass_inputs_are_not_silently_zero():
         assert branch["water_equivalent_mass_ppm_complete_liquid"] is None
         assert branch["actual_minus_reference_ppm_complete_liquid"] is None
     json.dumps(result, allow_nan=False)
+
+
+def test_sossi_complete_liquid_conversion_includes_independent_helium_mass():
+    kwargs = state_arguments()
+    # Hold 100 kg native host (including .01 kg water), then add .1/.2 kg H2/He.
+    total = 100.3
+    kwargs.update(molecular_h2_mass_ppm=.1 / total * 1e6,
+                  dissolved_helium_mass_ppm=.2 / total * 1e6,
+                  water_mass_percent=.01 / total * 100.)
+    result = s.assess_sossi_water_state(**kwargs)
+    assert result["native_host_mass_fraction_of_complete_liquid"] == pytest.approx(100. / total)
+    for branch in result["branches"].values():
+        assert branch["water_equivalent_mass_ppm_complete_liquid"] == pytest.approx(
+            branch["water_equivalent_mass_ppm_native_host"] * 100. / total)
+        assert branch["actual_water_mass_ppm_complete_liquid"] == pytest.approx(.01 / total * 1e6)
+        assert branch["prediction_error_bound"] is None
+    assert result["supports_material_admission"] is False
+    assert result["accepted_coupled_material_domain"] is None
+    kwargs.pop("dissolved_helium_mass_ppm")
+    with pytest.raises(ValueError, match="complete-liquid"):
+        s.assess_sossi_water_state(**kwargs)
+
+
+def test_known_helium_does_not_fill_an_unsupplied_hydrogen_mass():
+    kwargs = state_arguments()
+    kwargs.pop("molecular_h2_mass_ppm")
+    kwargs["dissolved_helium_mass_ppm"] = 100.
+    result = s.assess_sossi_water_state(**kwargs)
+    assert result["native_host_mass_fraction_of_complete_liquid"] is None
+    assert all(row["water_equivalent_mass_ppm_complete_liquid"] is None
+               for row in result["branches"].values())

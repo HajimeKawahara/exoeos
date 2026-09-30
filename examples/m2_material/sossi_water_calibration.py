@@ -163,15 +163,16 @@ def _predictor_support(rows, target):
 
 def assess_sossi_water_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fractions,
                              water_partial_pressure_Pa, hydrogen_partial_pressure_Pa,
-                             molecular_h2_mass_ppm=None, water_mass_percent=None):
+                             molecular_h2_mass_ppm=None, water_mass_percent=None,
+                             dissolved_helium_mass_ppm=0.0):
     """Compare a supplied native host with the measured 1-bar water reference.
 
     Partial pressures use the complete gas denominator and are interpreted
-    as ideal fugacities. Native oxides include H2O but exclude added H2.
-    H2 ppm and water percent, when supplied, use complete-liquid mass.
+    as ideal fugacities. Native oxides include H2O but exclude added H2/He.
+    H2/He ppm and water percent, when supplied, use complete-liquid mass.
     Predictions retain the experiment's H2O-equivalent/glass basis. Their
-    optional complete-liquid conversion only adds the supplied H2 mass to
-    the denominator, not a fitted H2 effect. No host/T/P extrapolation is
+    optional complete-liquid conversion adds the supplied H2/He masses to
+    the denominator, not fitted solubility effects. No host/T/P extrapolation is
     accepted, including evaluations inside the two-predictor convex hull.
     """
     values = (water_partial_pressure_Pa, hydrogen_partial_pressure_Pa)
@@ -181,6 +182,7 @@ def assess_sossi_water_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_
     reference = assess_material_state(
         temperature_K, pressure_Pa, silicate_oxide_mass_fractions=silicate_oxide_mass_fractions,
         molecular_h2_mass_ppm=molecular_h2_mass_ppm, water_mass_percent=water_mass_percent,
+        dissolved_helium_mass_ppm=dissolved_helium_mass_ppm,
         hydrogen_partial_pressure_Pa=hydrogen_partial_pressure_Pa)
     pressure, temperature = reference["input"]["pressure_Pa"], reference["input"]["temperature_K"]
     if sum(values) > pressure * (1 + 1e-12):
@@ -198,7 +200,8 @@ def assess_sossi_water_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_
         reasons.append("host_differs_from_reported_glass_mean_no_composition_radius_fitted")
     if not support["inside_fitted_predictor_hull"]:
         reasons.append("outside_joint_sqrt_fugacity_predictor_hull")
-    dilution = None if molecular_h2_mass_ppm is None else 1 - molecular_h2_mass_ppm * 1e-6
+    helium = reference["input"]["dissolved_helium_mass_ppm"]
+    dilution = None if molecular_h2_mass_ppm is None else 1 - (molecular_h2_mass_ppm + helium) * 1e-6
     actual = None if water_mass_percent is None else water_mass_percent * 1e4
     predictions = {}
     for name, branch in report["branches"].items():
@@ -228,7 +231,9 @@ def assess_sossi_water_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_
             "temperature_transfer_error_bound": None, "supports_material_admission": False,
             "accepted_coupled_material_domain": None,
             "concentration_basis": report["concentration_basis"],
-            "complete_liquid_conversion": "Native-host ppm times (1 - supplied molecular-H2 mass fraction); arithmetic dilution only, not an H2 constitutive correction.",
+            "complete_liquid_conversion": "Native-host ppm times (1 - supplied molecular-H2 mass fraction - supplied dissolved-He mass fraction); arithmetic dilution only, not a constitutive correction.",
+            "dissolved_helium_mass_ppm": helium,
+            "native_host_mass_fraction_of_complete_liquid": dilution,
             "uncertainty_scope": report["uncertainty_scope"],
             "branches": predictions,
             "data_sha256": report["data_sha256"],
