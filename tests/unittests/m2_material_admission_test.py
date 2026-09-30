@@ -50,6 +50,31 @@ def test_bse_control_has_quantified_extrapolation_and_no_common_admission():
     assert result["material_admission"] == "not_established"
 
 
+def test_constitutive_choices_do_not_misuse_legacy_reference_checks_as_acceptance():
+    inputs = dict(silicate_oxide_mass_fractions=bse(),
+                  alloy_atomic_fractions=[.97, .001, .004, .024, .001, 0., 0., 0., 0., 0., 0.])
+    legacy = assess(2173.15, 2.7e7, **inputs)
+    selected = assess(2173.15, 2.7e7, **inputs, liquid_model="published_water",
+                      metal_model="associated_k", hydrogen_oxygen_model="schenck1961_abstract")
+    for key in ("silicate_hydrogen_references", "alloy_hydrogen_reference", "input",
+                "implemented_hydrogen_reference_overlap"):
+        assert selected[key] == legacy[key]
+    assert not selected["reference_assessment_scope"]["reference_conditions_are_constitutive_acceptance"]
+    assert selected["accepted_coupled_material_domain"] is None
+    evidence = selected["constitutive_evidence"]
+    assert evidence["selected_models"]["liquid_model"] == "published_water"
+    assert evidence["actual_comparison_coordinates"]["alloy_mass_percent"] == selected["alloy_hydrogen_reference"]["mass_percent"]
+    assert legacy["constitutive_evidence"]["selected_models"]["metal_model"] is None
+    categories = set(evidence["categories"])
+    assert len(evidence["systems"]) == 6
+    assert all(categories <= set(system) for system in evidence["systems"].values())
+    for invalid in ({"liquid_model": "unknown"},
+                    {"metal_model": "ma", "hydrogen_oxygen_model": "schenck1961_abstract"},
+                    {"metal_model": "associated"}):
+        with pytest.raises(ValueError):
+            assess(2173.15, 2.7e7, **inputs, **invalid)
+
+
 def test_matching_a_measured_host_does_not_establish_a_coupled_domain():
     result = assess(1673.15, 1.2e9, silicate_oxide_mass_fractions=host("basalt"),
                     buffer="Fe-FeO-H2O")
