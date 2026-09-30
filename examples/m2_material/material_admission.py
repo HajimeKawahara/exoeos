@@ -21,9 +21,11 @@ ALLOY_MOLAR_MASSES = np.array([0.055845, 0.0280855, 0.0159994, 0.00100794])
 PHOSPHORUS_MOLAR_MASS = 0.030973761998
 EXTENDED_ALLOY_COMPONENTS = ALLOY_COMPONENTS + ("P", "Mg", "Ca", "Al", "Cr", "Ti")
 POTASSIUM_ALLOY_COMPONENTS = EXTENDED_ALLOY_COMPONENTS + ("K",)
+SODIUM_ALLOY_COMPONENTS = POTASSIUM_ALLOY_COMPONENTS + ("Na",)
 EXTENDED_ALLOY_MOLAR_MASSES = np.r_[ALLOY_MOLAR_MASSES, PHOSPHORUS_MOLAR_MASS,
                                    .024305, .040078, .0269815385, .0519961, .047867]
 POTASSIUM_ALLOY_MOLAR_MASSES = np.r_[EXTENDED_ALLOY_MOLAR_MASSES, .0390983]
+SODIUM_ALLOY_MOLAR_MASSES = np.r_[POTASSIUM_ALLOY_MOLAR_MASSES, .02298976928]
 OXIDES = ("SiO2", "TiO2", "Al2O3", "Cr2O3", "FeO", "Fe2O3", "MgO", "CaO",
           "Na2O", "K2O", "P2O5", "MnO", "NiO", "CoO", "H2O", "CO2")
 
@@ -116,12 +118,12 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
     """
     for name, value, allowed in (
             ("liquid_model", liquid_model, (None, "native", "published", "published_water")),
-            ("metal_model", metal_model, (None, "ma", "phosphorus", "associated", "associated_k")),
+            ("metal_model", metal_model, (None, "ma", "phosphorus", "associated", "associated_k", "associated_k_na")),
             ("hydrogen_oxygen_model", hydrogen_oxygen_model,
              (None, "omitted", "schenck1961_abstract"))):
         if value not in allowed:
             raise ValueError(f"Unknown {name}; declare an existing source model or leave unspecified.")
-    if hydrogen_oxygen_model == "schenck1961_abstract" and metal_model not in ("associated", "associated_k"):
+    if hydrogen_oxygen_model == "schenck1961_abstract" and metal_model not in ("associated", "associated_k", "associated_k_na"):
         raise ValueError("The declared H-O option requires an associated metal model.")
     temperature = _nonnegative(temperature_K, "T")
     pressure = _nonnegative(pressure_Pa, "P")
@@ -197,14 +199,16 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
     if alloy_atomic_fractions is not None:
         components = ALLOY_COMPONENTS
         if isinstance(alloy_atomic_fractions, dict):
-            if set(alloy_atomic_fractions) == set(POTASSIUM_ALLOY_COMPONENTS):
+            if set(alloy_atomic_fractions) == set(SODIUM_ALLOY_COMPONENTS):
+                components = SODIUM_ALLOY_COMPONENTS
+            elif set(alloy_atomic_fractions) == set(POTASSIUM_ALLOY_COMPONENTS):
                 components = POTASSIUM_ALLOY_COMPONENTS
             elif set(alloy_atomic_fractions) == set(EXTENDED_ALLOY_COMPONENTS):
                 components = EXTENDED_ALLOY_COMPONENTS
             elif set(alloy_atomic_fractions) == set(ALLOY_COMPONENTS + ("P",)):
                 components += ("P",)
             elif set(alloy_atomic_fractions) != set(ALLOY_COMPONENTS):
-                raise ValueError("Supply Fe, Si, O, H, optionally with P, all six additional metals, or those metals and K.")
+                raise ValueError("Supply Fe, Si, O, H, optionally with P, all six additional metals, or those metals and K, optionally with Na.")
             alloy_atomic_fractions = [alloy_atomic_fractions[name] for name in components]
         x = np.asarray(alloy_atomic_fractions)
         if x.shape == (5,):
@@ -213,13 +217,15 @@ def assess_material_state(temperature_K, pressure_Pa, *, silicate_oxide_mass_fra
             components = EXTENDED_ALLOY_COMPONENTS
         elif x.shape == (11,):
             components = POTASSIUM_ALLOY_COMPONENTS
-        if (x.shape not in ((4,), (5,), (10,), (11,)) or not np.isrealobj(x) or not np.all(np.isfinite(x))
+        elif x.shape == (12,):
+            components = SODIUM_ALLOY_COMPONENTS
+        if (x.shape not in ((4,), (5,), (10,), (11,), (12,)) or not np.isrealobj(x) or not np.all(np.isfinite(x))
                 or np.any(x < 0) or not np.isclose(x.sum(), 1.0, rtol=0.0, atol=1e-10)):
-            raise ValueError("Alloy atomic fractions must be finite, nonnegative and sum to one in the declared 4, 5, 10 or 11 element order.")
-        expected_size = {"ma": 4, "phosphorus": 5, "associated": 10, "associated_k": 11}.get(metal_model)
+            raise ValueError("Alloy atomic fractions must be finite, nonnegative and sum to one in the declared 4, 5, 10, 11 or 12 element order.")
+        expected_size = {"ma": 4, "phosphorus": 5, "associated": 10, "associated_k": 11, "associated_k_na": 12}.get(metal_model)
         if expected_size is not None and len(x) != expected_size:
             raise ValueError("Count every alloy element in the selected metal model before the mass comparison.")
-        masses = POTASSIUM_ALLOY_MOLAR_MASSES[:len(components)]
+        masses = SODIUM_ALLOY_MOLAR_MASSES[:len(components)]
         mass = x * masses
         wt_percent = mass / mass.sum() * 100.0
         fe_si = x[1] > 0

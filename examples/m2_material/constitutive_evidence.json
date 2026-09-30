@@ -716,11 +716,24 @@
     "supports_material_admission": false,
     "paths": {
       "Na_to_metal": {
-        "status": "not_evaluated",
-        "existing_model": "Na remains available to gas and silicate; associated_k has no Na metal component.",
+        "status": "conditional_scalar_available_finite_response_pending",
+        "existing_model": "associated_k omits Na; explicit associated_k_na adds Na1 using the pseudo-Fe excess and a separately selected projected-reference standard.",
         "insolubility_established": false,
-        "missing": "A Na metal standard/activity law or a quantitative detection-limit-derived partition bound transferable to the declared state.",
-        "available": "Five numerical S-free reported censoring limits with matching silicate Na; three FeS exchange constants replayed under two explicit concentration bases. Low-pressure standard/activities are not yet selected."
+        "missing": "Finite source/pressure response and robustness assessment for the declared projection/temperature/interaction choices; no empirical BSE extrapolation bound is supplied.",
+        "available": "Five S-free nondetections constrain one-sided Na Henry standards in four explicitly projected native hosts. Na/Fe atoms and raw analytical limits are preserved. Native/published calculations and frozen-source estimates are archived.",
+        "conditional_model": {
+          "provider": "sodium_metal.py",
+          "component": "Na",
+          "formula": {
+            "Na": 1
+          },
+          "excess": "gE20(x)=gE19(xFe+xNa,xSi,...,xK)",
+          "standard": "0.5 mu0_Na2SiO3 - 0.25 mu0_SiO2 - 0.25 mu0_Fe2SiO4 + 0.5 actual_parent_Fe_standard + A+B/T",
+          "model_selector": "associated_k_na",
+          "calibration_path": "validation/20260928_sodium_host_calibration/assessment.json",
+          "calibration_sha256": "f24cb74a1cd860a3eebcd0eff5f1e05fa3e0c7cc82c99c53c952138a91175370",
+          "empirical_BSE_calibration": false
+        }
       },
       "He_to_silicate": {
         "status": "not_evaluated_in_finite_equilibrium",
