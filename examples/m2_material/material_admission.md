@@ -77,6 +77,16 @@ reference concentration produces a null ratio and an explicit zero flag.
 This uses the authors' stated illustrative coefficient, not guessed units
 for their separate Equation 5 fugacity regression.
 
+For a declared nonideal gas, the optional
+`hydrogen_fugacity_coefficient` multiplies the supplied H2 partial pressure
+before this illustrative Henry comparison. The report preserves that partial
+pressure and records the coefficient and actual fugacity separately. Its
+default of one retains the historical ideal result. Nonideal fugacity does
+not change the measured slope or establish a new calibration. The Sossi
+comparison similarly accepts explicit H2O and H2 fugacity coefficients for
+its square-root fugacity predictors; see the
+[major-gas provider contract](major_gas_eos.md).
+
 The [Hirschmann et al. (2012) abstract](https://doi.org/10.1016/j.epsl.2012.06.031)
 supports experiments at 0.7–3 GPa on basalt/andesite and identifies peridotite
 solubility as an ionic-porosity extrapolation. The original concentration mole
