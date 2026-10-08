@@ -26,6 +26,12 @@ python -m pip install .
 
 ## Documentation
 
+Start with the [capability overview](documents/overview.rst) and
+[model selection and usage guide](documents/model_guide.rst). They distinguish
+package APIs, checkout examples, and the evidence supporting each model.
+The [Japanese explanation](https://github.com/HajimeKawahara/doc_ExoEOS) is
+maintained separately; current English documentation lives in `documents/`.
+
 Install the documentation dependencies and build the committed notebook-based
 tutorials with:
 

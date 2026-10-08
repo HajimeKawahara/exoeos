@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 330" role="img" aria-labelledby="title description">
+<title id="title">Responsibilities of ExoEOS and its consumers</title><desc id="description">ExoEOS supplies thermodynamic properties to ExoGibbs and mass density to ExoInventory. ExoGibbs solves local chemistry; ExoInventory closes planetary reservoirs and pressure.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8" fill="#64748b"/></marker></defs>
+<style>text{font-family:Arial,sans-serif;fill:#183249;font-size:17px}.heading{font-size:20px;font-weight:bold}.label{font-size:15px;fill:#475569}.arrow{fill:none;stroke:#64748b;stroke-width:2;marker-end:url(#arrow)}</style>
+<rect width="1040" height="330" fill="white"/>
+<rect x="20" y="30" width="300" height="135" rx="8" fill="#eff6fb" stroke="#b9cbd9"/>
+<text x="170.0" y="61" text-anchor="middle" class="heading">ExoEOS</text>
+<text x="170.0" y="87" text-anchor="middle" class="label">Properties at a supplied state</text>
+<text x="170.0" y="113" text-anchor="middle" class="label">Potentials and derivatives</text>
+<text x="170.0" y="139" text-anchor="middle" class="label">Models, bases and provenance</text>
+<rect x="370" y="30" width="300" height="135" rx="8" fill="#eff6fb" stroke="#b9cbd9"/>
+<text x="520.0" y="61" text-anchor="middle" class="heading">ExoGibbs</text>
+<text x="520.0" y="87" text-anchor="middle" class="label">Local chemical equilibrium</text>
+<text x="520.0" y="113" text-anchor="middle" class="label">Partition and phase selection</text>
+<text x="520.0" y="139" text-anchor="middle" class="label">Stability evidence</text>
+<rect x="720" y="30" width="300" height="135" rx="8" fill="#eff6fb" stroke="#b9cbd9"/>
+<text x="870.0" y="61" text-anchor="middle" class="heading">ExoInventory</text>
+<text x="870.0" y="87" text-anchor="middle" class="label">Finite elemental reservoirs</text>
+<text x="870.0" y="113" text-anchor="middle" class="label">Atmospheric column</text>
+<text x="870.0" y="139" text-anchor="middle" class="label">Pressure closure</text>
+<path d="M320 98 H367" class="arrow"/>
+<path d="M670 98 H717" class="arrow"/>
+<path d="M170 165 V230 H870 V168" class="arrow"/>
+<text x="520" y="220" text-anchor="middle" class="label">Mass-density providers</text>
+<text x="520" y="294" text-anchor="middle" class="label">Physical applicability is assessed alongside numerical and equilibrium evidence.</text>
+</svg>

@@ -14,8 +14,11 @@ The top-level package exports `HelmholtzEOS`, `TPHelmholtzEOS`, `IdealEOS`,
 `state_trho`, `state_tp`,
 `FluidCriticalProperties`, `available_critical_properties`,
 `get_critical_properties`,
-`GibbsExcessModel`, `IdealSolution`, `MaFeSiOLiquid`, `SolutionState`, `total_gex_RT`,
-`solution_state`, `ChabrierDebrasEOS`, `ChabrierDebrasTableLoader`,
+`GibbsExcessModel`, `IdealSolution`, `MaFeSiOLiquid`, `MaFeSiOHLiquid`,
+`SolutionState`, `total_gex_RT`, `solution_state`,
+`TotalSolutionState`, `total_solution_gibbs_RT`, `total_solution_state`,
+`MassFractionSoluteState`, `mass_fraction_solute_state`,
+`ChabrierDebrasEOS`, `ChabrierDebrasTableLoader`,
 `MassThermodynamicState`, `IdealGas`,
 `MarcumSilicateHydrogenEOS`, `MarcumSilicateHydrogenTableLoader`,
 `SilicateHydrogenState`,
@@ -348,6 +351,38 @@ completed Ma model; including the Fe solvent term itself changes Young's
 original `gamma_Fe=1` approximation. The equations and reference checks are
 in [the model specification](fe_si_o_reference.rst).
 
+### Fe-Si-O-H control and full solution potentials
+
+`MaFeSiOHLiquid` extends the dry Ma model with zero H excess interaction,
+using atomic mole fractions in Fe, Si, O, H order. Ideal dilution uses all
+four components. Its standard-state shift is a convention conversion, not
+an absolute H standard. The dry host must be present and within its supported
+domain; no H partition calibration or pressure response is inferred.
+See `fe_si_o_h_reference.rst` for the model and reference checks.
+
+`total_solution_gibbs_RT(model, T, P, n, mu0_RT)` combines supplied symmetric
+endmember standards, ideal mixing and excess energy. `n` and `mu0_RT` are
+matching nonempty vectors; T and P are scalar K and Pa. The result is the
+extensive `G/(RT)` in mol. `total_solution_state` returns this energy together
+with dimensionless component `mu_RT` in `TotalSolutionState`.
+
+The all-zero phase returns zero energy and NaN potentials. At supported
+zero-component boundaries of a present phase, the ideal contribution to the
+absent component potential is minus infinity. There is no trace floor.
+Derivatives require the model's differentiable domain and positive amounts
+for the components being differentiated. Standards must match the model's
+basis, T/P and gas constant; the helper does not align them automatically.
+
+`mass_fraction_solute_state` adds a mass-based solute scalar to supplied,
+already mixed host G and mu. It returns `MassFractionSoluteState` with
+`gibbs_RT` in mol and dimensionless `host_mu_RT`/`solute_mu_RT`. Host amounts
+use mol and molar masses use kg/mol. Its positive-host domain permits exactly
+zero solute, retaining host G/mu and an insertion potential of minus infinity.
+It includes reciprocal host dilution, requires a host-composition-independent
+solute standard, and supplies no fitted Henry coefficient. It must not
+duplicate native host mixing or water thermodynamics. See
+`m2_material_contract.rst` for its scalar and physical boundaries.
+
 ## Fixed-composition tabulated interface
 
 `ChabrierDebrasEOS` is a mass-specific table backend separate from the molar
@@ -656,9 +691,11 @@ inventory `b` is not. ExoJAX commonly uses pressure in bar, number density in
 four conversions as applicable. Temperature is in K in all three packages.
 
 For a condensed solution, ExoEOS supplies the scalar departure
-`total_gex_RT(model, T, P, n)` and its amount derivatives. ExoGibbs remains
-responsible for standard/endmember Gibbs energies, ideal mixing, mapping an
-element inventory into model component order, phase amounts, and total-Gibbs
-minimization. Passing only `lngamma` while retaining an ideal-mixture Hessian
+`total_gex_RT(model, T, P, n)` and its amount derivatives. The total-solution
+helpers can combine supplied standards and ideal mixing with this departure.
+ExoGibbs remains responsible for selecting and aligning standard/endmember
+Gibbs energies, mapping an element inventory into model component order, phase
+amounts, and total-Gibbs minimization. Passing only `lngamma` while retaining
+an ideal-mixture Hessian
 would omit the derivatives of the activity coefficients; differentiating the
 scalar departure preserves those terms.
