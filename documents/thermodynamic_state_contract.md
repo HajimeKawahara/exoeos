@@ -1,17 +1,19 @@
 # Thermodynamic-state contract
 
-This document defines the initial ExoEOS public contracts. The fluid residual
+This document defines the ExoEOS public contracts. The fluid residual
 layer uses reduced residual Helmholtz energy as its source of truth. The
-solution layer uses reduced molar excess Gibbs energy. The existing
-caloric ideal-gas interface remains separate from the residual
-temperature-pressure inversion layer. Fixed-composition tabulated models use
-a separate mass-specific state.
+total Helmholtz layer adds an ideal closure and supplies caloric and response
+quantities. The solution layer uses reduced molar excess Gibbs energy.
+The original caloric ideal-gas interface retains its broadcasting contract.
+Fixed-composition tabulated models use a separate mass-specific state.
 
 ## Public interface
 
 The top-level package exports `HelmholtzEOS`, `TPHelmholtzEOS`, `IdealEOS`,
 `SecondVirialEOS`, `PengRobinsonEOS`, `ZhangDuanEOS`, `TRhoState`, `psir`,
 `state_trho`, `state_tp`,
+`MolarHelmholtzEOS`, `HelmholtzThermodynamics`,
+`HelmholtzThermodynamicState`, `thermodynamic_state_trho`,
 `FluidCriticalProperties`, `available_critical_properties`,
 `get_critical_properties`,
 `GibbsExcessModel`, `IdealSolution`, `MaFeSiOLiquid`, `MaFeSiOHLiquid`,
@@ -135,6 +137,87 @@ participate in JAX transformations and this promotion rule.
 `TRhoState.reduced_residual_gibbs` is dimensionless. It must not be confused
 with `ThermodynamicState.residual_gibbs`, which is the dimensional molar
 quantity `g_res` in `J mol-1`.
+
+## Total molar Helmholtz interface
+
+`MolarHelmholtzEOS` is a structural protocol for a complete free energy:
+
+```python
+molar_helmholtz(T, rho, x)  # scalar a = A/n, J/mol
+molar_masses              # component vector, kg/mol
+```
+
+`thermodynamic_state_trho(model, T, rho, x)` evaluates one state with scalar
+temperature in K, scalar molar density in `mol m-3`, and a mole-fraction
+vector `(K,)` matching `molar_masses`. The free energy must be twice
+differentiable in temperature and density at fixed composition. The engine
+returns the immutable JAX PyTree `HelmholtzThermodynamicState`.
+
+`HelmholtzThermodynamics(residual, ideal)` combines
+`ideal.molar_helmholtz(T, rho, x) + R*T*residual.alphar(T, rho, x)` and uses
+the ideal model's molar masses. The two models must use the same component
+order. The ideal potential must include ideal mixing and obey
+`partial a_ideal / partial rho = R*T/rho`. `IdealGas.molar_helmholtz` supplies
+this potential with its existing heat capacities and reference convention.
+A custom ideal model can supply temperature-dependent heat capacities.
+
+The wrapper exposes `state_trho(T, rho, x)` and
+`state_tp(T, P, x, phase="vapor")`; `state` aliases `state_tp`. The TP path
+requires the residual model's `molar_density` hook and uses its phase/root
+policy before evaluating total free-energy derivatives at the resulting
+density. A generic complete potential only needs the T/rho entry point.
+Neither the total state nor its protocol supplies fugacity coefficients;
+the existing residual API retains that responsibility.
+
+Stored fields and properties use the following units. Molar and
+mass-specific bases are never interchanged by aliases.
+
+| Field or property | Alias | SI unit |
+| --- | --- | --- |
+| `temperature` | | `K` |
+| `molar_density` | `rho` | `mol m-3` |
+| `mean_molar_mass` | | `kg mol-1` |
+| `molar_helmholtz` | `a` | `J mol-1` |
+| `molar_internal_energy` | `u` | `J mol-1` |
+| `molar_enthalpy` | `h` | `J mol-1` |
+| `molar_gibbs` | `g` | `J mol-1` |
+| `molar_entropy` | `s` | `J mol-1 K-1` |
+| `molar_heat_capacity_cv` | `cv` | `J mol-1 K-1` |
+| `molar_heat_capacity_cp` | `cp` | `J mol-1 K-1` |
+| `pressure` | `P` | `Pa` |
+| `pressure_temperature_derivative` | | `Pa K-1` |
+| `pressure_density_derivative` | | `Pa m3 mol-1` |
+| `compressibility_factor` | `Z` | 1 |
+| `mass_density` | | `kg m-3` |
+| `number_density` | | `m-3` |
+| `sound_speed` | | `m s-1` |
+| `sound_speed_squared` | | `m2 s-2` |
+| `adiabatic_gradient` | `nabla_ad` | 1 |
+| `isothermal_compressibility` | | `Pa-1` |
+| `isentropic_compressibility` | | `Pa-1` |
+| `thermal_expansion` | | `K-1` |
+
+The state stores T, molar density, mean molar mass, a, s, cv, P, and the two
+pressure derivatives; other quantities are derived properties. All
+derivatives hold composition fixed. In particular, entropy derivatives for
+sound speed and the adiabatic gradient describe a homogeneous phase without
+chemical re-equilibration or latent heat. Definitions and derivative
+identities are in [the derivative guide](thermodynamic_derivatives.rst).
+
+Supply `T > 0`, `rho > 0`, positive molar masses, nonnegative normalized mole
+fractions and a differentiable model state. Stable responses normally
+require `cv > 0` and `pressure_density_derivative > 0`. Static shapes are
+checked; numerical inputs and outputs are not clipped, normalized or given
+stability floors. Singular responses can be infinite, negative sound-speed
+squared yields a NaN sound speed, and invalid states can propagate NaNs.
+
+The engine and wrapper support `jax.jit`, external `jax.vmap`, and automatic
+differentiation on their smooth domain. Further state differentiation
+requires higher free-energy derivatives; TP differentiation also requires
+a differentiable selected root. Keep phase strings static and register
+custom model parameters as PyTree leaves when transforming them. Input and
+model leaves participate in dtype promotion to at least float32; enable JAX
+64-bit mode for sensitive dense-fluid or derivative calculations.
 
 ## Second-virial equation of state
 
@@ -587,7 +670,9 @@ no separate unit conversion or change of thermodynamic basis in an alias.
 `EquationOfState` is a structural protocol for objects with this `state`
 operation; callers do not need to inherit from a package base class.
 This caloric interface is separate from the residual Helmholtz `state_tp`
-interface and its explicit static `phase` selector.
+interface and its explicit static `phase` selector. The same `IdealGas`
+also implements `molar_helmholtz(T, rho, x)` for the total Helmholtz engine,
+whose state and scalar input contract are defined above.
 
 ## Temperature-pressure ideal-gas input and shape convention
 
@@ -656,6 +741,11 @@ The limiting value `x_i ln(x_i) = 0` is used when `x_i = 0`. Zero default
 reference arrays define a relative caloric model, not an absolute
 thermochemical database.
 
+`IdealGas.molar_helmholtz` evaluates the consistent total potential
+`a = h - R*T - T*s` with the ideal pressure `P = rho*R*T`. This includes
+ideal mixing exactly once and preserves the same reference enthalpies and
+entropies.
+
 ## JAX behavior
 
 The ideal-gas state computation and returned PyTree support `jax.jit`,
@@ -689,6 +779,13 @@ Its equilibrium result `x` is a mole-fraction input, while its elemental
 inventory `b` is not. ExoJAX commonly uses pressure in bar, number density in
 `cm-3`, mass density in `g cm-3`, and molar-mass numbers in `g mol-1`; use all
 four conversions as applicable. Temperature is in K in all three packages.
+
+For RCE calculations, `state.cp / state.mean_molar_mass` on a
+`HelmholtzThermodynamicState`
+gives mass-specific heat capacity in `J kg-1 K-1`, and
+`state.adiabatic_gradient` is dimensionless. These are fixed-composition
+responses; equilibrium chemistry and condensation responses require a
+separate closure in the atmospheric calculation.
 
 For a condensed solution, ExoEOS supplies the scalar departure
 `total_gex_RT(model, T, P, n)` and its amount derivatives. The total-solution

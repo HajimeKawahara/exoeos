@@ -44,9 +44,11 @@ def vector_array(value: ArrayLike, name: str) -> Array:
 def common_dtype(tree: object, *values: ArrayLike):
     """Return a floating result dtype that includes inexact PyTree leaves."""
 
-    model_dtypes = []
+    model_values = []
     for leaf in jax.tree_util.tree_leaves(tree):
         leaf_dtype = getattr(leaf, "dtype", None)
         if leaf_dtype is not None and jnp.issubdtype(leaf_dtype, jnp.inexact):
-            model_dtypes.append(leaf_dtype)
-    return jnp.result_type(*values, *model_dtypes, jnp.float32)
+            model_values.append(leaf)
+    # Keep weak scalar defaults weak (e.g. IdealGas reference temperature).
+    # Explicitly typed model arrays still participate in dtype promotion.
+    return jnp.result_type(*values, *model_values, jnp.float32)

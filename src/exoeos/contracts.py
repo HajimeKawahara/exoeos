@@ -46,6 +46,28 @@ class TPHelmholtzEOS(HelmholtzEOS, Protocol):
         ...
 
 
+class MolarHelmholtzEOS(Protocol):
+    """Total molar Helmholtz model, including the ideal contribution."""
+
+    @property
+    def molar_masses(self) -> jax.Array:
+        """Component molar masses in kg mol^-1, ordered as ``x``."""
+
+        ...
+
+    def molar_helmholtz(
+        self, T: ArrayLike, rho: ArrayLike, x: ArrayLike
+    ) -> jax.Array:
+        """Return total molar Helmholtz energy in J mol^-1 for one state.
+
+        Temperature uses K, total molar density uses mol m^-3, and ``x`` is
+        a normalized component vector. The potential must be twice
+        differentiable in temperature and density at fixed composition.
+        """
+
+        ...
+
+
 class MassDensityProvider(Protocol):
     """Temperature-pressure mass-density provider in SI units."""
 

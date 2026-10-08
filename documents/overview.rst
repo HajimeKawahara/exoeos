@@ -8,9 +8,10 @@ Use :doc:`model_guide` to choose an evaluation path and find a minimal example.
 Use :doc:`feature_plots` to see how the outputs change with temperature,
 pressure and composition.
 
-This overview describes source commit
+The original capability survey used source commit
 `f049cfc <https://github.com/HajimeKawahara/exoeos/tree/f049cfcb3f42e198124c8f6c921385ff0d67f69d>`_
-(reviewed on 2026-10-08). A historical calculation elsewhere in the
+(reviewed on 2026-10-08); this overview also covers the subsequent total
+Helmholtz derivative engine. A historical calculation elsewhere in the
 documentation retains its own source revision, inputs, and validation scope.
 The `Japanese explanation <https://github.com/HajimeKawahara/doc_ExoEOS>`_
 is maintained separately in ``doc_ExoEOS/main_ja.tex``. English API and usage
@@ -74,6 +75,13 @@ package's ``src/`` build configuration.
        responses.
      - Component heat capacities are constant; reference enthalpies and
        entropies are supplied by the caller.
+   * - Total Helmholtz thermodynamics
+     - ``thermodynamic_state_trho`` and ``HelmholtzThermodynamics``:
+       enthalpy, entropy, heat capacities, sound speed, compressibilities,
+       expansion and adiabatic gradient from one free energy.
+     - Requires a complete molar Helmholtz potential, including an ideal
+       closure. Responses hold composition fixed in a homogeneous phase;
+       see :doc:`thermodynamic_derivatives`.
    * - Published tables
      - ``ChabrierDebrasEOS`` for fixed H/He variants;
        ``MarcumSilicateHydrogenEOS`` for MgSiO3--MgSiO3H4.
@@ -117,14 +125,20 @@ Evaluation paths
    :alt: Residual Helmholtz, excess Gibbs, full solution, table, and caloric ideal-gas paths have different inputs and state types. Only TP-capable residual models use the common state_tp function.
    :width: 100%
 
-   Choose the path by the required output and its physical basis. Similar
-   method names do not imply interchangeable states.
+   The residual, solution, table and analytic ideal-gas paths use distinct
+   states. The total Helmholtz path additionally combines a residual model
+   and an ideal closure, as described below and in
+   :doc:`thermodynamic_derivatives`.
 
 For residual models the shared path differentiates
 :math:`\psi^r=\rho\alpha^r` with respect to component molar densities.
 For excess solutions it differentiates :math:`n g^E/(RT)` with respect to
 component amounts at fixed temperature and pressure. Tables interpolate
 published fields instead of reconstructing either potential.
+The total Helmholtz engine differentiates :math:`a=a^0+RT\alpha^r` with
+respect to temperature and molar density through second order. Its separate
+``HelmholtzThermodynamicState`` supplies caloric and response quantities;
+the residual state continues to supply fugacity coefficients.
 
 The :download:`thermodynamic-state contract <thermodynamic_state_contract.md>`
 defines units, shapes and boundary behavior. In particular, ``TRhoState.rho``

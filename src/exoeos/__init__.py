@@ -10,6 +10,7 @@ from exoeos.contracts import (
     EquationOfState,
     GibbsExcessModel,
     HelmholtzEOS,
+    MolarHelmholtzEOS,
     MassDensityProvider,
     TPHelmholtzEOS,
 )
@@ -42,6 +43,7 @@ from exoeos.peng_robinson import PengRobinsonEOS
 from exoeos.second_virial import SecondVirialEOS
 from exoeos.solution_gibbs import total_solution_gibbs_RT, total_solution_state
 from exoeos.state import (
+    HelmholtzThermodynamicState,
     MassThermodynamicState,
     SilicateHydrogenState,
     SolutionState,
@@ -49,6 +51,7 @@ from exoeos.state import (
     ThermodynamicState,
     TRhoState,
 )
+from exoeos.thermodynamics import HelmholtzThermodynamics, thermodynamic_state_trho
 from exoeos.zhang_duan import ZhangDuanEOS
 
 
@@ -68,6 +71,8 @@ __all__ = [
     "FluidCriticalProperties",
     "GibbsExcessModel",
     "HelmholtzEOS",
+    "HelmholtzThermodynamicState",
+    "HelmholtzThermodynamics",
     "IdealEOS",
     "IdealGas",
     "IdealSolution",
@@ -78,6 +83,7 @@ __all__ = [
     "MassThermodynamicState",
     "MarcumSilicateHydrogenEOS",
     "MarcumSilicateHydrogenTableLoader",
+    "MolarHelmholtzEOS",
     "PengRobinsonEOS",
     "SilicateHydrogenState",
     "SolutionState",
@@ -98,6 +104,7 @@ __all__ = [
     "solution_state",
     "state_tp",
     "state_trho",
+    "thermodynamic_state_trho",
     "total_gex_RT",
     "total_solution_gibbs_RT",
     "total_solution_state",
