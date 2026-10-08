@@ -3,9 +3,122 @@
 from typing import NamedTuple
 
 import jax
+import jax.numpy as jnp
+
+from exoeos.constants import AVOGADRO_CONSTANT, MOLAR_GAS_CONSTANT
 
 
 Array = jax.Array
+
+
+class HelmholtzThermodynamicState(NamedTuple):
+    """Total single-phase state from a molar Helmholtz potential.
+
+    All derivatives hold composition fixed. Stored fields use SI units;
+    ``rho`` is molar density and heat capacities are molar. Derived
+    properties reuse the stored first and second potential derivatives.
+    No stability clipping is performed at singular or unstable states.
+    """
+
+    temperature: Array
+    molar_density: Array
+    mean_molar_mass: Array
+    molar_helmholtz: Array
+    molar_entropy: Array
+    molar_heat_capacity_cv: Array
+    pressure: Array
+    pressure_temperature_derivative: Array
+    pressure_density_derivative: Array
+
+    @property
+    def molar_internal_energy(self) -> Array:
+        """Internal energy in J mol^-1."""
+        return self.molar_helmholtz + self.temperature * self.molar_entropy
+
+    @property
+    def molar_enthalpy(self) -> Array:
+        """Enthalpy in J mol^-1."""
+        return self.molar_internal_energy + self.pressure / self.molar_density
+
+    @property
+    def molar_gibbs(self) -> Array:
+        """Gibbs energy in J mol^-1."""
+        return self.molar_helmholtz + self.pressure / self.molar_density
+
+    @property
+    def molar_heat_capacity_cp(self) -> Array:
+        """Constant-pressure heat capacity in J mol^-1 K^-1."""
+        return self.molar_heat_capacity_cv + (
+            self.temperature * self.pressure_temperature_derivative**2
+            / (self.molar_density**2 * self.pressure_density_derivative)
+        )
+
+    @property
+    def compressibility_factor(self) -> Array:
+        """Dimensionless compressibility factor."""
+        return self.pressure / (
+            self.molar_density * MOLAR_GAS_CONSTANT * self.temperature
+        )
+
+    @property
+    def mass_density(self) -> Array:
+        """Mass density in kg m^-3."""
+        return self.molar_density * self.mean_molar_mass
+
+    @property
+    def number_density(self) -> Array:
+        """Particle number density in m^-3."""
+        return self.molar_density * AVOGADRO_CONSTANT
+
+    @property
+    def thermal_expansion(self) -> Array:
+        """Isobaric volumetric expansion coefficient in K^-1."""
+        return self.pressure_temperature_derivative / (
+            self.molar_density * self.pressure_density_derivative
+        )
+
+    @property
+    def isothermal_compressibility(self) -> Array:
+        """Isothermal compressibility in Pa^-1."""
+        return 1.0 / (self.molar_density * self.pressure_density_derivative)
+
+    @property
+    def sound_speed_squared(self) -> Array:
+        """Squared frozen-composition isentropic sound speed in m^2 s^-2."""
+        return (
+            self.pressure_density_derivative
+            + self.temperature * self.pressure_temperature_derivative**2
+            / (self.molar_density**2 * self.molar_heat_capacity_cv)
+        ) / self.mean_molar_mass
+
+    @property
+    def sound_speed(self) -> Array:
+        """Frozen-composition isentropic sound speed in m s^-1."""
+        return jnp.sqrt(self.sound_speed_squared)
+
+    @property
+    def isentropic_compressibility(self) -> Array:
+        """Isentropic compressibility in Pa^-1."""
+        return 1.0 / (self.mass_density * self.sound_speed_squared)
+
+    @property
+    def adiabatic_gradient(self) -> Array:
+        """Dimensionless ``(d ln T / d ln P)_(s,x)``."""
+        return self.pressure * self.thermal_expansion / (
+            self.molar_density * self.molar_heat_capacity_cp
+        )
+
+    rho = property(lambda self: self.molar_density, doc="Molar density in mol m^-3.")
+    P = property(lambda self: self.pressure, doc="Pressure in Pa.")
+    a = property(lambda self: self.molar_helmholtz, doc="Helmholtz energy in J mol^-1.")
+    u = property(lambda self: self.molar_internal_energy, doc="Internal energy in J mol^-1.")
+    h = property(lambda self: self.molar_enthalpy, doc="Enthalpy in J mol^-1.")
+    g = property(lambda self: self.molar_gibbs, doc="Gibbs energy in J mol^-1.")
+    s = property(lambda self: self.molar_entropy, doc="Entropy in J mol^-1 K^-1.")
+    cv = property(lambda self: self.molar_heat_capacity_cv, doc="Molar cv in J mol^-1 K^-1.")
+    cp = property(lambda self: self.molar_heat_capacity_cp, doc="Molar cp in J mol^-1 K^-1.")
+    Z = property(lambda self: self.compressibility_factor, doc="Compressibility factor.")
+    nabla_ad = property(lambda self: self.adiabatic_gradient, doc="Adiabatic gradient.")
 
 
 class ThermodynamicState(NamedTuple):

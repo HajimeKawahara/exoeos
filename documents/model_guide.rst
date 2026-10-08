@@ -42,6 +42,10 @@ Choose an entry point
    * - Ideal-gas enthalpy, entropy and heat capacities
      - ``IdealGas(...).state(T, P, x)``
      - Supply molar masses, constant component cp and the required references.
+   * - Fluid caloric properties, sound speed and RCE responses
+     - ``HelmholtzThermodynamics(residual, ideal).state_tp(T, P, x)``
+     - Supply a compatible ideal free energy and molar masses; responses
+       hold composition fixed. See :doc:`thermodynamic_derivatives`.
    * - Density for an atmospheric column
      - ``MassDensityProvider.mass_density_tp(...)``
      - Choose the appropriate provider and match the species/mass ordering.
@@ -195,6 +199,10 @@ particular, this supercritical silicate--hydrogen table is not a molecular-H2
 solubility law for a cooler BSE melt.
 
 ``IdealGas`` provides a separate analytic caloric state with molar h/s/cp/cv.
+It also supplies ``molar_helmholtz`` for the
+:doc:`total Helmholtz derivative engine <thermodynamic_derivatives>`, which
+combines an ideal closure with residual models and generates caloric and
+response quantities from one potential.
 For density alone, ``mass_density_tp`` converts a residual model's molar
 density using supplied molar masses. ``TPHelmholtzDensityProvider`` wraps that
 path; ``FixedCompositionDensityProvider`` checks the requested composition
@@ -262,8 +270,8 @@ Phase selection and certificates belong to the chemical consumer.
 Numerical use and reproducibility
 ---------------------------------
 
-Residual and solution entry points evaluate one scalar state; use ``jax.vmap``
-for batches. ``IdealGas.state`` instead supports native broadcasting with the
+Residual, total Helmholtz and solution entry points evaluate one scalar state;
+use ``jax.vmap`` for batches. ``IdealGas.state`` supports native broadcasting with the
 last axis reserved for components. Keep phase strings static under ``jax.jit``.
 JAX differentiation follows the model's smooth domain: root degeneracies,
 table-cell boundaries and unsupported composition endpoints need separate

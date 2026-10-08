@@ -6,8 +6,10 @@ atmospheres, fluids, and melts, built with JAX.
 Residual equation-of-state models use reduced residual Helmholtz energy as
 their source of truth. Mole-fraction solution models use reduced molar excess
 Gibbs energy, from which logarithmic activity coefficients are obtained by
-automatic differentiation. A calorically perfect ideal-gas mixture remains
-available through the original temperature-pressure state interface.
+automatic differentiation. Total Helmholtz derivatives provide caloric
+properties and response functions for fluids with a supplied ideal closure.
+A calorically perfect ideal-gas mixture is also available through the
+original temperature-pressure state interface.
 
 ## Installation
 
@@ -32,6 +34,8 @@ package APIs, checkout examples, and the evidence supporting each model.
 The [plot gallery](documents/feature_plots.rst) shows how each capability's
 outputs change with temperature, pressure or composition, with reproducible
 code and explicit source conditions.
+The [Helmholtz derivative guide](documents/thermodynamic_derivatives.rst)
+covers heat capacities, sound speed and atmospheric/RCE use.
 The [Japanese explanation](https://github.com/HajimeKawahara/doc_ExoEOS) is
 maintained separately; current English documentation lives in `documents/`.
 
@@ -575,6 +579,43 @@ physical reference data when absolute values are needed.
 The complete units, shape, reference-state, and transformation contract is in
 [the thermodynamic-state contract](https://github.com/HajimeKawahara/exoeos/blob/main/documents/thermodynamic_state_contract.md).
 
+## Total Helmholtz thermodynamics
+
+`HelmholtzThermodynamics(residual, ideal)` combines an existing residual EOS
+with an ideal free energy and evaluates its first and second T/rho
+derivatives. It provides molar enthalpy, entropy, internal/Gibbs/Helmholtz
+energies, `cp`, `cv`, sound speed, adiabatic gradient, compressibilities and
+thermal expansion in one `HelmholtzThermodynamicState`:
+
+```python
+import jax.numpy as jnp
+from exoeos import HelmholtzThermodynamics, IdealGas, SecondVirialEOS
+
+ideal = IdealGas(molar_masses=[0.028], molar_heat_capacities=[29.1])
+eos = HelmholtzThermodynamics(SecondVirialEOS([[1.0e-5]]), ideal)
+state = eos.state_tp(T=500.0, P=1.0e5, x=jnp.array([1.0]))
+cp_mass = state.cp / state.mean_molar_mass  # J/(kg K), useful for RCE
+sound_speed = state.sound_speed            # m/s
+adiabatic_gradient = state.nabla_ad
+```
+
+`state_trho(T, rho, x)` accepts molar density in mol/m3; `state` aliases
+`state_tp`. The generic `thermodynamic_state_trho(model, T, rho, x)` also
+accepts a complete custom `MolarHelmholtzEOS` implementing
+`molar_helmholtz(T, rho, x)` in J/mol and `molar_masses` in kg/mol.
+`IdealGas` supplies a constant-cp ideal closure; custom ideal closures can
+represent temperature-dependent heat capacities. A residual EOS alone does
+not specify total caloric properties.
+
+Calls evaluate a single state and support `jax.jit` and external `jax.vmap`.
+Responses hold composition fixed in a homogeneous phase; chemical-equilibrium
+and latent-heat responses require an additional closure. Values are not
+clipped at unstable or singular states. For ExoJAX pressure inputs in bar,
+convert to Pa with `P_bar * 1.0e5`. See the
+[derivative guide](documents/thermodynamic_derivatives.rst) for equations,
+units and a batched atmospheric example. Existing residual states and their
+fugacity fields remain available through `state_trho` and `state_tp`.
+
 ## Development
 
 ```bash
@@ -582,6 +623,7 @@ python -m pip install -e ".[test]"
 pytest tests/unittests
 ```
 
-`SecondVirialEOS` and `PengRobinsonEOS` are the non-ideal fluid backends.
+`SecondVirialEOS`, `PengRobinsonEOS` and `ZhangDuanEOS` are the non-ideal
+fluid backends.
 Additional fluid EOS and nonzero Gibbs-excess models can be added behind the
 separate `TPHelmholtzEOS` and `GibbsExcessModel` contracts.

@@ -12,6 +12,7 @@ Start here
 
    overview
    model_guide
+   thermodynamic_derivatives
    feature_plots
 
 Tutorials

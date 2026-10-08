@@ -293,6 +293,31 @@ class IdealGas:
             self.reference_pressure,
         )
 
+    def molar_helmholtz(
+        self,
+        T: ArrayLike,
+        rho: ArrayLike,
+        x: ArrayLike,
+    ) -> Array:
+        """Return total ideal molar Helmholtz energy in J mol^-1.
+
+        Evaluate one state at temperature in K and molar density in mol m^-3.
+        The energy includes ideal mixing and the same enthalpy/entropy
+        references as :meth:`state`. Use ``jax.vmap`` for batches.
+        """
+
+        temperature = _scalar_array(T, "T")
+        molar_density = _scalar_array(rho, "rho")
+        mole_fractions = as_inexact_array(x)
+        if mole_fractions.ndim != 1:
+            raise ValueError("x must be one-dimensional; use jax.vmap for batches.")
+        state = self.state(
+            temperature,
+            molar_density * MOLAR_GAS_CONSTANT * temperature,
+            mole_fractions,
+        )
+        return state.h - MOLAR_GAS_CONSTANT * temperature - temperature * state.s
+
     def tree_flatten(self):
         children = (
             self.molar_masses,
