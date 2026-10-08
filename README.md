@@ -445,7 +445,10 @@ The default cache is `$XDG_CACHE_HOME/exoeos/DirEOS2021`, falling back to
 opened directly with `ChabrierDebrasEOS.from_directory(...)`.
 
 Inputs and returned quantities use SI units. The logarithmic derivative fields
-are dimensionless. The variants are separate fixed-composition datasets;
+are dimensionless. This original-table backend interpolates each published
+field independently; its response columns can differ from automatic
+derivatives of the interpolated density or entropy, and first derivatives
+can jump at cell boundaries. The variants are separate fixed-composition datasets;
 ExoEOS does not interpolate in helium mass fraction. Queries outside the
 nominal rectangular grids return `nan`, and the tables do not provide a mask
 for unphysical states inside those rectangles. If conversion to the selected
@@ -453,6 +456,27 @@ floating-point dtype makes any returned field non-finite, the complete state
 is returned as `nan`. Both evaluators accept one state at a time; use
 `jax.vmap` for batches. `Y0292` and `Y0297` are the effective-abundance
 variants defined by the authors.
+
+For a separate potential-consistent reconstruction, enable JAX 64-bit mode
+before loading and call ``original.to_helmholtz()``:
+
+```python
+import jax
+from exoeos import ChabrierDebrasTableLoader
+
+jax.config.update("jax_enable_x64", True)
+original = ChabrierDebrasTableLoader(variant="Y0275").load()
+potential = original.to_helmholtz()
+state = potential.state_trho(T=1.0e4, mass_density=1.0e3)
+residuals = original.helmholtz_residuals(potential, 1.0e4, 1.0e3)
+```
+
+This opt-in backend reconstructs `a = u - T*s`, interpolates a local C2
+Helmholtz potential, and derives pressure, entropy and responses from it.
+It retains mass-specific SI units. `residuals` exposes signed differences
+from every original T-rho field, and `state.is_stable` checks local thermal
+and mechanical stability. Consistency does not guarantee source accuracy or
+stability; see the [method, API and numerical comparison](documents/potential_tables.rst).
 
 ## Composition-dependent tabulated silicate-hydrogen API
 

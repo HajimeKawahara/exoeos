@@ -466,6 +466,50 @@ class ChabrierDebrasEOS:
 
         return _VARIANT_HELIUM_MASS_FRACTIONS[self.variant]
 
+    def to_helmholtz(self):
+        """Reconstruct a separate, potential-consistent T-rho backend.
+
+        This host operation requires JAX float64 mode. The local C2
+        biquintic interpolant uses ``a = u - T*s`` and nodal pressure,
+        caloric and response constraints from the T-rho table. It does not
+        fit the independent TP table. Source inconsistencies can produce
+        oscillations and unstable states between knots; use
+        :meth:`helmholtz_residuals` to inspect deviations from this original
+        backend, and inspect the reconstructed state's ``is_stable``.
+        """
+        from exoeos.helmholtz_table import HelmholtzTable
+
+        if not jax.config.x64_enabled:
+            raise ValueError("Chabrier-Debras reconstruction requires JAX float64 mode.")
+        fields = np.asarray(self.trho_fields, dtype=np.float64)
+        temperatures = 10.0 ** _expected_axis(_LOG_T_MIN, _TEMPERATURE_COUNT)
+        densities = 1.0e3 * 10.0 ** _expected_axis(_LOG_RHO_GCC_MIN, _DENSITY_COUNT)
+        return HelmholtzTable.from_thermodynamic_data(
+            temperatures,
+            densities,
+            1.0e9 * 10.0 ** fields[..., 0],
+            1.0e6 * 10.0 ** fields[..., 1],
+            1.0e6 * 10.0 ** fields[..., 2],
+            dlnrho_dlnT_P=fields[..., 3],
+            dlnrho_dlnP_T=fields[..., 4],
+            dlns_dlnT_P=fields[..., 5],
+        )
+
+    def helmholtz_residuals(self, potential, T, mass_density):
+        """Return signed SI residuals: potential minus original T-rho state.
+
+        Every original field is included, including the two response
+        columns not imposed in reconstruction. Relative residuals require
+        a caller-selected scale, especially for nearly zero response fields.
+        This pure JAX method supports ``jit`` and ``vmap``.
+        """
+        original = self.state_trho(T, mass_density)
+        reconstructed = potential.state_trho(T, mass_density)
+        return MassThermodynamicState(
+            *(getattr(reconstructed, name) - value
+              for name, value in zip(MassThermodynamicState._fields, original))
+        )
+
     def state_tp(
         self,
         T: ArrayLike,
