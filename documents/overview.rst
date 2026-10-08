@@ -5,6 +5,8 @@ ExoEOS evaluates thermodynamic properties at a supplied state and composition.
 Its free-energy models provide a scalar potential and consistent derivatives;
 its table models interpolate the quantities supplied by the published tables.
 Use :doc:`model_guide` to choose an evaluation path and find a minimal example.
+Use :doc:`feature_plots` to see how the outputs change with temperature,
+pressure and composition.
 
 This overview describes source commit
 `f049cfc <https://github.com/HajimeKawahara/exoeos/tree/f049cfcb3f42e198124c8f6c921385ff0d67f69d>`_

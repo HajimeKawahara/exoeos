@@ -12,6 +12,7 @@ Start here
 
    overview
    model_guide
+   feature_plots
 
 Tutorials
 ---------
