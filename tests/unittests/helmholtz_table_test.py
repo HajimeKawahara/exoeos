@@ -466,11 +466,15 @@ def test_float32_ideal_states_and_closed_endpoint_derivatives() -> None:
     ],
 )
 def test_constructor_rejects_grid_collapse_in_active_dtype(temperatures) -> None:
-    with jax.experimental.enable_x64(False):
+    previous = jax.config.x64_enabled
+    try:
+        jax.config.update("jax_enable_x64", False)
         with pytest.raises(ValueError, match="strictly increasing"):
             HelmholtzTable.from_helmholtz(
                 temperatures, MASS_DENSITIES, np.ones((3, len(MASS_DENSITIES)))
             )
+    finally:
+        jax.config.update("jax_enable_x64", previous)
 
 
 @pytest.mark.parametrize(

@@ -58,6 +58,10 @@ def test_reconstructed_off_grid_ideal_gas_and_residual_batches(original):
 
 
 def test_conversion_requires_float64(original):
-    with jax.experimental.enable_x64(False):
+    previous = jax.config.x64_enabled
+    try:
+        jax.config.update("jax_enable_x64", False)
         with pytest.raises(ValueError, match="float64"):
             original.to_helmholtz()
+    finally:
+        jax.config.update("jax_enable_x64", previous)
