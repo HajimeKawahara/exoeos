@@ -121,6 +121,106 @@ class HelmholtzThermodynamicState(NamedTuple):
     nabla_ad = property(lambda self: self.adiabatic_gradient, doc="Adiabatic gradient.")
 
 
+class MassHelmholtzThermodynamicState(NamedTuple):
+    """Total fixed-composition state from a specific Helmholtz potential.
+
+    All fields use SI units; energies and heat capacities are per kilogram.
+    Unstable responses are retained, without clipping or phase selection.
+    """
+
+    temperature: Array
+    mass_density: Array
+    specific_helmholtz: Array
+    specific_entropy: Array
+    specific_heat_capacity_cv: Array
+    pressure: Array
+    pressure_temperature_derivative: Array
+    pressure_density_derivative: Array
+    specific_internal_energy: Array
+
+    @property
+    def specific_enthalpy(self) -> Array:
+        return self.specific_internal_energy + self.pressure / self.mass_density
+
+    @property
+    def specific_gibbs(self) -> Array:
+        return self.specific_helmholtz + self.pressure / self.mass_density
+
+    @property
+    def specific_heat_capacity_cp(self) -> Array:
+        return self.specific_heat_capacity_cv + (
+            self.temperature * self.pressure_temperature_derivative**2
+            / (self.mass_density**2 * self.pressure_density_derivative)
+        )
+
+    @property
+    def thermal_expansion(self) -> Array:
+        return self.pressure_temperature_derivative / (
+            self.mass_density * self.pressure_density_derivative
+        )
+
+    @property
+    def isothermal_compressibility(self) -> Array:
+        return 1.0 / (self.mass_density * self.pressure_density_derivative)
+
+    @property
+    def sound_speed_squared(self) -> Array:
+        return self.pressure_density_derivative + (
+            self.temperature * self.pressure_temperature_derivative**2
+            / (self.mass_density**2 * self.specific_heat_capacity_cv)
+        )
+
+    @property
+    def sound_speed(self) -> Array:
+        return jnp.sqrt(self.sound_speed_squared)
+
+    @property
+    def isentropic_compressibility(self) -> Array:
+        return 1.0 / (self.mass_density * self.sound_speed_squared)
+
+    @property
+    def dlnrho_dlnT_P(self) -> Array:
+        return -self.temperature * self.thermal_expansion
+
+    @property
+    def dlnrho_dlnP_T(self) -> Array:
+        return self.pressure * self.isothermal_compressibility
+
+    @property
+    def dlns_dlnT_P(self) -> Array:
+        return self.specific_heat_capacity_cp / self.specific_entropy
+
+    @property
+    def dlns_dlnP_T(self) -> Array:
+        return -self.pressure * self.thermal_expansion / (
+            self.mass_density * self.specific_entropy
+        )
+
+    @property
+    def adiabatic_gradient(self) -> Array:
+        return self.pressure * self.thermal_expansion / (
+            self.mass_density * self.specific_heat_capacity_cp
+        )
+
+    @property
+    def is_stable(self) -> Array:
+        """Local thermal/mechanical stability; not a phase-equilibrium test."""
+        return (self.specific_heat_capacity_cv > 0) & (
+            self.pressure_density_derivative > 0
+        )
+
+    rho = property(lambda self: self.mass_density, doc="Mass density in kg m^-3.")
+    P = property(lambda self: self.pressure, doc="Pressure in Pa.")
+    a = property(lambda self: self.specific_helmholtz, doc="Helmholtz energy in J kg^-1.")
+    u = property(lambda self: self.specific_internal_energy, doc="Internal energy in J kg^-1.")
+    h = property(lambda self: self.specific_enthalpy, doc="Enthalpy in J kg^-1.")
+    g = property(lambda self: self.specific_gibbs, doc="Gibbs energy in J kg^-1.")
+    s = property(lambda self: self.specific_entropy, doc="Entropy in J kg^-1 K^-1.")
+    cv = property(lambda self: self.specific_heat_capacity_cv, doc="Specific cv in J kg^-1 K^-1.")
+    cp = property(lambda self: self.specific_heat_capacity_cp, doc="Specific cp in J kg^-1 K^-1.")
+    nabla_ad = property(lambda self: self.adiabatic_gradient, doc="Adiabatic gradient.")
+
+
 class ThermodynamicState(NamedTuple):
     """Immutable, JAX-compatible thermodynamic state.
 

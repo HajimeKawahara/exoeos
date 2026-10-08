@@ -198,6 +198,13 @@ define a residual Helmholtz model or component chemical potentials. In
 particular, this supercritical silicate--hydrogen table is not a molecular-H2
 solubility law for a cooler BSE melt.
 
+For fixed-composition H/He potential derivatives, explicitly convert the
+original model with ``table.to_helmholtz()`` in JAX 64-bit mode. The new
+``HelmholtzTable`` derives a mass-specific state from one C2 potential and
+retains source residuals and stability as separate checks. It does not
+replace the original backend; see :doc:`potential_tables` for construction,
+the explicit TP density bracket, and measured limitations.
+
 ``IdealGas`` provides a separate analytic caloric state with molar h/s/cp/cv.
 It also supplies ``molar_helmholtz`` for the
 :doc:`total Helmholtz derivative engine <thermodynamic_derivatives>`, which

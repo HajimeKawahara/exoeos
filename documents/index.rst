@@ -13,6 +13,7 @@ Start here
    overview
    model_guide
    thermodynamic_derivatives
+   potential_tables
    feature_plots
 
 Tutorials

@@ -29,6 +29,7 @@ from exoeos.density import (
 )
 from exoeos.gibbs_excess import solution_state, total_gex_RT
 from exoeos.helmholtz import psir, state_tp, state_trho
+from exoeos.helmholtz_table import HelmholtzTable
 from exoeos.ideal import IdealEOS
 from exoeos.ideal_gas import IdealGas
 from exoeos.ideal_solution import IdealSolution
@@ -45,6 +46,7 @@ from exoeos.solution_gibbs import total_solution_gibbs_RT, total_solution_state
 from exoeos.state import (
     HelmholtzThermodynamicState,
     MassThermodynamicState,
+    MassHelmholtzThermodynamicState,
     SilicateHydrogenState,
     SolutionState,
     TotalSolutionState,
@@ -73,6 +75,7 @@ __all__ = [
     "HelmholtzEOS",
     "HelmholtzThermodynamicState",
     "HelmholtzThermodynamics",
+    "HelmholtzTable",
     "IdealEOS",
     "IdealGas",
     "IdealSolution",
@@ -81,6 +84,7 @@ __all__ = [
     "MassDensityProvider",
     "MassFractionSoluteState",
     "MassThermodynamicState",
+    "MassHelmholtzThermodynamicState",
     "MarcumSilicateHydrogenEOS",
     "MarcumSilicateHydrogenTableLoader",
     "MolarHelmholtzEOS",

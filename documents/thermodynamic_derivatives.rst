@@ -17,6 +17,11 @@ in mol/m3, and ``x`` is a normalized mole-fraction vector of shape ``(K,)``.
 A custom model can provide any twice-differentiable total free energy that
 meets this contract.
 
+Fixed-composition mass-specific tables have a separate
+:doc:`potential-consistent interpolation backend <potential_tables>`.
+It applies the same identities in the mass basis without assigning molar
+masses or introducing composition derivatives.
+
 For existing residual EOS models, ``HelmholtzThermodynamics(residual, ideal)``
 constructs
 

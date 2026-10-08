@@ -1,0 +1,1681 @@
+{
+  "method": "Local C2 biquintic Hermite of a/T in ln(T), ln(rho)",
+  "reconstruction": "a=u-Ts; source P,u,s and three response constraints at nodes",
+  "relative_residual_definition": "abs(potential-original)/abs(original); zero references excluded",
+  "qmd_box_SI": {
+    "temperature": [
+      1000,
+      80000
+    ],
+    "mass_density": [
+      200,
+      9000
+    ]
+  },
+  "scope": "Backend differences and sampled local stability, not physical accuracy or a domain certificate",
+  "jax_version": "0.6.2",
+  "source_sha256": {
+    "src/exoeos/helmholtz_table.py": "88a4c737c06fa3c009c71aa47411fa3596e697e2f52796c214822e730a61fb4e",
+    "src/exoeos/state.py": "76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54",
+    "src/exoeos/chabrier_debras.py": "45fbfa72913833109e6eed38a47ce874c0a710538cb3e696380f60f505e512d1",
+    "examples/validate_helmholtz_table.py": "5e2cace518139071b0a4994fbe4edeb506937091baf9884950fdf621e37df434"
+  },
+  "variants": {
+    "Y0275": {
+      "checksums": {
+        "TABLEEOS_2021_TP_Y0275_v1": "c4995d114affedddf421b57b847ad4872699e9526f32b4b335013ffcbfb0b938",
+        "TABLEEOS_2021_Trho_Y0275_v1": "b9ffd42d50c83cd691f3152fd21009b366af7044221cd291d87e5e5a48cc8299"
+      },
+      "citation": "Chabrier, G., & Debras, F. (2021), The Astrophysical Journal, 917, 4, https://doi.org/10.3847/1538-4357/abfc48",
+      "nodes_full_rectangle": {
+        "pressure": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 9193914368.0,
+          "rms_absolute_SI": 58424296.02796488,
+          "absolute_relative_quantiles_50_95_100": [
+            1.2197958049007416e-15,
+            6.1095958616362676e-15,
+            2.373452941882474e-13
+          ]
+        },
+        "mass_density": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.0,
+          "rms_absolute_SI": 0.0,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "specific_internal_energy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 6.59375,
+          "rms_absolute_SI": 0.0841903366220393,
+          "absolute_relative_quantiles_50_95_100": [
+            1.451643949882545e-15,
+            4.11625941613984e-15,
+            1.390739451254769e-13
+          ]
+        },
+        "specific_entropy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 4.9681814249780795e+88,
+          "rms_absolute_SI": 2.9093518055101387e+86,
+          "absolute_relative_quantiles_50_95_100": [
+            3.2443981674535523e-16,
+            1.1042494354766037e-12,
+            3.6110750608848966e-10
+          ]
+        },
+        "dlnrho_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 1.1357315088389441e-10,
+          "rms_absolute_SI": 1.798067134323673e-12,
+          "absolute_relative_quantiles_50_95_100": [
+            4.160404057561459e-15,
+            1.0203544076754651e-11,
+            0.0006491494597304287
+          ]
+        },
+        "dlnrho_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 2.3246116143127438e-10,
+          "rms_absolute_SI": 7.113623300584534e-12,
+          "absolute_relative_quantiles_50_95_100": [
+            1.6668680555488399e-15,
+            6.882694483227648e-15,
+            8.308422373848462e-12
+          ]
+        },
+        "dlns_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 6.009872794691761e-05,
+          "rms_absolute_SI": 4.799300465896713e-07,
+          "absolute_relative_quantiles_50_95_100": [
+            3.3163131228459063e-15,
+            1.0683669340853835e-08,
+            0.2011248772540568
+          ]
+        },
+        "dlns_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 70918890.18302774,
+          "rms_absolute_SI": 1050228.8967233605,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0016177409644619128,
+            16.907667650603265,
+            178431958093.02042
+          ]
+        },
+        "adiabatic_gradient": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 297086929782.72864,
+          "rms_absolute_SI": 1912453167.824477,
+          "absolute_relative_quantiles_50_95_100": [
+            0.001633336302871995,
+            42.52882239634912,
+            2970869297827.286
+          ]
+        },
+        "samples": 29161,
+        "nonpositive_pressure": 0,
+        "nonpositive_entropy": 0,
+        "nonpositive_cv": 3384,
+        "nonpositive_dP_drho": 606
+      },
+      "nodes_qmd_box": {
+        "pressure": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.06640625,
+          "rms_absolute_SI": 0.008244274609199312,
+          "absolute_relative_quantiles_50_95_100": [
+            6.941627459475891e-16,
+            4.256143432747346e-15,
+            7.09708517401216e-15
+          ]
+        },
+        "mass_density": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.0,
+          "rms_absolute_SI": 0.0,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "specific_internal_energy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 6.198883056640625e-06,
+          "rms_absolute_SI": 9.430736783094563e-07,
+          "absolute_relative_quantiles_50_95_100": [
+            8.788228785259232e-16,
+            2.994924545696443e-15,
+            4.220584508030372e-15
+          ]
+        },
+        "specific_entropy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 3.906279744114727e-10,
+          "rms_absolute_SI": 3.081856107129097e-11,
+          "absolute_relative_quantiles_50_95_100": [
+            4.679292049743632e-16,
+            2.568111493543085e-15,
+            1.9046419329532547e-13
+          ]
+        },
+        "dlnrho_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 7.549516567451064e-15,
+          "rms_absolute_SI": 1.4114329429911326e-15,
+          "absolute_relative_quantiles_50_95_100": [
+            5.504276352450419e-15,
+            6.412955216465088e-14,
+            3.861279226650536e-12
+          ]
+        },
+        "dlnrho_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 6.661338147750939e-15,
+          "rms_absolute_SI": 1.160971689033014e-15,
+          "absolute_relative_quantiles_50_95_100": [
+            1.199756017161879e-15,
+            3.814879400262635e-15,
+            8.088781617323204e-15
+          ]
+        },
+        "dlns_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 3.1370461783808423e-12,
+          "rms_absolute_SI": 1.8653510196732116e-13,
+          "absolute_relative_quantiles_50_95_100": [
+            4.082014450462222e-15,
+            5.92031188234481e-14,
+            3.4227822472836714e-11
+          ]
+        },
+        "dlns_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 3.0482223278873737,
+          "rms_absolute_SI": 0.327689220852656,
+          "absolute_relative_quantiles_50_95_100": [
+            0.022993164025615884,
+            0.9269409147682945,
+            113.47424290368456
+          ]
+        },
+        "adiabatic_gradient": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 64.83325922872712,
+          "rms_absolute_SI": 2.5224046855507476,
+          "absolute_relative_quantiles_50_95_100": [
+            0.026427809341147506,
+            1.1048231086438978,
+            295.6184248553541
+          ]
+        },
+        "samples": 1287,
+        "nonpositive_pressure": 0,
+        "nonpositive_entropy": 0,
+        "nonpositive_cv": 8,
+        "nonpositive_dP_drho": 0
+      },
+      "cell_centers_full_rectangle": {
+        "pressure": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 1.984657757421188e+115,
+          "rms_absolute_SI": 1.5665358123114593e+113,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0007428888921822484,
+            0.22376997121353442,
+            3.525823970554293e+93
+          ]
+        },
+        "mass_density": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.0,
+          "rms_absolute_SI": 0.0,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "specific_internal_energy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 2.1022560393708785e+106,
+          "rms_absolute_SI": 1.659358829001212e+104,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0012669602828141282,
+            0.16871319282742347,
+            2.1328760068416693e+93
+          ]
+        },
+        "specific_entropy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 6.468720157213888e+100,
+          "rms_absolute_SI": 5.23249642879334e+98,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0005215043211447726,
+            19.539594377002654,
+            5.934699453890192e+81
+          ]
+        },
+        "dlnrho_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 851.674308789987,
+          "rms_absolute_SI": 6.535027966773387,
+          "absolute_relative_quantiles_50_95_100": [
+            0.048752327270394,
+            46.04754067716182,
+            9519814.976982126
+          ]
+        },
+        "dlnrho_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 172.54307091386872,
+          "rms_absolute_SI": 15.565878594765614,
+          "absolute_relative_quantiles_50_95_100": [
+            0.00023965357408059653,
+            0.13701627403930436,
+            280.5403703108185
+          ]
+        },
+        "dlns_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 26714.912398321885,
+          "rms_absolute_SI": 222.12811935592677,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0157927903648302,
+            44.651214136315545,
+            17002707.501665287
+          ]
+        },
+        "dlns_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 4467.829523831502,
+          "rms_absolute_SI": 39.39643671469665,
+          "absolute_relative_quantiles_50_95_100": [
+            0.05007604666243429,
+            32.561495330579,
+            276372861.6338765
+          ]
+        },
+        "adiabatic_gradient": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 9104.585004612534,
+          "rms_absolute_SI": 89.41222538350459,
+          "absolute_relative_quantiles_50_95_100": [
+            0.02956868974309146,
+            9.680168578521302,
+            30494.456419869806
+          ]
+        },
+        "samples": 28800,
+        "nonpositive_pressure": 606,
+        "nonpositive_entropy": 1294,
+        "nonpositive_cv": 4973,
+        "nonpositive_dP_drho": 592
+      },
+      "cell_centers_qmd_box": {
+        "pressure": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 4613003101090.814,
+          "rms_absolute_SI": 686312581753.4211,
+          "absolute_relative_quantiles_50_95_100": [
+            0.011887167231861026,
+            0.13750424220049745,
+            0.3171091303148426
+          ]
+        },
+        "mass_density": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.0,
+          "rms_absolute_SI": 0.0,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "specific_internal_energy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 291774279.53594565,
+          "rms_absolute_SI": 22960288.133740854,
+          "absolute_relative_quantiles_50_95_100": [
+            0.009049344258512115,
+            0.04126435110324931,
+            0.19143088421826843
+          ]
+        },
+        "specific_entropy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 137763.19267541234,
+          "rms_absolute_SI": 10761.36863332868,
+          "absolute_relative_quantiles_50_95_100": [
+            0.004200235869827188,
+            0.7306166973834276,
+            29.03408868437979
+          ]
+        },
+        "dlnrho_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.569246239631019,
+          "rms_absolute_SI": 0.06427781918562168,
+          "absolute_relative_quantiles_50_95_100": [
+            0.115411567601967,
+            5.237012845161467,
+            1301.7121849713055
+          ]
+        },
+        "dlnrho_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.09501772392110641,
+          "rms_absolute_SI": 0.04207632154985576,
+          "absolute_relative_quantiles_50_95_100": [
+            0.06664593819571804,
+            0.15217501264371044,
+            0.22100010389976474
+          ]
+        },
+        "dlns_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 104.65360644612876,
+          "rms_absolute_SI": 3.7257396791531434,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0172122927488031,
+            0.9123498142675628,
+            206.18211064126749
+          ]
+        },
+        "dlns_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 133.03237401992988,
+          "rms_absolute_SI": 4.994811162275439,
+          "absolute_relative_quantiles_50_95_100": [
+            0.10894421459304987,
+            5.429247907082715,
+            949.4428663337045
+          ]
+        },
+        "adiabatic_gradient": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 18.899334544228928,
+          "rms_absolute_SI": 1.0893844195848523,
+          "absolute_relative_quantiles_50_95_100": [
+            0.09274612316393174,
+            3.5817309948845377,
+            154.46754796563596
+          ]
+        },
+        "samples": 1254,
+        "nonpositive_pressure": 0,
+        "nonpositive_entropy": 34,
+        "nonpositive_cv": 13,
+        "nonpositive_dP_drho": 0
+      },
+      "independent_tp_samples_at_original_density": {
+        "pressure": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 1231852615379.871,
+          "rms_absolute_SI": 170288722463.36868,
+          "absolute_relative_quantiles_50_95_100": [
+            0.006416267700059833,
+            0.12319760564451081,
+            0.37300016586679136
+          ]
+        },
+        "mass_density": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.0,
+          "rms_absolute_SI": 0.0,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "specific_internal_energy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 3676808.7423861027,
+          "rms_absolute_SI": 503179.78585803835,
+          "absolute_relative_quantiles_50_95_100": [
+            0.00022948648700153864,
+            0.0014113022680039776,
+            0.003078164095293086
+          ]
+        },
+        "specific_entropy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 466.6113471338631,
+          "rms_absolute_SI": 46.11375247126578,
+          "absolute_relative_quantiles_50_95_100": [
+            0.00011787035232779932,
+            0.0023026198126697875,
+            0.11114045358317953
+          ]
+        },
+        "dlnrho_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 60.05527884962545,
+          "rms_absolute_SI": 3.6841033728024204,
+          "absolute_relative_quantiles_50_95_100": [
+            0.1854973272408106,
+            2.117436114953925,
+            52.70415093207729
+          ]
+        },
+        "dlnrho_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 46.8500835379457,
+          "rms_absolute_SI": 2.9790480792268528,
+          "absolute_relative_quantiles_50_95_100": [
+            0.14284164117567877,
+            1.7102416572642163,
+            44.36400443293356
+          ]
+        },
+        "dlns_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 33.69717073517162,
+          "rms_absolute_SI": 2.2619330556463866,
+          "absolute_relative_quantiles_50_95_100": [
+            0.10604645285304883,
+            1.2270624535134054,
+            146.9525703643967
+          ]
+        },
+        "dlns_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 4.509042306460956,
+          "rms_absolute_SI": 0.3517633607602295,
+          "absolute_relative_quantiles_50_95_100": [
+            0.17164907173314609,
+            1.758105585584132,
+            46.49021515726848
+          ]
+        },
+        "adiabatic_gradient": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 13.361968706962278,
+          "rms_absolute_SI": 1.0028443432330059,
+          "absolute_relative_quantiles_50_95_100": [
+            0.18167248829025,
+            2.4068501474898736,
+            64.01335636726174
+          ]
+        },
+        "samples": 400,
+        "nonpositive_pressure": 0,
+        "nonpositive_entropy": 0,
+        "nonpositive_cv": 11,
+        "nonpositive_dP_drho": 32
+      },
+      "potential_tp_roundtrip": {
+        "samples": 9,
+        "bracket_fraction_of_target_density": [
+          0.99,
+          1.01
+        ],
+        "nonfinite_count": 0,
+        "max_relative_density_error": 8.881784197001252e-16,
+        "max_relative_pressure_error": 2.7755575615628914e-15
+      },
+      "max_scaled_identity_residuals_maxwell_cv_first_law": [
+        3.8335083705391125e-12,
+        6.802271376958957e-13,
+        4.061093191658165e-14
+      ]
+    },
+    "Y0292": {
+      "checksums": {
+        "TABLEEOS_2021_TP_Y0292_v1": "436fe580aac6e8572159b59322bf7baf6afb43ec91630779239698bbeaf57a7d",
+        "TABLEEOS_2021_Trho_Y0292_v1": "60f0ec6a6409b2833293c368910c062e20e60222e3154718b63af8af6a706c54"
+      },
+      "citation": "Chabrier, G., & Debras, F. (2021), The Astrophysical Journal, 917, 4, https://doi.org/10.3847/1538-4357/abfc48",
+      "nodes_full_rectangle": {
+        "pressure": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 2260046150893568.0,
+          "rms_absolute_SI": 13234765132432.475,
+          "absolute_relative_quantiles_50_95_100": [
+            1.3895978422438513e-15,
+            6.142462070738588e-15,
+            6.053649995191694e-13
+          ]
+        },
+        "mass_density": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.0,
+          "rms_absolute_SI": 0.0,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "specific_internal_energy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 9220.0,
+          "rms_absolute_SI": 53.99263330444339,
+          "absolute_relative_quantiles_50_95_100": [
+            1.6367491236833042e-15,
+            4.1240132507426486e-15,
+            3.1925001111347837e-13
+          ]
+        },
+        "specific_entropy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 8.174884446685967e+83,
+          "rms_absolute_SI": 4.7871872603580505e+81,
+          "absolute_relative_quantiles_50_95_100": [
+            3.1967534858933615e-16,
+            3.261584358853412e-13,
+            2.526804370559854e-10
+          ]
+        },
+        "dlnrho_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 1.0217604540230241e-10,
+          "rms_absolute_SI": 9.498329383599763e-13,
+          "absolute_relative_quantiles_50_95_100": [
+            4.006137188299301e-15,
+            1.078630700800638e-11,
+            0.0001587381800262379
+          ]
+        },
+        "dlnrho_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 1.610089839232387e-10,
+          "rms_absolute_SI": 3.2351012477325196e-12,
+          "absolute_relative_quantiles_50_95_100": [
+            1.5543526476440579e-15,
+            6.338266686928679e-15,
+            9.568421835918875e-12
+          ]
+        },
+        "dlns_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 3.447385850175193e-05,
+          "rms_absolute_SI": 2.6575546802060867e-07,
+          "absolute_relative_quantiles_50_95_100": [
+            3.249753048831774e-15,
+            4.057439783544131e-10,
+            0.09048446818240675
+          ]
+        },
+        "dlns_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 67506619.52970459,
+          "rms_absolute_SI": 622192.5137591729,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0014877582833411455,
+            3.11668992443394,
+            551547572725.6085
+          ]
+        },
+        "adiabatic_gradient": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 196588028003.404,
+          "rms_absolute_SI": 1988401826.3867564,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0014894300474529063,
+            7.591846073459719,
+            1965880280034.0327
+          ]
+        },
+        "samples": 29161,
+        "nonpositive_pressure": 0,
+        "nonpositive_entropy": 0,
+        "nonpositive_cv": 3809,
+        "nonpositive_dP_drho": 162
+      },
+      "nodes_qmd_box": {
+        "pressure": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.06640625,
+          "rms_absolute_SI": 0.008038596232072648,
+          "absolute_relative_quantiles_50_95_100": [
+            7.815762042204741e-16,
+            4.253197770588048e-15,
+            7.247529926910532e-15
+          ]
+        },
+        "mass_density": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.0,
+          "rms_absolute_SI": 0.0,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "specific_internal_energy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 5.9604644775390625e-06,
+          "rms_absolute_SI": 9.200617777627009e-07,
+          "absolute_relative_quantiles_50_95_100": [
+            8.815360867931784e-16,
+            3.0181442534497505e-15,
+            4.230793454643274e-15
+          ]
+        },
+        "specific_entropy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 3.269633452873677e-10,
+          "rms_absolute_SI": 3.080609901416233e-11,
+          "absolute_relative_quantiles_50_95_100": [
+            4.632443766492694e-16,
+            2.535971665194045e-15,
+            1.522576309665808e-13
+          ]
+        },
+        "dlnrho_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 1.1324274851176597e-14,
+          "rms_absolute_SI": 1.4009705715063051e-15,
+          "absolute_relative_quantiles_50_95_100": [
+            5.371958980879556e-15,
+            7.035725794993835e-14,
+            3.055704503452542e-11
+          ]
+        },
+        "dlnrho_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 8.881784197001252e-15,
+          "rms_absolute_SI": 1.2418398369755618e-15,
+          "absolute_relative_quantiles_50_95_100": [
+            1.2336938463052686e-15,
+            4.0024488079819214e-15,
+            9.266192179570748e-15
+          ]
+        },
+        "dlns_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 3.6662894942196544e-12,
+          "rms_absolute_SI": 1.8507894922514988e-13,
+          "absolute_relative_quantiles_50_95_100": [
+            3.9453073839978065e-15,
+            6.740715421994271e-14,
+            4.630783339859625e-12
+          ]
+        },
+        "dlns_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 2.9424580724019647,
+          "rms_absolute_SI": 0.3141246725190995,
+          "absolute_relative_quantiles_50_95_100": [
+            0.022960202084852922,
+            0.8825627263375893,
+            244.15010060629908
+          ]
+        },
+        "adiabatic_gradient": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 21.351221217795462,
+          "rms_absolute_SI": 0.8940835745527945,
+          "absolute_relative_quantiles_50_95_100": [
+            0.02608834089262669,
+            1.0262082388437077,
+            162.2001839768713
+          ]
+        },
+        "samples": 1287,
+        "nonpositive_pressure": 0,
+        "nonpositive_entropy": 0,
+        "nonpositive_cv": 6,
+        "nonpositive_dP_drho": 0
+      },
+      "cell_centers_full_rectangle": {
+        "pressure": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 3.403969560108317e+110,
+          "rms_absolute_SI": 2.686831117349218e+108,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0007660863976313326,
+            0.1543274323818414,
+            6.139184251221561e+88
+          ]
+        },
+        "mass_density": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.0,
+          "rms_absolute_SI": 0.0,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "specific_internal_energy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 3.605667153985788e+101,
+          "rms_absolute_SI": 2.8460356466363126e+99,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0012397875866672042,
+            0.16175746528126678,
+            3.7164700191076734e+88
+          ]
+        },
+        "specific_entropy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 1.1094772186269017e+96,
+          "rms_absolute_SI": 8.974473210782145e+93,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0005354864111926477,
+            1.927169713555879,
+            6.716697716968285e+77
+          ]
+        },
+        "dlnrho_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 4915.603679945064,
+          "rms_absolute_SI": 29.501270460618443,
+          "absolute_relative_quantiles_50_95_100": [
+            0.04973851727027928,
+            44.47835645040742,
+            19698727.37499107
+          ]
+        },
+        "dlnrho_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 474.5424361110678,
+          "rms_absolute_SI": 7.019662068441115,
+          "absolute_relative_quantiles_50_95_100": [
+            0.00024053544808209058,
+            0.10213367156368401,
+            18.988160768985562
+          ]
+        },
+        "dlns_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 192571.84840000182,
+          "rms_absolute_SI": 1160.141988947321,
+          "absolute_relative_quantiles_50_95_100": [
+            0.016715877430634643,
+            13.25104626965933,
+            141985318.96067703
+          ]
+        },
+        "dlns_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 10004.216474641938,
+          "rms_absolute_SI": 67.83406191268723,
+          "absolute_relative_quantiles_50_95_100": [
+            0.050316414412594046,
+            24.595053830771956,
+            62506458.589759976
+          ]
+        },
+        "adiabatic_gradient": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 282456.1058405486,
+          "rms_absolute_SI": 1666.8955548636886,
+          "absolute_relative_quantiles_50_95_100": [
+            0.029561123853755308,
+            9.302794027327801,
+            948491.7672914205
+          ]
+        },
+        "samples": 28800,
+        "nonpositive_pressure": 200,
+        "nonpositive_entropy": 1033,
+        "nonpositive_cv": 5017,
+        "nonpositive_dP_drho": 195
+      },
+      "cell_centers_qmd_box": {
+        "pressure": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 4576080758799.055,
+          "rms_absolute_SI": 674364113860.2173,
+          "absolute_relative_quantiles_50_95_100": [
+            0.012845289043144605,
+            0.13777914126836563,
+            0.321790842110961
+          ]
+        },
+        "mass_density": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.0,
+          "rms_absolute_SI": 0.0,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "specific_internal_energy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 324206710.4798684,
+          "rms_absolute_SI": 24470423.974611744,
+          "absolute_relative_quantiles_50_95_100": [
+            0.009087547916311056,
+            0.04415045690600331,
+            0.21826143171992393
+          ]
+        },
+        "specific_entropy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 148683.37499472065,
+          "rms_absolute_SI": 11351.230312356722,
+          "absolute_relative_quantiles_50_95_100": [
+            0.004108534477971394,
+            0.83184863626346,
+            30.83471301234945
+          ]
+        },
+        "dlnrho_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.582124353404036,
+          "rms_absolute_SI": 0.0676323493255026,
+          "absolute_relative_quantiles_50_95_100": [
+            0.12264600972960296,
+            5.588698608284027,
+            1615.6160482034197
+          ]
+        },
+        "dlnrho_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.09589167896607687,
+          "rms_absolute_SI": 0.04532324508343533,
+          "absolute_relative_quantiles_50_95_100": [
+            0.07160102998001425,
+            0.16757274474116482,
+            0.22868760372658245
+          ]
+        },
+        "dlns_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 29.608861695928717,
+          "rms_absolute_SI": 1.884186075094687,
+          "absolute_relative_quantiles_50_95_100": [
+            0.01864664312314033,
+            0.9665796609399806,
+            469.8624489912242
+          ]
+        },
+        "dlns_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 58.16381426817535,
+          "rms_absolute_SI": 2.9612699994290357,
+          "absolute_relative_quantiles_50_95_100": [
+            0.11779841688307136,
+            5.843587222156572,
+            800.74671321826
+          ]
+        },
+        "adiabatic_gradient": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 20.141524791490916,
+          "rms_absolute_SI": 1.0888176144034905,
+          "absolute_relative_quantiles_50_95_100": [
+            0.1018523932370507,
+            3.7849437275616906,
+            162.56603072290423
+          ]
+        },
+        "samples": 1254,
+        "nonpositive_pressure": 0,
+        "nonpositive_entropy": 39,
+        "nonpositive_cv": 13,
+        "nonpositive_dP_drho": 0
+      },
+      "independent_tp_samples_at_original_density": {
+        "pressure": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 896048721406.2793,
+          "rms_absolute_SI": 119927814429.68506,
+          "absolute_relative_quantiles_50_95_100": [
+            0.00731538000352543,
+            0.12739058103272127,
+            0.38507115800383657
+          ]
+        },
+        "mass_density": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.0,
+          "rms_absolute_SI": 0.0,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "specific_internal_energy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 3223698.822788954,
+          "rms_absolute_SI": 465524.40170806774,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0002271272701023606,
+            0.001256397566188474,
+            0.002586633077778454
+          ]
+        },
+        "specific_entropy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 404.88051260451994,
+          "rms_absolute_SI": 39.84633899001257,
+          "absolute_relative_quantiles_50_95_100": [
+            0.00011436455582849368,
+            0.0027008493249401043,
+            0.09552266916461323
+          ]
+        },
+        "dlnrho_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 15.084817842987933,
+          "rms_absolute_SI": 1.4358634639355852,
+          "absolute_relative_quantiles_50_95_100": [
+            0.19338004503842016,
+            2.901378968169732,
+            282.6685114229911
+          ]
+        },
+        "dlnrho_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 14.697558560349762,
+          "rms_absolute_SI": 1.5536151876644264,
+          "absolute_relative_quantiles_50_95_100": [
+            0.16242662935713162,
+            2.0657492296156548,
+            34.40685526717577
+          ]
+        },
+        "dlns_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 37.87867705582747,
+          "rms_absolute_SI": 2.5384324759021575,
+          "absolute_relative_quantiles_50_95_100": [
+            0.10599861238050551,
+            1.5142836529174797,
+            195.8443792303067
+          ]
+        },
+        "dlns_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 2.602887098747717,
+          "rms_absolute_SI": 0.2247640508592452,
+          "absolute_relative_quantiles_50_95_100": [
+            0.19333382377725067,
+            2.615318508857477,
+            34.36604501936821
+          ]
+        },
+        "adiabatic_gradient": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 29.635083718064344,
+          "rms_absolute_SI": 1.5603770015885436,
+          "absolute_relative_quantiles_50_95_100": [
+            0.18053279203845712,
+            2.6318694397862563,
+            104.93628591049499
+          ]
+        },
+        "samples": 400,
+        "nonpositive_pressure": 0,
+        "nonpositive_entropy": 0,
+        "nonpositive_cv": 14,
+        "nonpositive_dP_drho": 27
+      },
+      "potential_tp_roundtrip": {
+        "samples": 9,
+        "bracket_fraction_of_target_density": [
+          0.99,
+          1.01
+        ],
+        "nonfinite_count": 0,
+        "max_relative_density_error": 8.881784197001252e-16,
+        "max_relative_pressure_error": 2.9976021664879227e-15
+      },
+      "max_scaled_identity_residuals_maxwell_cv_first_law": [
+        7.923120989247113e-13,
+        6.979841306150647e-13,
+        2.1436976628230962e-14
+      ]
+    },
+    "Y0297": {
+      "checksums": {
+        "TABLEEOS_2021_TP_Y0297_v1": "3a07460158c1b7feeea9484a94684148ac94ebc9b6df4b2f194f8024b1aa50bb",
+        "TABLEEOS_2021_Trho_Y0297_v1": "7b1b3ae39d819d1380a7ea4c450789f884bd4ba1a186cda74769786f1fd53414"
+      },
+      "citation": "Chabrier, G., & Debras, F. (2021), The Astrophysical Journal, 917, 4, https://doi.org/10.3847/1538-4357/abfc48",
+      "nodes_full_rectangle": {
+        "pressure": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 2898264064.0,
+          "rms_absolute_SI": 31513118.707451127,
+          "absolute_relative_quantiles_50_95_100": [
+            1.2192706791678522e-15,
+            6.118486055255458e-15,
+            2.6593061856440757e-13
+          ]
+        },
+        "mass_density": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.0,
+          "rms_absolute_SI": 0.0,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "specific_internal_energy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 10.78125,
+          "rms_absolute_SI": 0.089993399296251,
+          "absolute_relative_quantiles_50_95_100": [
+            1.4364784995299226e-15,
+            4.073265835075297e-15,
+            1.5749089570085062e-13
+          ]
+        },
+        "specific_entropy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 3.254961945296653e+82,
+          "rms_absolute_SI": 1.906095732495798e+80,
+          "absolute_relative_quantiles_50_95_100": [
+            3.2050746368420305e-16,
+            1.1966300402068481e-12,
+            3.468005464527854e-10
+          ]
+        },
+        "dlnrho_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 9.262635103368666e-11,
+          "rms_absolute_SI": 1.5746561706649598e-12,
+          "absolute_relative_quantiles_50_95_100": [
+            4.216437097035125e-15,
+            1.0633889357233093e-11,
+            0.00014368486489755485
+          ]
+        },
+        "dlnrho_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 1.9252865968155675e-10,
+          "rms_absolute_SI": 6.3904260385071086e-12,
+          "absolute_relative_quantiles_50_95_100": [
+            1.6812305719959565e-15,
+            7.22926466124823e-15,
+            9.566125680990218e-12
+          ]
+        },
+        "dlns_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 3.138015629901986e-05,
+          "rms_absolute_SI": 3.020477674476837e-07,
+          "absolute_relative_quantiles_50_95_100": [
+            3.318442981803936e-15,
+            1.0262098403240011e-08,
+            0.011927770865265551
+          ]
+        },
+        "dlns_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 59284967.5835394,
+          "rms_absolute_SI": 915647.8669904186,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0016167040108862507,
+            15.289383545708537,
+            142330245498.51782
+          ]
+        },
+        "adiabatic_gradient": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 191190408582.09128,
+          "rms_absolute_SI": 1669607942.533485,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0016189929011955818,
+            42.1634367701009,
+            1911904085820.9126
+          ]
+        },
+        "samples": 29161,
+        "nonpositive_pressure": 0,
+        "nonpositive_entropy": 0,
+        "nonpositive_cv": 3346,
+        "nonpositive_dP_drho": 619
+      },
+      "nodes_qmd_box": {
+        "pressure": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.064453125,
+          "rms_absolute_SI": 0.00795273009375497,
+          "absolute_relative_quantiles_50_95_100": [
+            7.555271093418569e-16,
+            4.2552485804707466e-15,
+            7.064830275154768e-15
+          ]
+        },
+        "mass_density": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.0,
+          "rms_absolute_SI": 0.0,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "specific_internal_energy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 5.9604644775390625e-06,
+          "rms_absolute_SI": 9.144974898197461e-07,
+          "absolute_relative_quantiles_50_95_100": [
+            9.168353688834356e-16,
+            3.0083594551225085e-15,
+            4.308727383097461e-15
+          ]
+        },
+        "specific_entropy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 4.861249180976301e-10,
+          "rms_absolute_SI": 3.155354609808179e-11,
+          "absolute_relative_quantiles_50_95_100": [
+            4.564165874335168e-16,
+            2.2583429795018306e-15,
+            2.284535352314878e-13
+          ]
+        },
+        "dlnrho_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 1.021405182655144e-14,
+          "rms_absolute_SI": 1.3522401501967275e-15,
+          "absolute_relative_quantiles_50_95_100": [
+            4.791629552780456e-15,
+            6.52283483477708e-14,
+            7.235197259031364e-12
+          ]
+        },
+        "dlnrho_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 7.771561172376096e-15,
+          "rms_absolute_SI": 1.162213584729628e-15,
+          "absolute_relative_quantiles_50_95_100": [
+            1.122046905572321e-15,
+            3.710287558015313e-15,
+            9.37952051237389e-15
+          ]
+        },
+        "dlns_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 2.8688162956314045e-12,
+          "rms_absolute_SI": 1.4227124295918173e-13,
+          "absolute_relative_quantiles_50_95_100": [
+            4.0500679090382685e-15,
+            6.695626032231571e-14,
+            2.265782722085248e-12
+          ]
+        },
+        "dlns_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 2.909490792335889,
+          "rms_absolute_SI": 0.3103702168435119,
+          "absolute_relative_quantiles_50_95_100": [
+            0.02288091820582807,
+            0.8781740569054212,
+            380.9424181230132
+          ]
+        },
+        "adiabatic_gradient": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 21.80368265322744,
+          "rms_absolute_SI": 0.8602068486495302,
+          "absolute_relative_quantiles_50_95_100": [
+            0.026137034419250246,
+            1.0025975160079406,
+            186.6434056944651
+          ]
+        },
+        "samples": 1287,
+        "nonpositive_pressure": 0,
+        "nonpositive_entropy": 0,
+        "nonpositive_cv": 6,
+        "nonpositive_dP_drho": 0
+      },
+      "cell_centers_full_rectangle": {
+        "pressure": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 1.377164057822269e+109,
+          "rms_absolute_SI": 1.0870271249235397e+107,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0008117392727760911,
+            0.23294353307869933,
+            2.4950869209047742e+87
+          ]
+        },
+        "mass_density": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.0,
+          "rms_absolute_SI": 0.0,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "specific_internal_energy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 1.4587660278160467e+100,
+          "rms_absolute_SI": 1.1514374283486322e+98,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0013237548719253296,
+            0.1768932556222825,
+            1.510656211583476e+87
+          ]
+        },
+        "specific_entropy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 4.4886774256705796e+94,
+          "rms_absolute_SI": 3.6308555611237083e+92,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0005563359845918838,
+            21.350850137855065,
+            4.3356506576305476e+76
+          ]
+        },
+        "dlnrho_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 979.6457564042453,
+          "rms_absolute_SI": 6.86432010671781,
+          "absolute_relative_quantiles_50_95_100": [
+            0.055400158007830394,
+            45.9512202891853,
+            147232395.46009347
+          ]
+        },
+        "dlnrho_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 170.23434765799695,
+          "rms_absolute_SI": 15.06949290229153,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0002533844543936032,
+            0.1538499974108159,
+            35.67882511190629
+          ]
+        },
+        "dlns_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 33046.31120878339,
+          "rms_absolute_SI": 235.05011133194392,
+          "absolute_relative_quantiles_50_95_100": [
+            0.017755090946558784,
+            41.114579465690724,
+            40079148.82549789
+          ]
+        },
+        "dlns_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 12332.784308255466,
+          "rms_absolute_SI": 88.58013549753166,
+          "absolute_relative_quantiles_50_95_100": [
+            0.05615872932074996,
+            35.00188696223475,
+            24178053.33252065
+          ]
+        },
+        "adiabatic_gradient": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 28071.30773210123,
+          "rms_absolute_SI": 204.25450598827052,
+          "absolute_relative_quantiles_50_95_100": [
+            0.03263653250280185,
+            10.465476815561177,
+            280713.0773210123
+          ]
+        },
+        "samples": 28800,
+        "nonpositive_pressure": 609,
+        "nonpositive_entropy": 1332,
+        "nonpositive_cv": 4970,
+        "nonpositive_dP_drho": 599
+      },
+      "cell_centers_qmd_box": {
+        "pressure": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 4557542730959.207,
+          "rms_absolute_SI": 670801183363.1925,
+          "absolute_relative_quantiles_50_95_100": [
+            0.013457397941021087,
+            0.13784297717221217,
+            0.3226418871637879
+          ]
+        },
+        "mass_density": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.0,
+          "rms_absolute_SI": 0.0,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "specific_internal_energy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 333509570.3280103,
+          "rms_absolute_SI": 24952229.14520138,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0090729700933453,
+            0.046873858667432704,
+            0.22623943152706583
+          ]
+        },
+        "specific_entropy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 152164.1922863661,
+          "rms_absolute_SI": 11560.0072910681,
+          "absolute_relative_quantiles_50_95_100": [
+            0.004094273940956493,
+            0.793753875324964,
+            31.413763154876484
+          ]
+        },
+        "dlnrho_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.5832404810846026,
+          "rms_absolute_SI": 0.06792153477938292,
+          "absolute_relative_quantiles_50_95_100": [
+            0.12600786604381056,
+            5.7548530209995485,
+            1830.4823742270826
+          ]
+        },
+        "dlnrho_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.10117388628513857,
+          "rms_absolute_SI": 0.04630005540930444,
+          "absolute_relative_quantiles_50_95_100": [
+            0.07298650282835643,
+            0.1717378882999403,
+            0.23630131768923243
+          ]
+        },
+        "dlns_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 254.25234934319286,
+          "rms_absolute_SI": 7.497004187135699,
+          "absolute_relative_quantiles_50_95_100": [
+            0.018973924355428523,
+            0.9686725013916081,
+            168.92945846280105
+          ]
+        },
+        "dlns_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 390.9909796260883,
+          "rms_absolute_SI": 11.487690204725334,
+          "absolute_relative_quantiles_50_95_100": [
+            0.11825660110554756,
+            5.79340358694682,
+            728.1559437353176
+          ]
+        },
+        "adiabatic_gradient": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 19.795821815267946,
+          "rms_absolute_SI": 1.1229689210653868,
+          "absolute_relative_quantiles_50_95_100": [
+            0.10137495171070321,
+            3.8556673497346248,
+            165.90670232962083
+          ]
+        },
+        "samples": 1254,
+        "nonpositive_pressure": 0,
+        "nonpositive_entropy": 41,
+        "nonpositive_cv": 14,
+        "nonpositive_dP_drho": 0
+      },
+      "independent_tp_samples_at_original_density": {
+        "pressure": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 857036954075.7656,
+          "rms_absolute_SI": 107648615597.48625,
+          "absolute_relative_quantiles_50_95_100": [
+            0.006825458163092999,
+            0.10387242258122534,
+            0.3795495489982504
+          ]
+        },
+        "mass_density": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 0.0,
+          "rms_absolute_SI": 0.0,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "specific_internal_energy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 3238189.5569844246,
+          "rms_absolute_SI": 449587.4180047118,
+          "absolute_relative_quantiles_50_95_100": [
+            0.0002365154337145806,
+            0.0012750293254765652,
+            0.002865844000012697
+          ]
+        },
+        "specific_entropy": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 353.4222416736393,
+          "rms_absolute_SI": 36.49770556018071,
+          "absolute_relative_quantiles_50_95_100": [
+            0.00012461557668071364,
+            0.0029823740504337985,
+            0.08316308214659036
+          ]
+        },
+        "dlnrho_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 527.3843023551843,
+          "rms_absolute_SI": 26.395238100750642,
+          "absolute_relative_quantiles_50_95_100": [
+            0.18915755673498338,
+            2.675417429621641,
+            1084.714093699197
+          ]
+        },
+        "dlnrho_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 638.0908351751189,
+          "rms_absolute_SI": 31.927658271249978,
+          "absolute_relative_quantiles_50_95_100": [
+            0.15596444576120638,
+            2.4213031837580234,
+            1229.0938078172053
+          ]
+        },
+        "dlns_dlnT_P": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 66.61091932880639,
+          "rms_absolute_SI": 4.2449260301164236,
+          "absolute_relative_quantiles_50_95_100": [
+            0.10861551512066792,
+            1.507136542282973,
+            214.14961539580577
+          ]
+        },
+        "dlns_dlnP_T": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 80.58051984221078,
+          "rms_absolute_SI": 4.034391484865519,
+          "absolute_relative_quantiles_50_95_100": [
+            0.191083219671133,
+            2.719254562030898,
+            1209.2285769741886
+          ]
+        },
+        "adiabatic_gradient": {
+          "nonfinite_count": 0,
+          "zero_reference_count": 0,
+          "max_absolute_SI": 10.953634747726591,
+          "rms_absolute_SI": 0.6677150500590677,
+          "absolute_relative_quantiles_50_95_100": [
+            0.17290908717712672,
+            2.929965838984106,
+            78.79261223547637
+          ]
+        },
+        "samples": 400,
+        "nonpositive_pressure": 0,
+        "nonpositive_entropy": 0,
+        "nonpositive_cv": 14,
+        "nonpositive_dP_drho": 29
+      },
+      "potential_tp_roundtrip": {
+        "samples": 9,
+        "bracket_fraction_of_target_density": [
+          0.99,
+          1.01
+        ],
+        "nonfinite_count": 0,
+        "max_relative_density_error": 8.881784197001252e-16,
+        "max_relative_pressure_error": 2.886579864025407e-15
+      },
+      "max_scaled_identity_residuals_maxwell_cv_first_law": [
+        1.3470279193665708e-12,
+        4.068134286124425e-13,
+        2.4734277596965254e-14
+      ]
+    }
+  }
+}

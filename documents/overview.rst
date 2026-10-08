@@ -87,6 +87,8 @@ package's ``src/`` build configuration.
        ``MarcumSilicateHydrogenEOS`` for MgSiO3--MgSiO3H4.
      - Dedicated mass-specific states. Neither table path supplies
        fugacity coefficients or component chemical potentials.
+       The H/He backend also offers a separate, opt-in
+       :doc:`potential-consistent reconstruction <potential_tables>`.
    * - Excess solution properties
      - ``IdealSolution``, ``MaFeSiOLiquid``, ``MaFeSiOHLiquid``;
        ``solution_state`` gives excess Gibbs and log activity coefficients.

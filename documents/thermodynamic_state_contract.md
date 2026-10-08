@@ -22,6 +22,7 @@ The top-level package exports `HelmholtzEOS`, `TPHelmholtzEOS`, `IdealEOS`,
 `MassFractionSoluteState`, `mass_fraction_solute_state`,
 `ChabrierDebrasEOS`, `ChabrierDebrasTableLoader`,
 `MassThermodynamicState`, `IdealGas`,
+`HelmholtzTable`, `MassHelmholtzThermodynamicState`,
 `MarcumSilicateHydrogenEOS`, `MarcumSilicateHydrogenTableLoader`,
 `SilicateHydrogenState`,
 `ThermodynamicState`, `EquationOfState`, `MassDensityProvider`,
@@ -494,6 +495,40 @@ field in that state is returned as `nan`.
 Automatic differentiation follows the piecewise-bilinear interpolant; the
 separately tabulated columns remain the source for thermodynamic derivatives.
 Both methods evaluate one scalar state; use `jax.vmap` for batches.
+
+### Potential-consistent fixed-composition tables
+
+`ChabrierDebrasEOS.to_helmholtz()` constructs a separate `HelmholtzTable`
+from its T-rho table in JAX 64-bit mode. This host operation reconstructs
+`a = u - T*s` with nodal thermodynamic constraints; it does not use the
+independent TP table. The original backend and its per-field interpolation
+remain available.
+
+`specific_helmholtz(T, mass_density)` returns total specific Helmholtz energy
+in J/kg. `state_trho(T, mass_density)` returns a
+`MassHelmholtzThermodynamicState` with temperature, mass density, a, s, cv,
+pressure, pressure derivatives and u as stored fields. Properties provide
+h, g, cp, sound speed, compressibilities, thermal expansion, the original
+logarithmic responses and `nabla_ad`. Entropy and heat capacities are in
+J/(kg K); pressure-density derivatives are in Pa m3/kg. No molar mass,
+composition, component chemical potential or fugacity is inferred.
+
+The potential is C2 across internal cell boundaries. Responses are derived
+from its first and second derivatives; third derivatives can jump.
+Closed-domain evaluation supports JIT and external VMAP. Outside the table
+or for nonfinite inputs, the state returns NaNs. Interior unstable responses
+are retained. `is_stable` checks `cv > 0` and `pressure_density_derivative > 0`
+and is not a phase-equilibrium test.
+
+`state_tp(T, P, density_bounds=(lo, hi))` requires an explicit monotonic
+single-phase density bracket for a simple root of the potential's pressure.
+Invalid or unbracketed queries and roots with nonpositive pressure-density
+derivatives return NaNs; the root uses implicit
+differentiation. `original.helmholtz_residuals(potential, T, mass_density)`
+returns signed potential-minus-original differences for all nine fields of
+the original `MassThermodynamicState`, with the same SI units.
+See [the method and validation guide](potential_tables.rst) for source
+fidelity, reconstruction inputs and numerical limits.
 
 ## Composition-dependent tabulated silicate-hydrogen interface
 
