@@ -4,6 +4,8 @@ Choosing and using a model
 Start with the quantity you need, then check composition, standard-state
 conventions, and the model's domain. This guide covers the source baseline
 in :doc:`overview`; it is not a claim that all models apply at the same state.
+The :doc:`feature_plots` gallery shows representative numerical curves for
+these paths and records the conditions and standards behind each plot.
 
 Choose an entry point
 ---------------------

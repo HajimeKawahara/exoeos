@@ -1,0 +1,325 @@
+{
+  "source_base_commit": "580f8b75e82c81ea6c4d2f266951b28cdaf51613",
+  "environment": {
+    "python": "3.12.7",
+    "jax": "0.6.2",
+    "numpy": "2.1.0",
+    "matplotlib": "3.10.0rc1",
+    "jax_enable_x64": true
+  },
+  "source_sha256": {
+    "examples/m2_liquid_mixing/parameters.json": "ad1306efaf05cd5e37834efb5f27eb46d9b696fd76897b0c08873534c4f096ee",
+    "examples/m2_material/gas_virial.py": "81c7a5b6f182f6c49d3f4fd8dfedbec53427add52071196b0fd650fe96d35388",
+    "examples/m2_material/gas_virial_sources.json": "aa88f50111621db9ab1906b21070e068b4884d96fb263e8102de48e3699cce51",
+    "examples/m2_material/hydrogen_reference.json": "5922d909964bf1c04a0c915e4cd02a8e03b40650bac0011ede6e6a93e10578aa",
+    "examples/m2_material/hydrogen_reference.py": "9a86530bc60dde2f0ea9931ff0637ac9b2ee662b8b24a3598de5cea01d0cbec7",
+    "examples/m2_material/major_gas_eos.py": "e7cb36cb8d7869ec8180af0ad4093bdf8ba43046c3d036b20238402ed80a5016",
+    "examples/m2_material/material_admission.py": "5ec0ace906c8c47e19d28eee2d8552477b19b889f3faea0f712bd32e96aa543b",
+    "examples/m2_material/sossi_water_calibration.py": "30d8ecfc8bd31e7a31be836b844c3bfe5b29c969ab08a2cbfc5325ddcf3f1cd4",
+    "examples/m2_material/water_data/Sossi2023_Table1.csv": "5907d9d2312aabad091ca3413bb21e56f62619ba277c2b296506c67ef26f7cfd",
+    "examples/m2_material/water_data/sossi2023_provenance.json": "133549e98c2f49188c051fd23d88dd388ef3712faadec8de0a1c0224d60f8a73",
+    "examples/m2_solid_mixing/parameters.json": "abf8e929122bba24d81d3505310dea95f6f6f65f8655e4b804171341b057d808",
+    "examples/melts_liquid_mixing.py": "10a87425f56e924b01d0767e4aac019f76ac0e14d6ada7df0e0e23f1c9f14a0b",
+    "examples/melts_solid_mixing.py": "df51c0597b6aecd96e6a03874b61727520eb4c72eff240cb2bd655d671eacb20",
+    "examples/plot_capabilities.py": "ea0b71b8241f19364ce7f23ca341acc7d27d203e1cd3f3dc5f3f970eae98000a",
+    "src/exoeos/__init__.py": "d914f770dfaeef185d7000c1a5eeda6b9b6c1740361af1ecf5a9c072ad176aeb",
+    "src/exoeos/_arrays.py": "12b7550107f17026eb54be2b22ad2376cbdcb55e0a24c49c39dff34ec585042b",
+    "src/exoeos/_table_loader.py": "201fa7d0105384d0faf07edb3786a5819f1d2572a23d88d4fbf600962ffa809b",
+    "src/exoeos/chabrier_debras.py": "747d3f428fc29b736f9c8587a1bd5893649075e19cbc103547275cb70ab63259",
+    "src/exoeos/constants.py": "69e57fe70ad4ea775f2d97722548276c87d3a91c76eb6be8f1be43ac30f83fa4",
+    "src/exoeos/contracts.py": "e69c36cbf81873beb5411d5d18b45bd8126b5948c3fb254ab39abaf8a97a3949",
+    "src/exoeos/critical_properties.py": "d3e3d5285577d1e3f040a672d3b8164fc75719b87967616c121f636eced83de8",
+    "src/exoeos/density.py": "781165f20f12498565eac73e7b6b06d356b7b4c3953bfd974214c6c595c292d3",
+    "src/exoeos/gibbs_excess.py": "c3354acd4f79940cee2723ec3d2c5500751c767666d295f8c04c3c97b8cfc7b3",
+    "src/exoeos/helmholtz.py": "75d7ab3a68781c73e8d8197c05151f0a8adb076595bcfad296a544f00860318e",
+    "src/exoeos/ideal.py": "556d07bb0ffe4d2b3d00a0ea451be128185e1f789382c5ac54f0ad7363c90b6b",
+    "src/exoeos/ideal_gas.py": "5516fdfe42b4c7f996dac2a6a907e7510933673c87def941ae9c4da49d0b361b",
+    "src/exoeos/ideal_solution.py": "b581faffae27988866fa88e0d2031413a81a0f1da33ceee9f524d663a758e4d0",
+    "src/exoeos/ma_fe_si_o.py": "32b526dc260d39a5071e25b198cc06fd331b1ceae89483d509702629ab5c7cde",
+    "src/exoeos/ma_fe_si_o_h.py": "131931749adf57a63642a156d93827c3429941b4c442256bc098c9d0cb86765d",
+    "src/exoeos/ma_interval.py": "01529ac84b6318b27e905be8e8cd0dd3d11ba7f05f05de6e67450429714a5b68",
+    "src/exoeos/marcum_silicate_hydrogen.py": "de714311e84a3e88c20334270d0f1c78f3581a206bb24427101f3f32b57de14f",
+    "src/exoeos/mass_fraction_solute.py": "d49c698a2814c62b73f128ef8e87a869e940f180334e7ae7b95b994df919830b",
+    "src/exoeos/peng_robinson.py": "d41306a6ae5c8ea8360e79d9ef28b75ddd1a73ba31446b55984f6dcbc56316f3",
+    "src/exoeos/second_virial.py": "bb9ae0910321a1e7a82af8b3df05e81274f47bfd9e8f6ba1658db0325d9bd5f3",
+    "src/exoeos/solution_gibbs.py": "6894b0821ab2955add1c85aa9087766d430b8bb2585b73aa1fe5c97ad463b693",
+    "src/exoeos/state.py": "ef677c6faa7f050ac6a359ce5bc396d81b9d314dbcb6c571c42f2427f6a0e880",
+    "src/exoeos/zhang_duan.py": "bacbb5d7d1295258fa3d888067bb8060450a01a4bbfa8a40eb499483a3bee986"
+  },
+  "plots": {
+    "virial.png": {
+      "T_K": 400,
+      "P_Pa": [
+        100000.0,
+        20000000.0
+      ],
+      "points": 121,
+      "B_m3_mol": [
+        -2e-05,
+        0,
+        2e-05
+      ],
+      "checks": [
+        "Z = 1 + rho B",
+        "TP pressure round trip",
+        "finite curves"
+      ],
+      "sha256": "64c7d91bf3e02132c1ad9d352f484d34c7a9fb25536aa1a757aca0368b396e9a"
+    },
+    "ideal_caloric.png": {
+      "T_K": [
+        300,
+        2000
+      ],
+      "P_Pa": 100000.0,
+      "cp_over_R": [
+        3.5,
+        2.5
+      ],
+      "reference_T_K": 300,
+      "reference_h_s": 0,
+      "checks": [
+        "h = cp (T - Tref)",
+        "cp - cv = R",
+        "endpoint and equimolar mixing entropy"
+      ],
+      "sha256": "fd98dba4765fd656fe775dd8893f78fc2583f0e15dc71bd0e288de225039527c"
+    },
+    "alloy_activities.png": {
+      "T_K": 1873,
+      "P_Pa": 100000.0,
+      "x_O_dry": 0.02,
+      "x_Si": [
+        0.001,
+        0.12
+      ],
+      "wet_dry_ratio": [
+        0.9,
+        0.08,
+        0.02
+      ],
+      "x_H": [
+        0,
+        0.15
+      ],
+      "checks": [
+        "excess Euler identity",
+        "dry energy dilution",
+        "zero H excess potential"
+      ],
+      "sha256": "a2f688a5dc210134b1abc5e3cc5b6175bf54a42d40484cee6431f2226098fa3a"
+    },
+    "solution_gibbs.png": {
+      "T_K": 1873,
+      "P_Pa": 100000.0,
+      "total_mol": 1,
+      "mu0_RT": [
+        0,
+        2,
+        -1
+      ],
+      "x_O": 0.02,
+      "x_Si": [
+        0.001,
+        0.12
+      ],
+      "checks": [
+        "standard + ideal + excess decomposition",
+        "full Gibbs Euler identity"
+      ],
+      "sha256": "af50f3d60c87dfd798c7aed47684dff01fb43a8163bd0eac7423dd4a39ca8501"
+    },
+    "mass_solute.png": {
+      "host_amounts_mol": [
+        0.8,
+        0.2
+      ],
+      "host_masses_kg_mol": [
+        0.06,
+        0.1
+      ],
+      "solute_mass_kg_mol": 0.002,
+      "solute_standard_RT": 3,
+      "mass_fraction": [
+        1e-06,
+        0.1
+      ],
+      "checks": [
+        "log mass-fraction solute law",
+        "reciprocal host correction",
+        "extensive Euler identity"
+      ],
+      "sha256": "f37f14f9384d1088ed2d1cae21b1ff66d05b36fcd67570545579867ac1b85dd1"
+    },
+    "density.png": {
+      "ideal_T_K": 1000,
+      "ideal_P_Pa": 1000000.0,
+      "masses_kg_mol": [
+        0.002016,
+        0.004003
+      ],
+      "synthetic_densities_kg_m3": [
+        1000.0,
+        4000.0
+      ],
+      "checks": [
+        "ideal mass conversion",
+        "pure endpoints",
+        "additive specific volume"
+      ],
+      "sha256": "70122d8200a50c4cd6475f228a6c7cef15e0d1a4453c219967a9ab48778daf5c"
+    },
+    "hhe_table.png": {
+      "variant": "Y0275",
+      "T_K": [
+        1000,
+        5000,
+        20000
+      ],
+      "P_Pa": [
+        100000.0,
+        1000000000000.0
+      ],
+      "archive_url": "https://perso.ens-lyon.fr/gilles.chabrier/DirEOS/DirEOS2021.tar.gz",
+      "archive_sha256": "45f316790ce20d5d1ce0abee4db308521b5bfdc5526d0997141a2784834feeff",
+      "tables_sha256": {
+        "TABLEEOS_2021_TP_Y0275_v1": "c4995d114affedddf421b57b847ad4872699e9526f32b4b335013ffcbfb0b938",
+        "TABLEEOS_2021_Trho_Y0275_v1": "b9ffd42d50c83cd691f3152fd21009b366af7044221cd291d87e5e5a48cc8299"
+      },
+      "checks": [
+        "verified published files",
+        "finite curves and positive density",
+        "fixed-composition density adapter"
+      ],
+      "sha256": "8e0b94aa8b6bbe0d98d842d3345740b6b86612d9d63ebe4ccc7d7b9fbfc868a4"
+    },
+    "silicate_table.png": {
+      "density_T_K": 5000,
+      "density_P_Pa": [
+        5000000000.0,
+        200000000000.0
+      ],
+      "x_hydrous": [
+        2.5e-05,
+        0.5,
+        1
+      ],
+      "heat_capacity_T_K": [
+        3000,
+        10000
+      ],
+      "heat_capacity_P_Pa": [
+        2000000000.0,
+        20000000000.0
+      ],
+      "table_url": "https://raw.githubusercontent.com/s-marcum/MgSiO3-H-EOS/5179f25721bd0bcc0827c7f77b5e24c18c36aa6f/MgSiO3-H_lookup.csv",
+      "table_sha256": "153e6261008663bd2923cf54a85d7f3a11cc4303a2a6b8bbf38714a4d78fe69f",
+      "checks": [
+        "verified published file",
+        "finite supported curves",
+        "all-NaN states in missing cells"
+      ],
+      "sha256": "5d5f583f4c72633012d2ebee1ad79b98f75eeb32c58561c3cd5894d2befa9dc5"
+    },
+    "alloy_bounds.png": {
+      "T_K": 2173.15,
+      "scale": [
+        0.5,
+        3.0
+      ],
+      "solute_upper_at_unit_scale": [
+        0.08,
+        0.02,
+        0.04
+      ],
+      "checks": [
+        "finite bounds",
+        "midpoint eigenvalues above whole-box bounds"
+      ],
+      "scope": "A negative lower bound is inconclusive; midpoint sampling is not a proof.",
+      "sha256": "4093e3c403394597722836eed46a84c78387a8c29bd2fff654cd2840ca61ce41"
+    },
+    "melts_mixing.png": {
+      "liquid_T_K": 1873,
+      "P_Pa": 100000.0,
+      "liquid_dry_ratio": {
+        "sio2": 0.6,
+        "mg2sio4": 0.4
+      },
+      "water_mole_fraction": [
+        0,
+        0.15
+      ],
+      "olivine_T_K": [
+        1200,
+        1800,
+        2400
+      ],
+      "olivine_coordinates": "[x, x, 0]",
+      "checks": [
+        "liquid Euler identity",
+        "pure olivine mixing endpoints",
+        "finite curves"
+      ],
+      "native_runtime_used": false,
+      "sha256": "6895ab9535d535cf9e4f9d06f0df3f73a344a5a55589b31d09aa77d09266361d"
+    },
+    "major_gas.png": {
+      "T_K": 2173.15,
+      "P_Pa": [
+        100000.0,
+        30000000.0
+      ],
+      "species": [
+        "H2",
+        "He1",
+        "H2O1",
+        "O2",
+        "Mg1"
+      ],
+      "x": [
+        0.75,
+        0.17,
+        0.06,
+        0.012,
+        0.008
+      ],
+      "h2_he_cm3_mol": [
+        0,
+        10,
+        20
+      ],
+      "water_policies": [
+        "extrapolate",
+        "hold_2000"
+      ],
+      "checks": [
+        "host parameter validation",
+        "finite curves",
+        "zero-pair trace lnphi = -ln Z"
+      ],
+      "scope": "Constitutive alternatives, not empirical uncertainty bands.",
+      "sha256": "75a552d8f57554d6e45bc50844426c9b6b95271c89b235f608525fb05fd6fd8d"
+    },
+    "material_references.png": {
+      "hydrogen_hosts": [
+        "basalt",
+        "andesite"
+      ],
+      "hydrogen_T_K": 1673.15,
+      "water_fit_samples": 11,
+      "water_excluded": [
+        "Per-1",
+        "Per-2",
+        "Per-5"
+      ],
+      "checks": [
+        "source-restricted H2 API",
+        "Sossi input checksum",
+        "parity residuals reproduce fit RMSE"
+      ],
+      "scope": "H2 error bars are reported observation SDs; water branches are not independent observations or external validation.",
+      "sha256": "fc82360961183fc2dc69fd77dda848e603c0dc7c2476a6c4d126f84cda047dc7"
+    }
+  }
+}
