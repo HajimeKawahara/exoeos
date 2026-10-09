@@ -1,0 +1,279 @@
+{
+  "reference_kind": "pinned_binary_supplied_properties",
+  "backend": {
+    "model": "rhyolite-MELTS 1.0.2",
+    "calculation_mode": 1,
+    "version_string": "2.3.2 (Jul 21 2026 17:06:24)",
+    "release": "v2.3.2",
+    "source_commit": "9b92b1e0e6d1538a0f498572d6c6651d5d3aca7e",
+    "source_url": "https://github.com/magmasource/alphaMELTS/tree/9b92b1e0e6d1538a0f498572d6c6651d5d3aca7e",
+    "archive_url": "https://github.com/magmasource/alphaMELTS/releases/download/v2.3.2/alphamelts-py-2.3.2-ubuntu_22_04-x86_64.zip",
+    "archive_sha256": "97ec2cdb53cae69822a41b5639d8b93edf95b2c361bc15e64e53b192ea9e1425",
+    "runtime_sha256": {
+      "meltsdynamic.py": "c9b12a82ee2d8dfc317af33e571e441158e0d4422af5bcdc11cf2197dbb71ce8",
+      "meltsengine.py": "05a41c1f842e6359fd44541638cb34389258a7539c47e5f205090434f6082af9",
+      "meltsstatus.py": "4869341cdd18e8eac01a4fe612e14bc350ea0f8ecdec7fa498a7f0e8e65e99ee",
+      "libalphamelts.so": "c218ef6f7ba5aef4b0760f3176530d1335457d6e2716823a1d0de3a5d13301e5",
+      "libgsl.so.28": "62dcb82585a2970edf2054e8e7c7df1a1aa4c307c936e7ff95b1331a4ababb2e",
+      "libgslcblas.so.0": "bb1d1273d2596ff756cbc881bc8a51837ed9cfbfa59ed55309ae42e3d9496948"
+    },
+    "license": "AGPL-3.0; backend is not redistributed",
+    "build_provenance": "Release binary pinned by hash; thermodynamic C build commit is not independently established."
+  },
+  "method": "Fresh calcPhaseProperties/calcEndMemberProperties liquid worker; pure Mg2SiO4 via calcMolarProperties(olivine). No equilibrium solve.",
+  "evaluator_sha256": "9f0248b0b6eb1f8b2ec338f0b374e4af83738813f57569fcee02c6534023c436",
+  "python_version": "3.12.7",
+  "tinynumpy_version": "1.2.1",
+  "component_order": [
+    "SiO2",
+    "Mg2SiO4"
+  ],
+  "states": [
+    {
+      "T_K": 1400.0,
+      "P_Pa": 50000000.0,
+      "n_mol": [
+        0.25,
+        0.75
+      ],
+      "liquid_standard_J_mol": [
+        -1030072.2383524532,
+        -2430337.275718437
+      ],
+      "liquid_gibbs_J": -2086175.1711940228,
+      "liquid_mu_J_mol": [
+        -1044284.4199421674,
+        -2433472.0882952865
+      ],
+      "forsterite_gibbs_J_mol": -2462022.214705823
+    },
+    {
+      "T_K": 1479.0,
+      "P_Pa": 100000.0,
+      "n_mol": [
+        0.25,
+        0.75
+      ],
+      "liquid_standard_J_mol": [
+        -1042975.1473539928,
+        -2461705.165434179
+      ],
+      "liquid_gibbs_J": -2113296.1741553815,
+      "liquid_mu_J_mol": [
+        -1058097.8882530578,
+        -2465028.936140364
+      ],
+      "forsterite_gibbs_J_mol": -2491309.3426289693
+    },
+    {
+      "T_K": 1480.0,
+      "P_Pa": 100000.0,
+      "n_mol": [
+        0.25,
+        0.75
+      ],
+      "liquid_standard_J_mol": [
+        -1043123.5386922621,
+        -2462079.1522125616
+      ],
+      "liquid_gibbs_J": -2113618.437496827,
+      "liquid_mu_J_mol": [
+        -1058257.8056585342,
+        -2465405.314793802
+      ],
+      "forsterite_gibbs_J_mol": -2491656.425329828
+    },
+    {
+      "T_K": 1481.0,
+      "P_Pa": 100000.0,
+      "n_mol": [
+        0.25,
+        0.75
+      ],
+      "liquid_standard_J_mol": [
+        -1043271.9823169748,
+        -2462453.3220990663
+      ],
+      "liquid_gibbs_J": -2113940.851240975,
+      "liquid_mu_J_mol": [
+        -1058417.7753504538,
+        -2465781.8765553613
+      ],
+      "forsterite_gibbs_J_mol": -2492003.6341001713
+    },
+    {
+      "T_K": 2000.0,
+      "P_Pa": 100000.0,
+      "n_mol": [
+        0.25,
+        0.75
+      ],
+      "liquid_standard_J_mol": [
+        -1126989.6209348496,
+        -2678878.856094673
+      ],
+      "liquid_gibbs_J": -2299615.9559762506,
+      "liquid_mu_J_mol": [
+        -1148117.4428487478,
+        -2683448.793704451
+      ],
+      "forsterite_gibbs_J_mol": -2687723.704485471
+    },
+    {
+      "T_K": 2050.0,
+      "P_Pa": 100000.0,
+      "n_mol": [
+        0.25,
+        0.75
+      ],
+      "liquid_standard_J_mol": [
+        -1135685.9586986431,
+        -2701830.728679671
+      ],
+      "liquid_gibbs_J": -2319237.7160104774,
+      "liquid_mu_J_mol": [
+        -1157390.08397289,
+        -2706520.2600421933
+      ],
+      "forsterite_gibbs_J_mol": -2708066.6224320093
+    },
+    {
+      "T_K": 2100.0,
+      "P_Pa": 100000.0,
+      "n_mol": [
+        0.25,
+        0.75
+      ],
+      "liquid_standard_J_mol": [
+        -1144481.541669554,
+        -2725113.121844331
+      ],
+      "liquid_gibbs_J": -2339132.177781229,
+      "liquid_mu_J_mol": [
+        -1166761.9703041497,
+        -2729922.2469595973
+      ],
+      "forsterite_gibbs_J_mol": -2728646.6630833503
+    },
+    {
+      "T_K": 2163.0,
+      "P_Pa": 100000.0,
+      "n_mol": [
+        0.25,
+        0.75
+      ],
+      "liquid_standard_J_mol": [
+        -1155701.6360171447,
+        -2754907.3915956533
+      ],
+      "liquid_gibbs_J": -2364577.455336323,
+      "liquid_mu_J_mol": [
+        -1178708.2068857795,
+        -2759867.204839377
+      ],
+      "forsterite_gibbs_J_mol": -2754907.3915956547
+    },
+    {
+      "T_K": 2000.0,
+      "P_Pa": 50000000.0,
+      "n_mol": [
+        0.25,
+        0.75
+      ],
+      "liquid_standard_J_mol": [
+        -1125649.1272875841,
+        -2676310.5348776947
+      ],
+      "liquid_gibbs_J": -2297354.591651717,
+      "liquid_mu_J_mol": [
+        -1146776.9492014823,
+        -2680880.472487473
+      ],
+      "forsterite_gibbs_J_mol": -2685380.3291899124
+    },
+    {
+      "T_K": 2000.0,
+      "P_Pa": 500000000.0,
+      "n_mol": [
+        0.25,
+        0.75
+      ],
+      "liquid_standard_J_mol": [
+        -1113717.854696274,
+        -2653340.4463705136
+      ],
+      "liquid_gibbs_J": -2277144.207123653,
+      "liquid_mu_J_mol": [
+        -1134845.6766101723,
+        -2657910.383980292
+      ],
+      "forsterite_gibbs_J_mol": -2664286.2872415055
+    },
+    {
+      "T_K": 2000.0,
+      "P_Pa": 100000.0,
+      "n_mol": [
+        1.0,
+        0.0
+      ],
+      "liquid_standard_J_mol": [
+        -1126989.6209348496,
+        null
+      ],
+      "liquid_gibbs_J": -1126989.6209266686,
+      "liquid_mu_J_mol": [
+        -1126989.6209348496,
+        null
+      ],
+      "forsterite_gibbs_J_mol": -2687723.704485471
+    },
+    {
+      "T_K": 2000.0,
+      "P_Pa": 100000.0,
+      "n_mol": [
+        0.75,
+        0.25
+      ],
+      "liquid_standard_J_mol": [
+        -1126989.6209348496,
+        -2678878.856094673
+      ],
+      "liquid_gibbs_J": -1523671.3384004491,
+      "liquid_mu_J_mol": [
+        -1131559.558544868,
+        -2700006.6780078514
+      ],
+      "forsterite_gibbs_J_mol": -2687723.704485471
+    },
+    {
+      "T_K": 2000.0,
+      "P_Pa": 100000.0,
+      "n_mol": [
+        0.01,
+        0.99
+      ],
+      "liquid_standard_J_mol": [
+        -1126989.6209348496,
+        -2678878.856094673
+      ],
+      "liquid_gibbs_J": -2664257.3229403277,
+      "liquid_mu_J_mol": [
+        -1200214.231812983,
+        -2679045.63700921
+      ],
+      "forsterite_gibbs_J_mol": -2687723.704485471
+    }
+  ],
+  "unavailable_cases": [
+    {
+      "T_K": 2000.0,
+      "P_Pa": 100000.0,
+      "n_mol": [
+        0.0,
+        1.0
+      ],
+      "reason": "Pinned worker oxide conversion reports negative SiO2 at the pure Mg2SiO4 liquid endpoint."
+    }
+  ],
+  "generator_sha256": "b4a3950ef0465d79808e7f9615e06de3942bb8fec3b479b7351f04b9c0a70684"
+}

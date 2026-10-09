@@ -46,6 +46,7 @@ Physical model references
    fe_si_o_h_reference
    melts_silicate_reference
    melts_liquid_evaluator
+   native_magma
    cns_provider_scope
    m2_material_contract
    m2_reaction_calibration

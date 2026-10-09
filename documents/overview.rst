@@ -11,8 +11,9 @@ pressure and composition.
 The original capability survey used source commit
 `f049cfc <https://github.com/HajimeKawahara/exoeos/tree/f049cfcb3f42e198124c8f6c921385ff0d67f69d>`_
 (reviewed on 2026-10-08); this overview also covers the subsequent total
-Helmholtz derivative engine. A historical calculation elsewhere in the
-documentation retains its own source revision, inputs, and validation scope.
+Helmholtz derivative engine and native binary magma model. A historical
+calculation elsewhere in the documentation retains its own source revision,
+inputs, and validation scope.
 The `Japanese explanation <https://github.com/HajimeKawahara/doc_ExoEOS>`_
 is maintained separately in ``doc_ExoEOS/main_ja.tex``. English API and usage
 updates belong here; the older ``doc_ExoEOS/main_en.tex`` is a historical edition.
@@ -114,6 +115,11 @@ package's ``src/`` build configuration.
        liquid mixing, and declarations for the 20-model native solution catalog.
      - Native evaluations need a separately installed runtime. Published
        expressions and native evaluations have distinct provenance.
+   * - Native JAX binary magma
+     - ``exoeos.magma``: liquid SiO2/Mg2SiO4 and solid forsterite standards,
+       full liquid G and its T/P/composition derivatives.
+     - No external runtime. :doc:`native_magma` restricts the cooling
+       example to liquid plus forsterite; enstatite and silica solids are omitted.
    * - M2 material references
      - Checkout tools for water, H/O/Mg/Na/K/P/He references and conditional
        models, material assessment, and a consistent major-gas potential.
