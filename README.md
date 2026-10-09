@@ -14,13 +14,14 @@ original temperature-pressure state interface.
 ## Installation
 
 ```bash
-python -m pip install exoeos
+python -m pip install "exoeos>=0.2.0"
 ```
 
-PyPI version `0.1.0` provides the caloric ideal-gas API only. Until a newer
-release is published, install a repository checkout containing these changes
-to use the residual Helmholtz, TP inversion, and excess Gibbs APIs documented
-below:
+Version `0.2.0` includes the residual Helmholtz, TP inversion, excess Gibbs,
+and total Helmholtz thermodynamics APIs documented below, alongside the
+caloric ideal-gas API from `0.1.0`.
+
+To install from a repository checkout:
 
 ```bash
 python -m pip install .
