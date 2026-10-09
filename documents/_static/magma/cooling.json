@@ -1,0 +1,26 @@
+{
+  "scope": "Closed liquid + pure forsterite restricted equilibrium; no enstatite or silica solids.",
+  "P_Pa": 100000.0,
+  "initial_oxide_moles": {
+    "MgO": 1.5,
+    "SiO2": 1.0
+  },
+  "onset_T_K": 2077.6001788181256,
+  "states": [
+    {
+      "T_K": 2100.0,
+      "forsterite_mol": 0.0,
+      "liquid_x_F": 0.75
+    },
+    {
+      "T_K": 2050.0,
+      "forsterite_mol": 0.22011864909965578,
+      "liquid_x_F": 0.6794384175087861
+    },
+    {
+      "T_K": 2000.0,
+      "forsterite_mol": 0.42520883646361374,
+      "liquid_x_F": 0.5650594235619731
+    }
+  ]
+}
