@@ -1,12 +1,14 @@
-"""Native JAX MELTS MgO--SiO2 liquid and pure silicate solids.
+"""Native JAX MELTS MgO--FeO--SiO2 liquid and silicate solids.
 
-The fixed liquid basis is (SiO2, Mg2SiO4), not oxide mole fractions.
+The liquid basis is (SiO2, Mg2SiO4[, Fe2SiO4]), not oxide mole fractions.
+Iron is exclusively Fe(II). Olivine is the binary forsterite--fayalite face.
 Temperatures are K, pressures Pa, amounts mol, and Gibbs energies J.
 Enable JAX x64 for thermodynamic derivatives and phase comparisons.
 
 Equations and coefficients: MAGMA revision
 705a0fb315e5054d18275a580562f6121c8e458c, sources/gibbs.c,
-includes/{liq_struct_data,sol_struct_data,param_struct_data_v34}.h.
+includes/{liq_struct_data,sol_struct_data,param_struct_data_v34}.h,
+and sources/olivine.c (Fe/Mg face).
 Silica additionally includes explicitly documented pinned-runtime offsets.
 This is the MELTS (not pMELTS) polynomial EOS and liquid mixing model.
 It does not establish stability against omitted phases or a calibrated
@@ -19,6 +21,8 @@ from jax.scipy.special import xlogy
 
 
 COMPONENTS = ("SiO2", "Mg2SiO4")
+TERNARY_COMPONENTS = COMPONENTS + ("Fe2SiO4",)
+OLIVINE_COMPONENTS = ("Mg2SiO4", "Fe2SiO4")
 SILICA_POLYMORPHS = ("quartz", "tridymite", "cristobalite")
 R = 8.3143  # J/(mol K); retain the MELTS entropy convention.
 W = 3421.0  # J/mol; SiO2--Mg2SiO4 liquid interaction.
@@ -32,13 +36,14 @@ def _tp(T, P):
     return temperature, pressure
 
 
-def _forsterite_h_s(T):
+def _olivine_h_s(T, *, iron=False):
     # Integrate Cp = k0 + k1/sqrt(T) + k3/T**3 from the Berman reference.
-    k0, k1, k3 = 238.64, -2001.3, -1.1624e8
-    h = (-2174420.0 + k0 * (T - _TR)
+    h0, s0, k0, k1, k3 = ((-1479360., 150.930, 248.93, -1923.9, -1.3910e8)
+                          if iron else (-2174420., 94.010, 238.64, -2001.3, -1.1624e8))
+    h = (h0 + k0 * (T - _TR)
          + 2.0 * k1 * (jnp.sqrt(T) - jnp.sqrt(_TR))
          - 0.5 * k3 * (T**-2 - _TR**-2))
-    s = (94.010 + k0 * jnp.log(T / _TR)
+    s = (s0 + k0 * jnp.log(T / _TR)
          - 2.0 * k1 * (T**-0.5 - _TR**-0.5)
          - k3 / 3.0 * (T**-3 - _TR**-3))
     return h, s
@@ -52,13 +57,55 @@ def forsterite_gibbs(T, P):
     the Berman polynomial relative to 1 bar, with volume in J/bar/mol.
     """
     T, P = _tp(T, P)
-    h, s = _forsterite_h_s(T)
+    h, s = _olivine_h_s(T)
     dt, dp = T - _TR, P / 1e5 - 1.0
     pressure_g = 4.366 * (
         (1.0 + 29.464e-6 * dt + 88.633e-10 * dt**2) * dp
         - 0.791e-6 * dp**2 / 2.0 + 1.351e-12 * dp**3 / 3.0
     )
     return h - T * s + pressure_g
+
+
+def fayalite_gibbs(T, P):
+    """Return the olivine Fe2SiO4 standard G in J/mol at scalar K/Pa.
+
+    Uses the Berman EOS of the olivine endmember, not the separate pure
+    fayalite phase's Vinet EOS. Input/x64 contracts match forsterite_gibbs.
+    """
+    T, P = _tp(T, P)
+    h, s = _olivine_h_s(T, iron=True)
+    dt, dp = T - _TR, P / 1e5 - 1.0
+    return h - T * s + 4.630 * (
+        (1.0 + 26.546e-6 * dt + 79.482e-10 * dt**2) * dp
+        - 0.730e-6 * dp**2 / 2.0
+    )
+
+
+def olivine_gibbs(T, P, n):
+    """Return extensive binary olivine G in J for [n_Fo, n_Fa] in mol.
+
+    The Fe/Mg face of MELTS olivine.c has equal occupancies on its two
+    cation sites at magmatic temperatures. Its entropy is twice the ideal
+    endmember entropy and W = 20300 + 0.015*(P/bar - 1) J/mol. No redox,
+    Ca, Mn, Ni or Co is included. Zero amounts use continuous energy limits;
+    composition derivatives require both amounts positive, as for liquid G.
+    """
+    T, P = _tp(T, P)
+    amounts = jnp.asarray(n) * 1.0
+    if amounts.shape != (2,):
+        raise ValueError("n must have shape (2,) in (Mg2SiO4, Fe2SiO4) order.")
+
+    def present(values):
+        x = values / values.sum()
+        standards = jnp.stack((forsterite_gibbs(T, P), fayalite_gibbs(T, P)))
+        interaction = 20300.0 + 0.015 * (P / 1e5 - 1.0)
+        return (values @ standards + 2 * R * T * jnp.sum(xlogy(values, x))
+                + interaction * values[0] * x[1])
+
+    return jax.lax.cond(
+        jnp.all(amounts == 0), lambda values: jnp.zeros_like(T + P + values.sum()),
+        present, amounts,
+    )
 
 
 def enstatite_gibbs(T, P):
@@ -163,17 +210,19 @@ def _silica_h_s(T):
     return jax.lax.cond(T >= 1480.0, above, below, T)
 
 
-def liquid_standard_gibbs(T, P):
-    """Return liquid standards [SiO2, Mg2SiO4] in J/mol at scalar K/Pa.
+def liquid_standard_gibbs(T, P, *, include_fe=False):
+    """Return liquid standards [SiO2, Mg2SiO4[, Fe2SiO4]] in J/mol.
 
     The SiO2 branch switches at 1480 K, preserving G and its first
     temperature derivative; its heat capacity can jump there. The
     Mg2SiO4 standard uses fusion at 2163 K and constant liquid Cp.
+    Static ``include_fe=True`` appends Fe2SiO4 (fusion 1490 K, liquid
+    Cp=240.2 J/mol/K). Default shape (2,) preserves the binary API.
     Input validation and x64 configuration belong to the caller.
     """
     T, P = _tp(T, P)
     h_q, s_q = _silica_h_s(T)
-    h_f, s_f = _forsterite_h_s(2163.0)
+    h_f, s_f = _olivine_h_s(2163.0)
     h_f = h_f + 2163.0 * 57.2 + 271.0 * (T - 2163.0)
     s_f = s_f + 57.2 + 271.0 * jnp.log(T / 2163.0)
     thermal = jnp.stack((h_q - T * s_q, h_f - T * s_f))
@@ -183,15 +232,24 @@ def liquid_standard_gibbs(T, P):
         [2.690, 4.980], [0.0, 5.24e-4], [-1.89e-5, -1.35e-5],
         [1.3e-8, -1.3e-8], [3.6e-10, 4.14e-10],
     ], dtype=thermal.dtype)
+    if include_fe:
+        h_a, s_a = _olivine_h_s(1490.0, iron=True)
+        h_a = h_a + 1490.0 * 59.9 + 240.2 * (T - 1490.0)
+        s_a = s_a + 59.9 + 240.2 * jnp.log(T / 1490.0)
+        thermal = jnp.append(thermal, h_a - T * s_a)
+        v, dvdt, dvdp, d2vdtp, d2vdp2 = (
+            jnp.append(values, extra) for values, extra in zip(
+                (v, dvdt, dvdp, d2vdtp, d2vdp2),
+                (5.420, 5.84e-4, -2.79e-5, -2.3e-8, 14.6e-10)))
     return (thermal + (v + dvdt * dt) * dp
             + (dvdp + d2vdtp * dt) * dp**2 / 2.0
             + d2vdp2 * dp**3 / 6.0)
 
 
 def liquid_gibbs(T, P, n):
-    """Return extensive liquid G in J for n=[n_SiO2, n_Mg2SiO4] in mol.
+    """Return liquid G in J for n=[n_SiO2, n_Mg2SiO4[, n_Fe2SiO4]].
 
-    Supply nonnegative finite amounts with shape (2,) and positive finite
+    Supply nonnegative finite mol amounts with shape (2,) or (3,) and positive finite
     scalar K/Pa. Only static shapes are checked here. Zero component
     amounts use the continuous energy limit, including G(T,P,[0,0])=0.
     Composition derivatives are supported for strictly positive amounts;
@@ -201,14 +259,18 @@ def liquid_gibbs(T, P, n):
     """
     T, P = _tp(T, P)
     amounts = jnp.asarray(n) * 1.0
-    if amounts.shape != (2,):
-        raise ValueError("n must have shape (2,) in (SiO2, Mg2SiO4) order.")
+    if amounts.shape not in ((2,), (3,)):
+        raise ValueError("n must have shape (2,) or (3,) in (SiO2, Mg2SiO4[, Fe2SiO4]) order.")
+    include_fe = amounts.shape == (3,)
 
     def present(values):
         x = values / jnp.sum(values)
-        return (jnp.dot(values, liquid_standard_gibbs(T, P))
+        excess = W * values[0] * x[1]
+        if include_fe:
+            excess += 23660.9 * values[0] * x[2] - 37256.7 * values[1] * x[2]
+        return (jnp.dot(values, liquid_standard_gibbs(T, P, include_fe=include_fe))
                 + R * T * jnp.sum(xlogy(values, x))
-                + W * values[0] * x[1])
+                + excess)
 
     return jax.lax.cond(
         jnp.all(amounts == 0), lambda values: jnp.zeros_like(T + P + values.sum()),
