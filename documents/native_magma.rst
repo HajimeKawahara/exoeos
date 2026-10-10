@@ -3,6 +3,8 @@ Native JAX magma: MgO--SiO2
 
 ``exoeos.magma`` evaluates a two-component MELTS liquid and pure crystalline
 forsterite entirely in JAX, including their standard Gibbs energies.
+It also supplies the pure Mg orthopyroxene endpoint for an enstatite
+insertion test on the restricted cooling path.
 No external MELTS runtime is needed for evaluation, derivatives, the cooling
 example, or ordinary tests. This first model restricts equilibrium to one
 liquid plus forsterite; it does not reproduce the full MgO--SiO2 phase diagram.
@@ -24,7 +26,7 @@ The MELTS constants are :math:`R_b=8.3143` J/(mol K) and
 :math:`W=3421` J/mol. Using oxide mole fractions in the entropy term would
 define a different model.
 
-The three functions have scalar ``T`` in K and ``P`` in Pa:
+The four functions have scalar ``T`` in K and ``P`` in Pa:
 
 .. list-table:: API in ``exoeos.magma``
    :header-rows: 1
@@ -38,6 +40,8 @@ The three functions have scalar ``T`` in K and ``P`` in Pa:
      - Extensive G in J; ``n`` is shape (2,) in mol, in that same order.
    * - ``forsterite_gibbs(T, P)``
      - Crystalline Mg2SiO4 standard G in J/mol.
+   * - ``enstatite_gibbs(T, P)``
+     - Pure Mg orthopyroxene G in J per mol **MgSiO3**.
 
 Use positive finite T/P and finite nonnegative amounts; validate material
 inputs before entering JAX transformations. Static shapes are checked by
@@ -164,9 +168,107 @@ For M=1.5 mol, S=1 mol, P=1 bar, the restricted onset is **2077.600179 K**.
 
    Dashed lines mark the restricted onset. Cooling proceeds from left to right.
 
-Enstatite and silica solids are omitted. Their insertion conditions and
-competing stability must be examined before interpreting this as the
+Enstatite and silica solids are omitted from this minimization. The next
+section tests enstatite insertion without calculating its equilibrium amount.
+Competing phase stability must be examined before interpreting this as the
 physical binary phase diagram. MgO/SiO2>2 requires a different basis.
+
+Enstatite insertion and comparison with MELTS
+-----------------------------------------------
+
+``enstatite_gibbs(T, P)`` returns the pure Mg **orthopyroxene** endpoint,
+in J per mol MgSiO3. It is not a minimum over enstatite polymorphs or a
+pyroxene solid-solution model. The MELTS endmember basis is Mg2Si2O6,
+so one native mole corresponds to two API moles.
+
+The tabulated Mg2Si2O6 standard is monoclinic, including for orthopyroxene.
+The total orthopyroxene endpoint also needs its site energy minus the
+monoclinic pure-reference energy. At the pure Mg end there is no ordering
+freedom or configurational site entropy. Reducing the published expression
+gives, per native mole, :math:`\Delta H=-5020.8` J/mol,
+:math:`\Delta S=-2.3237936` J/(mol K), and
+:math:`\Delta V=-0.0619232` J/(bar mol). With :math:`P_b=P/10^5`,
+
+.. math::
+
+   g_{\rm En}=\frac{1}{2}\left[g_{\rm CEn}^0(T,P)
+        -5020.8+2.3237936T-0.0619232(P_b-1)\right].
+
+The monoclinic standard follows the Berman Cp and pressure integrals in
+``sol_struct_data.h``. The endpoint correction comes from
+`orthopyroxene.c <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/orthopyroxene.c>`_
+at the same pinned revision. Comparing a raw endmember standard alone
+would miss this correction.
+
+.. figure:: _static/magma/enstatite_melts_comparison.png
+   :alt: JAX orthopyroxene energies overlay independent MELTS points at three pressures; the lower panel shows their signed differences.
+   :width: 85%
+
+   Pure Mg orthopyroxene at 1, 500 and 5000 bar. Lines are JAX; circles are
+   actual pinned MELTS evaluations, converted from Mg2Si2O6 to MgSiO3.
+   The maximum absolute difference across these 12 states is 7e-10 J/mol.
+   Pressure comparisons check formulas, not empirical high-pressure accuracy.
+
+One mol of MgSiO3 consumes half a mol each of liquid Q and F. For a
+present liquid with both amounts positive, the insertion derivative is
+
+.. math::
+
+   \Delta g_{\rm En}=g_{\rm En}-\frac{\mu_{Q,l}+\mu_{F,l}}{2}
+      =\left.\frac{\partial}{\partial\eta}
+       \left[G_l(T,P,[n_Q-\eta/2,n_F-\eta/2])+\eta g_{\rm En}\right]
+       \right|_{\eta=0}.
+
+``examples/magma_cooling.py::enstatite_insertion_energy`` evaluates this
+derivative using the same JAX liquid G. A negative value proves the supplied
+state is unstable to this candidate. A nonnegative value checks only Mg
+orthopyroxene and does not establish stability against every omitted phase.
+Enstatite insertion conserves Mg, Si, O and mass.
+
+On the existing 1 bar, 1.5 mol MgO + 1 mol SiO2 closed cooling path, the
+derivative crosses zero at **1908.603653 K**, with 0.584374215 mol
+forsterite. At 2000 K it is +2578.340908 J/mol; at 1900 K it is
+-167.806610 J/mol. The continuation below the crossing remains a restricted
+liquid + forsterite calculation and is unstable when orthopyroxene is allowed.
+It does not give the phase amounts after enstatite appears.
+
+.. figure:: _static/magma/enstatite_saturation.png
+   :alt: Enstatite insertion energy crosses zero near 1909 K; JAX and independently solved MELTS restricted paths agree.
+   :width: 85%
+
+   Cooling proceeds from left to right. Circles use a separate bisection
+   of actual MELTS liquid chemical potentials against pure forsterite G.
+   The upper panel tests enstatite insertion on each independently computed
+   path; the lower panel compares the restricted forsterite amounts.
+   The shaded continuation is unstable to enstatite insertion.
+
+``tests/reference/enstatite_source_v1.json`` independently integrates Cp,
+Cp/T and V and evaluates the previously transcribed site polynomials at
+the exact Mg endpoint. It records G, S, Cp and V at 12 T/P states.
+``tests/reference/enstatite_melts_v1.json`` separately records 12 actual
+MELTS endpoint evaluations and 12 restricted cooling states. The latter
+use fresh workers and 40 bisections of native chemical potentials, with
+no JAX thermodynamic model or MELTS phase-assemblage solver. The maximum
+JAX/backend differences are 2.2e-7 J/mol for insertion energies and
+2.1e-11 mol for forsterite amounts. Tests allow 1e-6 J/mol and 1e-9 mol,
+respectively. Source agreement and these finite backend comparisons do
+not validate a complete experimental phase diagram.
+
+Regenerate the figures and numerical summary without an external runtime:
+
+.. code-block:: bash
+
+   JAX_ENABLE_X64=1 MPLBACKEND=Agg python examples/magma_enstatite.py \
+       --output documents/_static/magma
+
+Regenerate either independent fixture:
+
+.. code-block:: bash
+
+   python tests/reference/generate_enstatite_reference.py \
+       --output tests/reference/enstatite_source_v1.json
+   python tests/reference/generate_enstatite_reference.py --runtime /path/to/pinned/runtime \
+       --python /path/to/worker/python --output tests/reference/enstatite_melts_v1.json
 
 Provenance and independent checks
 ---------------------------------

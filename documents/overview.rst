@@ -117,9 +117,10 @@ package's ``src/`` build configuration.
        expressions and native evaluations have distinct provenance.
    * - Native JAX binary magma
      - ``exoeos.magma``: liquid SiO2/Mg2SiO4 and solid forsterite standards,
-       full liquid G and its T/P/composition derivatives.
+       the Mg orthopyroxene endpoint, full liquid G and its T/P/composition derivatives.
      - No external runtime. :doc:`native_magma` restricts the cooling
-       example to liquid plus forsterite; enstatite and silica solids are omitted.
+       example to liquid plus forsterite and tests enstatite insertion.
+       Enstatite phase amounts and silica solids are not included.
    * - M2 material references
      - Checkout tools for water, H/O/Mg/Na/K/P/He references and conditional
        models, material assessment, and a consistent major-gas potential.

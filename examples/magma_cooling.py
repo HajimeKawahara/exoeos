@@ -2,7 +2,8 @@
 
 Run with JAX_ENABLE_X64=1. Crystals remain in the system. The default
 inventory is 1.5 mol MgO + 1 mol SiO2 at 1 bar. This one-dimensional
-example does not replace ExoGibbs phase selection or include enstatite.
+example does not replace ExoGibbs phase selection. The enstatite insertion
+diagnostic tests the restricted path without equilibrating another phase.
 """
 
 import argparse
@@ -13,7 +14,9 @@ import jax
 import jax.numpy as jnp
 import numpy as np
 
-from exoeos.magma import R, W, forsterite_gibbs, liquid_gibbs, liquid_standard_gibbs
+from exoeos.magma import (
+    R, W, enstatite_gibbs, forsterite_gibbs, liquid_gibbs, liquid_standard_gibbs,
+)
 
 
 def component_amounts(mgo_mol, sio2_mol):
@@ -31,6 +34,19 @@ def total_gibbs(T, P, xi, a=.75, b=.25):
 
 
 crystallization_slope = jax.jit(jax.grad(total_gibbs, argnums=2))
+
+
+@jax.jit
+def enstatite_insertion_energy(T, P, n):
+    """Return dG/deta in J/mol for infinitesimal MgSiO3 crystallization.
+
+    Require a present liquid with both component amounts strictly positive.
+    One mol MgSiO3 consumes half a mol each of liquid Q and F. A negative
+    value makes the supplied state unstable to Mg orthopyroxene insertion;
+    a nonnegative value tests only this candidate, not all omitted phases.
+    """
+    mu = jax.grad(liquid_gibbs, argnums=2)(T, P, n)
+    return enstatite_gibbs(T, P) - jnp.sum(mu) / 2.0
 
 
 def _bisect_increasing(function, lower, upper):

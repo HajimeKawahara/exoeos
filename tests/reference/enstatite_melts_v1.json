@@ -1,0 +1,299 @@
+{
+  "reference_kind": "pinned_binary_properties_and_restricted_cooling",
+  "backend": {
+    "model": "rhyolite-MELTS 1.0.2",
+    "calculation_mode": 1,
+    "version_string": "2.3.2 (Jul 21 2026 17:06:24)",
+    "release": "v2.3.2",
+    "source_commit": "9b92b1e0e6d1538a0f498572d6c6651d5d3aca7e",
+    "source_url": "https://github.com/magmasource/alphaMELTS/tree/9b92b1e0e6d1538a0f498572d6c6651d5d3aca7e",
+    "archive_url": "https://github.com/magmasource/alphaMELTS/releases/download/v2.3.2/alphamelts-py-2.3.2-ubuntu_22_04-x86_64.zip",
+    "archive_sha256": "97ec2cdb53cae69822a41b5639d8b93edf95b2c361bc15e64e53b192ea9e1425",
+    "runtime_sha256": {
+      "meltsdynamic.py": "c9b12a82ee2d8dfc317af33e571e441158e0d4422af5bcdc11cf2197dbb71ce8",
+      "meltsengine.py": "05a41c1f842e6359fd44541638cb34389258a7539c47e5f205090434f6082af9",
+      "meltsstatus.py": "4869341cdd18e8eac01a4fe612e14bc350ea0f8ecdec7fa498a7f0e8e65e99ee",
+      "libalphamelts.so": "c218ef6f7ba5aef4b0760f3176530d1335457d6e2716823a1d0de3a5d13301e5",
+      "libgsl.so.28": "62dcb82585a2970edf2054e8e7c7df1a1aa4c307c936e7ff95b1331a4ababb2e",
+      "libgslcblas.so.0": "bb1d1273d2596ff756cbc881bc8a51837ed9cfbfa59ed55309ae42e3d9496948"
+    },
+    "license": "AGPL-3.0; backend is not redistributed",
+    "build_provenance": "Release binary pinned by hash; thermodynamic C build commit is not independently established."
+  },
+  "method": "Fresh MELTS workers; pure orthopyroxene/olivine via calcMolarProperties. Restricted cooling bisects actual liquid chemical potentials; no MELTS phase-assemblage solver or JAX model used.",
+  "evaluator_sha256": "9f0248b0b6eb1f8b2ec338f0b374e4af83738813f57569fcee02c6534023c436",
+  "python_version": "3.12.7",
+  "tinynumpy_version": "1.2.1",
+  "native_enstatite_endmember_moles": [
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "native_formula": "Mg2Si2O6",
+  "reported_insertion_formula": "MgSiO3",
+  "initial_oxide_moles": {
+    "MgO": 1.5,
+    "SiO2": 1.0
+  },
+  "states": [
+    {
+      "T_K": 1400.0,
+      "P_Pa": 100000.0,
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3503040.0793168945
+    },
+    {
+      "T_K": 1800.0,
+      "P_Pa": 100000.0,
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3709533.9866631357
+    },
+    {
+      "T_K": 2000.0,
+      "P_Pa": 100000.0,
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3822308.417291147
+    },
+    {
+      "T_K": 2200.0,
+      "P_Pa": 100000.0,
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3940658.4591065203
+    },
+    {
+      "T_K": 1400.0,
+      "P_Pa": 50000000.0,
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3499799.537684976
+    },
+    {
+      "T_K": 1800.0,
+      "P_Pa": 50000000.0,
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3706237.7473208415
+    },
+    {
+      "T_K": 2000.0,
+      "P_Pa": 50000000.0,
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3818981.4997379584
+    },
+    {
+      "T_K": 2200.0,
+      "P_Pa": 50000000.0,
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3937298.9771053004
+    },
+    {
+      "T_K": 1400.0,
+      "P_Pa": 500000000.0,
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3470629.4095455217
+    },
+    {
+      "T_K": 1800.0,
+      "P_Pa": 500000000.0,
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3676565.335220084
+    },
+    {
+      "T_K": 2000.0,
+      "P_Pa": 500000000.0,
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3789032.430424727
+    },
+    {
+      "T_K": 2200.0,
+      "P_Pa": 500000000.0,
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3907056.240425047
+    }
+  ],
+  "cooling": [
+    {
+      "T_K": 2200.0,
+      "P_Pa": 100000.0,
+      "forsterite_mol": 0.0,
+      "liquid_n_mol": [
+        0.25,
+        0.75
+      ],
+      "liquid_mu_J_mol": [
+        -1185794.1348126014,
+        -2777686.6645564334
+      ],
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3940658.4591065203,
+      "insertion_J_mol_MgSiO3": 11411.17013125727,
+      "forsterite_slope_J_mol": 7188.4012476853095
+    },
+    {
+      "T_K": 2100.0,
+      "P_Pa": 100000.0,
+      "forsterite_mol": 0.0,
+      "liquid_n_mol": [
+        0.25,
+        0.75
+      ],
+      "liquid_mu_J_mol": [
+        -1166761.9703041497,
+        -2729922.2469595973
+      ],
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3880817.060119411,
+      "insertion_J_mol_MgSiO3": 7933.578572168015,
+      "forsterite_slope_J_mol": 1275.583876247052
+    },
+    {
+      "T_K": 2050.0,
+      "P_Pa": 100000.0,
+      "forsterite_mol": 0.22011864911985413,
+      "liquid_n_mol": [
+        0.25,
+        0.5298813508801459
+      ],
+      "liquid_mu_J_mol": [
+        -1153497.6912363467,
+        -2708066.6224320093
+      ],
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3851392.535551347,
+      "insertion_J_mol_MgSiO3": 5085.889058504719,
+      "forsterite_slope_J_mol": 0.0
+    },
+    {
+      "T_K": 2000.0,
+      "P_Pa": 100000.0,
+      "forsterite_mol": 0.4252088364718247,
+      "liquid_n_mol": [
+        0.25,
+        0.3247911635281753
+      ],
+      "liquid_mu_J_mol": [
+        -1139741.3946217147,
+        -2687723.704485465
+      ],
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3822308.417291147,
+      "insertion_J_mol_MgSiO3": 2578.340908016311,
+      "forsterite_slope_J_mol": -6.05359673500061e-09
+    },
+    {
+      "T_K": 1950.0,
+      "P_Pa": 100000.0,
+      "forsterite_mol": 0.5305125782796267,
+      "liquid_n_mol": [
+        0.25,
+        0.21948742172037328
+      ],
+      "liquid_mu_J_mol": [
+        -1127864.3605360582,
+        -2667623.150473665
+      ],
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3793572.33104166,
+      "insertion_J_mol_MgSiO3": 957.5899840313941,
+      "forsterite_slope_J_mol": 6.05359673500061e-09
+    },
+    {
+      "T_K": 1925.0,
+      "P_Pa": 100000.0,
+      "forsterite_mol": 0.5654996876331779,
+      "liquid_n_mol": [
+        0.25,
+        0.18450031236682207
+      ],
+      "liquid_mu_J_mol": [
+        -1122366.3807058134,
+        -2657665.463481885
+      ],
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3779337.2790941875,
+      "insertion_J_mol_MgSiO3": 347.2825467553921,
+      "forsterite_slope_J_mol": 8.847564458847046e-09
+    },
+    {
+      "T_K": 1915.0,
+      "P_Pa": 100000.0,
+      "forsterite_mol": 0.57733976760926,
+      "liquid_n_mol": [
+        0.25,
+        0.17266023239074002
+      ],
+      "liquid_mu_J_mol": [
+        -1120230.5124782398,
+        -2653699.895151737
+      ],
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3773668.4079259518,
+      "insertion_J_mol_MgSiO3": 130.99985201261006,
+      "forsterite_slope_J_mol": -1.6298145055770874e-08
+    },
+    {
+      "T_K": 1910.0,
+      "P_Pa": 100000.0,
+      "forsterite_mol": 0.5828722741138108,
+      "liquid_n_mol": [
+        0.25,
+        0.16712772588618918
+      ],
+      "liquid_mu_J_mol": [
+        -1119174.7700869576,
+        -2651720.885331988
+      ],
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3770839.3949678848,
+      "insertion_J_mol_MgSiO3": 28.130225530359894,
+      "forsterite_slope_J_mol": -3.725290298461914e-09
+    },
+    {
+      "T_K": 1905.0,
+      "P_Pa": 100000.0,
+      "forsterite_mol": 0.5881668360713093,
+      "liquid_n_mol": [
+        0.25,
+        0.16183316392869074
+      ],
+      "liquid_mu_J_mol": [
+        -1118126.7580198292,
+        -2649744.399476495
+      ],
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3768014.0083535165,
+      "insertion_J_mol_MgSiO3": -71.42542859609239,
+      "forsterite_slope_J_mol": -4.656612873077393e-10
+    },
+    {
+      "T_K": 1900.0,
+      "P_Pa": 100000.0,
+      "forsterite_mol": 0.5932373026388404,
+      "liquid_n_mol": [
+        0.25,
+        0.15676269736115955
+      ],
+      "liquid_mu_J_mol": [
+        -1117086.1999382295,
+        -2647770.4434199864
+      ],
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3765192.256577639,
+      "insertion_J_mol_MgSiO3": -167.80660971160978,
+      "forsterite_slope_J_mol": -4.6566128730773926e-09
+    },
+    {
+      "T_K": 1850.0,
+      "P_Pa": 100000.0,
+      "forsterite_mol": 0.6340286754715407,
+      "liquid_n_mol": [
+        0.25,
+        0.11597132452845926
+      ],
+      "liquid_mu_J_mol": [
+        -1107039.7966128823,
+        -2628171.325411393
+      ],
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3737176.553035884,
+      "insertion_J_mol_MgSiO3": -982.7155058044009,
+      "forsterite_slope_J_mol": 2.3283064365386963e-09
+    },
+    {
+      "T_K": 1800.0,
+      "P_Pa": 100000.0,
+      "forsterite_mol": 0.6621340867246772,
+      "liquid_n_mol": [
+        0.25,
+        0.08786591327532278
+      ],
+      "liquid_mu_J_mol": [
+        -1097524.4609348106,
+        -2608831.8165584183
+      ],
+      "orthopyroxene_g_J_per_mol_Mg2Si2O6": -3709533.9866631357,
+      "insertion_J_mol_MgSiO3": -1588.854584953282,
+      "forsterite_slope_J_mol": -1.6298145055770874e-08
+    }
+  ],
+  "generator_sha256": "f102e78b8de1348b8398598d2e8eb19246e892407e55e719101077bdf1729f5d"
+}
