@@ -43,6 +43,9 @@ forsterite, enstatite and three SiO2 polymorphs without an external MELTS
 runtime. The native JAX Gibbs model follows crystallization order, phase
 appearance/disappearance and residual liquid composition, with comparison
 plots against independent restricted equilibria using pinned MELTS properties.
+The Fe(II) extension adds a three-component liquid and a forsterite--fayalite
+olivine solution. Its [closed cooling example](examples/magma_olivine.py)
+computes crystal amounts and liquid/crystal Fe/Mg partitioning from the same G.
 The [Japanese explanation](https://github.com/HajimeKawahara/doc_ExoEOS) is
 maintained separately; current English documentation lives in `documents/`.
 

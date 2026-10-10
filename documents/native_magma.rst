@@ -1,5 +1,5 @@
-Native JAX magma: MgO--SiO2
-===========================
+Native JAX magma: MgO--FeO--SiO2
+============================================================
 
 ``exoeos.magma`` evaluates a two-component MELTS liquid, pure crystalline
 forsterite, the pure Mg orthopyroxene endpoint and three SiO2 polymorphs in JAX,
@@ -8,8 +8,11 @@ forsterite cooling and enstatite insertion to equilibrium phase amounts
 after enstatite appears, then to multiphase equilibrium with silica solids.
 No external MELTS runtime is needed for evaluation, derivatives, the cooling
 examples, or ordinary tests. This is the native JAX Gibbs model for silicate
-magma. The largest example allows one liquid, forsterite, Mg orthopyroxene,
+magma. The binary multiphase example allows one liquid, forsterite, Mg orthopyroxene,
 quartz, tridymite and cristobalite; it is not the full MgO--SiO2 phase diagram.
+The Fe(II) extension below adds a ternary liquid and a binary
+forsterite--fayalite olivine solution, with a separate closed liquid + olivine
+equilibrium example for Fe/Mg partitioning.
 
 Gibbs energy and component basis
 --------------------------------
@@ -28,7 +31,7 @@ The MELTS constants are :math:`R_b=8.3143` J/(mol K) and
 :math:`W=3421` J/mol. Using oxide mole fractions in the entropy term would
 define a different model.
 
-The five functions have scalar ``T`` in K and ``P`` in Pa:
+The original binary functions have scalar ``T`` in K and ``P`` in Pa:
 
 .. list-table:: API in ``exoeos.magma``
    :header-rows: 1
@@ -541,6 +544,256 @@ trial energies without an external runtime.
    python tests/reference/generate_silica_reference.py \
        --runtime /path/to/pinned/runtime --python /path/to/worker/python \
        --output tests/reference/silica_melts_v1.json
+
+Fe(II), ternary liquid and olivine partitioning
+------------------------------------------------------------
+
+Olivine is the solid solution :math:`(\mathrm{Mg,Fe})_2\mathrm{SiO_4}`
+between forsterite (Fo, Mg2SiO4) and fayalite (Fa, Fe2SiO4). Thus the new
+crystallization example describes **olivine precipitation**, with a variable
+crystal composition. All iron is Fe(II); there is no Fe(III), metal, redox
+equilibrium, oxygen buffer or oxygen exchange.
+
+The added Gibbs-energy model is the **Q--F--A restriction of the MELTS
+liquid**, with pairwise regular-solution interactions, together with the
+**Fo--Fa restriction of MELTS olivine**, with two cation sites and a symmetric
+excess term. Both include temperature- and pressure-dependent standard
+states. The equations and coefficients are ported from the pinned MAGMA
+revision below; no new parameters are fitted to the partitioning results.
+
+The liquid basis extends to :math:`[Q,F,A]=[\mathrm{SiO_2},\mathrm{Mg_2SiO_4},
+\mathrm{Fe_2SiO_4}]`, exported as ``TERNARY_COMPONENTS``. For oxide amounts
+M=MgO, E=FeO and S=SiO2 in mol,
+
+.. math::
+
+   [b,a,c]=[S-(M+E)/2,\ M/2,\ E/2].
+
+A nonnegative basis requires M,E>=0 and M+E<=2S. The same extensive
+``liquid_gibbs`` now accepts either two or three component amounts.
+``liquid_standard_gibbs(T,P,include_fe=True)`` returns all three standards;
+the default and ``COMPONENTS`` retain their original two-component order.
+``include_fe`` is a static choice: use a closure or
+``jax.jit(..., static_argnames=("include_fe",))``. Shape-(3,) with zero Fe
+recovers the original energy, without a composition floor.
+
+For the liquid, :math:`N_l=n_Q+n_F+n_A` and :math:`x_i=n_i/N_l`.
+Its extensive energy separates into standard, ideal-mixing and excess terms:
+
+.. math::
+
+   G_l=\underbrace{\sum_{i=Q,F,A}n_i g_{i,l}^0(T,P)}_{G_l^{\mathrm{std}}}
+       +\underbrace{R_bT\sum_{i=Q,F,A}n_i\ln x_i}_{G_l^{\mathrm{id}}}
+       +\underbrace{N_l\sum_{i<j}W_{ij}x_ix_j}_{G_l^{\mathrm{E}}},
+
+.. math::
+
+   (W_{QF},W_{QA},W_{FA})=(3421,\ 23660.9,\ -37256.7)\ \mathrm{J/mol}.
+
+Here :math:`R_b=8.3143` J/(mol K), G is in J, the standards are in J/mol,
+and amounts are in mol. The liquid interaction coefficients are independent
+of T and P. Setting :math:`n_A=0` recovers the earlier binary energy;
+the new liquid terms are the A standard and mixing contribution and the
+Q--A and F--A interactions. These are endmember fractions, not oxide fractions.
+
+``olivine_gibbs(T,P,[n_Fo,n_Fa])`` returns extensive G in J. Its binary
+reduction of the published ``olivine.c`` model uses
+:math:`N_{ol}=n_{Fo}+n_{Fa}` and :math:`y_i=n_i/N_{ol}`:
+
+.. math::
+
+   G_{ol}=n_{Fo}g_{Fo}^0+n_{Fa}g_{Fa}^0
+       +2R_bT\sum_{i=Fo,Fa}n_i\ln y_i
+       +N_{ol}W_{ol}y_{Fo}y_{Fa},
+
+.. math::
+
+   W_{ol}=20300+0.015(P/10^5-1)\ \mathrm{J/mol}.
+
+The first two terms are the crystalline standards, followed by the
+two-site ideal mixing and the excess term; P is supplied in Pa.
+There are two cation sites per formula unit. With only Fe/Mg at magmatic
+temperatures their equilibrium Fe occupancies are equal, so the ideal
+entropy has the factor **2**. The remaining interaction includes an excess
+volume of :math:`0.015y_{Fo}y_{Fa}` J/(bar mol). No internal ordering solve
+is needed on this face. These are single-phase properties, not a convex
+envelope or a general low-temperature olivine unmixing calculation.
+Both solid endpoints and absent phases have continuous energy limits;
+composition derivatives require positive amounts in each present phase.
+
+The new Fe standards are constructed explicitly as follows. At
+:math:`T_r=298.15` K and 1 bar, the Fa reference has
+:math:`H_r=-1479360` J/mol and :math:`S_r=150.930` J/(mol K):
+
+.. math::
+
+   \begin{aligned}
+   C_{p,Fa}(T)&=248.93-1923.9/\sqrt{T}-1.3910\times10^8/T^3,\\
+   h_{Fa}(T)&=H_r+\int_{T_r}^{T}C_{p,Fa}(\theta)\,d\theta,\\
+   s_{Fa}(T)&=S_r+\int_{T_r}^{T}\frac{C_{p,Fa}(\theta)}{\theta}\,d\theta.
+   \end{aligned}
+
+The heat capacity is in J/(mol K); h and s denote the 1-bar thermal parts.
+The crystalline Fa and liquid A standards are
+
+.. math::
+
+   \begin{aligned}
+   g_{Fa}^0(T,P)&=h_{Fa}(T)-Ts_{Fa}(T)+\Pi_B(T,P),\\
+   g_{A,l}^0(T,P)&=h_{Fa}(T_m)-Ts_{Fa}(T_m)+(T_m-T)\Delta S_f\\
+       &\quad+C_{p,l}\left[T-T_m-T\ln(T/T_m)\right]+\Pi_K(T,P).
+   \end{aligned}
+
+Here the 1-bar fusion reference is :math:`T_m=1490` K,
+:math:`\Delta S_f=59.9` J/(mol K), and the constant liquid
+:math:`C_{p,l}=240.2` J/(mol K). Define :math:`\Delta T_s=T-298.15`,
+:math:`\Delta T_l=T-1673`, and :math:`\Delta p=P/10^5-1`, using numerical
+T in K and P in Pa. The integrated Berman and Kress pressure terms, in J/mol,
+are respectively
+
+.. math::
+
+   \begin{aligned}
+   \Pi_B&=4.630\left[
+       (1+26.546\times10^{-6}\Delta T_s+79.482\times10^{-10}\Delta T_s^2)
+       \Delta p-\frac{0.730\times10^{-6}}{2}\Delta p^2\right],\\
+   \Pi_K&=(5.420+5.84\times10^{-4}\Delta T_l)\Delta p\\
+       &\quad+\frac{-2.79\times10^{-5}-2.3\times10^{-8}\Delta T_l}{2}\Delta p^2
+       +\frac{14.6\times10^{-10}}{6}\Delta p^3.
+   \end{aligned}
+
+The pressure increment is evaluated in bar; the volume coefficients use
+J/(bar mol). Thus both terms vanish at 1 bar, and differentiation with
+respect to API pressure in Pa returns SI volume.
+``fayalite_gibbs`` uses the **olivine endmember's Berman EOS**; the separate
+pure-fayalite phase in MELTS uses a Vinet EOS. The Q and F liquid standards
+and the crystalline Fo standard retain the construction described above.
+
+Retaining the crystals, :math:`u` mol Fo and :math:`v` mol Fa in one olivine
+leave liquid :math:`[b,a-u,c-v]`. Minimize
+
+.. math::
+
+   G_{total}(u,v)=G_l(T,P,[b,a-u,c-v])+G_{ol}(T,P,[u,v]),
+   \quad 0\le u\le a,\quad 0\le v\le c.
+
+The same model gives :math:`\mu_i=(\partial G/\partial n_i)_{T,P,n_{j\ne i}}`.
+Writing :math:`g_l^{\mathrm{E}}=\sum_{i<j}W_{ij}x_ix_j`, its explicit potentials are
+
+.. math::
+
+   \begin{aligned}
+   \mu_{i,l}&=g_{i,l}^0+R_bT\ln x_i+\sum_{j\ne i}W_{ij}x_j-g_l^{\mathrm{E}},\\
+   \mu_{Fo,ol}&=g_{Fo}^0+2R_bT\ln y_{Fo}+W_{ol}y_{Fa}^2,\\
+   \mu_{Fa,ol}&=g_{Fa}^0+2R_bT\ln y_{Fa}+W_{ol}y_{Fo}^2.
+   \end{aligned}
+
+Here :math:`W_{ji}=W_{ij}`. The constrained total G conserves Mg, Fe, Si, O
+and mass. Interior coexistence requires
+:math:`\mu_{Fo,ol}=\mu_{F,l}` and :math:`\mu_{Fa,ol}=\mu_{A,l}`.
+The resulting exchange coefficient is an **output**, not a prescribed 0.3:
+
+.. math::
+
+   K_D^{Fe/Mg}=\frac{(Fe/Mg)_{ol}}{(Fe/Mg)_l}
+       =\frac{v/u}{(c-v)/(a-u)}.
+
+``examples/magma_olivine.py::equilibrium`` uses two nested bisections of
+derivatives of this same JAX G. At fixed total crystal amount it equilibrates
+Fe/Mg exchange, then equilibrates the crystal amount. Before creating an
+absent solid it minimizes its insertion energy over Fo/Fa composition.
+The example requires positive Q, F and A inventories, T>=1600 K and
+1<=P/bar<=5000. The ternary liquid is strictly convex above 1539.756 K
+(a composition-independent curvature bound for these W values); olivine
+is also strictly convex in the example's domain. These restrictions support
+the unique minimum and are not empirical calibration limits. Positive Q
+ensures some liquid remains. Pure endpoints are supported by the property
+API, while the example deliberately excludes zero-inventory faces and
+all-solid/degenerate cases. The eager selector is not a differentiable
+equilibrium API.
+
+At 1 bar with M=1.2, E=0.3 and S=1 mol, olivine first appears at
+**1987.882448 K**. Results below describe a closed system in which existing
+crystals continue to equilibrate, not fractional crystallization:
+
+.. list-table:: Fe/Mg partitioning from total G
+   :header-rows: 1
+
+   * - T (K)
+     - Olivine (mol)
+     - Liquid Fe/(Mg+Fe)
+     - Olivine Fe/(Mg+Fe)
+     - Kd
+   * - 2000
+     - 0
+     - 0.200000
+     - undefined
+     - undefined
+   * - 1900
+     - 0.292098
+     - 0.275259
+     - 0.082021
+     - 0.235253
+   * - 1800
+     - 0.496054
+     - 0.347613
+     - 0.124432
+     - 0.266718
+   * - 1600
+     - 0.705063
+     - 0.344209
+     - 0.190809
+     - 0.449252
+
+.. figure:: _static/magma/olivine_partitioning.png
+   :alt: JAX cooling curves and independent MELTS points agree for phase amounts, Fe fractions and the changing Fe/Mg exchange coefficient.
+   :width: 90%
+
+   Cooling proceeds to the right; the dashed line is olivine onset. Olivine
+   is Mg-rich relative to the liquid. Fe enrichment of the residual liquid
+   is not monotonic because retained crystals reequilibrate as Kd changes.
+   The liquid's Fe/(Mg+Fe) is x_A/(x_F+x_A), not x_A. Amounts in the upper
+   panel are mol Si and sum to one. Absent-olivine composition and Kd are
+   returned as ``None``; incipient composition is a separate diagnostic.
+
+.. figure:: _static/magma/olivine_melts_comparison.png
+   :alt: Signed JAX minus MELTS energy differences are about 1e-5 J for the ternary liquid and 1e-9 J for olivine at three pressures.
+   :width: 85%
+
+   Supplied liquid [Q,F,A]=[0.25,0.6,0.15] mol and olivine [Fo,Fa]=[0.8,0.2]
+   mol, at 1, 500 and 5000 bar. Differences are shown explicitly rather
+   than hidden by the roughly megajoule absolute energy scale.
+
+``olivine_melts_v1.json`` records **15 distinct liquid states, 60 olivine
+states including both endpoints, and 30 independent restricted equilibria**
+for two bulk Fe/Mg ratios. The generator uses actual hash-pinned alphaMELTS
+2.3.2 / rhyolite-MELTS 1.0.2 properties, verifies oxide/component inventories,
+disables oxygen buffering, and solves native chemical-potential roots using
+SciPy. It imports neither JAX thermodynamics nor the example solver.
+Maximum observed differences are 1.25e-5 J for liquid/total G, 1.4e-9 J for
+olivine G, 1.1e-11 mol for phase amounts and 2.7e-12 for Kd. These finite
+checks concern the **same liquid + olivine phase set**, not MELTS full phase
+selection or validation of an experimental ternary phase diagram.
+Pyroxenes (including Fe-bearing ones), silica solids and all other candidates
+are omitted from this new equilibrium example; they can destabilize its path.
+The earlier Fe-free examples keep their original phase sets.
+
+.. code-block:: bash
+
+   JAX_ENABLE_X64=1 MPLBACKEND=Agg python examples/magma_olivine.py \
+       --output documents/_static/magma
+   # Optional independent reference regeneration; SciPy + pinned runtime:
+   python tests/reference/generate_olivine_reference.py \
+       --runtime /path/to/pinned/runtime --python /path/to/worker/python \
+       --output tests/reference/olivine_melts_v1.json
+
+Normal tests require no MELTS or SciPy. They check independent reference
+energies/potentials/partitioning, conservation, coexistence, an independent
+feasible composition grid, onset, scaling, zero-phase and pure-endmember
+energies, two-site entropy, pressure units, JIT/vmap and joint derivatives.
+The additional source is
+`olivine.c at the same MAGMA revision <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/olivine.c>`_
+(SHA256 ``872fa74c5c7601dccdb41560c70a996af558917ff1e82589e277dd459a93a080``).
 
 Provenance and independent checks
 ---------------------------------
