@@ -2,13 +2,14 @@ Native JAX magma: MgO--SiO2
 ===========================
 
 ``exoeos.magma`` evaluates a two-component MELTS liquid, pure crystalline
-forsterite and the pure Mg orthopyroxene endpoint entirely in JAX,
+forsterite, the pure Mg orthopyroxene endpoint and three SiO2 polymorphs in JAX,
 including their standard Gibbs energies. The examples progress from
 forsterite cooling and enstatite insertion to equilibrium phase amounts
-after enstatite appears.
+after enstatite appears, then to multiphase equilibrium with silica solids.
 No external MELTS runtime is needed for evaluation, derivatives, the cooling
-examples, or ordinary tests. Equilibrium is restricted to one liquid,
-forsterite and Mg orthopyroxene; this is not the full MgO--SiO2 phase diagram.
+examples, or ordinary tests. This is the native JAX Gibbs model for silicate
+magma. The largest example allows one liquid, forsterite, Mg orthopyroxene,
+quartz, tridymite and cristobalite; it is not the full MgO--SiO2 phase diagram.
 
 Gibbs energy and component basis
 --------------------------------
@@ -27,7 +28,7 @@ The MELTS constants are :math:`R_b=8.3143` J/(mol K) and
 :math:`W=3421` J/mol. Using oxide mole fractions in the entropy term would
 define a different model.
 
-The four functions have scalar ``T`` in K and ``P`` in Pa:
+The five functions have scalar ``T`` in K and ``P`` in Pa:
 
 .. list-table:: API in ``exoeos.magma``
    :header-rows: 1
@@ -43,6 +44,9 @@ The four functions have scalar ``T`` in K and ``P`` in Pa:
      - Crystalline Mg2SiO4 standard G in J/mol.
    * - ``enstatite_gibbs(T, P)``
      - Pure Mg orthopyroxene G in J per mol **MgSiO3**.
+   * - ``silica_gibbs(T, P)``
+     - J/mol SiO2, shape (3,), ordered **quartz, tridymite, cristobalite**,
+       also exported as ``SILICA_POLYMORPHS``.
 
 Use positive finite T/P and finite nonnegative amounts; validate material
 inputs before entering JAX transformations. Static shapes are checked by
@@ -392,6 +396,151 @@ invariant segments, scaling, and energies against a feasible 2-D grid.
    python tests/reference/generate_magma_equilibrium_reference.py \
        --runtime /path/to/pinned/runtime --python /path/to/worker/python \
        --output tests/reference/magma_equilibrium_melts_v1.json
+
+Silica polymorphs and multiple solids
+-------------------------------------
+
+``silica_gibbs`` extends the native JAX Gibbs model with quartz, tridymite
+and cristobalite. Each includes its MELTS alpha/beta thermal branch and
+Berman pressure integral. At pressure in bar, the switch temperatures are
+848+0.0237(P-1), 383, and 535+0.0480(P-1) K, respectively; equality selects
+the alpha branch. The low-temperature lambda heat capacity is integrated
+from the source's shifted lower limit (373 K for quartz, 298.15 K for the
+other two, before the pressure shift). These tabulated branch joins are
+not smoothed or assumed to be exactly continuous. JAX derivatives describe
+each branch, not a derivative through a structural switch or phase selection.
+
+The pinned **rhyolite-MELTS 1.0.2** runtime has constant offsets from the
+unadjusted public MAGMA silica formulas:
+
+.. list-table:: Included standard-state offsets
+   :header-rows: 1
+
+   * - Polymorph
+     - Offset (J/mol SiO2)
+     - Evidence
+   * - Quartz
+     - -1291
+     - Public ``RHYOLITE_ADJUSTMENTS`` in ``gibbs.c`` and runtime checks.
+   * - Tridymite
+     - -2625
+     - Transcribed constant difference from the hash-pinned runtime.
+   * - Cristobalite
+     - -450
+     - Transcribed constant difference from the hash-pinned runtime.
+
+The last two offsets are **not present in the pinned public source**.
+They are explicit runtime transcriptions, checked over 48 T/P states
+including both sides of the alpha/beta switches, not adjustments fitted to
+the cooling curves. Their source-build identity is unestablished.
+Without these offsets the model is a different standard-state convention
+and gives different phase selection. The runtime convention is fixed here;
+there is no new calibration or empirical phase-diagram claim.
+
+.. figure:: _static/magma/silica_melts_comparison.png
+   :alt: Three SiO2 polymorph energies relative to quartz at 1, 500 and 5000 bar, with independent MELTS points and numerical residuals.
+   :width: 100%
+
+   Lines are native JAX, circles are actual pinned MELTS properties, and
+   the lower panels show differences after including the declared offsets.
+   The maximum absolute difference is 2.4e-10 J/mol. These pressure checks
+   validate formulas, not experimental high-pressure applicability.
+
+``examples/magma_multiphase.py`` minimizes the combined G with all five
+solid candidates. Its amount order is **[liquid Q, liquid F, Fo, En,
+quartz, tridymite, cristobalite]**, in mol of one-Si formula units. Write
+:math:`s=\sum_j s_j` for the total silica-solid amount. Conservation gives
+
+.. math::
+
+   n_Q=b-\eta/2-s,\qquad n_F=a-\xi-\eta/2,\qquad
+   G=G_l+\xi g_{\rm Fo}+\eta g_{\rm En}+\sum_j s_j g_j.
+
+All amounts are nonnegative. Each liquid/single-solid edge is convex for
+T>W/(2R_b), so bisection finds its minimum. Comparing those edges with
+every feasible all-solid pair suffices: two conserved components and a
+strictly convex liquid ensure that a multiphase minimum has an endpoint
+in this list. Same-composition silica ties are retained as distinct
+endpoints. There is no optimizer dependency or general solver in the package.
+
+``equilibrium`` returns ``amounts_mol``, ``g_J``, ``phases``, ``liquid_x_F``,
+``liquid_MgO_SiO2``, ``degenerate`` and ``equilibrium_endpoints_mol``.
+The residual liquid oxide ratio is **2*x_F**, not an oxide mole fraction.
+Both liquid-composition fields are ``None`` after the liquid disappears.
+An equal-energy endpoint set describes its convex hull of permitted amounts;
+the least-liquid endpoint is only a reporting convention. Ties use
+1e-7 J per initial mol Si. ``phases`` lists amounts above 1e-10 of initial Si;
+this reporting threshold does not enter the minimization.
+
+``cooling_path`` independently equilibrates each decreasing temperature
+with the full bulk inventory, retaining crystals. It returns states and
+``events`` with ``appeared``, ``disappeared`` and ``T_bracket_K``. These are
+sampled brackets; they do not assert an exact event temperature. This is
+closed equilibrium cooling, not fractional crystallization or kinetics.
+
+.. figure:: _static/magma/multiphase_cooling.png
+   :alt: Four closed cooling paths show solid appearance, consumption of forsterite, liquid disappearance and residual liquid composition, with MELTS comparison points.
+   :width: 100%
+
+   Each inventory contains 1 mol SiO2 initially. Lines are JAX; circles are
+   independently solved equilibria using MELTS properties with the same
+   candidates. Shaded bands bracket sampled phase changes. No residual-liquid
+   curve is drawn after solidification.
+
+At 1 bar the predicted sequences on cooling from 2600 to 1600 K are:
+
+.. list-table:: Crystallization in the declared model
+   :header-rows: 1
+
+   * - MgO / SiO2
+     - Sequence (L: liquid, Trd: tridymite)
+     - Solids at 1800 K (mol)
+   * - 0.1
+     - L -> L+Trd -> En+Trd
+     - En 0.1, Trd 0.9
+   * - 0.5
+     - L -> L+En -> En+Trd
+     - En 0.5, Trd 0.5
+   * - 0.9
+     - L -> L+Fo -> L+En -> En+Trd
+     - En 0.9, Trd 0.1
+   * - 1.5
+     - L -> L+Fo -> Fo+En
+     - Fo 0.5, En 0.5
+
+The En+Trd+L invariant is **1818.067260 K**, with liquid
+**x_F=0.208047861** (MgO/SiO2=0.416095723). Below it the silica-rich
+inventories have no liquid. The Fo+En+L invariant remains 1908.603653 K.
+The fixed runtime selects tridymite over cristobalite on these 1 bar paths;
+cristobalite is evaluated and rejected by energy, not suppressed.
+Its quartz/tridymite crossing is 582.694782 K. This unusually low model
+crossing must not be read as an experimental silica transition. The lower
+temperature standards are formula checks; extrapolated liquid behavior at
+such temperatures is not a calibrated cooling prediction. Coesite,
+stishovite, other MgSiO3 polymorphs and solid solutions remain omitted.
+
+The saved ``silica_melts_v1.json`` contains 48 silica standard states,
+four native finite-difference derivative checks, 21 independent restricted
+equilibria and two transition roots. Its generator uses fresh MELTS workers,
+SciPy roots and global supporting-line checks; it imports neither JAX
+thermodynamics nor the example selector. Maximum differences in this run
+are 9.9e-12 mol for amounts and 1.5e-5 J for total G. Comparisons concern
+the same candidates using MELTS properties, not MELTS full phase selection.
+Ordinary tests use saved values and verify conservation, phase stability,
+invariant endpoint sets, scaling, derivatives and feasible simultaneous-solid
+trial energies without an external runtime.
+
+.. code-block:: bash
+
+   JAX_ENABLE_X64=1 MPLBACKEND=Agg python examples/magma_multiphase.py \
+       --output documents/_static/magma
+   # Customize inventory, pressure (Pa) and sampling:
+   JAX_ENABLE_X64=1 MPLBACKEND=Agg python examples/magma_multiphase.py \
+       --mgo 0.9 --pressure 100000 --temperature-min 1700 --step 1
+   # Reference regeneration only:
+   python tests/reference/generate_silica_reference.py \
+       --runtime /path/to/pinned/runtime --python /path/to/worker/python \
+       --output tests/reference/silica_melts_v1.json
 
 Provenance and independent checks
 ---------------------------------
