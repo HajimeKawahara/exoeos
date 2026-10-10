@@ -1,13 +1,14 @@
 Native JAX magma: MgO--SiO2
 ===========================
 
-``exoeos.magma`` evaluates a two-component MELTS liquid and pure crystalline
-forsterite entirely in JAX, including their standard Gibbs energies.
-It also supplies the pure Mg orthopyroxene endpoint for an enstatite
-insertion test on the restricted cooling path.
+``exoeos.magma`` evaluates a two-component MELTS liquid, pure crystalline
+forsterite and the pure Mg orthopyroxene endpoint entirely in JAX,
+including their standard Gibbs energies. The examples progress from
+forsterite cooling and enstatite insertion to equilibrium phase amounts
+after enstatite appears.
 No external MELTS runtime is needed for evaluation, derivatives, the cooling
-example, or ordinary tests. This first model restricts equilibrium to one
-liquid plus forsterite; it does not reproduce the full MgO--SiO2 phase diagram.
+examples, or ordinary tests. Equilibrium is restricted to one liquid,
+forsterite and Mg orthopyroxene; this is not the full MgO--SiO2 phase diagram.
 
 Gibbs energy and component basis
 --------------------------------
@@ -230,7 +231,8 @@ derivative crosses zero at **1908.603653 K**, with 0.584374215 mol
 forsterite. At 2000 K it is +2578.340908 J/mol; at 1900 K it is
 -167.806610 J/mol. The continuation below the crossing remains a restricted
 liquid + forsterite calculation and is unstable when orthopyroxene is allowed.
-It does not give the phase amounts after enstatite appears.
+The following equilibrium example also allows enstatite and calculates
+the phase amounts beyond this crossing.
 
 .. figure:: _static/magma/enstatite_saturation.png
    :alt: Enstatite insertion energy crosses zero near 1909 K; JAX and independently solved MELTS restricted paths agree.
@@ -269,6 +271,127 @@ Regenerate either independent fixture:
        --output tests/reference/enstatite_source_v1.json
    python tests/reference/generate_enstatite_reference.py --runtime /path/to/pinned/runtime \
        --python /path/to/worker/python --output tests/reference/enstatite_melts_v1.json
+
+Equilibrium after enstatite appears
+-----------------------------------
+
+``examples/magma_equilibrium.py`` minimizes the same G over liquid,
+pure forsterite (Fo) and pure Mg orthopyroxene (En). With retained crystals,
+:math:`\xi` mol Fo and :math:`\eta` mol MgSiO3 leave
+
+.. math::
+
+   n_Q=b-\eta/2,\qquad n_F=a-\xi-\eta/2,\qquad
+   G_{\rm total}=G_l(T,P,[n_Q,n_F])+\xi g_{\rm Fo}+\eta g_{\rm En}.
+
+All four amounts must be nonnegative. These constraints conserve Mg, Si,
+O and mass, including when previously crystallized Fo is consumed.
+The two crystallization derivatives are :math:`g_{\rm Fo}-\mu_F`
+and :math:`g_{\rm En}-(\mu_Q+\mu_F)/2`.
+
+For T>W/(2R_b), the liquid is strictly convex in composition. The small
+example compares the liquid + Fo edge, the liquid + En edge, and the
+all-solid state :math:`(\xi,\eta)=(a-b,2b)` when a>=b. Each liquid/solid
+edge is a one-dimensional minimization; the pure-composition cases compare
+energies directly. A three-phase stationary point has a flat direction
+that reaches these edges, so an interior two-dimensional optimizer is
+unnecessary. The all-liquid state is included explicitly. Absent liquid
+contributes exactly zero G and is never assigned chemical potentials.
+This eager, scalar example adds no solver dependency to ExoEOS; general
+phase selection remains an ExoGibbs responsibility.
+
+At fixed pressure a binary three-phase equilibrium is invariant, consistent
+with the `phase rule <https://goldbook.iupac.org/terms/view/P04533>`_.
+At **1908.603653 K**, the common liquid has :math:`x_F=0.398497376`.
+Its Q:F ratio is preserved while liquid and Fo react into En. For the
+original 1.5 mol MgO + 1 mol SiO2 inventory, the equilibrium endpoints are
+
+.. math::
+
+   [n_Q,n_F,\xi,\eta]
+   =[0.25,0.165625785,0.584374215,0]
+   \quad\hbox{and}\quad [0,0,0.5,0.5].
+
+Every convex combination has the same G at the invariant. Temperature,
+pressure and bulk inventory alone do not fix the amount along this segment;
+an additional enthalpy or heat-removal condition would be needed. A prescribed
+temperature path therefore has a jump, not an interval of three-phase
+coexistence. Below the invariant the original inventory is all solid in
+this phase set: **0.5 mol Fo + 0.5 mol MgSiO3**. Forsterite decreases during
+the reaction instead of following the unstable Fo-only continuation.
+
+``equilibrium(T, P=1e5, mgo_mol=1.5, sio2_mol=1.)`` returns
+``amounts_mol`` in **[liquid Q, liquid F, solid Fo, solid En]** order,
+``g_J``, ``degenerate``, and ``equilibrium_endpoints_mol``. It requires x64
+and the same T/P/inventory domain as the Fo-only example. Distinct endpoints
+whose energies differ by at most 1e-7 J per initial mol Si flag degeneracy;
+``amounts_mol`` then selects the endpoint with least liquid as a convention,
+and the full conserved segment is retained. The equilibrium selector itself
+is not a JAX-transformable or differentiable phase solver.
+
+.. list-table:: Equilibrated amounts at 1900 K and 1 bar
+   :header-rows: 1
+
+   * - Initial MgO / SiO2 (mol/mol)
+     - Liquid [Q, F] (mol)
+     - Fo (mol)
+     - En (mol MgSiO3)
+   * - 1.5 / 1
+     - [0, 0]
+     - 0.5
+     - 0.5
+   * - 0.9 / 1
+     - [0.232967246, 0.132967246]
+     - 0
+     - 0.634065507
+
+.. figure:: _static/magma/enstatite_equilibrium.png
+   :alt: Closed cooling with Fo and En compared with MELTS property roots; liquid disappears for MgO/SiO2=1.5 but persists with En for 0.9.
+   :width: 100%
+
+   JAX lines and independent restricted equilibria using MELTS properties
+   (circles). Dotted vertical segments represent the nonunique invariant
+   amounts. Each plotted amount is mol Si in that phase: liquid Q+F, mol Fo,
+   or mol MgSiO3. The 0.9/1 inventory consumes all Fo at the invariant and
+   continues as liquid + En. Omitted silica solids can affect that path.
+
+An absent liquid also needs a stability test. With both solids present,
+their supporting chemical potentials are
+:math:`\lambda_Q=2g_{\rm En}-g_{\rm Fo}`, :math:`\lambda_F=g_{\rm Fo}`.
+Minimize :math:`g_l(x)-[(1-x)\lambda_Q+x\lambda_F]` over liquid composition
+:math:`x=x_F`. A positive minimum means liquid formation raises G.
+This line extends below x=1/2 as a chemical-potential reference; a physical
+Fo+En mixture itself only spans 1/2<=x<=1.
+
+.. figure:: _static/magma/enstatite_liquid_stability.png
+   :alt: The minimum liquid energy relative to the Fo-En supporting line changes from negative to zero to positive on cooling.
+   :width: 85%
+
+   The liquid minimum is negative at 1925 K, zero at the invariant and
+   positive at 1900 K. Circles are minima found independently from actual
+   MELTS chemical potentials. This verifies liquid disappearance for the
+   Fo+En inventory without differentiating an absent phase.
+
+``tests/reference/magma_equilibrium_melts_v1.json`` stores 13 equilibria
+for the two inventories and a separately solved invariant. Its generator
+uses pinned MELTS liquid G/mu and pure olivine/orthopyroxene properties,
+supporting-line stability, and SciPy roots. It imports neither the JAX
+thermodynamic model nor this example's equilibrium selector. The comparison
+is to the **same restricted phase set using MELTS properties**, not the
+full MELTS phase-assemblage solver or an experimental phase diagram.
+The maximum amount difference is 9.9e-12 mol, total-G difference 1.5e-5 J,
+and invariant-temperature difference 3.1e-11 K in this run. Ordinary tests
+read the saved fixture and check conservation, coexistence, disappearance,
+invariant segments, scaling, and energies against a feasible 2-D grid.
+
+.. code-block:: bash
+
+   JAX_ENABLE_X64=1 MPLBACKEND=Agg python examples/magma_equilibrium.py \
+       --output documents/_static/magma
+   # Reference regeneration only; requires the pinned runtime and SciPy:
+   python tests/reference/generate_magma_equilibrium_reference.py \
+       --runtime /path/to/pinned/runtime --python /path/to/worker/python \
+       --output tests/reference/magma_equilibrium_melts_v1.json
 
 Provenance and independent checks
 ---------------------------------
