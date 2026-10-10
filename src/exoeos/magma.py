@@ -1,4 +1,4 @@
-"""Native JAX MELTS MgO--SiO2 liquid and pure crystalline forsterite.
+"""Native JAX MELTS MgO--SiO2 liquid, forsterite and Mg orthopyroxene.
 
 The fixed liquid basis is (SiO2, Mg2SiO4), not oxide mole fractions.
 Temperatures are K, pressures Pa, amounts mol, and Gibbs energies J.
@@ -57,6 +57,35 @@ def forsterite_gibbs(T, P):
         - 0.791e-6 * dp**2 / 2.0 + 1.351e-12 * dp**3 / 3.0
     )
     return h - T * s + pressure_g
+
+
+def enstatite_gibbs(T, P):
+    """Return pure Mg orthopyroxene G in J per mol of MgSiO3.
+
+    Scalar ``T`` is K and ``P`` is Pa, with the same input/x64 contract
+    as ``forsterite_gibbs``. This is the MELTS orthopyroxene endpoint,
+    not a minimum over enstatite polymorphs or a pyroxene solid solution.
+    The native Mg2Si2O6 standard is monoclinic. Add the orthopyroxene
+    endpoint minus its monoclinic pure-reference mixing energy before
+    dividing by two. Coefficients follow sol_struct_data.h and
+    orthopyroxene.c at the module's pinned MAGMA revision.
+    """
+    T, P = _tp(T, P)
+    dt, dp = T - _TR, P / 1e5 - 1.0
+    k0, k1, k2, k3 = 333.16, -2401.2, -4.5412e6, 5.5830e8
+    h = (-3086083.0 + k0 * dt + 2.0 * k1 * (jnp.sqrt(T) - jnp.sqrt(_TR))
+         - k2 * (1.0 / T - 1.0 / _TR) - k3 / 2.0 * (T**-2 - _TR**-2))
+    s = (135.164 + k0 * jnp.log(T / _TR)
+         - 2.0 * k1 * (T**-0.5 - _TR**-0.5)
+         - k2 / 2.0 * (T**-2 - _TR**-2) - k3 / 3.0 * (T**-3 - _TR**-3))
+    pressure_g = 6.3279 * (
+        (1.0 + 24.656e-6 * dt + 74.670e-10 * dt**2) * dp
+        - 0.749e-6 * dp**2 / 2.0 + 0.447e-12 * dp**3 / 3.0
+    )
+    # Per mol Mg2Si2O6: dH=-5020.8 J, dS=-2.3237936 J/K,
+    # dV=-0.0619232 J/bar. No ordering freedom remains at the pure Mg end.
+    correction = -5020.8 + 2.3237936 * T - 0.0619232 * dp
+    return (h - T * s + pressure_g + correction) / 2.0
 
 
 def _silica_h_s(T):

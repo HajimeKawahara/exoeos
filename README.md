@@ -38,8 +38,9 @@ code and explicit source conditions.
 The [Helmholtz derivative guide](documents/thermodynamic_derivatives.rst)
 covers heat capacities, sound speed and atmospheric/RCE use.
 The [native JAX magma example](documents/native_magma.rst) evaluates
-MgO--SiO2 liquid and forsterite standards, derivatives, and restricted
-equilibrium cooling without an external MELTS runtime.
+MgO--SiO2 liquid and forsterite standards, derivatives, restricted cooling,
+and enstatite insertion without an external MELTS runtime. It includes
+comparison plots against the pinned MELTS backend.
 The [Japanese explanation](https://github.com/HajimeKawahara/doc_ExoEOS) is
 maintained separately; current English documentation lives in `documents/`.
 
