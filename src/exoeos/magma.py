@@ -1,4 +1,4 @@
-"""Native JAX MELTS MgO--SiO2 liquid, forsterite and Mg orthopyroxene.
+"""Native JAX MELTS MgO--SiO2 liquid and pure silicate solids.
 
 The fixed liquid basis is (SiO2, Mg2SiO4), not oxide mole fractions.
 Temperatures are K, pressures Pa, amounts mol, and Gibbs energies J.
@@ -7,6 +7,7 @@ Enable JAX x64 for thermodynamic derivatives and phase comparisons.
 Equations and coefficients: MAGMA revision
 705a0fb315e5054d18275a580562f6121c8e458c, sources/gibbs.c,
 includes/{liq_struct_data,sol_struct_data,param_struct_data_v34}.h.
+Silica additionally includes explicitly documented pinned-runtime offsets.
 This is the MELTS (not pMELTS) polynomial EOS and liquid mixing model.
 It does not establish stability against omitted phases or a calibrated
 MgO--SiO2 phase diagram. See documents/native_magma.rst for provenance.
@@ -18,6 +19,7 @@ from jax.scipy.special import xlogy
 
 
 COMPONENTS = ("SiO2", "Mg2SiO4")
+SILICA_POLYMORPHS = ("quartz", "tridymite", "cristobalite")
 R = 8.3143  # J/(mol K); retain the MELTS entropy convention.
 W = 3421.0  # J/mol; SiO2--Mg2SiO4 liquid interaction.
 _TR = 298.15
@@ -86,6 +88,59 @@ def enstatite_gibbs(T, P):
     # dV=-0.0619232 J/bar. No ordering freedom remains at the pure Mg end.
     correction = -5020.8 + 2.3237936 * T - 0.0619232 * dp
     return (h - T * s + pressure_g + correction) / 2.0
+
+
+def silica_gibbs(T, P):
+    """Return [quartz, tridymite, cristobalite] G in J/mol SiO2.
+
+    Scalar K/Pa and x64 contracts match the other standards. Each phase
+    includes the MELTS alpha/beta switch (alpha at equality), its lambda
+    heat-capacity integral and Berman EOS. Quartz and cristobalite switch
+    temperatures depend on pressure. Derivatives apply within each branch;
+    the tabulated branches are not smoothed at their transitions. Constant
+    offsets [-1291, -2625, -450] J/mol match the pinned rhyolite-MELTS 1.0.2
+    runtime. Only the quartz offset is present in the public source; the
+    other two are runtime transcriptions, independently checked in the
+    saved reference. See documents/native_magma.rst for provenance.
+    These three low-pressure polymorphs omit coesite and stishovite.
+    """
+    T, P = _tp(T, P)
+    dt, dp = T - _TR, P / 1e5 - 1.0
+    k0, k1, k2, k3 = jnp.array([
+        [80.01, 75.37, 83.51], [-240.3, 0., -374.7],
+        [-35.467e5, -59.581e5, -24.554e5], [49.157e7, 95.825e7, 28.007e7],
+    ])
+    shift = -jnp.array([.0237, 0., .0480]) * dp
+    beta = T > jnp.array([848., 383., 535.]) - shift
+    h = jnp.where(beta, jnp.array([-908627., -907045., -906377.]),
+                  jnp.array([-910700., -907750., -907753.]))
+    s = jnp.where(beta, jnp.array([44.207, 45.524, 46.029]),
+                  jnp.array([41.460, 43.770, 43.394]))
+    h = (h + k0 * dt + 2*k1*(jnp.sqrt(T) - jnp.sqrt(_TR))
+         - k2*(1/T - 1/_TR) - k3/2*(T**-2 - _TR**-2))
+    s = (s + k0*jnp.log(T/_TR) - 2*k1*(T**-.5 - _TR**-.5)
+         - k2/2*(T**-2 - _TR**-2) - k3/3*(T**-3 - _TR**-3))
+    # Expand Cp_lambda = (T+shift) * (l1+l2*(T+shift))**2.
+    l1 = jnp.array([-.09187, .42670, -.14216])
+    l2 = jnp.array([24.607e-5, -144.575e-5, 44.142e-5])
+    x1 = shift*(l1 + l2*shift)**2
+    x2 = l1**2 + 4*l1*l2*shift + 3*l2**2*shift**2
+    x3, x4 = 2*l1*l2 + 3*l2**2*shift, l2**2
+    lower = jnp.array([373., _TR, _TR]) - shift
+    dh = (x1*(T-lower) + x2/2*(T**2-lower**2)
+          + x3/3*(T**3-lower**3) + x4/4*(T**4-lower**4))
+    ds = (x1*jnp.log(T/lower) + x2*(T-lower)
+          + x3/2*(T**2-lower**2) + x4/3*(T**3-lower**3))
+    v, v1, v2, v3 = jnp.where(beta[None, :], jnp.array([
+        [2.370, 2.737, 2.730], [-1.238e-6, -.740e-6, -1.100e-6],
+        [7.087e-13, 3.735e-12, 5.535e-12], [0., 4.829e-6, 3.189e-6],
+    ]), jnp.array([
+        [2.269, 2.675, 2.587], [-2.434e-6, -2.508e-6, -2.515e-6],
+        [10.137e-12, 0., 0.], [23.895e-6, 19.339e-6, 20.824e-6],
+    ]))
+    pressure_g = v*((1 + v3*dt)*dp + v1*dp**2/2 + v2*dp**3/3)
+    return (h - T*s + jnp.where(beta, 0., dh - T*ds) + pressure_g
+            - jnp.array([1291., 2625., 450.]))
 
 
 def _silica_h_s(T):
