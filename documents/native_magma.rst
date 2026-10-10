@@ -1,4 +1,4 @@
-Native JAX magma: MgO--FeO--SiO2
+Native JAX magma: dry Ca--Mg--Fe--Al silicates
 ============================================================
 
 ``exoeos.magma`` evaluates a two-component MELTS liquid, pure crystalline
@@ -13,6 +13,243 @@ quartz, tridymite and cristobalite; it is not the full MgO--SiO2 phase diagram.
 The Fe(II) extension below adds a ternary liquid and a binary
 forsterite--fayalite olivine solution, with a separate closed liquid + olivine
 equilibrium example for Fe/Mg partitioning.
+The Ca/Al extension below adds CaSiO3 and Al2O3 liquid
+coordinates, Di--Hd clinopyroxene and pure anorthite. Its dry CMFAS example
+admits all the implemented mineral families together, while retaining
+their explicitly limited composition ranges.
+
+.. _native-dry-magma:
+
+CaO and Al2O3: competing dry minerals
+-------------------------------------
+
+The minimal Ca/Al extension covers **CaO--MgO--FeO--Al2O3--SiO2 (CMFAS)**,
+with Fe fixed to Fe(II), no volatiles and no Na/K. It adds the Ca-saturated
+diopside--hedenbergite clinopyroxene face and the pure anorthite feldspar
+endpoint. These can compete with the existing Fo--Fa olivine, pure Mg
+orthopyroxene and three silica polymorphs. It does not include Ca-poor or
+Al-bearing pyroxene solutions, Fe-bearing orthopyroxene, spinel, garnet,
+corundum, or alkali feldspar components. This is an incremental Gibbs
+provider, with a restricted numerical equilibrium example.
+
+Liquid basis and mixing equation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The five coordinates are
+:math:`[Q,F,A,C,L]=[\mathrm{SiO_2},\mathrm{Mg_2SiO_4},\mathrm{Fe_2SiO_4},
+\mathrm{CaSiO_3},\mathrm{Al_2O_3}]`. For oxide **mol** inventories,
+
+.. math::
+
+   n_F=\tfrac12 n_{\mathrm{MgO}},\quad n_A=\tfrac12 n_{\mathrm{FeO}},\quad
+   n_C=n_{\mathrm{CaO}},\quad n_L=n_{\mathrm{Al_2O_3}},\quad
+   n_Q=n_{\mathrm{SiO_2}}-n_F-n_A-n_C.
+
+Nonnegative oxide inventories alone do not ensure nonnegative model
+coordinates: the liquid basis requires :math:`n_Q\ge0`. Al2O3 is alumina;
+an Al2O species is not introduced. The extensive liquid energy is
+
+.. math::
+
+   G_l=\sum_i n_i g_{i,l}^0+R_bT\sum_i n_i\ln x_i
+       +\frac{1}{N_l}\sum_{i<j}W_{ij}n_i n_j,\qquad
+   N_l=\sum_i n_i,\quad x_i=n_i/N_l.
+
+All ten interaction energies (J/mol) are retained from the pinned
+``param_struct_data_v34.h``; they have no T/P dependence:
+
+.. list-table:: Upper-triangular liquid interaction matrix
+   :header-rows: 1
+
+   * - Pair
+     - Q--F
+     - Q--A
+     - Q--C
+     - Q--L
+     - F--A
+   * - W (J/mol)
+     - 3421
+     - 23660.9
+     - -863.7
+     - -39120
+     - -37256.7
+   * - Pair
+     - F--C
+     - F--L
+     - A--C
+     - A--L
+     - C--L
+   * - W (J/mol)
+     - -31731.9
+     - -32880.3
+     - -12970.8
+     - -30509
+     - -57917.9
+
+The new liquid standards use the same fusion construction and integrated
+Kress volume polynomial as the existing olivine components:
+
+.. math::
+
+   g_l^0(T,P)=H_s(T_m)+T_m\Delta S_f+C_{p,l}(T-T_m)
+   -T\left[S_s(T_m)+\Delta S_f+C_{p,l}\ln(T/T_m)\right]
+   +\int_{1\,\mathrm{bar}}^{P}V_l(T,p)\,dp.
+
+.. list-table:: New liquid fusion parameters
+   :header-rows: 1
+
+   * - Component
+     - Tm (K)
+     - Delta S (J/mol/K)
+     - Liquid Cp (J/mol/K)
+   * - CaSiO3
+     - 1817
+     - 31.5
+     - 172.4
+   * - Al2O3
+     - 2319.65
+     - 48.61
+     - 170.3
+
+Di--Hd clinopyroxene and anorthite
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+On the Ca-saturated face, Ca fills M2, Si fills the tetrahedral sites,
+and Mg/Fe mix on M1. The restriction of the Sack--Ghiorso MELTS pyroxene
+model is a one-site regular solution:
+
+.. math::
+
+   G_{\rm cpx}=n_{\rm Di}g_{\rm Di}^0+n_{\rm Hd}g_{\rm Hd}^0
+     +R_bT\left(n_{\rm Di}\ln x_{\rm Di}+n_{\rm Hd}\ln x_{\rm Hd}\right)
+     +7029.12\frac{n_{\rm Di}n_{\rm Hd}}{n_{\rm Di}+n_{\rm Hd}}.
+
+Here Di = CaMgSi2O6 and Hd = CaFeSi2O6, both per mol of six oxygens.
+The coefficient is :math:`cW_{H12}=1.68\times1000\times4.184` J/mol;
+its volume coefficient is zero. No ordering freedom or pure-reference
+mixing correction remains on this face. Its ideal entropy has one mixed
+site, whereas the Fo--Fa olivine face has two.
+
+With Na/K absent, feldspar is pure An = CaAl2Si2O8:
+:math:`G_{\rm An}=n_{\rm An}g_{\rm An}^0`. The solid standards use
+
+.. math::
+
+   C_p=k_0+k_1T^{-1/2}+k_2T^{-2}+k_3T^{-3},\quad
+   g^0=H_r+\int_{298.15}^{T}C_p\,dt
+       -T\left(S_r+\int_{298.15}^{T}C_p/t\,dt\right)+\int V_s\,dp.
+
+The Berman pressure integral is
+:math:`V_r[(1+v_3\Delta T+v_4\Delta T^2)\Delta p+
+v_1\Delta p^2/2+v_2\Delta p^3/3]`, with pressure in bar internally.
+Anorthite includes the tabulated Carpenter I1--C1 correction
+:math:`\Delta H=3.7\times4184` J/mol and
+:math:`\Delta S=\Delta H/2200` J/(mol K); it adds
+:math:`\Delta H-T\Delta S`, without a new branch switch. The coefficients
+are transcribed in ``magma.py`` from the pinned ``sol_struct_data.h``.
+
+API and closed-system example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``liquid_standard_gibbs(..., include_ca_al=True)`` returns the four-component
+``CMAS_COMPONENTS`` basis. Also setting ``include_fe=True`` returns
+``CMFAS_COMPONENTS``. ``liquid_gibbs`` chooses these orders from static
+shapes (4,) and (5,); its original (2,) and (3,) APIs retain their results.
+``clinopyroxene_standard_gibbs`` returns [Di, Hd] in J/mol,
+``clinopyroxene_gibbs`` accepts [n_Di, n_Hd] mol and returns J, and
+``anorthite_gibbs`` returns J/mol An. All use scalar K/Pa, support JAX
+``jit``, ``vmap`` and differentiation, and follow the positive-interior
+composition derivative contract described below.
+
+The additional solid columns in the liquid basis are
+
+.. math::
+
+   b_{\rm Di}=(1/2,1/2,0,1,0)^\mathsf{T},\quad
+   b_{\rm Hd}=(1/2,0,1/2,1,0)^\mathsf{T},\quad
+   b_{\rm An}=(1,0,0,1,1)^\mathsf{T}.
+
+``examples/magma_dry.py`` minimizes :math:`G_l+\sum_\alpha G_\alpha`
+subject to :math:`n_l+B n_s=n_{\rm bulk}` and nonnegative phase amounts.
+It uses SciPy SLSQP with JAX gradients, searches the composition of absent
+binary minerals, polishes coexistence chemical potentials and checks all
+admitted solid insertion gaps. Pure silica selects the lowest of its
+three standards. Crystal amounts are retained; no fractional removal occurs.
+The script is an eager example, not a differentiable equilibrium API or
+a global stability certificate against multiple liquids.
+
+The example supports resolved liquid interiors at 1200--2200 K and
+1--5000 bar. It raises at liquid disappearance, an unresolved component
+boundary or failed stationarity/stability checks. Solver tolerances are
+not changes to the underlying Gibbs model. The committed demonstration
+uses 1800--1400 K at 1 bar and oxide mol
+**SiO2:MgO:FeO:CaO:Al2O3 = 1:0.55:0.15:0.25:0.12**.
+No calibration over this numerical T/P box is claimed.
+
+.. figure:: _static/magma/dry_cooling_comparison.png
+   :width: 100%
+
+   One liquid plus the declared mineral compositions. Olivine appears
+   first, followed by anorthite and clinopyroxene near 1460 K. Crystals
+   preferentially retain Mg while the remaining liquid gains Fe.
+   Lines are JAX results; circles are independent equilibrium roots
+   using actual pinned MELTS G and chemical potentials.
+
+At the eight saved restricted equilibria, the maximum amount difference
+is **5.2e-12 mol** and the total-G difference is **1.2e-5 J**. Across 24
+property states (1400--2000 K at 1, 500 and 5000 bar), new solid standards
+agree to the saved precision; liquid standards differ by at most
+4.7e-10 J/mol, cpx G by 1.9e-9 J, and cpx chemical potentials by
+1.4e-9 J/mol. Liquid G and chemical-potential differences are at most
+1.2e-5 J and 2.7e-7 J/mol. These are finite comparisons with
+alphaMELTS 2.3.2 / rhyolite-MELTS 1.0.2, not experimental error bounds.
+
+.. figure:: _static/magma/dry_full_melts_comparison.png
+   :width: 100%
+
+   Full MELTS phase selection for the same bulk admits additional
+   mineral compositions. It forms Ca-poor and Fe-bearing pyroxenes,
+   and has no liquid at the sampled temperatures 1450 K and below.
+   At 1400 K, the restricted JAX model still has about 34% liquid by mass.
+   The extra components change the competition even though the shared
+   Gibbs expressions agree. The 1450 K full run has two clinopyroxene
+   compositions, grouped together in the bar chart. Connecting lines
+   between saved full-MELTS states do not locate exact phase boundaries.
+
+The reference generator rejects full-MELTS runs at 1800 and 2000 K because
+their native logs report iteration/convergence warnings despite returning
+success. The attempted conditions and log hashes remain in the JSON;
+they are not plotted as converged results. Native supplied cpx G is
+nonfinite at the exact Di/Hd endpoints in all 24 sampled T/P states.
+Those endpoints are recorded as unavailable; standards are checked at
+interior native probes, while JAX endpoint energies are checked against
+their analytic continuous limits.
+
+Reproduce the figures and quantitative comparison without a MELTS runtime:
+
+.. code-block:: bash
+
+   JAX_ENABLE_X64=1 MPLBACKEND=Agg python examples/magma_dry.py \
+       --output documents/_static/magma
+
+Regenerate native evidence only with the separately installed, hash-pinned
+runtime and a worker Python containing SciPy and tinynumpy:
+
+.. code-block:: bash
+
+   python tests/reference/generate_dry_magma_reference.py \
+       --runtime /path/to/pinned/runtime --python /path/to/worker/python \
+       --output tests/reference/dry_magma_melts_v1.json
+
+The fixture includes runtime and source hashes and separate records for
+supplied properties, restricted equilibria, and full phase selection.
+The source revision is `MAGMA 705a0fb
+<https://github.com/magmasource/MAGMA/tree/705a0fb315e5054d18275a580562f6121c8e458c>`_;
+the additional model source is ``sources/clinopyroxene.c``. The
+`MELTS phase-property documentation
+<https://melts.ofm-research.org/CORBA_CTserver/phaseProp.html>`_ lists the
+Sack--Ghiorso pyroxene references. Public-source/binary build identity
+and accuracy against experimental phase diagrams remain separate questions.
 
 Gibbs energy and component basis
 --------------------------------

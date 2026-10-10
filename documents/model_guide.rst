@@ -33,13 +33,15 @@ Choose an entry point
      - ``mass_fraction_solute_state(...)``
      - Supply consistent host G/mu, masses, and a host-composition-independent
        solute standard; retain the host derivative correction.
-   * - Native MgO--SiO2 liquid and pure solid G
+   * - Native dry silicate liquid and mineral G
      - ``exoeos.magma.liquid_gibbs``, ``forsterite_gibbs``, ``enstatite_gibbs``,
-       ``silica_gibbs``
-     - K, Pa, mol; liquid order SiO2, Mg2SiO4. Enable x64 and read the
+       ``silica_gibbs``, ``olivine_gibbs``, ``clinopyroxene_gibbs``, ``anorthite_gibbs``
+     - K, Pa, mol; liquid bases from binary MgO--SiO2 to five-component CMFAS.
+       Enable x64 and read the
        restricted equilibrium scope in :doc:`native_magma`. Enstatite is
        the Mg orthopyroxene endpoint, per mol MgSiO3. Silica order is
        quartz, tridymite, cristobalite, per mol SiO2.
+       Clinopyroxene is the Di--Hd face; feldspar is pure anorthite (no Na/K).
    * - H/He caloric table properties
      - ``table.state_tp(T, P)`` or ``table.state_trho(T, rho_mass)``
      - Select a fixed Chabrier--Debras variant and load its verified tables.
