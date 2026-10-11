@@ -169,7 +169,8 @@ def equilibrium(T, P=1e5, oxides=None):
         raise RuntimeError(f"Unresolved solid stability or splitting: {gaps}")
     return {"T_K": float(T), "P_Pa": float(P), "initial_oxide_moles": dict(oxides),
             "liquid_mol": (liquid*scale).tolist(), "solid_mol": (np.asarray(solid_amounts(z))*scale).tolist(),
-            "phase_mol_Si": (z[:5]*scale).tolist(), "g_J": float(energy(z, T, P, bulk)*scale),
+            "phase_mol_Si": (z[:5]*np.array([1., 1., 2., 1., 1.])*scale).tolist(),
+            "g_J": float(energy(z, T, P, bulk)*scale),
             "solid_insertion_J_mol_Si": gaps.tolist(),
             "cpx_Ca_M2": float(z[6]) if active[1] else None,
             "cpx_Fe_fraction": float(z[7]) if active[1] else None,
@@ -219,7 +220,8 @@ def main():
             for key, value in values.items():
                 errors[key] = max(errors.get(key, 0.), float(np.max(np.abs(value-np.array(row[key])))))
     summary = {"scope": "One liquid, Fo--Fa olivine, Ca--Mg--Fe cpx/opx, pure An and silica; retained crystals, Fe(II). Melt-bearing numerical equilibria with multi-start solid tangent checks, not a full phase diagram.",
-               "phase_order": ["liquid"]+list(PHASES), "maximum_absolute_errors": errors,
+               "solid_phase_order": PHASES, "mass_fraction_order": ["liquid"]+list(PHASES),
+               "maximum_absolute_errors": errors,
                "default_bulk": states, "low_Ca_bulk": low_ca,
                "native_reference": reference["backend"],
                "native_unavailable_endpoints": sum("status" in r for r in reference["properties"])}

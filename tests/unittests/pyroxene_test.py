@@ -135,6 +135,8 @@ def test_cooling_conservation_and_solid_tangent_stability(cooling):
         inventory = np.array(state["liquid_mol"])+cooling.SOLID_COMPONENTS@state["solid_mol"]
         np.testing.assert_allclose(inventory, cooling.component_amounts(cooling.DEFAULT_OXIDES), atol=1e-12, rtol=0)
         assert min(state["liquid_mol"]+state["solid_mol"]) >= 0
+        assert sum(state["liquid_mol"][:4])+sum(state["phase_mol_Si"]) == pytest.approx(
+            state["initial_oxide_moles"]["SiO2"], abs=1e-12, rel=0)
         gaps = np.array(state["solid_insertion_J_mol_Si"])
         assert min(gaps) >= -5e-4
         np.testing.assert_allclose(gaps[np.array(state["phase_mol_Si"]) > 0], 0., atol=5e-4, rtol=0)
