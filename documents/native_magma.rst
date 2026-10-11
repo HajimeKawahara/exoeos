@@ -14,20 +14,233 @@ The Fe(II) extension below adds a ternary liquid and a binary
 forsterite--fayalite olivine solution, with a separate closed liquid + olivine
 equilibrium example for Fe/Mg partitioning.
 The Ca/Al extension below adds CaSiO3 and Al2O3 liquid
-coordinates, Di--Hd clinopyroxene and pure anorthite. Its dry CMFAS example
-admits all the implemented mineral families together, while retaining
-their explicitly limited composition ranges.
+coordinates, Di--Hd clinopyroxene and pure anorthite. The following extension
+adds Ca--Mg--Fe compositions and relaxed Mg/Fe site order to both pyroxene
+structures. The preceding restricted examples retain their original APIs
+and candidate sets.
+
+.. _native-pyroxene:
+
+Ca--Mg--Fe clinopyroxene and orthopyroxene
+------------------------------------------
+
+``pyroxene_gibbs(T, P, n, phase=...)`` extends the Ca-saturated Di--Hd face
+and pure Mg orthopyroxene of `PR #65 <https://github.com/HajimeKawahara/exoeos/pull/65>`_.
+Both structures now admit variable Ca and Fe/Mg, with Mg/Fe exchange between
+M1 and M2. Iron remains Fe(II); Na, Al and Ti are absent from these pyroxenes.
+The liquid still contains Al2O3 and competes with pure anorthite.
+
+.. list-table:: Minerals admitted by the extended dry example
+   :header-rows: 1
+   :widths: 20 32 48
+
+   * - Phase
+     - Formula / useful endpoints
+     - Composition treatment
+   * - Olivine
+     - Mg2SiO4 (Fo), Fe2SiO4 (Fa)
+     - Existing binary solution; two Mg/Fe sites.
+   * - Clinopyroxene
+     - CaMgSi2O6 (Di), CaFeSi2O6 (Hd), Mg2Si2O6, Fe2Si2O6
+     - Monoclinic Ca--Mg--Fe model, including Ca-poor compositions.
+   * - Orthopyroxene
+     - Mg2Si2O6 (En), Fe2Si2O6 (Fs), dissolved Ca
+     - Orthorhombic Ca--Mg--Fe model; its Ca-rich values are metastable extensions.
+   * - Anorthite
+     - CaAl2Si2O8
+     - Existing pure feldspar endpoint; no Na/K.
+   * - Silica
+     - SiO2
+     - Existing quartz, tridymite and cristobalite standards.
+
+Physical coordinates and site ordering
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The new API takes **mol of [CaSiO3, MgSiO3, FeSiO3]**, not Di--En--Hd
+endmember amounts. These are inventory coordinates, not three independent
+stable minerals. If :math:`N=(n_{Ca}+n_{Mg}+n_{Fe})/2`, the bulk cation
+contents per two-Si formula unit are :math:`c=n_{Ca}/N` and :math:`f=n_{Fe}/N`.
+Require nonnegative amounts and :math:`n_{Ca}\le n_{Mg}+n_{Fe}`, equivalently
+:math:`0\le c\le1`, :math:`0\le f\le2-c`. Ca occupies M2 only. With
+:math:`b` the Fe occupancy on M2, the site fractions are
+
+.. math::
+
+   (y_{Mg}^{M1},y_{Fe}^{M1})=(1-f+b,f-b),\qquad
+   (y_{Ca}^{M2},y_{Mg}^{M2},y_{Fe}^{M2})=(c,1-c-b,b),
+
+   \max(0,f-1)\le b\le\min(f,1-c).
+
+One mol of these API coordinates contains one mol Si, whereas one mol of
+the original Di--Hd API contains two mol Si. For example,
+``pyroxene_gibbs(T,P,[1,.8,.2])`` equals
+``clinopyroxene_gibbs(T,P,[.8,.2])``. The orthopyroxene call with ``[0,1,0]``
+equals ``enstatite_gibbs(T,P)``. The Fe-rich corner ``[0,0,2]`` is admitted.
+
+For structure :math:`\phi\in\{cpx,opx\}`, the implemented energy is
+
+.. math::
+
+   G_\phi=N\min_b\left[(c-f)g^0_{Di}+(1-c)g^0_{cEn}+fg^0_{Hd}
+     +C_\phi+B_\phi b+A_\phi b^2
+     +R_bT\sum_{s\in\{M1,M2\}}\sum_i y_i^s\ln y_i^s\right],
+
+   (C_\phi,B_\phi,A_\phi)=\boldsymbol h_\phi(c,f)
+      -T\boldsymbol s_\phi(c,f)+(P_{bar}-1)\boldsymbol v_\phi(c,f).
+
+The Berman standards are the same Di, **monoclinic** En and Hd standards
+used by both MELTS structures. Their formal fractions :math:`(c-f,1-c,f)`
+sum to one but Di can be negative. This is an algebraic standard-state
+basis; it does not mean a negative physical phase amount. The implementation
+subtracts the monoclinic pure mixing reference for both structures,
+including :math:`g^{mix,pure}_{cEn}=1.08018328T` J/mol. Substituting an
+orthopyroxene standard and then retaining this correction would count the
+structural offset twice.
+
+The coefficient vectors in ``magma._pyroxene_coefficients`` are the explicit
+restriction of the pinned Sack--Ghiorso MELTS polynomials, using
+:math:`r_0=f`, :math:`r_5=1-c`, :math:`s_1=2b-1+c`, and all other
+:math:`r_i,s_i=0`. The existing independent full-site transcription in
+``examples/m2_solid_mixing/parameters.json`` is checked against this reduction.
+For example, the ordering quadratic coefficients are
+
+.. math::
+
+   A_{cpx}=42781.4c+679.9f-12939.02
+       +(P_{bar}-1)(-0.39748c-0.023012f+0.037656),
+
+   A_{opx}=82006.4c+836.8f-19455.6
+       +(P_{bar}-1)(-0.6276c-0.029288f+0.029288).
+
+All coefficients retain J/mol, J/(mol K) and J/(mol bar), with pressure
+converted from Pa at the public API. Source equations and parameters are
+in pinned `clinopyroxene.c <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/clinopyroxene.c>`_
+and `orthopyroxene.c <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/orthopyroxene.c>`_.
+This is one MELTS energy per structural type, not an additional selector
+between named clinopyroxene polymorphs.
+
+Relaxed thermodynamic derivatives
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The one-dimensional interior stationarity equation is
+
+.. math::
+
+   0=B_\phi+2A_\phi b+R_bT\ln\frac{(1-f+b)b}{(f-b)(1-c-b)}.
+
+Its derivative is :math:`2A_\phi+R_bT[1/(1-f+b)+1/(f-b)+1/b+1/(1-c-b)]`.
+In the supported 1200--2200 K, 1--5000 bar box, :math:`A_\phi\ge-19455.6`
+and the reciprocal sum is at least eight, so the root is unique and is
+the minimum over site order. A 64-step bounded bisection locates it;
+``jax.lax.custom_root`` differentiates the stationarity equation. If
+:math:`\widehat G(q,b)` denotes the energy before relaxing :math:`b`,
+
+.. math::
+
+   \frac{dG}{dq}=\widehat G_q,\qquad
+   \frac{d^2G}{dq\,dr}=\widehat G_{qr}
+       -\frac{\widehat G_{qb}\widehat G_{br}}{\widehat G_{bb}}.
+
+Consequently :math:`S=-G_T`, :math:`V=G_P`, :math:`C_P=-TG_{TT}` and
+:math:`\mu_i=G_{n_i}` include ordering relaxation. Holding site order fixed
+would give the wrong curvature and heat capacity. ``jit``, ``vmap``, and
+first/second derivatives are supported inside the stated composition and
+T/P domain. At exact composition edges only the continuous G and
+fixed-composition T/P derivatives are supported; a zero phase returns
+exactly zero G. Low-temperature ordering branches are outside this contract.
+
+.. code-block:: python
+
+   import jax
+   import jax.numpy as jnp
+   from exoeos.magma import pyroxene_gibbs
+
+   jax.config.update("jax_enable_x64", True)
+   n = jnp.array([0.05, 1.50, 0.45])
+   opx = lambda T, P, n: pyroxene_gibbs(T, P, n, phase="orthopyroxene")
+   G = jax.jit(opx)(1600., 1e5, n)  # J for 2 mol Si
+   mu = jax.grad(opx, 2)(1600., 1e5, n)  # J/mol of each API coordinate
+
+MELTS comparisons and closed cooling
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``tests/reference/pyroxene_melts_v1.json`` records 198 requested phase states
+at three temperatures, three pressures and eleven compositions for both
+structures. It uses the independently hash-pinned alphaMELTS 2.3.2 /
+rhyolite-MELTS 1.0.2 runtime already used by PR #65. Nonfinite native endpoint
+G values are marked unavailable. Exact-edge native derivative singularities
+are excluded from the derivative reference; their continuous energy limits
+are checked separately. Interior comparisons include signed native Di
+fractions, scaled amounts, G, chemical potentials, S, Cp and V.
+Of the 198 requests, 162 have finite native G, 36 are unavailable exact
+endpoints, and 72 support all interior derivative comparisons. Maximum
+absolute errors are 1.9e-9 J for G, 1.2e-9 J/mol for chemical potentials,
+9.1e-13 J/K for S, 4.6e-13 J/K for Cp, and 5.5e-20 m3 for V.
+The four independent assemblage roots agree within 9.5e-12 mol in amounts
+and 7.4e-6 J in total G; the larger total-G discrepancy is inherited from
+the independently evaluated liquid. These are finite comparison errors,
+not uniform accuracy bounds.
+
+.. figure:: _static/magma/pyroxene_melts_comparison.png
+   :alt: Native JAX and MELTS agree on the orthopyroxene minus clinopyroxene energy at three compositions and two pressures.
+   :width: 100%
+
+   Negative values favor orthopyroxene at the **same composition**. This
+   comparison checks the two structural energies, not the stability of a
+   full assemblage or a two-pyroxene coexistence boundary.
+
+``examples/magma_pyroxene.py`` admits one liquid, Fo--Fa olivine, both
+Ca--Mg--Fe pyroxenes, pure An and the lowest-G implemented silica polymorph.
+It minimizes total G with :math:`n_l+B n_s=n_{bulk}`. Each pyroxene contributes
+CaSiO3, MgSiO3 and FeSiO3 columns :math:`(0,0,0,1,0)`,
+:math:`(1/2,1/2,0,0,0)` and :math:`(1/2,0,1/2,0,0)` to the liquid basis
+[Q,F,A,C,L]. Thus all Ca, Mg, Fe, Al, Si and O inventories are conserved.
+
+The default oxide bulk is the one from #65,
+SiO2:MgO:FeO:CaO:Al2O3 = 1:0.55:0.15:0.25:0.12 mol. At 1475 K its cpx
+has Ca(M2) = 0.70937 and Fe/(Mg+Fe) = 0.13222. At 1465 K both pyroxenes
+coexist with olivine, anorthite and liquid. The second bulk,
+1:0.9:0.1:0.04:0.02 mol, highlights Ca-bearing, Fe-bearing orthopyroxene.
+
+.. figure:: _static/magma/pyroxene_cooling.png
+   :alt: Retained-crystal cooling in two dry bulks, with phase mass fractions and variable cpx and opx Ca/Fe compositions.
+   :width: 100%
+
+   The circles are four independent chemical-potential roots using actual
+   MELTS properties and specified liquid/olivine/pyroxene assemblages; they
+   are not full MELTS phase selection. Lines use the JAX example with all
+   the admitted solids. Absent pyroxenes have no reported composition.
+
+The example uses multistart constrained minimization, then polishes
+coexistence chemical potentials and searches solid tangent gaps from six
+composition starts per pyroxene. It returns only resolved states with all
+five liquid components positive. Failure near liquid disappearance or
+unresolved solid splitting raises an exception; the plot ending at 1460 K
+does not locate the solidus. Multiple liquids, multiple instances of one
+pyroxene structure, Al-bearing pyroxenes, spinel and garnet are not included.
+These finite numerical checks do not certify a global phase diagram or
+experimental calibration. The full MELTS comparison from #65 below retains
+its historical, more restricted native candidate set.
+
+.. code-block:: bash
+
+   JAX_ENABLE_X64=1 MPLBACKEND=Agg python examples/magma_pyroxene.py \
+       --output documents/_static/magma
+   # Reference regeneration only; requires the pinned runtime and tinynumpy:
+   python tests/reference/generate_pyroxene_reference.py \
+       --runtime /path/to/pinned/runtime --python /path/to/worker/python \
+       --output tests/reference/pyroxene_melts_v1.json
 
 .. _native-dry-magma:
 
 CaO and Al2O3: competing dry minerals
 -------------------------------------
 
-The minimal Ca/Al extension covers **CaO--MgO--FeO--Al2O3--SiO2 (CMFAS)**,
+The preceding PR #65 example covers **CaO--MgO--FeO--Al2O3--SiO2 (CMFAS)**,
 with Fe fixed to Fe(II), no volatiles and no Na/K. It adds the Ca-saturated
 diopside--hedenbergite clinopyroxene face and the pure anorthite feldspar
 endpoint. These can compete with the existing Fo--Fa olivine, pure Mg
-orthopyroxene and three silica polymorphs. It does not include Ca-poor or
+orthopyroxene and three silica polymorphs. That example does not include Ca-poor or
 Al-bearing pyroxene solutions, Fe-bearing orthopyroxene, spinel, garnet,
 corundum, or alkali feldspar components. This is an incremental Gibbs
 provider, with a restricted numerical equilibrium example.

@@ -51,6 +51,10 @@ clinopyroxene and pure anorthite. Its [dry cooling example](examples/magma_dry.p
 allows these minerals to compete with olivine, Mg orthopyroxene and silica.
 Comparisons show both agreement with the same restricted MELTS model and
 the different crystallization obtained with full MELTS mineral compositions.
+The [Ca--Mg--Fe pyroxene extension](documents/native_magma.rst#ca-mg-fe-clinopyroxene-and-orthopyroxene)
+adds both pyroxene structures with relaxed Mg/Fe site order and implicit JAX
+derivatives. Its [cooling example](examples/magma_pyroxene.py) includes variable
+Ca and Fe in both pyroxenes and compares with independent MELTS property roots.
 The [Japanese explanation](https://github.com/HajimeKawahara/doc_ExoEOS) is
 maintained separately; current English documentation lives in `documents/`.
 

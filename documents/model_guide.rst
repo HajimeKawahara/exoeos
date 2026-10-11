@@ -35,13 +35,15 @@ Choose an entry point
        solute standard; retain the host derivative correction.
    * - Native dry silicate liquid and mineral G
      - ``exoeos.magma.liquid_gibbs``, ``forsterite_gibbs``, ``enstatite_gibbs``,
-       ``silica_gibbs``, ``olivine_gibbs``, ``clinopyroxene_gibbs``, ``anorthite_gibbs``
+       ``silica_gibbs``, ``olivine_gibbs``, ``clinopyroxene_gibbs``, ``pyroxene_gibbs``, ``anorthite_gibbs``
      - K, Pa, mol; liquid bases from binary MgO--SiO2 to five-component CMFAS.
        Enable x64 and read the
        restricted equilibrium scope in :doc:`native_magma`. Enstatite is
        the Mg orthopyroxene endpoint, per mol MgSiO3. Silica order is
        quartz, tridymite, cristobalite, per mol SiO2.
-       Clinopyroxene is the Di--Hd face; feldspar is pure anorthite (no Na/K).
+       ``clinopyroxene_gibbs`` retains its Di--Hd face. ``pyroxene_gibbs``
+       admits Ca--Mg--Fe in both structures on [CaSiO3, MgSiO3, FeSiO3] mol
+       coordinates, with relaxed site order. Feldspar is pure anorthite (no Na/K).
    * - H/He caloric table properties
      - ``table.state_tp(T, P)`` or ``table.state_trho(T, rho_mass)``
      - Select a fixed Chabrier--Debras variant and load its verified tables.
