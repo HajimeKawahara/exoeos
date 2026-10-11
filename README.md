@@ -46,6 +46,11 @@ plots against independent restricted equilibria using pinned MELTS properties.
 The Fe(II) extension adds a three-component liquid and a forsterite--fayalite
 olivine solution. Its [closed cooling example](examples/magma_olivine.py)
 computes crystal amounts and liquid/crystal Fe/Mg partitioning from the same G.
+The CaO/Al2O3 extension adds four- and five-component liquids, Di--Hd
+clinopyroxene and pure anorthite. Its [dry cooling example](examples/magma_dry.py)
+allows these minerals to compete with olivine, Mg orthopyroxene and silica.
+Comparisons show both agreement with the same restricted MELTS model and
+the different crystallization obtained with full MELTS mineral compositions.
 The [Japanese explanation](https://github.com/HajimeKawahara/doc_ExoEOS) is
 maintained separately; current English documentation lives in `documents/`.
 
