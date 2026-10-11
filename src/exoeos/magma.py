@@ -8,7 +8,7 @@ Enable JAX x64 for thermodynamic derivatives and phase comparisons.
 Equations and coefficients: MAGMA revision
 705a0fb315e5054d18275a580562f6121c8e458c, sources/gibbs.c,
 includes/{liq_struct_data,sol_struct_data,param_struct_data_v34}.h,
-and sources/{olivine,clinopyroxene}.c (declared binary faces).
+and sources/{olivine,clinopyroxene,orthopyroxene}.c (declared composition faces).
 Silica additionally includes explicitly documented pinned-runtime offsets.
 This is the MELTS (not pMELTS) polynomial EOS and liquid mixing model.
 It does not establish stability against omitted phases or a calibrated
@@ -26,6 +26,7 @@ CMAS_COMPONENTS = COMPONENTS + ("CaSiO3", "Al2O3")
 CMFAS_COMPONENTS = TERNARY_COMPONENTS + ("CaSiO3", "Al2O3")
 OLIVINE_COMPONENTS = ("Mg2SiO4", "Fe2SiO4")
 CLINOPYROXENE_COMPONENTS = ("CaMgSi2O6", "CaFeSi2O6")
+PYROXENE_COMPONENTS = ("CaSiO3", "MgSiO3", "FeSiO3")
 SILICA_POLYMORPHS = ("quartz", "tridymite", "cristobalite")
 R = 8.3143  # J/(mol K); retain the MELTS entropy convention.
 W = 3421.0  # J/mol; SiO2--Mg2SiO4 liquid interaction.
@@ -92,6 +93,112 @@ def clinopyroxene_gibbs(T, P, n):
         x = values / values.sum()
         return (values @ clinopyroxene_standard_gibbs(T, P)
                 + R * T * jnp.sum(xlogy(values, x)) + 7029.12 * values[0] * x[1])
+
+    return jax.lax.cond(
+        jnp.all(amounts == 0), lambda values: jnp.zeros_like(T + P + values.sum()),
+        present, amounts)
+
+
+def _pyroxene_coefficients(T, P, c, f, clino):
+    # Ca--Mg--Fe restriction of the pinned Sack--Ghiorso site polynomial,
+    # after subtracting the *monoclinic* pure references for BOTH phases.
+    # Return [constant, b, b**2] coefficients, where b is M2 Fe occupancy.
+    if clino:
+        h = jnp.array([
+            5857.6*c**3 - 11537.38*c*c*f - 33137.28*c*c - 679.9*c*f*f
+            + 19299.6932816*c*f + 27279.68*c - 6349.22*f*f - 733.1932816*f,
+            34287.88*c*c - 20710.8*c*f - 49654.6132816*c - 679.9*f*f
+            + 14476.64*f - 4257.22,
+            42781.4*c + 679.9*f - 12939.02])
+        s = jnp.array([
+            3.64848984*c*c*f + 2.895328*c*c - 1.48812328*c*f - 2.895328*c
+            - 2.16036656*f,
+            -3.64848984*c*c + 1.48812328*c + 2.16036656, 0.])
+        v = jnp.array([
+            -.066944*c**3 + .17781996532*c*c*f + .138072*c*c + .023012*c*f*f
+            - .18156613064*c*f - .071128*c - .023012*f*f + .00374616532*f,
+            -.42258396532*c*c + .175728*c*f + .44725016532*c + .023012*f*f
+            - .037656,
+            -.39748*c - .023012*f + .037656])
+    else:
+        h = jnp.array([
+            10878.4*c**3 - 22593.6*c*c*f - 47948.64*c*c - 836.8*c*f*f
+            + 27363.36*c*f + 44422.7832*c - 7531.2*f*f + 3316.6568*f - 5020.8,
+            65270.4*c*c - 40166.4*c*f - 73554.72*c - 836.8*f*f
+            + 18618.8*f - 6987.28,
+            82006.4*c + 836.8*f - 19455.6])
+        s = jnp.array([
+            1.15955376*c*f + 3.7045136*c - 1.98798576*f - 2.3237936,
+            1.15955376*(1-c), 0.])
+        v = jnp.array([
+            -.100416*c**3 + .23012*c*c*f + .117152*c*c + .029288*c*f*f
+            - .3048082*c*f + .1204992*c - .043409*f*f + .111798*f - .0619232,
+            -.602496*c*c + .284512*c*f + .5626472*c + .029288*f*f - .150624,
+            -.6276*c - .029288*f + .029288])
+    return h - T*s + (P/1e5-1)*v
+
+
+def _pyroxene_order(T, c, f, coefficients):
+    lower, upper = jnp.maximum(0., f-1), jnp.minimum(f, 1-c)
+
+    def interior(_):
+        def slope(b):
+            return (coefficients[1] + 2*coefficients[2]*b + R*T*(
+                jnp.log(1-f+b) + jnp.log(b) - jnp.log(f-b) - jnp.log(1-c-b)))
+
+        def solve(fun, initial):
+            def step(_, bracket):
+                lo, hi = bracket
+                mid = (lo+hi)/2
+                positive = fun(mid) > 0
+                return jnp.where(positive, lo, mid), jnp.where(positive, mid, hi)
+
+            lo, hi = jax.lax.fori_loop(0, 64, step, (lower, upper))
+            return (lo+hi)/2
+
+        # Differentiate the stationarity equation, not the bisection decisions.
+        return jax.lax.custom_root(slope, (lower+upper)/2, solve,
+                                   lambda linear, rhs: rhs/linear(jnp.ones_like(rhs)))
+
+    return jax.lax.cond(upper > lower, interior, lambda _: lower, operand=None)
+
+
+def pyroxene_gibbs(T, P, n, *, phase="clinopyroxene"):
+    """Return extensive Ca--Mg--Fe pyroxene G in J, with relaxed site order.
+
+    ``n`` is [CaSiO3, MgSiO3, FeSiO3] in mol, for either ``clinopyroxene``
+    or ``orthopyroxene``. These are physical inventory coordinates, not
+    independent pure minerals: require nonnegative amounts and
+    n_Ca <= n_Mg+n_Fe (at most one Ca on M2 per two-Si formula unit).
+    The caller validates values; scalar K/Pa and x64 contracts match liquid G.
+
+    The Sack--Ghiorso Ca--Mg--Fe face has Mg/Fe on M1 and Ca/Mg/Fe on M2.
+    One bounded Fe site occupancy minimizes G. Its curvature is positive
+    over 1200--2200 K and 1--5000 bar; no low-temperature branch selection
+    is supplied. JIT, vmap and implicit first/second derivatives are supported
+    inside this domain and the composition interior. At composition edges
+    only continuous G and fixed-composition T/P derivatives are supported.
+    An absent phase has exactly zero G. No Na, Al, Ti or Fe(III) is admitted.
+    The original two-component ``clinopyroxene_gibbs`` API is unchanged.
+    """
+    T, P = _tp(T, P)
+    amounts = jnp.asarray(n) * 1.0
+    if amounts.shape != (3,):
+        raise ValueError("n must have shape (3,) in (CaSiO3, MgSiO3, FeSiO3) order.")
+    if phase not in ("clinopyroxene", "orthopyroxene"):
+        raise ValueError("phase must be 'clinopyroxene' or 'orthopyroxene'.")
+
+    def present(values):
+        total = values.sum()/2  # mol of the two-Si pyroxene formula unit.
+        c, f = values[0]/total, values[2]/total
+        coefficients = _pyroxene_coefficients(T, P, c, f, phase == "clinopyroxene")
+        b = _pyroxene_order(T, c, f, coefficients)
+        sites = jnp.array([1-f+b, f-b, c, 1-c-b, b])
+        mixing = coefficients @ jnp.array([1., b, b*b]) + R*T*jnp.sum(xlogy(sites, sites))
+        di, hd = clinopyroxene_standard_gibbs(T, P)
+        # Both MELTS structures use the same monoclinic En standard.
+        en = 2*enstatite_gibbs(T, P) - (-5020.8 + 2.3237936*T - .0619232*(P/1e5-1))
+        return total*((c-f)*di + (1-c)*en + f*hd + mixing)
 
     return jax.lax.cond(
         jnp.all(amounts == 0), lambda values: jnp.zeros_like(T + P + values.sum()),

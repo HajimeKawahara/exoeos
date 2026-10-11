@@ -117,14 +117,16 @@ package's ``src/`` build configuration.
        expressions and native evaluations have distinct provenance.
    * - Native JAX dry magma
      - ``exoeos.magma``: binary through CMFAS liquid G and standards,
-       Fo--Fa olivine, Di--Hd clinopyroxene, anorthite, pure Mg orthopyroxene
+       Fo--Fa olivine, Ca--Mg--Fe clinopyroxene/orthopyroxene, anorthite
        and quartz/tridymite/cristobalite; native JAX derivatives.
      - No external runtime. :doc:`native_magma` follows closed cooling
        through enstatite appearance, crystal reaction and liquid disappearance.
        The multiphase example adds silica solids, phase-change brackets
        and residual liquid composition. The dry CMFAS example compares
        competing minerals with restricted and full MELTS calculations;
-       Ca-poor/Al-bearing pyroxene solutions and Na/K feldspars are omitted.
+       Al-bearing pyroxene components and Na/K feldspars are omitted.
+       The Ca--Mg--Fe pyroxene extension relaxes Mg/Fe site order and
+       compares both structures and cooling paths with MELTS properties.
    * - M2 material references
      - Checkout tools for water, H/O/Mg/Na/K/P/He references and conditional
        models, material assessment, and a consistent major-gas potential.
