@@ -1,4 +1,4 @@
-Native JAX magma: dry Ca--Mg--Fe--Al silicates
+Native JAX magma: silicate liquids and solids
 ============================================================
 
 ``exoeos.magma`` evaluates a two-component MELTS liquid, pure crystalline
@@ -18,6 +18,9 @@ coordinates, Di--Hd clinopyroxene and pure anorthite. The following extension
 adds Ca--Mg--Fe compositions and relaxed Mg/Fe site order to both pyroxene
 structures. The preceding restricted examples retain their original APIs
 and candidate sets.
+The Fe(III) extension appends Fe2O3 to the five-component liquid and evaluates
+supplied Fe(II)/Fe(III) compositions. Magnetite and redox equilibrium are not
+included in this extension.
 
 .. _native-magma-contract:
 
@@ -41,8 +44,9 @@ form an extensive phase energy. The component order and amount basis are:
      - ``COMPONENTS`` = (SiO2, Mg2SiO4);
        ``TERNARY_COMPONENTS`` adds Fe2SiO4;
        ``CMAS_COMPONENTS`` = (SiO2, Mg2SiO4, CaSiO3, Al2O3);
-       ``CMFAS_COMPONENTS`` = (SiO2, Mg2SiO4, Fe2SiO4, CaSiO3, Al2O3).
-     - J for the supplied 2, 3, 4 or 5 component amounts.
+       ``CMFAS_COMPONENTS`` = (SiO2, Mg2SiO4, Fe2SiO4, CaSiO3, Al2O3);
+       ``FERRIC_COMPONENTS`` appends Fe2O3 to CMFAS.
+     - J for the supplied 2, 3, 4, 5 or 6 component amounts.
    * - ``olivine_gibbs``
      - ``OLIVINE_COMPONENTS`` = (Mg2SiO4, Fe2SiO4).
      - J; each coordinate is mol of one-Si formula units.
@@ -151,6 +155,259 @@ Internal site relaxation belongs to the phase property model. Assemblage
 minimization, phase appearance/disappearance, multiple compositions of one
 phase, and derivatives of the equilibrium solution belong to the equilibrium
 consumer; absolute reservoirs and planetary closure belong to its caller.
+
+.. _native-ferric-liquid:
+
+Fe(III) liquid component
+------------------------
+
+``FERRIC_COMPONENTS`` is the ordered basis
+:math:`[Q,F,A,C,L,B]=[\mathrm{SiO_2},\mathrm{Mg_2SiO_4},\mathrm{Fe_2SiO_4},
+\mathrm{CaSiO_3},\mathrm{Al_2O_3},\mathrm{Fe_2O_3}]`.
+``liquid_gibbs`` selects it for a six-entry amount vector. The new standard
+flag ``include_ferric=True`` requires ``include_fe=True, include_ca_al=True``;
+the existing default and 2--5 component orders are preserved.
+
+Fe2O3 is a **liquid thermodynamic component**, not a hematite solid phase.
+Fe3O4 (magnetite), other ferric solids, oxygen exchange, imposed oxygen
+fugacity and a redox equilibrium solver are outside this addition.
+All existing solids and cooling examples retain their Fe(II) compositions.
+
+Basis, mixing and chemical potentials
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The oxide mapping retains the existing residual silica condition:
+
+.. math::
+
+   n_F=\frac{n_{\mathrm{MgO}}}{2},\quad
+   n_A=\frac{n_{\mathrm{FeO}}}{2},\quad n_C=n_{\mathrm{CaO}},\quad
+   n_L=n_{\mathrm{Al_2O_3}},\quad n_B=n_{\mathrm{Fe_2O_3}},\qquad
+   n_Q=n_{\mathrm{SiO_2}}-n_F-n_A-n_C\ge0.
+
+The Fe2O3 column of ``element_matrix(FERRIC_COMPONENTS)`` is
+``[3, 0, 0, 2, 0, 0]`` in ``ELEMENTS`` order. It contributes three O atoms
+and two Fe atoms per formula mol; the Fe3+/total-Fe fraction is
+:math:`n_B/(n_A+n_B)` when iron is present. Valence is encoded by component
+stoichiometry, while the ledger conserves total elemental Fe and O.
+
+With :math:`N=\sum_i n_i`, :math:`x_i=n_i/N`, and symmetric
+:math:`W_{ij}=W_{ji}`, :math:`W_{ii}=0`, the same regular-solution form is used:
+
+.. math::
+
+   G=\sum_i n_i g_i^0(T,P)+R T\sum_i n_i\ln x_i
+       +N g^{\mathrm{ex}},\qquad
+   g^{\mathrm{ex}}=\sum_{i<j}W_{ij}x_ix_j,
+
+.. math::
+
+   \mu_i=g_i^0+RT\ln x_i+\sum_jW_{ij}x_j-g^{\mathrm{ex}}.
+
+Here :math:`R=8.3143` J/(mol K). Existing interactions are unchanged.
+The five added values are from ``meltsModelParameters`` in the pinned
+``param_struct_data_v34.h``; their excess entropy and volume coefficients
+are zero, so these W values have no T/P dependence.
+
+.. list-table:: New Fe2O3 interactions
+   :header-rows: 1
+
+   * - Partner
+     - W with Fe2O3 (J/mol)
+   * - SiO2
+     - 8110.3
+   * - Mg2SiO4
+     - -71518.6
+   * - Fe2SiO4
+     - -179064.9
+   * - CaSiO3
+     - 12076.6
+   * - Al2O3
+     - -17089.4
+
+Standard Gibbs energy and pressure
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Fe2O3 liquid uses the MELTS fusion construction. The solid reference
+has :math:`H_r=-822000` J/mol, :math:`S_r=87.40` J/(mol K), and
+:math:`T_r=298.15` K. Its background heat capacity and additional anomaly are
+
+.. math::
+
+   C_{P,b}(T)=146.86-\frac{5.5768\times10^6}{T^2}
+                    +\frac{5.2563\times10^8}{T^3},\qquad
+   C_{P,\lambda}(T)=T(l_1+l_2T)^2,
+
+where :math:`l_1=-7.403\times10^{-2}`, :math:`l_2=27.921\times10^{-5}`
+in the source's K/J/mol convention. The anomaly integral ends at
+:math:`T_c=955` K, and a transition enthalpy :math:`\Delta H_c=1287` J/mol
+is also included. With :math:`T_m=1895` K and
+:math:`\Delta S_f=60.41` J/(mol K), the liquid reference at fusion is
+
+.. math::
+
+   H_m=H_r+\int_{T_r}^{T_m}C_{P,b}\,dT
+       +\int_{T_r}^{T_c}C_{P,\lambda}\,dT+\Delta H_c+T_m\Delta S_f,
+
+.. math::
+
+   S_m=S_r+\int_{T_r}^{T_m}\frac{C_{P,b}}{T}\,dT
+       +\int_{T_r}^{T_c}\frac{C_{P,\lambda}}{T}\,dT
+       +\frac{\Delta H_c}{T_c}+\Delta S_f.
+
+For constant liquid :math:`C_{P,l}=240.9` J/(mol K),
+
+.. math::
+
+   g_B^0(T,P)=H_m+C_{P,l}(T-T_m)
+       -T\left[S_m+C_{P,l}\ln(T/T_m)\right]+I_P(T,P).
+
+The 955 K feature belongs to the **solid reference integral**. It does not
+introduce a liquid branch at 955 K. Omitting it shifts the liquid standard
+and entropy even at magma temperatures.
+
+Use :math:`d=T-1673` K and :math:`q=P/10^5-1` bar for the integrated Kress EOS:
+
+.. math::
+
+   I_P=(v+a d)q+\frac{b+c d}{2}q^2+\frac{e}{6}q^3,
+
+.. list-table:: Fe2O3 liquid pressure coefficients
+   :header-rows: 1
+
+   * - Coefficient
+     - Value
+     - Unit
+   * - v
+     - 4.213
+     - J/(bar mol)
+   * - a
+     - 9.09e-4
+     - J/(bar mol K)
+   * - b
+     - -2.53e-5
+     - J/(bar² mol)
+   * - c
+     - 3.1e-8
+     - J/(bar² mol K)
+   * - e
+     - 4.4e-10
+     - J/(bar³ mol)
+
+Automatic differentiation gives :math:`S=-G_T`, :math:`V=G_P`,
+:math:`C_P=-TG_{TT}`, :math:`V_T=G_{PT}`, and :math:`V_P=G_{PP}` in SI units.
+For this liquid the mixing volume and excess mixing entropy are zero;
+:math:`C_P=\sum_i n_i C_{P,i}^0`. The ideal entropy contribution remains
+:math:`-R\sum_i n_i\ln x_i`.
+
+Independent comparisons and zero-ferric limit
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``tests/reference/generate_ferric_reference.py`` imports no ExoEOS/JAX
+thermodynamic code. It generates two independent references:
+
+* ``ferric_source_v1.json``: 24 pure-standard states, using 96-point
+  Gauss--Legendre quadrature for Cp, Cp/T and the pressure integral, including
+  the solid anomaly. The extra 298.15 and 955 K states are formula checks.
+* ``ferric_melts_v1.json``: 110 supplied-liquid states from the hash-pinned
+  rhyolite-MELTS 1.0.2 runtime, including 72 six-component interiors with μ.
+  The grid spans 1200, 1479, 1481, 1600, 1895 and 2200 K at 1, 500 and
+  5000 bar. It includes trace Fe2O3, finite Fe2O3, doubled amounts,
+  zero Fe2O3 and the pure Fe2O3 endpoint, plus two available binary faces.
+
+Each T/P request uses a fresh process with oxygen buffering disabled.
+Oxide amounts and component fractions are checked after conversion; the
+largest oxide round-trip error is below 1e-9 g. Native S, Cp, V, V_T and V_P
+are compared directly with JAX derivatives, without finite-differencing
+ExoEOS. Native cm3 and cm3/bar are converted to m3 and m3/Pa.
+
+.. list-table:: Maximum absolute differences from the 110 saved MELTS states
+   :header-rows: 1
+
+   * - Quantity
+     - Maximum difference
+     - Test tolerance
+   * - Standard G (J/mol)
+     - 4.66e-10
+     - 3e-8
+   * - Total G (J)
+     - 1.91e-5
+     - 5e-5
+   * - Interior μ (J/mol), 72 states
+     - 5.36e-7
+     - 2e-6
+   * - S (J/K)
+     - 3.33e-9
+     - 1e-8
+   * - Cp (J/K)
+     - 1.82e-9
+     - 1e-8
+   * - V (m3)
+     - 5.89e-15
+     - 1e-14
+   * - V_T (m3/K)
+     - 8.02e-20
+     - 2e-19
+   * - V_P (m3/Pa)
+     - 4.94e-26
+     - 2e-24
+
+.. figure:: _static/magma/ferric_validation.png
+   :alt: Ferric standard G, entropy and volume match MELTS points; residual panels show the largest sampled G, chemical-potential and heat-capacity differences.
+   :width: 100%
+
+   Pure Fe2O3 properties and sampled comparison errors. Circles in the top
+   row are independent MELTS evaluations. The bottom row reports maximum
+   errors over the six compositions at each T/P, with μ restricted to the
+   positive interiors. These finite comparisons are model checks, not an
+   empirical calibration or a uniform error bound outside the sample.
+
+Three requested binary faces (Fe2O3 with Mg2SiO4, Fe2SiO4 or CaSiO3) fail
+the pinned runtime's oxide conversion with negative SiO2. They are listed
+in ``unavailable_cases`` and are not replaced by perturbed compositions.
+All five added interactions participate in the positive-interior comparisons.
+
+At :math:`n_B=0`, energy and fixed-composition T/P derivatives recover the
+five-component model; the saved 1700 K, 500 bar example has exactly zero
+differences for G, S, Cp, V, V_T and V_P. At this boundary the full
+six-component composition gradient is outside the API contract. As
+:math:`n_B\to0^+`, the five present chemical potentials converge to those
+of the existing model, while :math:`\mu_B\to-\infty` through the ideal term.
+No finite floor or finite zero-amount ferric chemical potential is supplied.
+
+.. figure:: _static/magma/ferric_zero_limit.png
+   :alt: Total G and the five present chemical potentials approach the five-component values as Fe2O3 tends to zero, while ferric chemical potential diverges logarithmically.
+   :width: 100%
+
+   Fe2O3 dilution at fixed other amounts
+   :math:`[0.4,0.275,0.075,0.25,0.12]` mol, 1700 K and 500 bar.
+   At 1e-12 mol Fe2O3, the total-G difference is 1.60e-6 J and the largest
+   present-μ difference is 1.54e-7 J/mol. This is a property limit with
+   changing elemental inventory, not a closed redox reaction path.
+
+Reproduce the figures and numerical summary without MELTS:
+
+.. code-block:: console
+
+   JAX_PLATFORMS=cpu python examples/magma_ferric.py --output results/magma_ferric
+   python -m pytest tests/unittests/magma_ferric_test.py
+
+Optional reference regeneration requires the separately installed pinned
+runtime and ``tinynumpy`` only for the second command:
+
+.. code-block:: console
+
+   python tests/reference/generate_ferric_reference.py --output tests/reference/ferric_source_v1.json
+   python tests/reference/generate_ferric_reference.py --runtime /path/to/pinned/runtime --output tests/reference/ferric_melts_v1.json
+
+The formulas and coefficients are pinned to MAGMA revision
+``705a0fb315e5054d18275a580562f6121c8e458c``:
+`liquid standards <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/liq_struct_data.h>`_,
+`fusion and transition integrals <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/gibbs.c>`_, and
+`mixing coefficients <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/param_struct_data_v34.h>`_.
+Both fixtures record source hashes; the runtime fixture also records wrapper
+and library hashes. The release binary's thermodynamic C build identity is
+not independently established by these formula comparisons.
 
 .. _native-pyroxene:
 

@@ -1,7 +1,8 @@
-"""Native JAX MELTS CaO--MgO--FeO--Al2O3--SiO2 liquid and silicate solids.
+"""Native JAX MELTS Fe(II)/Fe(III) silicate liquid and silicate solids.
 
 The liquid basis is (SiO2, Mg2SiO4[, Fe2SiO4][, CaSiO3, Al2O3]), not oxides.
-Iron is exclusively Fe(II). Olivine is the binary forsterite--fayalite face.
+The six-component ferric basis appends Fe2O3 to CMFAS. Solid iron remains
+Fe(II); olivine is the binary forsterite--fayalite face. No redox solve is done.
 Temperatures are K, pressures Pa, amounts mol, and Gibbs energies J.
 Enable JAX x64 for thermodynamic derivatives and phase comparisons.
 ELEMENTS and element_matrix(components) define the conserved atom ledger:
@@ -28,6 +29,7 @@ COMPONENTS = ("SiO2", "Mg2SiO4")
 TERNARY_COMPONENTS = COMPONENTS + ("Fe2SiO4",)
 CMAS_COMPONENTS = COMPONENTS + ("CaSiO3", "Al2O3")
 CMFAS_COMPONENTS = TERNARY_COMPONENTS + ("CaSiO3", "Al2O3")
+FERRIC_COMPONENTS = CMFAS_COMPONENTS + ("Fe2O3",)
 OLIVINE_COMPONENTS = ("Mg2SiO4", "Fe2SiO4")
 CLINOPYROXENE_COMPONENTS = ("CaMgSi2O6", "CaFeSi2O6")
 PYROXENE_COMPONENTS = ("CaSiO3", "MgSiO3", "FeSiO3")
@@ -40,6 +42,7 @@ _ELEMENT_COUNTS = {
     "Fe2SiO4": (4, 0, 1, 2, 0, 0),
     "CaSiO3": (3, 0, 1, 0, 0, 1),
     "Al2O3": (3, 0, 0, 0, 2, 0),
+    "Fe2O3": (3, 0, 0, 2, 0, 0),
     "CaMgSi2O6": (6, 1, 2, 0, 0, 1),
     "CaFeSi2O6": (6, 0, 2, 1, 0, 1),
     "MgSiO3": (3, 1, 1, 0, 0, 0),
@@ -433,8 +436,9 @@ def _silica_h_s(T):
     return jax.lax.cond(T >= 1480.0, above, below, T)
 
 
-def liquid_standard_gibbs(T, P, *, include_fe=False, include_ca_al=False):
-    """Return [SiO2, Mg2SiO4[, Fe2SiO4][, CaSiO3, Al2O3]] G in J/mol.
+def liquid_standard_gibbs(T, P, *, include_fe=False, include_ca_al=False,
+                          include_ferric=False):
+    """Return liquid standards in J/mol in the selected component order.
 
     The SiO2 branch switches at 1480 K, preserving G and its first
     temperature derivative; its heat capacity can jump there. The
@@ -444,8 +448,14 @@ def liquid_standard_gibbs(T, P, *, include_fe=False, include_ca_al=False):
     Static ``include_ca_al=True`` appends CaSiO3 and Al2O3, yielding
     shape (4,) or (5,). They use fusion at 1817 and 2319.65 K with
     constant liquid Cp=172.4 and 170.3 J/mol/K, respectively.
+    Static ``include_ferric=True`` requires both other flags and appends
+    Fe2O3, giving FERRIC_COMPONENTS. Its fusion construction includes the
+    solid reference's 955 K transition, fusion at 1895 K, and liquid
+    Cp=240.9 J/mol/K. Fe(II)/Fe(III) amounts are supplied, not equilibrated.
     Input validation and x64 configuration belong to the caller.
     """
+    if include_ferric and not (include_fe and include_ca_al):
+        raise ValueError("include_ferric requires include_fe=True and include_ca_al=True.")
     T, P = _tp(T, P)
     h_q, s_q = _silica_h_s(T)
     h_f, s_f = _olivine_h_s(2163.0)
@@ -482,16 +492,32 @@ def liquid_standard_gibbs(T, P, *, include_fe=False, include_ca_al=False):
                 (v, dvdt, dvdp, d2vdtp, d2vdp2),
                 ([4.347, 3.711], [2.92e-4, 2.62e-4], [-1.55e-5, -2.26e-5],
                  [-1.6e-8, 2.7e-8], [3.89e-10, 4.0e-10])))
+    if include_ferric:
+        h, s = _berman_h_s(1895., -822000., 87.40, (146.86, 0., -5.5768e6, 5.2563e8))
+        # Integrate Cp_lambda = T*(l1+l2*T)**2 to 955 K, then add the
+        # transition latent heat. The liquid has no branch at 955 K.
+        tc, l1, l2 = 955., -7.403e-2, 27.921e-5
+        h += (1287. + l1*l1*(tc**2-_TR**2)/2
+              + 2*l1*l2*(tc**3-_TR**3)/3 + l2*l2*(tc**4-_TR**4)/4)
+        s += (1287./tc + l1*l1*(tc-_TR)
+              + l1*l2*(tc**2-_TR**2) + l2*l2*(tc**3-_TR**3)/3)
+        thermal = jnp.append(thermal, h + 1895.*60.41 + 240.9*(T-1895.)
+                             - T*(s + 60.41 + 240.9*jnp.log(T/1895.)))
+        v, dvdt, dvdp, d2vdtp, d2vdp2 = (
+            jnp.append(values, extra) for values, extra in zip(
+                (v, dvdt, dvdp, d2vdtp, d2vdp2),
+                (4.213, 9.09e-4, -2.53e-5, 3.1e-8, 4.4e-10)))
     return (thermal + (v + dvdt * dt) * dp
             + (dvdp + d2vdtp * dt) * dp**2 / 2.0
             + d2vdp2 * dp**3 / 6.0)
 
 
 def liquid_gibbs(T, P, n):
-    """Return liquid G in J on the binary, ternary, CMAS or CMFAS basis.
+    """Return liquid G in J on a supported two- to six-component basis.
 
     Shape (2,) is COMPONENTS, (3,) TERNARY_COMPONENTS, (4,) CMAS_COMPONENTS,
-    and (5,) CMFAS_COMPONENTS. Supply nonnegative finite mol amounts and positive finite
+    (5,) CMFAS_COMPONENTS, and (6,) FERRIC_COMPONENTS (CMFAS plus Fe2O3).
+    Supply nonnegative finite mol amounts and positive finite
     scalar K/Pa. Only static shapes are checked here. Zero component
     amounts use the continuous energy limit, including G(T,P,[0,0])=0.
     Composition derivatives are supported for strictly positive amounts;
@@ -501,10 +527,11 @@ def liquid_gibbs(T, P, n):
     """
     T, P = _tp(T, P)
     amounts = jnp.asarray(n) * 1.0
-    if amounts.shape not in ((2,), (3,), (4,), (5,)):
-        raise ValueError("n must have shape (2,), (3,), (4,) or (5,) in the documented liquid order.")
-    include_fe = amounts.shape in ((3,), (5,))
-    include_ca_al = amounts.shape in ((4,), (5,))
+    if amounts.shape not in ((2,), (3,), (4,), (5,), (6,)):
+        raise ValueError("n must have shape (2,), (3,), (4,), (5,) or (6,) in the documented liquid order.")
+    include_fe = amounts.shape in ((3,), (5,), (6,))
+    include_ca_al = amounts.shape in ((4,), (5,), (6,))
+    include_ferric = amounts.shape == (6,)
 
     def present(values):
         x = values / jnp.sum(values)
@@ -512,13 +539,18 @@ def liquid_gibbs(T, P, n):
         if include_fe:
             excess += 23660.9 * values[0] * x[2] - 37256.7 * values[1] * x[2]
         if include_ca_al:
-            excess += (-863.7 * values[0] * x[-2] - 39120.0 * values[0] * x[-1]
-                       - 31731.9 * values[1] * x[-2] - 32880.3 * values[1] * x[-1]
-                       - 57917.9 * values[-2] * x[-1])
+            c, al = (3, 4) if include_fe else (2, 3)
+            excess += (-863.7 * values[0] * x[c] - 39120.0 * values[0] * x[al]
+                       - 31731.9 * values[1] * x[c] - 32880.3 * values[1] * x[al]
+                       - 57917.9 * values[c] * x[al])
             if include_fe:
-                excess += -12970.8 * values[2] * x[-2] - 30509.0 * values[2] * x[-1]
+                excess += -12970.8 * values[2] * x[c] - 30509.0 * values[2] * x[al]
+        if include_ferric:
+            excess += x[5] * (jnp.array([8110.3, -71518.6, -179064.9, 12076.6, -17089.4])
+                              @ values[:5])
         return (jnp.dot(values, liquid_standard_gibbs(
-                    T, P, include_fe=include_fe, include_ca_al=include_ca_al))
+                    T, P, include_fe=include_fe, include_ca_al=include_ca_al,
+                    include_ferric=include_ferric))
                 + R * T * jnp.sum(xlogy(values, x))
                 + excess)
 
