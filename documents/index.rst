@@ -48,6 +48,7 @@ Physical model references
    melts_liquid_evaluator
    native_magma
    native_dry_solids
+   native_hydrous_liquid
    cns_provider_scope
    m2_material_contract
    m2_reaction_calibration

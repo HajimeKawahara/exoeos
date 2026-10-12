@@ -1,0 +1,417 @@
+{
+  "scope": "Supplied hydrous liquid; fixed Fe(II)/Fe(III), no equilibrium or empirical water correction.",
+  "component_order": [
+    "SiO2",
+    "Mg2SiO4",
+    "Fe2SiO4",
+    "CaSiO3",
+    "Al2O3",
+    "Fe2O3",
+    "TiO2",
+    "MgCr2O4",
+    "Na2SiO3",
+    "KAlSiO4",
+    "Ca3(PO4)2",
+    "H2O"
+  ],
+  "backend": {
+    "model": "rhyolite-MELTS 1.0.2",
+    "calculation_mode": 1,
+    "version_string": "2.3.2 (Jul 21 2026 17:06:24)",
+    "release": "v2.3.2",
+    "source_commit": "9b92b1e0e6d1538a0f498572d6c6651d5d3aca7e",
+    "source_url": "https://github.com/magmasource/alphaMELTS/tree/9b92b1e0e6d1538a0f498572d6c6651d5d3aca7e",
+    "archive_url": "https://github.com/magmasource/alphaMELTS/releases/download/v2.3.2/alphamelts-py-2.3.2-ubuntu_22_04-x86_64.zip",
+    "archive_sha256": "97ec2cdb53cae69822a41b5639d8b93edf95b2c361bc15e64e53b192ea9e1425",
+    "runtime_sha256": {
+      "meltsdynamic.py": "c9b12a82ee2d8dfc317af33e571e441158e0d4422af5bcdc11cf2197dbb71ce8",
+      "meltsengine.py": "05a41c1f842e6359fd44541638cb34389258a7539c47e5f205090434f6082af9",
+      "meltsstatus.py": "4869341cdd18e8eac01a4fe612e14bc350ea0f8ecdec7fa498a7f0e8e65e99ee",
+      "libalphamelts.so": "c218ef6f7ba5aef4b0760f3176530d1335457d6e2716823a1d0de3a5d13301e5",
+      "libgsl.so.28": "62dcb82585a2970edf2054e8e7c7df1a1aa4c307c936e7ff95b1331a4ababb2e",
+      "libgslcblas.so.0": "bb1d1273d2596ff756cbc881bc8a51837ed9cfbfa59ed55309ae42e3d9496948"
+    },
+    "license": "AGPL-3.0; backend is not redistributed",
+    "build_provenance": "Release binary pinned by hash; thermodynamic C build commit is not independently established."
+  },
+  "native_states": 148,
+  "native_interior_mu_states": 98,
+  "compiled_standard_states": 27,
+  "water_pair_count": 11,
+  "maximum_absolute_errors": {
+    "g_J": 5.6896358728408813e-05,
+    "s_J_K": 8.452843758277595e-09,
+    "cp_J_K": 4.173671186435968e-09,
+    "v_m3": 1.504921404507642e-14,
+    "dvdt_m3_K": 4.859520662626527e-20,
+    "dvdp_m3_Pa": 9.69415389207997e-26,
+    "mu_J_mol": 2.844957634806633e-06,
+    "standard_J_mol": 9.313225746154785e-10
+  },
+  "compiled_standard_maximum_absolute_errors": {
+    "g_J": 1.3853423297405243e-08,
+    "s_J_K": 2.0889956431346945e-11,
+    "cp_J_K": 3.410747240195633e-10,
+    "v_m3": 2.0328790734103208e-20,
+    "dvdt_m3_K": 9.926167350636332e-24,
+    "dvdp_m3_Pa": 1.8932661725304283e-29
+  },
+  "recipes": [
+    {
+      "name": "BSE_0.1wt",
+      "water_wt_percent": 0.1,
+      "n_mol": [
+        0.15605978213556124,
+        0.467925809275454,
+        0.05605315209445833,
+        0.06289389327435184,
+        0.04336004597417263,
+        0.0,
+        0.00251706811139227,
+        0.0025278704013034768,
+        0.005811624196484055,
+        0.0006160281849886388,
+        0.00014802662286851197,
+        0.005550868155779564
+      ]
+    },
+    {
+      "name": "BSE_2wt",
+      "water_wt_percent": 2.0,
+      "n_mol": [
+        0.153091678171021,
+        0.45902631940935423,
+        0.054987076128697854,
+        0.06169771312198678,
+        0.0425353804351243,
+        0.0,
+        0.002469195945109534,
+        0.002479792786063471,
+        0.005701092805359733,
+        0.0006043119332220882,
+        0.00014521130171285459,
+        0.11101736311559128
+      ]
+    },
+    {
+      "name": "BSE_5wt",
+      "water_wt_percent": 5.0,
+      "n_mol": [
+        0.14840519822701018,
+        0.44497449330498623,
+        0.05330379828802344,
+        0.0598090076182525,
+        0.04123327695241641,
+        0.0,
+        0.002393608314136793,
+        0.0024038807620003033,
+        0.005526569556216067,
+        0.0005858125883275344,
+        0.00014076605778286924,
+        0.2775434077889782
+      ]
+    },
+    {
+      "name": "basalt_like_0.1wt",
+      "water_wt_percent": 0.1,
+      "n_mol": [
+        0.41375344950562193,
+        0.09881686311460929,
+        0.05561865312667023,
+        0.17695181286484146,
+        0.1363628419612819,
+        0.012511569131115985,
+        0.025006633391239923,
+        0.0006572792193180877,
+        0.048355134824829206,
+        0.021209425562134704,
+        0.006334164925845677,
+        0.005550868155779564
+      ]
+    },
+    {
+      "name": "basalt_like_2wt",
+      "water_wt_percent": 2.0,
+      "n_mol": [
+        0.4058842647802897,
+        0.09693746331563272,
+        0.05456084090504186,
+        0.17358636297051513,
+        0.1337693544765328,
+        0.012273611359853519,
+        0.02453103175517029,
+        0.000644778413345071,
+        0.04743546759592856,
+        0.020806043093985992,
+        0.006213695322651413,
+        0.11101736311559128
+      ]
+    },
+    {
+      "name": "basalt_like_5wt",
+      "water_wt_percent": 5.0,
+      "n_mol": [
+        0.3934592362666074,
+        0.09396998994882765,
+        0.05289061108141813,
+        0.16827249471631567,
+        0.12967437423745526,
+        0.011897888563123309,
+        0.023780081803481404,
+        0.0006250402986508341,
+        0.04598336144503278,
+        0.020169123407435402,
+        0.006023480159713106,
+        0.2775434077889782
+      ]
+    },
+    {
+      "name": "rhyolite_like_0.1wt",
+      "water_wt_percent": 0.1,
+      "n_mol": [
+        1.0145271289975648,
+        0.006163729959300865,
+        0.01042849746125067,
+        0.022709404164864506,
+        0.0894485102447229,
+        0.003127892282778996,
+        0.0037509950086859877,
+        6.572792193180876e-05,
+        0.06447351309977228,
+        0.09544241502960617,
+        0.0013372125954563092,
+        0.005550868155779564
+      ]
+    },
+    {
+      "name": "rhyolite_like_2wt",
+      "water_wt_percent": 2.0,
+      "n_mol": [
+        0.9952318182358494,
+        0.006046501861976825,
+        0.01023015766969535,
+        0.022277493575142356,
+        0.0877472873271556,
+        0.0030684028399633797,
+        0.003679654763275543,
+        6.447784133450708e-05,
+        0.06324729012790474,
+        0.09362719392293699,
+        0.0013117801236708537,
+        0.11101736311559128
+      ]
+    },
+    {
+      "name": "rhyolite_like_5wt",
+      "water_wt_percent": 5.0,
+      "n_mol": [
+        0.9647655380857723,
+        0.005861404866202025,
+        0.0099169895777659,
+        0.021595529486107386,
+        0.08506114587836514,
+        0.0029744721407808272,
+        0.0035670122705222106,
+        6.25040298650834e-05,
+        0.061311148593377045,
+        0.09076105533345931,
+        0.0012716235892727664,
+        0.2775434077889782
+      ]
+    }
+  ],
+  "unavailable_cases": [
+    {
+      "T_K": 1700.0,
+      "P_Pa": 50000000.0,
+      "samples": [
+        {
+          "name": "water_pair_1",
+          "n_mol": [
+            0.0,
+            0.7,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.3
+          ]
+        }
+      ],
+      "reason": "Native oxide conversion gives negative SiO2; no perturbation used."
+    },
+    {
+      "T_K": 1700.0,
+      "P_Pa": 50000000.0,
+      "samples": [
+        {
+          "name": "water_pair_2",
+          "n_mol": [
+            0.0,
+            0.0,
+            0.7,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.3
+          ]
+        }
+      ],
+      "reason": "Native oxide conversion gives negative SiO2; no perturbation used."
+    },
+    {
+      "T_K": 1700.0,
+      "P_Pa": 50000000.0,
+      "samples": [
+        {
+          "name": "water_pair_3",
+          "n_mol": [
+            0.0,
+            0.0,
+            0.0,
+            0.7,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.3
+          ]
+        }
+      ],
+      "reason": "Native oxide conversion gives negative SiO2; no perturbation used."
+    },
+    {
+      "T_K": 1700.0,
+      "P_Pa": 50000000.0,
+      "samples": [
+        {
+          "name": "water_pair_7",
+          "n_mol": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7,
+            0.0,
+            0.0,
+            0.0,
+            0.3
+          ]
+        }
+      ],
+      "reason": "Native oxide conversion gives negative SiO2; no perturbation used."
+    },
+    {
+      "T_K": 1700.0,
+      "P_Pa": 50000000.0,
+      "samples": [
+        {
+          "name": "water_pair_8",
+          "n_mol": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7,
+            0.0,
+            0.0,
+            0.3
+          ]
+        }
+      ],
+      "reason": "Native oxide conversion gives negative SiO2; no perturbation used."
+    },
+    {
+      "T_K": 1700.0,
+      "P_Pa": 50000000.0,
+      "samples": [
+        {
+          "name": "water_pair_9",
+          "n_mol": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7,
+            0.0,
+            0.3
+          ]
+        }
+      ],
+      "reason": "Native oxide conversion gives negative SiO2; no perturbation used."
+    },
+    {
+      "T_K": 1700.0,
+      "P_Pa": 50000000.0,
+      "samples": [
+        {
+          "name": "water_pair_10",
+          "n_mol": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.7,
+            0.3
+          ]
+        }
+      ],
+      "reason": "Native oxide conversion gives negative SiO2; no perturbation used."
+    },
+    {
+      "T_K": 1700.0,
+      "P_Pa": 50000000.0,
+      "samples": [
+        {
+          "name": "pure_water",
+          "n_mol": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ],
+      "reason": "Native mixing evaluates 0*log(0) at pure water; nonfinite G/S. The compiled standard is saved separately."
+    }
+  ]
+}

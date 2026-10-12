@@ -78,6 +78,13 @@ characteristics and numerical errors; assemblage selection remains separate.
 The [Japanese explanation](https://github.com/HajimeKawahara/doc_ExoEOS) is
 maintained separately; current English documentation lives in `documents/`.
 
+The [hydrous liquid extension](documents/native_hydrous_liquid.rst) appends
+H2O to the dry eleven-component basis, with the MELTS Haar/Robie standard,
+all eleven water interactions and the extra water mixing entropy. Its
+[comparison example](examples/magma_hydrous.py) reproduces supplied wet
+BSE, basalt-like and rhyolite-like properties without an external runtime.
+This is the MELTS water option; empirical solubility models remain separate.
+
 Install the documentation dependencies and build the committed notebook-based
 tutorials with:
 
