@@ -7,6 +7,19 @@ quantities. The solution layer uses reduced molar excess Gibbs energy.
 The original caloric ideal-gas interface retains its broadcasting contract.
 Fixed-composition tabulated models use a separate mass-specific state.
 
+The `exoeos.magma_fluid` submodule provides `water_gas_standard_gibbs(T)`
+(J/mol at the 1 bar ideal-gas standard) and
+`water_fluid_gibbs(T, P, n, eos=...)` (extensive J; scalar K, Pa, mol H2O).
+The standard retains the MELTS Haar reference shift; an explicitly selected
+pure-water EOS supplies `R*T*(log(P/1e5) + lnphi)` on its vapor root.
+Enable x64. Inputs require T >= 700 K, P > 0, n >= 0 and the EOS's domain.
+G, mu, S, Cp and V derive from the same scalar, including the T-dependent
+standard. G=0 at n=0 is an energy convention; its guarded derivative is not
+a chemical potential. Evaluate a positive amount for candidate insertion.
+See [the fluid connection](native_magma_fluid.rst) for the distinct
+composition, temperature, ordering and density-root boundaries. This
+property API does not solve saturation or phase amounts.
+
 ## Public interface
 
 The top-level package exports `HelmholtzEOS`, `TPHelmholtzEOS`, `IdealEOS`,

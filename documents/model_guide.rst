@@ -23,6 +23,10 @@ Choose an entry point
    * - Fluid pressure and fugacity at known molar density
      - ``state_trho(eos, T, rho, x)``
      - Supply molar density in mol/m3 and normalized mole fractions.
+   * - Pure H2O fluid G on the native magma reference
+     - ``exoeos.magma_fluid.water_fluid_gibbs(T, P, n, eos=...)``
+     - Scalar K, Pa, mol; explicitly select a pure-water EOS, enable x64
+       and read :doc:`native_magma_fluid` for standards and boundaries.
    * - Excess Gibbs and activities
      - ``solution_state(model, T, P, x)``
      - Match the model's component order and symmetric standards.
