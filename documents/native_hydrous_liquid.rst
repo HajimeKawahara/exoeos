@@ -13,7 +13,9 @@ models in ``examples/m2_material`` remain separate alternatives; their
 computational kernels are not migrated here. Adding such a solubility
 correction to this G would count water thermodynamics twice. The current
 extension supplies liquid properties, not water saturation, hydrous minerals,
-redox equilibrium or crystallization. The separate :doc:`native_magma_fluid`
+redox equilibrium or crystallization. :doc:`native_hydrous_solids` adds
+separate hydrous mineral models and a restricted water-effect cooling control.
+The separate :doc:`native_magma_fluid`
 connects an explicit H2O gas standard to an existing EOS for supplied-state
 chemical-potential comparisons.
 

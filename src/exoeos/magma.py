@@ -4,7 +4,8 @@ The liquid basis is (SiO2, Mg2SiO4[, Fe2SiO4][, CaSiO3, Al2O3]), not oxides.
 The six-component ferric basis appends Fe2O3 to CMFAS; DRY11_COMPONENTS
 adds TiO2, MgCr2O4, Na2SiO3, KAlSiO4 and Ca3(PO4)2. The solids in this
 module retain Fe(II); magma_solids adds ferric pyroxenes and oxides as well
-as Na/K feldspars. Olivine is the binary Fo--Fa face. No redox solve is done.
+as Na/K feldspars, biotite, hornblende and Ca--Mg--Fe amphiboles.
+Olivine is the binary Fo--Fa face. No redox solve is done.
 Temperatures are K, pressures Pa, amounts mol, and Gibbs energies J.
 Enable JAX x64 for thermodynamic derivatives and phase comparisons.
 ELEMENTS and element_matrix(components) define the conserved atom ledger:
@@ -87,6 +88,16 @@ _ELEMENT_COUNTS = {
 }
 _ELEMENT_COUNTS = {name: counts + (0,) for name, counts in _ELEMENT_COUNTS.items()}
 _ELEMENT_COUNTS["H2O"] = (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2)
+_ELEMENT_COUNTS.update({
+    "KFe3Si3AlO10(OH)2": (12, 0, 3, 3, 1, 0, 0, 1, 0, 0, 0, 2),
+    "KMg3Si3AlO10(OH)2": (12, 3, 3, 0, 1, 0, 0, 1, 0, 0, 0, 2),
+    "NaCa2Mg4Al3Si6O22(OH)2": (24, 4, 6, 0, 3, 2, 1, 0, 0, 0, 0, 2),
+    "NaCa2Fe4Al3Si6O22(OH)2": (24, 0, 6, 4, 3, 2, 1, 0, 0, 0, 0, 2),
+    "NaCa2Mg4FeAl2Si6O22(OH)2": (24, 4, 6, 1, 2, 2, 1, 0, 0, 0, 0, 2),
+    "Mg7Si8O22(OH)2": (24, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0, 2),
+    "Fe7Si8O22(OH)2": (24, 0, 8, 7, 0, 0, 0, 0, 0, 0, 0, 2),
+    "Ca2Mg5Si8O22(OH)2": (24, 5, 8, 0, 0, 2, 0, 0, 0, 0, 0, 2),
+})
 R = 8.3143  # J/(mol K); retain the MELTS entropy convention.
 W = 3421.0  # J/mol; SiO2--Mg2SiO4 liquid interaction.
 # Upper triangle in DRY11_COMPONENTS order; all 55 H interactions (J/mol).
