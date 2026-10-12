@@ -1,0 +1,110 @@
+{
+  "scope": "Supplied dry phase properties, not crystallization or redox equilibrium.",
+  "reference_sha256": "dc6276730e6e7c7b2f372239414781df44e8d8c80edc77fd0b84344fb6b428e9",
+  "backend": {
+    "model": "rhyolite-MELTS 1.0.2",
+    "calculation_mode": 1,
+    "version_string": "2.3.2 (Jul 21 2026 17:06:24)",
+    "release": "v2.3.2",
+    "source_commit": "9b92b1e0e6d1538a0f498572d6c6651d5d3aca7e",
+    "source_url": "https://github.com/magmasource/alphaMELTS/tree/9b92b1e0e6d1538a0f498572d6c6651d5d3aca7e",
+    "archive_url": "https://github.com/magmasource/alphaMELTS/releases/download/v2.3.2/alphamelts-py-2.3.2-ubuntu_22_04-x86_64.zip",
+    "archive_sha256": "97ec2cdb53cae69822a41b5639d8b93edf95b2c361bc15e64e53b192ea9e1425",
+    "runtime_sha256": {
+      "meltsdynamic.py": "c9b12a82ee2d8dfc317af33e571e441158e0d4422af5bcdc11cf2197dbb71ce8",
+      "meltsengine.py": "05a41c1f842e6359fd44541638cb34389258a7539c47e5f205090434f6082af9",
+      "meltsstatus.py": "4869341cdd18e8eac01a4fe612e14bc350ea0f8ecdec7fa498a7f0e8e65e99ee",
+      "libalphamelts.so": "c218ef6f7ba5aef4b0760f3176530d1335457d6e2716823a1d0de3a5d13301e5",
+      "libgsl.so.28": "62dcb82585a2970edf2054e8e7c7df1a1aa4c307c936e7ff95b1331a4ababb2e",
+      "libgslcblas.so.0": "bb1d1273d2596ff756cbc881bc8a51837ed9cfbfa59ed55309ae42e3d9496948"
+    },
+    "license": "AGPL-3.0; backend is not redistributed",
+    "build_provenance": "Release binary pinned by hash; thermodynamic C build commit is not independently established."
+  },
+  "phases": {
+    "plagioclase": {
+      "states": 33,
+      "maximum_absolute_errors": {
+        "g_J": 1.862645149230957e-09,
+        "s_J_K": 2.2737367544323206e-13,
+        "cp_J_K": 1.7053025658242404e-13,
+        "v_m3": 4.0657581468206416e-20,
+        "mu_J_mol": 2.7939677238464355e-09,
+        "standard_J_mol": 1.862645149230957e-09
+      }
+    },
+    "alkali-feldspar": {
+      "states": 33,
+      "maximum_absolute_errors": {
+        "g_J": 9.313225746154785e-10,
+        "s_J_K": 2.2737367544323206e-13,
+        "cp_J_K": 3.410605131648481e-13,
+        "v_m3": 4.0657581468206416e-20,
+        "mu_J_mol": 2.7939677238464355e-09,
+        "standard_J_mol": 1.862645149230957e-09
+      }
+    },
+    "spinel": {
+      "states": 33,
+      "maximum_absolute_errors": {
+        "g_J": 4.656612873077393e-10,
+        "s_J_K": 2.2737367544323206e-13,
+        "cp_J_K": 1.1368683772161603e-13,
+        "v_m3": 1.3552527156068805e-20,
+        "mu_J_mol": 9.313225746154785e-10,
+        "standard_J_mol": 4.656612873077393e-10
+      }
+    },
+    "rhm-oxide": {
+      "states": 39,
+      "maximum_absolute_errors": {
+        "g_J": 4.656612873077393e-10,
+        "s_J_K": 2.2737367544323206e-13,
+        "cp_J_K": 5.4072302191343624e-12,
+        "v_m3": 1.3552527156068805e-20,
+        "mu_J_mol": 6.984919309616089e-10,
+        "standard_J_mol": 2.3283064365386963e-10
+      }
+    },
+    "clinopyroxene": {
+      "states": 33,
+      "maximum_absolute_errors": {
+        "g_J": 1.3969838619232178e-09,
+        "s_J_K": 3.410605131648481e-13,
+        "cp_J_K": 2.8421709430404007e-13,
+        "v_m3": 2.710505431213761e-20,
+        "mu_J_mol": 1.862645149230957e-09,
+        "standard_J_mol": 9.313225746154785e-10
+      }
+    },
+    "orthopyroxene": {
+      "states": 33,
+      "maximum_absolute_errors": {
+        "g_J": 9.313225746154785e-10,
+        "s_J_K": 3.410605131648481e-13,
+        "cp_J_K": 2.8421709430404007e-13,
+        "v_m3": 2.710505431213761e-20,
+        "mu_J_mol": 1.3969838619232178e-09,
+        "standard_J_mol": 9.313225746154785e-10
+      }
+    },
+    "rutile": {
+      "states": 11,
+      "maximum_absolute_errors": {
+        "g_J": 0.0,
+        "s_J_K": 2.842170943040401e-14,
+        "cp_J_K": 2.842170943040401e-14,
+        "v_m3": 6.776263578034403e-21
+      }
+    },
+    "corundum": {
+      "states": 11,
+      "maximum_absolute_errors": {
+        "g_J": 2.3283064365386963e-10,
+        "s_J_K": 8.526512829121202e-14,
+        "cp_J_K": 8.526512829121202e-14,
+        "v_m3": 1.0164395367051604e-20
+      }
+    }
+  }
+}

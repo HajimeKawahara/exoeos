@@ -2,8 +2,9 @@
 
 The liquid basis is (SiO2, Mg2SiO4[, Fe2SiO4][, CaSiO3, Al2O3]), not oxides.
 The six-component ferric basis appends Fe2O3 to CMFAS; DRY11_COMPONENTS
-adds TiO2, MgCr2O4, Na2SiO3, KAlSiO4 and Ca3(PO4)2. Solid iron remains
-Fe(II); olivine is the binary forsterite--fayalite face. No redox solve is done.
+adds TiO2, MgCr2O4, Na2SiO3, KAlSiO4 and Ca3(PO4)2. The solids in this
+module retain Fe(II); magma_solids adds ferric pyroxenes and oxides as well
+as Na/K feldspars. Olivine is the binary Fo--Fa face. No redox solve is done.
 Temperatures are K, pressures Pa, amounts mol, and Gibbs energies J.
 Enable JAX x64 for thermodynamic derivatives and phase comparisons.
 ELEMENTS and element_matrix(components) define the conserved atom ledger:
@@ -63,6 +64,20 @@ _ELEMENT_COUNTS = {
     "MgSiO3": (3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0),
     "FeSiO3": (3, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0),
     "CaAl2Si2O8": (8, 0, 2, 0, 2, 1, 0, 0, 0, 0, 0),
+    "NaAlSi3O8": (8, 0, 3, 0, 1, 0, 1, 0, 0, 0, 0),
+    "KAlSi3O8": (8, 0, 3, 0, 1, 0, 0, 1, 0, 0, 0),
+    "Mg2Si2O6": (6, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0),
+    "CaTi0.5Mg0.5AlSiO6": (6, .5, 1, 0, 1, 1, 0, 0, .5, 0, 0),
+    "CaTi0.5Mg0.5FeSiO6": (6, .5, 1, 1, 0, 1, 0, 0, .5, 0, 0),
+    "CaFeAlSiO6": (6, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0),
+    "NaAlSi2O6": (6, 0, 2, 0, 1, 0, 1, 0, 0, 0, 0),
+    "FeCr2O4": (4, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0),
+    "FeAl2O4": (4, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0),
+    "Fe3O4": (4, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0),
+    "MgAl2O4": (4, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0),
+    "Fe2TiO4": (4, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0),
+    "MgTiO3": (3, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+    "FeTiO3": (3, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0),
 }
 R = 8.3143  # J/(mol K); retain the MELTS entropy convention.
 W = 3421.0  # J/mol; SiO2--Mg2SiO4 liquid interaction.
@@ -82,7 +97,7 @@ _TR = 298.15
 
 
 def element_matrix(components):
-    """Return integer atom counts A with element inventory = A @ n.
+    """Return atom counts A with element inventory = A @ n.
 
     Rows follow ELEMENTS; columns follow the supplied nonempty sequence of
     supported formula strings (e.g. CMFAS_COMPONENTS or PYROXENE_COMPONENTS).
@@ -98,7 +113,9 @@ def element_matrix(components):
         raise ValueError(f"Unsupported magma component: {error.args[0]}") from error
     if not counts:
         raise ValueError("components must contain at least one supported formula.")
-    return jnp.asarray(counts, dtype=jnp.int32).T
+    # Ti-bearing pyroxenes carry exact half-integer atoms per formula unit.
+    dtype = float if any(v != int(v) for row in counts for v in row) else jnp.int32
+    return jnp.asarray(counts, dtype=dtype).T
 
 
 def liquid_moles_from_oxides(m):

@@ -25,6 +25,9 @@ The dry eleven-component extension adds TiO2, MgCr2O4, Na2SiO3, KAlSiO4
 and Ca3(PO4)2 with all 55 pair interactions and atom-conserving oxide
 conversion. It evaluates supplied liquid compositions; the existing
 restricted cooling examples keep their phase sets.
+The :doc:`native_dry_solids` extension supplies Na/K feldspars, ordered
+spinel and rhombohedral oxides, rutile/corundum, and seven-component
+Al/Na/Ti/Fe(III)-bearing pyroxenes in separate phase modules.
 
 .. _native-magma-contract:
 
@@ -80,7 +83,8 @@ Element inventories and coordinate changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``ELEMENTS = ("O", "Mg", "Si", "Fe", "Al", "Ca", "Na", "K", "Ti", "Cr", "P")`` fixes the row order of
-``element_matrix(components)``. Its integer columns give atom counts for
+``element_matrix(components)``. Its columns give atom counts (including
+half-integers for Ti-bearing pyroxenes) for
 the supplied ordered formula strings. Thus :math:`b=A n` is the elemental
 inventory in mol of atoms, and inventories from different phases add in
 this common row order. Repeated formulas are allowed for separate phases.
