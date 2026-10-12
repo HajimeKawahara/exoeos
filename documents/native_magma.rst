@@ -19,6 +19,139 @@ adds Ca--Mg--Fe compositions and relaxed Mg/Fe site order to both pyroxene
 structures. The preceding restricted examples retain their original APIs
 and candidate sets.
 
+.. _native-magma-contract:
+
+Shared property contract
+------------------------
+
+Thermodynamic functions in ``exoeos.magma`` use scalar temperature in K and pressure
+in Pa. Solution functions take **absolute component amounts in mol**, not
+mole fractions or oxide masses, and return extensive G in J. Pure-phase
+functions return molar G; multiply by the corresponding formula amount to
+form an extensive phase energy. The component order and amount basis are:
+
+.. list-table:: Public amount bases
+   :header-rows: 1
+   :widths: 26 44 30
+
+   * - Function
+     - Ordered coordinates
+     - Energy basis
+   * - ``liquid_gibbs``
+     - ``COMPONENTS`` = (SiO2, Mg2SiO4);
+       ``TERNARY_COMPONENTS`` adds Fe2SiO4;
+       ``CMAS_COMPONENTS`` = (SiO2, Mg2SiO4, CaSiO3, Al2O3);
+       ``CMFAS_COMPONENTS`` = (SiO2, Mg2SiO4, Fe2SiO4, CaSiO3, Al2O3).
+     - J for the supplied 2, 3, 4 or 5 component amounts.
+   * - ``olivine_gibbs``
+     - ``OLIVINE_COMPONENTS`` = (Mg2SiO4, Fe2SiO4).
+     - J; each coordinate is mol of one-Si formula units.
+   * - ``clinopyroxene_gibbs``
+     - ``CLINOPYROXENE_COMPONENTS`` = (CaMgSi2O6, CaFeSi2O6).
+     - J; each coordinate is mol of two-Si formula units.
+   * - ``pyroxene_gibbs``
+     - ``PYROXENE_COMPONENTS`` = (CaSiO3, MgSiO3, FeSiO3), for either structure.
+     - J; each coordinate contains one mol Si. Formula amount is sum(n)/2.
+   * - ``forsterite_gibbs``, ``fayalite_gibbs``
+     - Mg2SiO4, Fe2SiO4, respectively.
+     - J/mol of the named formula.
+   * - ``enstatite_gibbs``, ``anorthite_gibbs``
+     - MgSiO3, CaAl2Si2O8, respectively.
+     - J/mol of the named formula; anorthite contains two mol Si.
+   * - ``silica_gibbs``
+     - SiO2 for each entry in ``SILICA_POLYMORPHS``.
+     - Three molar energies in J/mol SiO2, not a three-component solution.
+
+``liquid_standard_gibbs`` and ``clinopyroxene_standard_gibbs`` return molar
+standard vectors in the corresponding liquid and Di--Hd bases. Select the
+liquid standard flags to match the liquid component tuple.
+
+Element inventories and coordinate changes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``ELEMENTS = ("O", "Mg", "Si", "Fe", "Al", "Ca")`` fixes the row order of
+``element_matrix(components)``. Its integer columns give atom counts for
+the supplied ordered formula strings. Thus :math:`b=A n` is the elemental
+inventory in mol of atoms, and inventories from different phases add in
+this common row order. Repeated formulas are allowed for separate phases.
+The lookup describes the existing components only; it does not choose a
+phase, infer an oxide conversion, or check site feasibility.
+
+For example, one mol Di corresponds to ``[1, 1, 0]`` in the new pyroxene
+coordinates; one mol Hd corresponds to ``[1, 0, 1]``. If :math:`n=B m`
+changes amount coordinates, require :math:`A_n B=A_m` and use
+:math:`G_m(T,P,m)=G_n(T,P,Bm)`. Where composition derivatives exist,
+:math:`\mu_m=B^{\mathsf T}\mu_n`. Merely relabeling the molar units is
+insufficient. On the Ca-saturated pyroxene edge the energy equivalence
+holds, but the full three-coordinate composition gradient is unsupported.
+
+.. code-block:: python
+
+   import jax
+   jax.config.update("jax_enable_x64", True)
+   import jax.numpy as jnp
+   from exoeos.magma import CMFAS_COMPONENTS, ELEMENTS, element_matrix, liquid_gibbs
+
+   A = element_matrix(CMFAS_COMPONENTS)  # shape (6, 5); static metadata
+   n = jnp.array([0.4, 0.25, 0.075, 0.25, 0.12])
+   element_moles = A @ n                # ordered as ELEMENTS
+   T, P = 1700., 1e5
+   G = liquid_gibbs(T, P, n)             # J, including all mixing terms
+   mu = jax.grad(liquid_gibbs, 2)(T, P, n)  # J/mol of each API coordinate
+   common_R = 8.31446261815324
+   G_RT = G / (common_R * T)             # mol, not dimensionless
+   mu_RT = mu / (common_R * T)           # dimensionless
+
+Standards and reduced units
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The phase energies include their standard, mixing and pressure terms.
+Do not add another ideal/excess term or pass this full G as an excess model
+to ``total_solution_gibbs_RT``. The physical MELTS mixing entropy retains
+``R = 8.3143`` J/(mol K); division by the consumer's R*T changes only the
+output convention. Thermodynamic derivatives use dimensional G:
+:math:`S=-G_T`, :math:`C_P=-T G_{TT}`, :math:`V=G_P`, in J/K, J/K and m3
+for an extensive energy. Keep all standard-state T/P dependence inside
+the differentiated function, including any reference conversion.
+
+Standards follow the pinned MELTS model and the phase-specific corrections
+documented below, including the silica runtime offsets and the shared
+monoclinic pyroxene reference. These standards are not automatically aligned
+with arbitrary gas or alloy data. At a supplied T/P, an elemental reference
+shift :math:`G'=G+\lambda^{\mathsf T}A n` changes component potentials by
+:math:`A^{\mathsf T}\lambda`. If the same elemental shift is applied to every
+phase, it cancels from atom-balanced reaction energies and changes a closed
+assemblage's energy by a conserved constant. A component-specific reaction
+correction generally does not cancel and defines a different physical model.
+An elemental reference shift cannot repair incompatible reaction standards.
+
+Input and derivative domains
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The caller validates finite positive T/P and finite nonnegative amounts
+before JAX transformations; the evaluators check static shapes. Enable x64
+and use ``vmap`` for batches. Oxide inventories must map into the declared
+nonnegative liquid basis, including the residual-SiO2 constraint below.
+Pyroxenes additionally require ``n_Ca <= n_Mg + n_Fe``. Their relaxed
+first/second derivatives apply in the composition interior over 1200--2200 K
+and 1--5000 bar. A static phase name selects the pyroxene structure.
+
+An absent solution has exactly zero G and no chemical potentials; any AD
+output at its zero vector is not a chemical-potential contract. Individual
+zero amounts use continuous energy limits. Composition derivatives are
+supported in positive interiors (also strictly inside site constraints for
+pyroxenes); absent ideal-component potentials have a divergent limit.
+At composition edges, use only the documented energy and fixed-composition
+T/P derivatives. Temperature/structural branches retain their own derivative
+domains, including the liquid SiO2 Cp jump at 1480 K and silica polymorph
+branch switches. Finite reference comparisons do not establish an empirical
+calibration domain or authorize extrapolation to arbitrary pressures.
+
+Internal site relaxation belongs to the phase property model. Assemblage
+minimization, phase appearance/disappearance, multiple compositions of one
+phase, and derivatives of the equilibrium solution belong to the equilibrium
+consumer; absolute reservoirs and planetary closure belong to its caller.
+
 .. _native-pyroxene:
 
 Ca--Mg--Fe clinopyroxene and orthopyroxene
