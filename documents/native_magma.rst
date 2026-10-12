@@ -28,6 +28,8 @@ restricted cooling examples keep their phase sets.
 The :doc:`native_dry_solids` extension supplies Na/K feldspars, ordered
 spinel and rhombohedral oxides, rutile/corundum, and seven-component
 Al/Na/Ti/Fe(III)-bearing pyroxenes in separate phase modules.
+The :doc:`native_hydrous_liquid` extension appends H2O to the dry liquid,
+including its standard, eleven interactions and extra water mixing entropy.
 
 .. _native-magma-contract:
 
@@ -54,8 +56,8 @@ form an extensive phase energy. The component order and amount basis are:
        ``CMFAS_COMPONENTS`` = (SiO2, Mg2SiO4, Fe2SiO4, CaSiO3, Al2O3);
        ``FERRIC_COMPONENTS`` appends Fe2O3 to CMFAS;
        ``DRY11_COMPONENTS`` then appends TiO2, MgCr2O4, Na2SiO3,
-       KAlSiO4, Ca3(PO4)2.
-     - J for the supplied 2, 3, 4, 5, 6 or 11 component amounts.
+       KAlSiO4, Ca3(PO4)2; ``HYDROUS_COMPONENTS`` appends H2O to DRY11.
+     - J for the supplied 2, 3, 4, 5, 6, 11 or 12 component amounts.
    * - ``olivine_gibbs``
      - ``OLIVINE_COMPONENTS`` = (Mg2SiO4, Fe2SiO4).
      - J; each coordinate is mol of one-Si formula units.
@@ -82,7 +84,7 @@ liquid standard flags to match the liquid component tuple.
 Element inventories and coordinate changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``ELEMENTS = ("O", "Mg", "Si", "Fe", "Al", "Ca", "Na", "K", "Ti", "Cr", "P")`` fixes the row order of
+``ELEMENTS = ("O", "Mg", "Si", "Fe", "Al", "Ca", "Na", "K", "Ti", "Cr", "P", "H")`` fixes the row order of
 ``element_matrix(components)``. Its columns give atom counts (including
 half-integers for Ti-bearing pyroxenes) for
 the supplied ordered formula strings. Thus :math:`b=A n` is the elemental
@@ -90,8 +92,9 @@ inventory in mol of atoms, and inventories from different phases add in
 this common row order. Repeated formulas are allowed for separate phases.
 The lookup describes supported component and oxide formulas; it does not
 choose a phase, perform an oxide conversion, or check site feasibility.
-The dry11 extension appends five element rows; existing columns acquire
-five zeros. Consumers must use ``len(ELEMENTS)`` instead of a fixed row count.
+The dry11 extension appended five element rows; the hydrous extension
+appends H. Existing dry columns have zero H. Consumers must use
+``len(ELEMENTS)`` instead of a fixed row count.
 
 For example, one mol Di corresponds to ``[1, 1, 0]`` in the new pyroxene
 coordinates; one mol Hd corresponds to ``[1, 0, 1]``. If :math:`n=B m`
@@ -108,7 +111,7 @@ holds, but the full three-coordinate composition gradient is unsupported.
    import jax.numpy as jnp
    from exoeos.magma import CMFAS_COMPONENTS, ELEMENTS, element_matrix, liquid_gibbs
 
-   A = element_matrix(CMFAS_COMPONENTS)  # shape (11, 5); static metadata
+   A = element_matrix(CMFAS_COMPONENTS)  # shape (len(ELEMENTS), 5); static metadata
    n = jnp.array([0.4, 0.25, 0.075, 0.25, 0.12])
    element_moles = A @ n                # ordered as ELEMENTS
    T, P = 1700., 1e5
@@ -198,7 +201,7 @@ The oxide mapping retains the existing residual silica condition:
    n_Q=n_{\mathrm{SiO_2}}-n_F-n_A-n_C\ge0.
 
 The Fe2O3 column of ``element_matrix(FERRIC_COMPONENTS)`` is
-``[3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0]`` in ``ELEMENTS`` order. It contributes three O atoms
+``[3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]`` in ``ELEMENTS`` order. It contributes three O atoms
 and two Fe atoms per formula mol; the Fe3+/total-Fe fraction is
 :math:`n_B/(n_A+n_B)` when iron is present. Valence is encoded by component
 stoichiometry, while the ledger conserves total elemental Fe and O.
@@ -552,7 +555,8 @@ TiO2, Cr2O3, Na2O, K2O, P2O5)``. For oxide **mol** amounts :math:`m`,
    \end{aligned}
 
 ``oxide_moles_from_liquid(n)`` is the inverse transform. Both are linear
-JAX functions checking only shape (11,). Validate finite nonnegative oxide
+JAX functions using shape (11,) for this dry basis; shape (12,) appends
+H2O as described in :doc:`native_hydrous_liquid`. Validate finite nonnegative oxide
 and resulting component amounts **before** evaluating G. In particular,
 MgO >= Cr2O3, Al2O3 >= K2O, CaO >= 3 P2O5 and residual SiO2 >= 0
 are required. Negative residuals are returned unchanged; there is no
