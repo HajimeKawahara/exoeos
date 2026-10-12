@@ -70,8 +70,9 @@ def test_zero_ferric_recovers_existing_liquid_and_thermal_derivatives(T, P):
     n = jnp.array([.4, .275, .075, .25, .12])
     np.testing.assert_allclose(LIQUID_PROPERTIES(T, P, jnp.r_[n, 0.]),
                                LIQUID_PROPERTIES(T, P, n), rtol=3e-15, atol=1e-20)
-    np.testing.assert_array_equal(STANDARDS(T, P)[:5], liquid_standard_gibbs(
-        T, P, include_fe=True, include_ca_al=True))
+    # JIT and eager arithmetic can differ by one ulp across JAX versions.
+    np.testing.assert_allclose(STANDARDS(T, P)[:5], liquid_standard_gibbs(
+        T, P, include_fe=True, include_ca_al=True), rtol=0, atol=1e-9)
     # Composition derivatives use the positive interior. The five present
     # potentials approach the old model; the absent ferric mu diverges.
     old_mu = np.asarray(MU(T, P, n))
