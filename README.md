@@ -67,7 +67,14 @@ The [ferric liquid extension](documents/native_magma.rst#fe-iii-liquid-component
 appends Fe2O3 to the five-component liquid, including its standard, pressure
 and mixing terms. Independent MELTS comparisons cover G, chemical potentials
 and thermodynamic derivatives; a zero-ferric check recovers the existing model.
-This supplies phase properties, without a redox solve or magnetite phase.
+This supplies phase properties without a redox solve.
+The [dry solid extension](documents/native_dry_solids.rst) adds Na/Ca/K
+feldspars, ordered spinel and Fe/Ti oxides, rutile/corundum, and
+Al/Na/Ti/Fe(III)-bearing pyroxenes in small phase modules under
+`exoeos.magma_solids`. Standards, mixing, site relaxation and implicit
+first/second derivatives are checked against independent MELTS properties.
+Its [comparison example](examples/magma_dry_solids.py) plots the phase
+characteristics and numerical errors; assemblage selection remains separate.
 The [Japanese explanation](https://github.com/HajimeKawahara/doc_ExoEOS) is
 maintained separately; current English documentation lives in `documents/`.
 
