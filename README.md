@@ -58,6 +58,11 @@ Ca and Fe in both pyroxenes and compares with independent MELTS property roots.
 The [shared magma property contract](documents/native_magma.rst#shared-property-contract)
 defines component amount bases, the `element_matrix` atom ledger, standard-state
 alignment, reduced units and derivative domains for these functions.
+The [dry eleven-component liquid](documents/native_magma.rst#dry-eleven-component-liquid)
+adds TiO2, MgCr2O4, Na2SiO3, KAlSiO4 and Ca3(PO4)2, all 55 interactions,
+and atom-conserving oxide conversion. Its [comparison example](examples/magma_dry11.py)
+checks supplied BSE, basalt-like, rhyolite-like and alkali-rich compositions
+against pinned MELTS, plus the existing two- through six-component faces.
 The [ferric liquid extension](documents/native_magma.rst#fe-iii-liquid-component)
 appends Fe2O3 to the five-component liquid, including its standard, pressure
 and mixing terms. Independent MELTS comparisons cover G, chemical potentials

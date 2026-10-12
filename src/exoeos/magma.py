@@ -1,7 +1,8 @@
 """Native JAX MELTS Fe(II)/Fe(III) silicate liquid and silicate solids.
 
 The liquid basis is (SiO2, Mg2SiO4[, Fe2SiO4][, CaSiO3, Al2O3]), not oxides.
-The six-component ferric basis appends Fe2O3 to CMFAS. Solid iron remains
+The six-component ferric basis appends Fe2O3 to CMFAS; DRY11_COMPONENTS
+adds TiO2, MgCr2O4, Na2SiO3, KAlSiO4 and Ca3(PO4)2. Solid iron remains
 Fe(II); olivine is the binary forsterite--fayalite face. No redox solve is done.
 Temperatures are K, pressures Pa, amounts mol, and Gibbs energies J.
 Enable JAX x64 for thermodynamic derivatives and phase comparisons.
@@ -30,27 +31,53 @@ TERNARY_COMPONENTS = COMPONENTS + ("Fe2SiO4",)
 CMAS_COMPONENTS = COMPONENTS + ("CaSiO3", "Al2O3")
 CMFAS_COMPONENTS = TERNARY_COMPONENTS + ("CaSiO3", "Al2O3")
 FERRIC_COMPONENTS = CMFAS_COMPONENTS + ("Fe2O3",)
+DRY11_COMPONENTS = FERRIC_COMPONENTS + ("TiO2", "MgCr2O4", "Na2SiO3", "KAlSiO4", "Ca3(PO4)2")
+DRY11_OXIDES = ("SiO2", "MgO", "FeO", "CaO", "Al2O3", "Fe2O3", "TiO2", "Cr2O3", "Na2O", "K2O", "P2O5")
 OLIVINE_COMPONENTS = ("Mg2SiO4", "Fe2SiO4")
 CLINOPYROXENE_COMPONENTS = ("CaMgSi2O6", "CaFeSi2O6")
 PYROXENE_COMPONENTS = ("CaSiO3", "MgSiO3", "FeSiO3")
 SILICA_POLYMORPHS = ("quartz", "tridymite", "cristobalite")
-ELEMENTS = ("O", "Mg", "Si", "Fe", "Al", "Ca")
+ELEMENTS = ("O", "Mg", "Si", "Fe", "Al", "Ca", "Na", "K", "Ti", "Cr", "P")
 _ELEMENT_COUNTS = {
     # Atom counts per mol of each API coordinate, in ELEMENTS order.
-    "SiO2": (2, 0, 1, 0, 0, 0),
-    "Mg2SiO4": (4, 2, 1, 0, 0, 0),
-    "Fe2SiO4": (4, 0, 1, 2, 0, 0),
-    "CaSiO3": (3, 0, 1, 0, 0, 1),
-    "Al2O3": (3, 0, 0, 0, 2, 0),
-    "Fe2O3": (3, 0, 0, 2, 0, 0),
-    "CaMgSi2O6": (6, 1, 2, 0, 0, 1),
-    "CaFeSi2O6": (6, 0, 2, 1, 0, 1),
-    "MgSiO3": (3, 1, 1, 0, 0, 0),
-    "FeSiO3": (3, 0, 1, 1, 0, 0),
-    "CaAl2Si2O8": (8, 0, 2, 0, 2, 1),
+    "SiO2": (2, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0),
+    "Mg2SiO4": (4, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0),
+    "Fe2SiO4": (4, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0),
+    "CaSiO3": (3, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0),
+    "Al2O3": (3, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0),
+    "Fe2O3": (3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0),
+    "TiO2": (2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+    "MgCr2O4": (4, 1, 0, 0, 0, 0, 0, 0, 0, 2, 0),
+    "Na2SiO3": (3, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0),
+    "KAlSiO4": (4, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0),
+    "Ca3(PO4)2": (8, 0, 0, 0, 0, 3, 0, 0, 0, 0, 2),
+    "MgO": (1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+    "FeO": (1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0),
+    "CaO": (1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0),
+    "Cr2O3": (3, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0),
+    "Na2O": (1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0),
+    "K2O": (1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0),
+    "P2O5": (5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2),
+    "CaMgSi2O6": (6, 1, 2, 0, 0, 1, 0, 0, 0, 0, 0),
+    "CaFeSi2O6": (6, 0, 2, 1, 0, 1, 0, 0, 0, 0, 0),
+    "MgSiO3": (3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0),
+    "FeSiO3": (3, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0),
+    "CaAl2Si2O8": (8, 0, 2, 0, 2, 1, 0, 0, 0, 0, 0),
 }
 R = 8.3143  # J/(mol K); retain the MELTS entropy convention.
 W = 3421.0  # J/mol; SiO2--Mg2SiO4 liquid interaction.
+# Upper triangle in DRY11_COMPONENTS order; all 55 H interactions (J/mol).
+# S and V interactions vanish on this dry face of param_struct_data_v34.h.
+_LIQUID_W = tuple((0.,)*(i+1) + row for i, row in enumerate((
+    (W, 23660.9, -863.7, -39120., 8110.3, 26266.7, 27886.3, -99039., -33921.7, 61891.6),
+    (-37256.7, -31731.9, -32880.3, -71518.6, -4178.3, 46049.2, -41876.9, 22323.1, -23208.8),
+    (-12970.8, -30509., -179064.9, 5209.1, -82971.8, -90533.8, 23649.4, 87410.3),
+    (-57917.9, 12076.6, -35372.5, 30704.7, -13247.1, 17111.1, 37070.3),
+    (-17089.4, -29449.8, -31770.3, -130785., -25859.2, 52220.8),
+    (-84756.9, 21605.9, -149662.2, 57555.9, -4213.9),
+    (-72303.4, -15415.6, -48094.6, 25938.8),
+    (113646., 75709.1, 5341.8), (6522.8, 15571.9), (17100.6,), (),
+)))
 _TR = 298.15
 
 
@@ -72,6 +99,37 @@ def element_matrix(components):
     if not counts:
         raise ValueError("components must contain at least one supported formula.")
     return jnp.asarray(counts, dtype=jnp.int32).T
+
+
+def liquid_moles_from_oxides(m):
+    """Map DRY11_OXIDES mol to DRY11_COMPONENTS mol, conserving every atom.
+
+    This linear JAX transform checks shape (11,) only. The caller must
+    validate finite nonnegative input AND output before evaluating G:
+    MgO >= Cr2O3, CaO >= 3*P2O5, Al2O3 >= K2O, and residual SiO2 >= 0.
+    Negative residuals are retained, never clipped or renormalized.
+    FeO and Fe2O3 are supplied independently; this is not a redox solve.
+    """
+    m = jnp.asarray(m) * 1.0
+    if m.shape != (11,):
+        raise ValueError("m must have shape (11,) in DRY11_OXIDES order.")
+    si, mg, fe, ca, al, ferric, ti, cr, na, k, p = m
+    f, a, c = (mg-cr)/2, fe/2, ca-3*p
+    return jnp.array([si-f-a-c-na-2*k, f, a, c, al-k, ferric, ti, cr, na, 2*k, p])
+
+
+def oxide_moles_from_liquid(n):
+    """Map DRY11_COMPONENTS mol to DRY11_OXIDES mol without normalization.
+
+    Shape (11,) is checked; finite nonnegative amounts belong to the caller.
+    This is the inverse linear transform of liquid_moles_from_oxides.
+    """
+    n = jnp.asarray(n) * 1.0
+    if n.shape != (11,):
+        raise ValueError("n must have shape (11,) in DRY11_COMPONENTS order.")
+    q, f, a, c, al, ferric, ti, cr, na, k, p = n
+    return jnp.array([q+f+a+c+na+k, 2*f+cr, 2*a, c+3*p,
+                      al+k/2, ferric, ti, cr, na, k/2, p])
 
 
 def _tp(T, P):
@@ -437,7 +495,7 @@ def _silica_h_s(T):
 
 
 def liquid_standard_gibbs(T, P, *, include_fe=False, include_ca_al=False,
-                          include_ferric=False):
+                          include_ferric=False, include_dry11=False):
     """Return liquid standards in J/mol in the selected component order.
 
     The SiO2 branch switches at 1480 K, preserving G and its first
@@ -452,8 +510,13 @@ def liquid_standard_gibbs(T, P, *, include_fe=False, include_ca_al=False,
     Fe2O3, giving FERRIC_COMPONENTS. Its fusion construction includes the
     solid reference's 955 K transition, fusion at 1895 K, and liquid
     Cp=240.9 J/mol/K. Fe(II)/Fe(III) amounts are supplied, not equilibrated.
+    Static ``include_dry11=True`` selects DRY11_COMPONENTS, implying all
+    three other flags. The five additional standards use the same fusion
+    construction, including the KAlSiO4 and Ca3(PO4)2 reference transitions.
     Input validation and x64 configuration belong to the caller.
     """
+    if include_dry11:
+        include_fe = include_ca_al = include_ferric = True
     if include_ferric and not (include_fe and include_ca_al):
         raise ValueError("include_ferric requires include_fe=True and include_ca_al=True.")
     T, P = _tp(T, P)
@@ -507,16 +570,46 @@ def liquid_standard_gibbs(T, P, *, include_fe=False, include_ca_al=False,
             jnp.append(values, extra) for values, extra in zip(
                 (v, dvdt, dvdp, d2vdtp, d2vdp2),
                 (4.213, 9.09e-4, -2.53e-5, 3.1e-8, 4.4e-10)))
+    if include_dry11:
+        tm = jnp.array([1870., 2673.15, 1361., 2023.15, 1943.15])
+        ds = jnp.array([35.824, 73.22, 38.34, 24.5, 35.690])
+        cp = jnp.array([109.2, 335.1, 180.2, 217., 574.67])
+        h, s = _berman_h_s(
+            tm, jnp.array([-944750., -1783640., -373190.*4.184, -2111813.55, -4097169.]),
+            jnp.array([50.460, 106.02, 27.21*4.184, 133.9653, 235.978]),
+            jnp.array([[77.84, 201.981, 234.77, 186., 402.997],
+                       [0., -551.9, -2218.9, 0., -2808.35],
+                       [-33.678e5, -57.844e5, 0., -131.067e5, 0.],
+                       [40.294e7, 57.729e7, 13.530e7, 213.893e7, -32.6230e7]]))
+        # K and P solid-reference anomalies end below fusion. These add
+        # constants to liquid H/S, not liquid branches at the transitions.
+        tc, latent = jnp.array([800.15, 1373.]), jnp.array([1154., 14059.])
+        l1, l2 = jnp.array([-7.096454e-2, 2.5427e-2]), jnp.array([21.682e-5, 19.255e-5])
+        h = h.at[3:].add(latent + l1**2*(tc**2-_TR**2)/2
+                        + 2*l1*l2*(tc**3-_TR**3)/3 + l2**2*(tc**4-_TR**4)/4)
+        s = s.at[3:].add(latent/tc + l1**2*(tc-_TR)
+                        + l1*l2*(tc**2-_TR**2) + l2**2*(tc**3-_TR**3)/3)
+        thermal = jnp.concatenate((thermal, h + tm*ds + cp*(T-tm)
+                                   - T*(s + ds + cp*jnp.log(T/tm))))
+        v, dvdt, dvdp, d2vdtp, d2vdp2 = (
+            jnp.concatenate((values, jnp.array(extra))) for values, extra in zip(
+                (v, dvdt, dvdp, d2vdtp, d2vdp2),
+                ([2.316, 5.358, 5.568, 6.8375, 10.7382],
+                 [7.246e-4, 11.71e-4, 7.41e-4, 7.265e-4, 0.],
+                 [-2.310e-5, -2.26e-5, -4.29e-5, -6.395e-5, 0.],
+                 [0., 1.8e-8, -5.3e-8, -4.6e-8, 0.],
+                 [5.0e-10, 4.67e-10, 8.4e-10, 12.1e-10, 0.])))
     return (thermal + (v + dvdt * dt) * dp
             + (dvdp + d2vdtp * dt) * dp**2 / 2.0
             + d2vdp2 * dp**3 / 6.0)
 
 
 def liquid_gibbs(T, P, n):
-    """Return liquid G in J on a supported two- to six-component basis.
+    """Return liquid G in J on a supported two- to eleven-component basis.
 
     Shape (2,) is COMPONENTS, (3,) TERNARY_COMPONENTS, (4,) CMAS_COMPONENTS,
     (5,) CMFAS_COMPONENTS, and (6,) FERRIC_COMPONENTS (CMFAS plus Fe2O3).
+    Shape (11,) selects DRY11_COMPONENTS, with all 55 pair interactions.
     Supply nonnegative finite mol amounts and positive finite
     scalar K/Pa. Only static shapes are checked here. Zero component
     amounts use the continuous energy limit, including G(T,P,[0,0])=0.
@@ -527,32 +620,19 @@ def liquid_gibbs(T, P, n):
     """
     T, P = _tp(T, P)
     amounts = jnp.asarray(n) * 1.0
-    if amounts.shape not in ((2,), (3,), (4,), (5,), (6,)):
-        raise ValueError("n must have shape (2,), (3,), (4,), (5,) or (6,) in the documented liquid order.")
-    include_fe = amounts.shape in ((3,), (5,), (6,))
-    include_ca_al = amounts.shape in ((4,), (5,), (6,))
-    include_ferric = amounts.shape == (6,)
+    if amounts.shape not in ((2,), (3,), (4,), (5,), (6,), (11,)):
+        raise ValueError("n must have shape (2,), (3,), (4,), (5,), (6,) or (11,) in the documented liquid order.")
+    size = amounts.size
+    indices = jnp.array((0, 1, 3, 4) if size == 4 else tuple(range(size)))
+    matrix = jnp.asarray(_LIQUID_W)[indices[:, None], indices[None, :]]
 
     def present(values):
         x = values / jnp.sum(values)
-        excess = W * values[0] * x[1]
-        if include_fe:
-            excess += 23660.9 * values[0] * x[2] - 37256.7 * values[1] * x[2]
-        if include_ca_al:
-            c, al = (3, 4) if include_fe else (2, 3)
-            excess += (-863.7 * values[0] * x[c] - 39120.0 * values[0] * x[al]
-                       - 31731.9 * values[1] * x[c] - 32880.3 * values[1] * x[al]
-                       - 57917.9 * values[c] * x[al])
-            if include_fe:
-                excess += -12970.8 * values[2] * x[c] - 30509.0 * values[2] * x[al]
-        if include_ferric:
-            excess += x[5] * (jnp.array([8110.3, -71518.6, -179064.9, 12076.6, -17089.4])
-                              @ values[:5])
         return (jnp.dot(values, liquid_standard_gibbs(
-                    T, P, include_fe=include_fe, include_ca_al=include_ca_al,
-                    include_ferric=include_ferric))
+                    T, P, include_fe=size in (3, 5, 6, 11), include_ca_al=size >= 4,
+                    include_ferric=size >= 6, include_dry11=size == 11))
                 + R * T * jnp.sum(xlogy(values, x))
-                + excess)
+                + values @ matrix @ x)
 
     return jax.lax.cond(
         jnp.all(amounts == 0), lambda values: jnp.zeros_like(T + P + values.sum()),

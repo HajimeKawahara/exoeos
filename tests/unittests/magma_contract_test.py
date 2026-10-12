@@ -23,9 +23,9 @@ def test_liquid_ledger_matches_independent_oxide_atom_counts(components, fe, ca,
     n = jnp.array([amounts[name] for name in components])
     expected = {"O": 2. + .6 + fe + ca + 3*al, "Mg": .6, "Si": 1.,
                 "Fe": fe, "Al": 2*al, "Ca": ca}
-    assert ELEMENTS == ("O", "Mg", "Si", "Fe", "Al", "Ca")
+    assert ELEMENTS == ("O", "Mg", "Si", "Fe", "Al", "Ca", "Na", "K", "Ti", "Cr", "P")
     np.testing.assert_allclose(element_matrix(components) @ n,
-                               [expected[name] for name in ELEMENTS], rtol=0, atol=1e-15)
+                               [expected.get(name, 0) for name in ELEMENTS], rtol=0, atol=1e-15)
 
 
 @pytest.mark.parametrize("components,liquid_columns", [
@@ -53,7 +53,7 @@ def test_common_element_reference_and_rt_conversion_preserve_reaction_energy():
     anorthite_atoms = element_matrix(("CaAl2Si2O8",))[:, 0]
     # SiO2 + CaSiO3 + Al2O3 -> CaAl2Si2O8; all other amounts stay fixed.
     transfer = jnp.array([1., 0., 0., 1., 1.])
-    reference = jnp.array([1300., -200., 500., 700., -1100., 300.])
+    reference = jnp.array([1300., -200., 500., 700., -1100., 300., 40., 50., 60., 70., 80.])
     shifted = lambda amounts: liquid_gibbs(T, P, amounts) + reference @ liquid_atoms @ amounts
     shifted_mu = jax.jit(jax.grad(shifted))(n)
     shifted_anorthite = anorthite_gibbs(T, P) + reference @ anorthite_atoms
@@ -68,7 +68,7 @@ def test_common_element_reference_and_rt_conversion_preserve_reaction_energy():
                                reaction / rt, rtol=0, atol=3e-13)
 
 
-@pytest.mark.parametrize("components", [(), ("FeO",)])
+@pytest.mark.parametrize("components", [(), ("H2O",)])
 def test_element_lookup_rejects_empty_or_unimplemented_bases(components):
     with pytest.raises(ValueError):
         element_matrix(components)

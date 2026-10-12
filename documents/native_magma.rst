@@ -21,6 +21,10 @@ and candidate sets.
 The Fe(III) extension appends Fe2O3 to the five-component liquid and evaluates
 supplied Fe(II)/Fe(III) compositions. Magnetite and redox equilibrium are not
 included in this extension.
+The dry eleven-component extension adds TiO2, MgCr2O4, Na2SiO3, KAlSiO4
+and Ca3(PO4)2 with all 55 pair interactions and atom-conserving oxide
+conversion. It evaluates supplied liquid compositions; the existing
+restricted cooling examples keep their phase sets.
 
 .. _native-magma-contract:
 
@@ -45,8 +49,10 @@ form an extensive phase energy. The component order and amount basis are:
        ``TERNARY_COMPONENTS`` adds Fe2SiO4;
        ``CMAS_COMPONENTS`` = (SiO2, Mg2SiO4, CaSiO3, Al2O3);
        ``CMFAS_COMPONENTS`` = (SiO2, Mg2SiO4, Fe2SiO4, CaSiO3, Al2O3);
-       ``FERRIC_COMPONENTS`` appends Fe2O3 to CMFAS.
-     - J for the supplied 2, 3, 4, 5 or 6 component amounts.
+       ``FERRIC_COMPONENTS`` appends Fe2O3 to CMFAS;
+       ``DRY11_COMPONENTS`` then appends TiO2, MgCr2O4, Na2SiO3,
+       KAlSiO4, Ca3(PO4)2.
+     - J for the supplied 2, 3, 4, 5, 6 or 11 component amounts.
    * - ``olivine_gibbs``
      - ``OLIVINE_COMPONENTS`` = (Mg2SiO4, Fe2SiO4).
      - J; each coordinate is mol of one-Si formula units.
@@ -73,13 +79,15 @@ liquid standard flags to match the liquid component tuple.
 Element inventories and coordinate changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``ELEMENTS = ("O", "Mg", "Si", "Fe", "Al", "Ca")`` fixes the row order of
+``ELEMENTS = ("O", "Mg", "Si", "Fe", "Al", "Ca", "Na", "K", "Ti", "Cr", "P")`` fixes the row order of
 ``element_matrix(components)``. Its integer columns give atom counts for
 the supplied ordered formula strings. Thus :math:`b=A n` is the elemental
 inventory in mol of atoms, and inventories from different phases add in
 this common row order. Repeated formulas are allowed for separate phases.
-The lookup describes the existing components only; it does not choose a
-phase, infer an oxide conversion, or check site feasibility.
+The lookup describes supported component and oxide formulas; it does not
+choose a phase, perform an oxide conversion, or check site feasibility.
+The dry11 extension appends five element rows; existing columns acquire
+five zeros. Consumers must use ``len(ELEMENTS)`` instead of a fixed row count.
 
 For example, one mol Di corresponds to ``[1, 1, 0]`` in the new pyroxene
 coordinates; one mol Hd corresponds to ``[1, 0, 1]``. If :math:`n=B m`
@@ -96,7 +104,7 @@ holds, but the full three-coordinate composition gradient is unsupported.
    import jax.numpy as jnp
    from exoeos.magma import CMFAS_COMPONENTS, ELEMENTS, element_matrix, liquid_gibbs
 
-   A = element_matrix(CMFAS_COMPONENTS)  # shape (6, 5); static metadata
+   A = element_matrix(CMFAS_COMPONENTS)  # shape (11, 5); static metadata
    n = jnp.array([0.4, 0.25, 0.075, 0.25, 0.12])
    element_moles = A @ n                # ordered as ELEMENTS
    T, P = 1700., 1e5
@@ -186,7 +194,7 @@ The oxide mapping retains the existing residual silica condition:
    n_Q=n_{\mathrm{SiO_2}}-n_F-n_A-n_C\ge0.
 
 The Fe2O3 column of ``element_matrix(FERRIC_COMPONENTS)`` is
-``[3, 0, 0, 2, 0, 0]`` in ``ELEMENTS`` order. It contributes three O atoms
+``[3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0]`` in ``ELEMENTS`` order. It contributes three O atoms
 and two Fe atoms per formula mol; the Fe3+/total-Fe fraction is
 :math:`n_B/(n_A+n_B)` when iron is present. Valence is encoded by component
 stoichiometry, while the ledger conserves total elemental Fe and O.
@@ -408,6 +416,239 @@ The formulas and coefficients are pinned to MAGMA revision
 Both fixtures record source hashes; the runtime fixture also records wrapper
 and library hashes. The release binary's thermodynamic C build identity is
 not independently established by these formula comparisons.
+
+.. _native-dry11:
+
+Dry eleven-component liquid
+---------------------------
+
+``liquid_gibbs(T, P, n)`` accepts eleven absolute component amounts in mol,
+with ``DRY11_COMPONENTS`` ordered as
+``(SiO2, Mg2SiO4, Fe2SiO4, CaSiO3, Al2O3, Fe2O3, TiO2, MgCr2O4,
+Na2SiO3, KAlSiO4, Ca3(PO4)2)``. ``liquid_standard_gibbs(T, P,
+include_dry11=True)`` returns the matching molar standards and implies the
+Fe, Ca/Al and ferric flags. Old shapes, orders and default flags retain
+their meanings. Fe(II) and Fe(III) are supplied independently.
+
+This is a single supplied liquid property model. The extension does not
+add a phase-selection solver or new solids. Water, CO2, Mn, Ni and Co
+components remain outside this eleven-component API.
+
+Energy and standard states
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+With :math:`N=\sum_i n_i`, :math:`x_i=n_i/N`, and :math:`R_b=8.3143`
+J/(mol K), the extensive energy is
+
+.. math::
+
+   G=\sum_{i=1}^{11}n_i g_i^0(T,P)
+     +R_b T\sum_{i=1}^{11}n_i\ln x_i
+     +N\sum_{i<j}W_{ij}x_i x_j.
+
+All :math:`11\times10/2=55` distinct pairs are included. Their enthalpy
+coefficients come from ``meltsModelParameters`` in the pinned
+``param_struct_data_v34.h``; all pair entropy and volume coefficients on
+this face are zero. The implementation uses one upper-triangular table,
+also selecting every earlier composition face from that table.
+The complete coefficient table is available as
+:download:`CSV <_static/magma/dry11_interactions.csv>` (J/mol, J/(mol K),
+J/(mol bar)). No new parameters are fitted to BSE or any other composition.
+
+The five new standards use the Berman reference heat capacity
+:math:`C_{p,s}=k_0+k_1/\sqrt{T}+k_2/T^2+k_3/T^3`, integrated from
+:math:`T_r=298.15` K to fusion. At fusion,
+
+.. math::
+
+   H_f=H_r+\int_{T_r}^{T_m}C_{p,s}(t)\,dt+\Delta H_\lambda+T_m\Delta S_f,
+   \qquad
+   S_f=S_r+\int_{T_r}^{T_m}\frac{C_{p,s}(t)}{t}\,dt+\Delta S_\lambda+\Delta S_f.
+
+Then :math:`H_l=H_f+C_{p,l}(T-T_m)` and
+:math:`S_l=S_f+C_{p,l}\ln(T/T_m)`. For KAlSiO4 and Ca3(PO4)2,
+the solid-reference anomaly is :math:`C_{p,\lambda}=T(l_1+l_2T)^2`, with
+
+.. math::
+
+   \Delta H_\lambda=\int_{T_r}^{T_c}C_{p,\lambda}(t)\,dt+L_c,
+   \qquad
+   \Delta S_\lambda=\int_{T_r}^{T_c}\frac{C_{p,\lambda}(t)}{t}\,dt+\frac{L_c}{T_c}.
+
+These are constant reference corrections, not liquid branches at
+:math:`T_c`. The other three new standards have no such anomaly.
+
+.. list-table:: Added liquid standards
+   :header-rows: 1
+
+   * - Component
+     - Tm (K)
+     - Fusion entropy (J/mol/K)
+     - Liquid Cp (J/mol/K)
+     - Solid Tc (K); latent heat (J/mol)
+   * - TiO2
+     - 1870
+     - 35.824
+     - 109.2
+     - none
+   * - MgCr2O4
+     - 2673.15
+     - 73.22
+     - 335.1
+     - none
+   * - Na2SiO3
+     - 1361
+     - 38.34
+     - 180.2
+     - none
+   * - KAlSiO4
+     - 2023.15
+     - 24.5
+     - 217
+     - 800.15; 1154
+   * - Ca3(PO4)2
+     - 1943.15
+     - 35.690
+     - 574.67
+     - 1373; 14059
+
+For :math:`\Delta p=P/10^5-1` in bar and :math:`\Delta T=T-1673` K,
+the same integrated Kress EOS gives
+
+.. math::
+
+   g_i^0=H_{l,i}-TS_{l,i}
+   +(v_i+v_{T,i}\Delta T)\Delta p
+   +\tfrac12(v_{P,i}+v_{TP,i}\Delta T)\Delta p^2
+   +\tfrac16 v_{PP,i}\Delta p^3.
+
+The volume coefficients use J/bar units; differentiating API pressure in
+Pa gives SI volume. Cp and EOS coefficients are transcribed from
+``liq_struct_data.h`` at the same source revision as the ferric model above.
+The liquid phosphate has constant volume in this model.
+The existing silica branch at 1480 K and ferric reference integral remain.
+
+Oxide conversion and conservation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``DRY11_OXIDES`` is ordered as ``(SiO2, MgO, FeO, CaO, Al2O3, Fe2O3,
+TiO2, Cr2O3, Na2O, K2O, P2O5)``. For oxide **mol** amounts :math:`m`,
+``liquid_moles_from_oxides(m)`` implements
+
+.. math::
+
+   \begin{aligned}
+   n_{MgCr_2O_4}&=m_{Cr_2O_3},& n_{Mg_2SiO_4}&=(m_{MgO}-m_{Cr_2O_3})/2,\\
+   n_{KAlSiO_4}&=2m_{K_2O},& n_{Al_2O_3}&=m_{Al_2O_3}-m_{K_2O},\\
+   n_{Ca_3(PO_4)_2}&=m_{P_2O_5},& n_{CaSiO_3}&=m_{CaO}-3m_{P_2O_5},\\
+   n_{Fe_2SiO_4}&=m_{FeO}/2,& n_{Na_2SiO_3}&=m_{Na_2O},\\
+   n_{TiO_2}&=m_{TiO_2},& n_{Fe_2O_3}&=m_{Fe_2O_3},\\
+   n_{SiO_2}&=m_{SiO_2}-n_{Mg_2SiO_4}-n_{Fe_2SiO_4}
+              -n_{CaSiO_3}-n_{Na_2SiO_3}-n_{KAlSiO_4}.
+   \end{aligned}
+
+``oxide_moles_from_liquid(n)`` is the inverse transform. Both are linear
+JAX functions checking only shape (11,). Validate finite nonnegative oxide
+and resulting component amounts **before** evaluating G. In particular,
+MgO >= Cr2O3, Al2O3 >= K2O, CaO >= 3 P2O5 and residual SiO2 >= 0
+are required. Negative residuals are returned unchanged; there is no
+floor, clipping or normalization. Convert oxide masses to mol first.
+
+Writing :math:`n=B m`, the element matrices satisfy exactly
+:math:`A_l B=A_o`, including oxygen and both supplied iron valences.
+Thus mass is conserved for any consistent atomic-mass table. The corresponding
+derivatives are :math:`\mu_o=B^{\mathsf T}\mu_l` and
+:math:`H_o=B^{\mathsf T}H_lB`; they are not obtained by relabeling components.
+
+.. code-block:: python
+
+   from exoeos.magma import liquid_moles_from_oxides, oxide_moles_from_liquid
+   # DRY11_OXIDES order, mol; validate before JIT/grad.
+   m = jnp.array([2., 1., .4, .5, .3, .1, .07, .02, .08, .04, .03])
+   n = liquid_moles_from_oxides(m)
+   assert bool(jnp.all(jnp.isfinite(n) & (n >= 0)))
+   G = liquid_gibbs(1700., 5e7, n)
+   mu = jax.grad(liquid_gibbs, 2)(1700., 5e7, n)
+   m_again = oxide_moles_from_liquid(n)
+
+Independent comparison and existing faces
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The saved source fixture contains **210** quadrature states for the five
+new standards, including reference, transition and fusion temperatures, and
+all **55** interactions parsed directly from the hash-checked source header.
+The native fixture contains **96** supplied states: four recipes at six
+temperatures and three pressures (72), eight random interiors, a sevenfold
+scaled recipe, and 15 available pure/binary edge states. **63** states have
+strictly positive amounts in all eleven coordinates and support full AD mu
+comparisons. BSE has exactly zero ferric amount.
+
+.. csv-table:: Oxide mass percent of the 100 g comparison recipes
+   :header: "Oxide", "BSE", "Basalt-like", "Rhyolite-like", "Alkali-rich"
+
+   SiO2,45.0699,49,73,52
+   MgO,37.8587,8,0.5,4
+   FeO,8.0625,8,1.5,5
+   CaO,3.55551,11,1.5,6
+   Al2O3,4.45691,15,14,18
+   Fe2O3,0,2,0.5,2
+   TiO2,0.201312,2,0.3,1
+   Cr2O3,0.384596,0.1,0.01,0.1
+   Na2O,0.360559,3,4,6
+   K2O,0.029045,1,4.5,5
+   P2O5,0.0210326,0.9,0.19,0.9
+
+BSE uses the existing McDonough--Sun Table 4 recipe. The other recipes are
+synthetic composition controls, not measured rocks. The comparison samples
+1200, 1479, 1480, 1481, 1800 and 2200 K at 1, 500 and 5000 bar. These
+finite checks do not establish an empirical calibration range.
+
+.. figure:: _static/magma/dry11_validation.png
+   :alt: Supplied BSE and three non-BSE liquid recipes agree with independent MELTS in G, entropy and volume; small residuals are shown separately.
+   :width: 100%
+
+   Lines are JAX, circles are MELTS. Top panels use 500 bar and 100 g of
+   each recipe. Bottom panels show the largest error over three pressures;
+   BSE is omitted from full-composition mu because its Fe2O3 amount is zero.
+
+Across all 96 states, including the 700 g scaled recipe, maximum absolute
+differences are G **5.80e-5 J**, S **8.53e-9 J/K**, Cp **4.24e-9 J/K**,
+V **1.54e-14 m3**, dV/dT **6.97e-20 m3/K**, dV/dP **9.95e-26 m3/Pa**,
+interior mu **4.36e-6 J/mol**, and standards **9.32e-10 J/mol**.
+Each 100 g recipe has G error below **1.11e-5 J**. Atom-inventory errors
+are at most **4.45e-16 mol** in these conversions.
+
+Of 66 attempted pure/binary native states, **51 are explicitly unavailable**:
+the pinned runtime's oxide conversion reports negative SiO2 (50 cases)
+or CaSiO3 (one case) on exact boundaries. Their compositions and failures are
+saved, without perturbed substitutes. All eleven JAX endpoints and all 55
+binary energies are checked separately against standards and published
+interactions. Source-formula checks, native comparisons and experimental
+validation are distinct claims.
+
+.. figure:: _static/magma/dry11_faces.png
+   :alt: All 55 interactions and the agreement of existing two- through six-component faces, including chemical-potential dilution limits.
+   :width: 100%
+
+   Exact zero-padding recovers G and fixed-composition T/P derivatives of
+   every earlier liquid basis, including the noncontiguous CMAS selection.
+   Present mu approaches the old model as the added amounts tend to zero.
+   Absent-component mu has no finite boundary value. The plot uses 1700 K,
+   500 bar; tests also cover 1200 K/1 bar, 1600 K/500 bar and 2200 K/5000 bar.
+
+Tests also check the inverse transform, invalid negative residuals,
+mass conservation, composition-gradient/Hessian transformations, Euler
+homogeneity, Hessian symmetry, finite differences, JIT/vmap and zero phase.
+Full numerical results are in
+:download:`dry11_comparison.json <_static/magma/dry11_comparison.json>`.
+
+.. code-block:: console
+
+   JAX_PLATFORMS=cpu MPLBACKEND=Agg python examples/magma_dry11.py --output documents/_static/magma
+   python -m pytest tests/unittests/magma_dry11_test.py
+   # Optional regeneration; the pinned sources/runtime are separate dependencies.
+   python tests/reference/generate_dry11_reference.py --source /path/to/pinned/sources --output tests/reference/dry11_source_v1.json
+   python tests/reference/generate_dry11_reference.py --runtime /path/to/pinned/runtime --output tests/reference/dry11_melts_v1.json
 
 .. _native-pyroxene:
 
