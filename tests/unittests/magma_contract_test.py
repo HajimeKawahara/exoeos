@@ -68,7 +68,7 @@ def test_common_element_reference_and_rt_conversion_preserve_reaction_energy():
                                reaction / rt, rtol=0, atol=3e-13)
 
 
-@pytest.mark.parametrize("components", [(), ("Fe2O3",)])
+@pytest.mark.parametrize("components", [(), ("FeO",)])
 def test_element_lookup_rejects_empty_or_unimplemented_bases(components):
     with pytest.raises(ValueError):
         element_matrix(components)

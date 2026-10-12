@@ -143,7 +143,7 @@ def test_cooling_sequence_scaling_and_unresolved_disappearance(dry):
 
 
 def test_invalid_shapes_and_oxide_basis(dry):
-    for fun, n in [(liquid_gibbs, [1.]*6), (clinopyroxene_gibbs, [1.]*3)]:
+    for fun, n in [(liquid_gibbs, [1.]*7), (clinopyroxene_gibbs, [1.]*3)]:
         with pytest.raises(ValueError, match="shape"):
             fun(1600., 1e5, n)
     with pytest.raises(ValueError, match="scalars"):

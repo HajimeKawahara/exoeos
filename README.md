@@ -58,6 +58,11 @@ Ca and Fe in both pyroxenes and compares with independent MELTS property roots.
 The [shared magma property contract](documents/native_magma.rst#shared-property-contract)
 defines component amount bases, the `element_matrix` atom ledger, standard-state
 alignment, reduced units and derivative domains for these functions.
+The [ferric liquid extension](documents/native_magma.rst#fe-iii-liquid-component)
+appends Fe2O3 to the five-component liquid, including its standard, pressure
+and mixing terms. Independent MELTS comparisons cover G, chemical potentials
+and thermodynamic derivatives; a zero-ferric check recovers the existing model.
+This supplies phase properties, without a redox solve or magnetite phase.
 The [Japanese explanation](https://github.com/HajimeKawahara/doc_ExoEOS) is
 maintained separately; current English documentation lives in `documents/`.
 
