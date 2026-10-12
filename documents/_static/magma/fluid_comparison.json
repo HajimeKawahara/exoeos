@@ -1,0 +1,94 @@
+{
+  "scope": "Supplied compositions only; Haar ideal standard plus ZD09 residual, not MELTS fluid EOS or experimental saturation validation.",
+  "standard_states": 10,
+  "fluid_states": 30,
+  "liquid_mu_states": 98,
+  "standard_maximum_absolute_errors": {
+    "g_J_mol": 1.4202669262886047e-08,
+    "s_J_mol_K": 1.9610979506978765e-11,
+    "cp_J_mol_K": 1.71581859831349e-10
+  },
+  "fluid_maximum_absolute_errors": {
+    "g_J_mol": 1.4202669262886047e-08,
+    "s_J_mol_K": 2.307049840055697e-08,
+    "cp_J_mol_K": 6.025484680094451e-07,
+    "v_m3_mol": 5.551115123125783e-16,
+    "dvdt_m3_mol_K": 6.462855087742766e-15,
+    "dvdp_m3_mol_Pa": 2.8079142201480056e-18
+  },
+  "liquid_mu_maximum_absolute_error_J_mol": 2.450542524456978e-07,
+  "chemical_potential_comparison": [
+    {
+      "T_K": 1700.0,
+      "P_Pa": 5000000.0,
+      "water_wt_percent": 0.1,
+      "liquid_mu_J_mol": -609106.86362058,
+      "fluid_mu_J_mol": -565024.218681078,
+      "fluid_minus_liquid_J_mol": 44082.644939502
+    },
+    {
+      "T_K": 1700.0,
+      "P_Pa": 50000000.0,
+      "water_wt_percent": 0.1,
+      "liquid_mu_J_mol": -607379.708572751,
+      "fluid_mu_J_mol": -532376.862763358,
+      "fluid_minus_liquid_J_mol": 75002.84580939298
+    },
+    {
+      "T_K": 1700.0,
+      "P_Pa": 500000000.0,
+      "water_wt_percent": 0.1,
+      "liquid_mu_J_mol": -593354.4441186107,
+      "fluid_mu_J_mol": -496793.97662047425,
+      "fluid_minus_liquid_J_mol": 96560.46749813645
+    },
+    {
+      "T_K": 1700.0,
+      "P_Pa": 5000000.0,
+      "water_wt_percent": 2.0,
+      "liquid_mu_J_mol": -531503.820265572,
+      "fluid_mu_J_mol": -565024.218681078,
+      "fluid_minus_liquid_J_mol": -33520.398415506
+    },
+    {
+      "T_K": 1700.0,
+      "P_Pa": 50000000.0,
+      "water_wt_percent": 2.0,
+      "liquid_mu_J_mol": -529776.6652177431,
+      "fluid_mu_J_mol": -532376.862763358,
+      "fluid_minus_liquid_J_mol": -2600.1975456149084
+    },
+    {
+      "T_K": 1700.0,
+      "P_Pa": 500000000.0,
+      "water_wt_percent": 2.0,
+      "liquid_mu_J_mol": -515751.40076360275,
+      "fluid_mu_J_mol": -496793.97662047425,
+      "fluid_minus_liquid_J_mol": 18957.424143128505
+    },
+    {
+      "T_K": 1700.0,
+      "P_Pa": 5000000.0,
+      "water_wt_percent": 5.0,
+      "liquid_mu_J_mol": -514349.90619572497,
+      "fluid_mu_J_mol": -565024.218681078,
+      "fluid_minus_liquid_J_mol": -50674.31248535309
+    },
+    {
+      "T_K": 1700.0,
+      "P_Pa": 50000000.0,
+      "water_wt_percent": 5.0,
+      "liquid_mu_J_mol": -512622.75114789593,
+      "fluid_mu_J_mol": -532376.862763358,
+      "fluid_minus_liquid_J_mol": -19754.111615462112
+    },
+    {
+      "T_K": 1700.0,
+      "P_Pa": 500000000.0,
+      "water_wt_percent": 5.0,
+      "liquid_mu_J_mol": -498597.4866937556,
+      "fluid_mu_J_mol": -496793.97662047425,
+      "fluid_minus_liquid_J_mol": 1803.510073281359
+    }
+  ]
+}

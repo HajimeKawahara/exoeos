@@ -12,8 +12,10 @@ This implements the MELTS water option. The existing empirical water
 models in ``examples/m2_material`` remain separate alternatives; their
 computational kernels are not migrated here. Adding such a solubility
 correction to this G would count water thermodynamics twice. The current
-extension supplies phase properties, not water saturation, a gas phase,
-hydrous minerals, redox equilibrium or crystallization.
+extension supplies liquid properties, not water saturation, hydrous minerals,
+redox equilibrium or crystallization. The separate :doc:`native_magma_fluid`
+connects an explicit H2O gas standard to an existing EOS for supplied-state
+chemical-potential comparisons.
 
 API and conserved inventory
 ----------------------------

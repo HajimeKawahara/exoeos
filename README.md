@@ -85,6 +85,12 @@ all eleven water interactions and the extra water mixing entropy. Its
 BSE, basalt-like and rhyolite-like properties without an external runtime.
 This is the MELTS water option; empirical solubility models remain separate.
 
+The [H2O fluid connection](documents/native_magma_fluid.rst) combines an
+explicit Haar ideal-gas standard with a selected existing EOS. It provides
+extensive G and JAX derivatives on the liquid's reference convention.
+The [comparison example](examples/magma_fluid.py) plots liquid/fluid water
+chemical potentials; saturation and fluid amounts remain ExoGibbs tasks.
+
 Install the documentation dependencies and build the committed notebook-based
 tutorials with:
 

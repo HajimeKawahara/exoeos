@@ -49,6 +49,7 @@ Physical model references
    native_magma
    native_dry_solids
    native_hydrous_liquid
+   native_magma_fluid
    cns_provider_scope
    m2_material_contract
    m2_reaction_calibration

@@ -9,6 +9,16 @@ import jax
 import jax.numpy as jnp
 
 
+def _haar_ideal(T):
+    """Dimensionless ideal term shared by the Haar and gas standards."""
+    c = jnp.array([-.483429455355, .605743189245e1, 22.56023885, -9.87532442,
+                  -.43135538513e1, .458155781, -.47754901883e-1, .41238460633e-2,
+                  -.27929052852e-3, .14481695261e-4, -.56473658748e-6, .16200446e-7,
+                  -.3303822796e-9, .451916067368e-11, -.370734122708e-13, .137546068238e-15])
+    tr = T/100
+    return 1 + (19.730271018/tr + 20.9662681977)*jnp.log(tr) + jnp.sum(c*tr**jnp.arange(-3., 13.))
+
+
 def _haar_helmholtz(T, rho):
     # rho: g/cm3; A: bar cm3/g. All 40 residual terms from water.c.
     tau = T / 647.073
@@ -38,13 +48,7 @@ def _haar_helmholtz(T, rho):
                 - jnp.array([2e4, 2e4, 4e4, 25.])*(T/jnp.array([640., 640., 641.6, 270.])-1)**2)
     residual += jnp.sum(jnp.array([-2.25, -16.8*delta[1]**2, .55, -930.])
                         * jnp.where(exponent > -100, jnp.exp(exponent), 0.))
-    c = jnp.array([-.483429455355, .605743189245e1, 22.56023885, -9.87532442,
-                  -.43135538513e1, .458155781, -.47754901883e-1, .41238460633e-2,
-                  -.27929052852e-3, .14481695261e-4, -.56473658748e-6, .16200446e-7,
-                  -.3303822796e-9, .451916067368e-11, -.370734122708e-13, .137546068238e-15])
-    tr = T/100
-    ideal = 1 + (19.730271018/tr + 20.9662681977)*jnp.log(tr) + jnp.sum(c*tr**jnp.arange(-3., 13.))
-    return 4.6152*T*(base-ideal) + residual
+    return 4.6152*T*(base-_haar_ideal(T)) + residual
 
 
 def _haar_density(T):
