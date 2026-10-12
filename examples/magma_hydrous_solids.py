@@ -99,7 +99,8 @@ def main():
     mix = jax.jit(jax.vmap(lambda x, t: biotite.mixing_gibbs(t, 5e7, jnp.array([x, 1-x])), in_axes=(0, None)))
     for t in (800., 1200., 1600.):
         axes[0, 0].plot(xs, mix(xs, t)/1000, label=f'{t:g} K')
-    axes[0, 0].set(xlabel='Annite fraction', ylabel='Mixing G (kJ/mol)', title='Biotite: one binary entropy')
+    axes[0, 0].set(xlabel='Annite fraction', ylabel='Mixing Gibbs energy (kJ/mol)',
+                   title='Biotite: symmetric regular solution')
     temperatures = jnp.linspace(800., 2200., 81)
     for name, style in (('clinoamphibole', '-'), ('orthoamphibole', '--')):
         q = jax.jit(jax.vmap(lambda t: amphibole.order(t, 5e7, jnp.array([.4, .3, .3]), phase=name)))(temperatures)

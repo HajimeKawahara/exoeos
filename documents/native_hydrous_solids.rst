@@ -117,6 +117,76 @@ Euler's identity :math:`G=\boldsymbol n\cdot\boldsymbol\mu`, amount scaling,
 Hessian symmetry, :math:`G_{nn}\boldsymbol n=0`, finite differences and
 mixed T/P/amount derivatives with pressure coordinates scaled for accuracy.
 
+Biotite as a symmetric regular solution
+---------------------------------------
+
+The top-left panel below is a textbook symmetric binary regular solution
+of annite (An) and phlogopite (Ph). It plots **mixing Gibbs energy**, not
+mixing entropy alone. Set :math:`x=n_{\rm An}/N`, with
+:math:`N=n_{\rm An}+n_{\rm Ph}>0`. For one formula mol, the plotted molar
+mixing energy (J/mol) has the same numerical value as ``mixing_gibbs`` (J):
+
+.. math::
+
+   \Delta g_{\rm mix}=\Delta h_{\rm mix}-T\Delta s_{\rm mix}
+     =Wx(1-x)+RT[x\ln x+(1-x)\ln(1-x)],
+
+.. math::
+
+   \Delta h_{\rm mix}=Wx(1-x),\qquad
+   \Delta s_{\rm mix}=-\left(\frac{\partial\Delta g_{\rm mix}}{\partial T}\right)_{P,x}
+      =-R[x\ln x+(1-x)\ln(1-x)].
+
+Here :math:`W=13430.64` J/mol is independent of temperature and pressure.
+The positive enthalpy penalizes mixing; the positive entropy favors mixing
+through :math:`-T\Delta s_{\rm mix}`. The entropy is ideal, but the solution
+is nonideal because W is nonzero (W=0 gives the ideal solution). Its entropy
+is independent of T and peaks at :math:`x=1/2`, with
+:math:`\Delta s_{\rm mix}=R\ln2=5.76303` J/(mol K). Thus the three different
+temperature curves show the growing entropy contribution to G, not three
+different mixing entropies. The pinned model uses R here, not 3R for the
+three octahedral cations.
+
+Both terms are unchanged by :math:`x\leftrightarrow1-x`, and both vanish
+at the pure endpoints using :math:`0\ln0=0`. This symmetry belongs to
+:math:`\Delta g_{\rm mix}`; the full molar Gibbs energy
+:math:`g=xg_{\rm An}^0+(1-x)g_{\rm Ph}^0+\Delta g_{\rm mix}` generally has
+a linear tilt from the unequal standards. That tilt leaves its curvature
+and common-tangent coexistence compositions unchanged.
+
+For :math:`0<x<1`, the slope and curvature are
+
+.. math::
+
+   \frac{d\Delta g_{\rm mix}}{dx}=W(1-2x)+RT\ln\frac{x}{1-x},\qquad
+   \frac{d^2\Delta g_{\rm mix}}{dx^2}=-2W+\frac{RT}{x(1-x)}.
+
+The minimum curvature occurs at :math:`x=1/2` and vanishes at
+:math:`T_c=W/(2R)=807.683` K. The 1200 and 1600 K curves are strictly
+convex. At 800 K, just below :math:`T_c`, a shallow double well remains:
+the minima lie near x=0.416 and 0.584, only 0.455 J/mol below the central
+maximum, which is hard to see on the kJ/mol scale. Negative curvature
+means local instability to composition fluctuations. The spinodal limits
+are :math:`x_\pm=[1\pm\sqrt{1-T/T_c}]/2`; at 800 K they are 0.451 and
+0.549. They differ from the coexistence (binodal) compositions 0.416 and
+0.584, found by the common tangent. A negative mixing G alone therefore
+does not guarantee a stable homogeneous mixture. ``mixing_gibbs`` returns
+the homogeneous curve; it does not replace the double well by its common
+tangent. These are predictions of this restricted biotite model, not an
+experimental miscibility boundary or a full multiphase calculation.
+
+Chemical potentials follow from the same extensive :math:`G=Ng` by
+varying each amount while holding the other fixed:
+
+.. math::
+
+   \mu_{\rm An}=g_{\rm An}^0+RT\ln x+W(1-x)^2,\qquad
+   \mu_{\rm Ph}=g_{\rm Ph}^0+RT\ln(1-x)+Wx^2.
+
+These satisfy :math:`G=n_{\rm An}\mu_{\rm An}+n_{\rm Ph}\mu_{\rm Ph}`
+in the interior. The logarithmic insertion potentials diverge at absent
+component endpoints even though mixing G has a finite continuous limit.
+
 API and distinct boundaries
 ---------------------------
 
@@ -234,7 +304,10 @@ mineral and check the atom ledger and derivative of the combined G.
    :width: 100%
    :alt: Biotite mixing, amphibole site order, wet versus dry forsterite crystallization, and water enrichment.
 
-   Top: mineral properties at 500 bar (amphibole Cum/Grn/Tr=0.4/0.3/0.3).
+   Top left: biotite mixing Gibbs energy for the symmetric regular solution
+   explained above; the 800 K double well is too shallow to resolve at this
+   scale. Top right: amphibole site order (Cum/Grn/Tr=0.4/0.3/0.3).
+   Both mineral panels use 500 bar; biotite mixing G is pressure independent.
    Bottom: restricted liquid+Fo cooling; circles are independent native roots.
 
 Reproduce without MELTS:
