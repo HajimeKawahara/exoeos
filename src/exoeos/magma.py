@@ -4,6 +4,10 @@ The liquid basis is (SiO2, Mg2SiO4[, Fe2SiO4][, CaSiO3, Al2O3]), not oxides.
 Iron is exclusively Fe(II). Olivine is the binary forsterite--fayalite face.
 Temperatures are K, pressures Pa, amounts mol, and Gibbs energies J.
 Enable JAX x64 for thermodynamic derivatives and phase comparisons.
+ELEMENTS and element_matrix(components) define the conserved atom ledger:
+rows are elements, columns are the caller's ordered component formulas.
+See the shared property contract in documents/native_magma.rst for amount
+bases, standard-state alignment, reduced units and derivative domains.
 
 Equations and coefficients: MAGMA revision
 705a0fb315e5054d18275a580562f6121c8e458c, sources/gibbs.c,
@@ -28,9 +32,43 @@ OLIVINE_COMPONENTS = ("Mg2SiO4", "Fe2SiO4")
 CLINOPYROXENE_COMPONENTS = ("CaMgSi2O6", "CaFeSi2O6")
 PYROXENE_COMPONENTS = ("CaSiO3", "MgSiO3", "FeSiO3")
 SILICA_POLYMORPHS = ("quartz", "tridymite", "cristobalite")
+ELEMENTS = ("O", "Mg", "Si", "Fe", "Al", "Ca")
+_ELEMENT_COUNTS = {
+    # Atom counts per mol of each API coordinate, in ELEMENTS order.
+    "SiO2": (2, 0, 1, 0, 0, 0),
+    "Mg2SiO4": (4, 2, 1, 0, 0, 0),
+    "Fe2SiO4": (4, 0, 1, 2, 0, 0),
+    "CaSiO3": (3, 0, 1, 0, 0, 1),
+    "Al2O3": (3, 0, 0, 0, 2, 0),
+    "CaMgSi2O6": (6, 1, 2, 0, 0, 1),
+    "CaFeSi2O6": (6, 0, 2, 1, 0, 1),
+    "MgSiO3": (3, 1, 1, 0, 0, 0),
+    "FeSiO3": (3, 0, 1, 1, 0, 0),
+    "CaAl2Si2O8": (8, 0, 2, 0, 2, 1),
+}
 R = 8.3143  # J/(mol K); retain the MELTS entropy convention.
 W = 3421.0  # J/mol; SiO2--Mg2SiO4 liquid interaction.
 _TR = 298.15
+
+
+def element_matrix(components):
+    """Return integer atom counts A with element inventory = A @ n.
+
+    Rows follow ELEMENTS; columns follow the supplied nonempty sequence of
+    supported formula strings (e.g. CMFAS_COMPONENTS or PYROXENE_COMPONENTS).
+    The shape is (len(ELEMENTS), len(components)). With n in mol of API
+    coordinates, A @ n is mol of atoms. Pure anorthite uses ("CaAl2Si2O8",).
+    Formulas may repeat when assembling multiple phases. Names are static
+    metadata; obtain A before JAX transformations. This lookup neither maps
+    oxide inventories into components nor validates a phase's site domain.
+    """
+    try:
+        counts = tuple(_ELEMENT_COUNTS[name] for name in components)
+    except KeyError as error:
+        raise ValueError(f"Unsupported magma component: {error.args[0]}") from error
+    if not counts:
+        raise ValueError("components must contain at least one supported formula.")
+    return jnp.asarray(counts, dtype=jnp.int32).T
 
 
 def _tp(T, P):

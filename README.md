@@ -55,6 +55,9 @@ The [Ca--Mg--Fe pyroxene extension](documents/native_magma.rst#ca-mg-fe-clinopyr
 adds both pyroxene structures with relaxed Mg/Fe site order and implicit JAX
 derivatives. Its [cooling example](examples/magma_pyroxene.py) includes variable
 Ca and Fe in both pyroxenes and compares with independent MELTS property roots.
+The [shared magma property contract](documents/native_magma.rst#shared-property-contract)
+defines component amount bases, the `element_matrix` atom ledger, standard-state
+alignment, reduced units and derivative domains for these functions.
 The [Japanese explanation](https://github.com/HajimeKawahara/doc_ExoEOS) is
 maintained separately; current English documentation lives in `documents/`.
 
