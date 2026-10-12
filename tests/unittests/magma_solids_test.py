@@ -55,7 +55,18 @@ def test_relaxed_hessian_and_extensivity(phase):
     mu = grad(T, P, n)[2]
     np.testing.assert_allclose(n@mu, fun(T, P, n), atol=4e-9, rtol=0)
     np.testing.assert_allclose(fun(T, P, 3.7*n), 3.7*fun(T, P, n), atol=1e-8, rtol=0)
-    hessian = jax.jit(jax.hessian(fun, 2))(T, P, n)
+    # Scale external coordinates so small pressure blocks cannot pass on
+    # a large absolute tolerance. Include T/n, P/n and T/P Maxwell pairs.
+    state = jnp.r_[T/1000., P/1e8, n]
+    joint = lambda z: fun(1000.*z[0], 1e8*z[1], z[2:])
+    joint_gradient = jax.jit(jax.grad(joint))
+    full = jax.jit(jax.hessian(joint))(state)
+    np.testing.assert_allclose(full, full.T, atol=1e-7, rtol=2e-10)
+    for index in (0, 1):
+        delta = jnp.eye(state.size)[index]*1e-5
+        finite = (joint_gradient(state+delta)-joint_gradient(state-delta))/2e-5
+        np.testing.assert_allclose(full[:, index], finite, atol=.003, rtol=3e-6)
+    hessian = full[2:, 2:]
     np.testing.assert_allclose(hessian, hessian.T, atol=2e-8, rtol=0)
     np.testing.assert_allclose(hessian@n, 0., atol=2e-8, rtol=0)
     direction = jnp.linspace(-.7, .9, n.size)
@@ -74,8 +85,28 @@ def test_relaxed_hessian_and_extensivity(phase):
     assert np.all(np.isfinite(batch))
     assert batch[1] == pytest.approx(float(fun(T, P, n)), abs=3e-9, rel=0)
     assert fun(T, P, jnp.zeros(len(module.COMPONENTS))) == 0.
+    # The zero-branch AD sentinel is not an absent phase's chemical potential.
     for derivative in grad(T, P, jnp.zeros(len(module.COMPONENTS))):
         np.testing.assert_array_equal(derivative, np.zeros_like(derivative))
+
+
+def test_positive_interior_limits_against_native(phase):
+    name, module, fun, _, grad, dtt = phase
+    rows = [r for r in REFERENCE['interior_limits'] if r['phase'] == name]
+    for row in rows:
+        T, P, n = row['T_K'], row['P_Pa'], jnp.array(row['n_mol'])
+        dt, dp, mu = grad(T, P, n)
+        actual = np.array([fun(T, P, n), -dt, -T*dtt(T, P, n), dp])
+        expected = np.array([row[k] for k in ('g_J', 's_J_K', 'cp_J_K', 'v_m3')])
+        assert np.all(abs(actual-expected) <= [5e-9, 1e-9, 2e-8, 1e-17]), actual-expected
+        assert np.all(np.isfinite(mu))
+        np.testing.assert_allclose(n@mu, actual[0], atol=4e-9, rtol=0)
+        # At an interior root every modeled site is positive, including the
+        # small exchange populations that must not land on a zero-site face.
+        kwargs = {'phase': name} if module is pyroxene else {}
+        order = module.order(T, P, n, **kwargs)
+        sites = module._model(name)[1] if module is pyroxene else module._SITES
+        assert np.all(sites(order) > 0)
 
 
 def test_pure_endmembers_and_fixed_face_derivatives(phase):

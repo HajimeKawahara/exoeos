@@ -69,6 +69,13 @@ def relax(energy, initial, free, sites, starts=None):
     claim of global phase stability. AD uses the stationarity equation.
     """
     free = jnp.asarray(free)
+    interior_sites = sites(initial) > 0.
+
+    def scaled_hessian(h):
+        # Order fractions of trace species have small, valid curvatures.
+        # Equilibrate coordinates before damping or testing definiteness.
+        scale = jnp.sqrt(jnp.maximum(jnp.abs(jnp.diag(h)), jnp.finfo(h.dtype).tiny))
+        return h/scale[:, None]/scale[None, :], scale
 
     def objective(q):
         return energy(q)+jnp.sum(jnp.where(free, 0., (q-initial)**2/2))
@@ -79,24 +86,31 @@ def relax(energy, initial, free, sites, starts=None):
         def run(start):
             def step(_, q):
                 g = fun(q)
-                h = jax.jacfwd(fun)(q)
+                h, scale = scaled_hessian(jax.jacfwd(fun)(q))
                 shift = jnp.maximum(0., 1e-5-jnp.linalg.eigvalsh(h)[0])
-                direction = -jnp.linalg.solve(h+shift*jnp.eye(q.size), g)
+                direction = -jnp.linalg.solve(h+shift*jnp.eye(q.size), g/scale)/scale
                 direction = direction/jnp.maximum(1., jnp.max(jnp.abs(direction)))
                 value = objective(q)
 
-                def backtrack(_, alpha):
+                def acceptable(alpha):
                     trial = q+alpha*direction
-                    feasible = jnp.all(sites(trial) >= 0.)
+                    occupied = sites(trial)
+                    # Preserve live sites; structural zeros stay on their
+                    # fixed face. A zero-site energy limit is not a root.
+                    feasible = jnp.all(jnp.where(interior_sites, occupied > 0., occupied >= 0.))
                     decrease = objective(trial) <= value+1e-4*alpha*(g@direction)+1e-14
-                    return jnp.where(feasible & decrease, alpha, alpha/2)
+                    return feasible & decrease
+
+                def backtrack(_, alpha):
+                    return jnp.where(acceptable(alpha), alpha, alpha/2)
 
                 alpha = jax.lax.fori_loop(0, 32, backtrack, jnp.array(1.))
-                return jnp.where(jnp.max(jnp.abs(g)) < 2e-12, q, q+alpha*direction)
+                converged = jnp.max(jnp.abs(g)/scale**2) < 2e-12
+                return jnp.where(converged | ~acceptable(alpha), q, q+alpha*direction)
 
             q = jax.lax.fori_loop(0, 80, step, start)
-            h = jax.jacfwd(fun)(q)
-            valid = (jnp.max(jnp.abs(fun(q))) < 1e-8) & (jnp.linalg.eigvalsh(h)[0] > 1e-9)
+            h, scale = scaled_hessian(jax.jacfwd(fun)(q))
+            valid = (jnp.max(jnp.abs(fun(q))/scale**2) < 1e-8) & (jnp.linalg.eigvalsh(h)[0] > 1e-9)
             valid &= jnp.all(sites(q) >= -1e-14)
             return q, jnp.where(valid, objective(q), jnp.inf)
 

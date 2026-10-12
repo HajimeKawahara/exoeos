@@ -20,7 +20,7 @@
     "build_provenance": "Release binary pinned by hash; thermodynamic C build commit is not independently established."
   },
   "method": "Supplied native molar properties and chemical potentials; no phase selection or JAX imports.",
-  "generator_sha256": "3c98b276f8a0989274b3a3fc133c42bbb9ec75af726b471c46a7ac4c9d8edf01",
+  "generator_sha256": "718c75f48cd7d0067fa3b300f4257c3ecb4837f7ca258cdc1d6a9c3fc146669a",
   "parameter_sha256": "abf8e929122bba24d81d3505310dea95f6f6f65f8655e4b804171341b057d808",
   "endpoint_policy": "Native spinel/pyroxene endpoint ordering derivatives can be singular or finite but inconsistent (including negative Cp near -1e13 J/K). Preserve them as diagnostics; use finite endpoint G as a reference and independently test fixed-face derivatives against continuous pure limits and finite differences.",
   "properties": [
@@ -7828,6 +7828,110 @@
       "cp_J_K": 267.46375469653685,
       "v_m3": 6.301696710557216e-05,
       "status": "native_nonfinite_endpoint_properties"
+    }
+  ],
+  "interior_limits": [
+    {
+      "phase": "clinopyroxene",
+      "T_K": 1600.0,
+      "P_Pa": 50000000.0,
+      "n_mol": [
+        1.0,
+        0.001,
+        0.001,
+        0.001,
+        0.001,
+        0.001,
+        0.001
+      ],
+      "g_J": -3744931.811438128,
+      "s_J_K": 526.052190647565,
+      "cp_J_K": 264.215210334977,
+      "v_m3": 6.990426301793968e-05
+    },
+    {
+      "phase": "clinopyroxene",
+      "T_K": 1600.0,
+      "P_Pa": 50000000.0,
+      "n_mol": [
+        1.0,
+        1e-06,
+        1e-06,
+        1e-06,
+        1e-06,
+        1e-06,
+        1e-06
+      ],
+      "g_J": -3723222.997456602,
+      "s_J_K": 522.4438193149397,
+      "cp_J_K": 262.62710499484524,
+      "v_m3": 6.949922206613068e-05
+    },
+    {
+      "phase": "orthopyroxene",
+      "T_K": 1600.0,
+      "P_Pa": 50000000.0,
+      "n_mol": [
+        1.0,
+        0.001,
+        0.001,
+        0.001,
+        0.001,
+        0.001,
+        0.001
+      ],
+      "g_J": -3744657.1219133157,
+      "s_J_K": 527.4260454373247,
+      "cp_J_K": 264.2151679985151,
+      "v_m3": 7.065670591358146e-05
+    },
+    {
+      "phase": "orthopyroxene",
+      "T_K": 1600.0,
+      "P_Pa": 50000000.0,
+      "n_mol": [
+        1.0,
+        1e-06,
+        1e-06,
+        1e-06,
+        1e-06,
+        1e-06,
+        1e-06
+      ],
+      "g_J": -3723062.7109851553,
+      "s_J_K": 523.8245324387735,
+      "cp_J_K": 262.6271049948013,
+      "v_m3": 7.02523413981475e-05
+    },
+    {
+      "phase": "rhm-oxide",
+      "T_K": 1600.0,
+      "P_Pa": 50000000.0,
+      "n_mol": [
+        1.0,
+        1e-09,
+        1e-09,
+        1e-09
+      ],
+      "g_J": -1850074.245488994,
+      "s_J_K": 276.0722126203129,
+      "cp_J_K": 134.32103651456512,
+      "v_m3": 3.210244578394667e-05
+    },
+    {
+      "phase": "rhm-oxide",
+      "T_K": 1600.0,
+      "P_Pa": 50000000.0,
+      "n_mol": [
+        1.0,
+        1e-12,
+        1e-12,
+        1e-12
+      ],
+      "g_J": -1850074.2395864918,
+      "s_J_K": 276.07221085220056,
+      "cp_J_K": 134.32103581767322,
+      "v_m3": 3.2102445693868285e-05
     }
   ]
 }

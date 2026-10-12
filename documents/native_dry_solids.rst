@@ -222,7 +222,10 @@ Relaxed derivatives and domains
 
 The site solver uses feasible damped Newton steps. Inactive order coordinates
 are removed through identity equations on the corresponding composition
-face. Rhombohedral oxide uses disordered and ordered starts and selects the
+face. Live sites remain strictly positive during the line search; structural
+zeros stay on their fixed face. Diagonal scaling makes the convergence and
+curvature checks meaningful for trace-species order coordinates as well.
+Rhombohedral oxide uses disordered and ordered starts and selects the
 lowest converged stable root; albite compares its disordered and ordered
 branches. Failure of stationarity or positive ordering curvature returns
 NaN. This is a local ordering calculation, not a certificate of global
@@ -305,6 +308,12 @@ also be inconsistent: pure cEn Cp reaches negative values near
 260--280 J/K. These derivative values remain diagnostic records, not
 regression targets. Finite endpoint G is checked; fixed-face T/P derivatives
 are checked against the continuous pure limits and finite differences.
+Six additional supplied-property records at 1600 K and 500 bar cover
+positive interior approaches to diopside and geikielite, with minor amounts
+from 1e-3 to 1e-12 mol. They catch false ordering failures before the exact
+endpoint. Coupled T/P/amount Hessians are also checked against finite
+differences on smooth interior branches. The AD sentinel at zero total
+amount is never interpreted as a chemical potential.
 
 .. figure:: _static/magma/dry_solids_validation.png
    :width: 100%
