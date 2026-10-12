@@ -29,6 +29,11 @@ SAMPLES = {
     'orthopyroxene': [[.45, .1, .1, .05, .05, .1, .15], [.1, .55, .15, .02, .02, .06, .1],
                       [-.1, .7, .2, .03, .02, .1, .05]],
 }
+LIMIT_SAMPLES = {
+    phase: [[1.] + [epsilon]*6 for epsilon in (1e-3, 1e-6)]
+    for phase in ('clinopyroxene', 'orthopyroxene')
+}
+LIMIT_SAMPLES['rhm-oxide'] = [[1., epsilon, epsilon, epsilon] for epsilon in (1e-9, 1e-12)]
 
 
 def worker(runtime, T, P):
@@ -43,7 +48,7 @@ def worker(runtime, T, P):
     engine.temperature, engine.pressure = T-273.15, P/1e5
     data = json.loads(PARAMETERS.read_text())
     assert data['oxide_order'] == list(native.OXIDES)
-    rows, endpoints = [], []
+    rows, endpoints, interior_limits = [], [], []
     for phase in PHASES:
         model = data['models'][phase]
         indices = model['native_endmember_indices']
@@ -93,7 +98,27 @@ def worker(runtime, T, P):
         rows.append({'phase': phase, 'T_K': T, 'P_Pa': P, 'g_J': float(engine.g[phase]),
                      's_J_K': float(engine.s[phase]), 'cp_J_K': float(engine.cp[phase]),
                      'v_m3': float(engine.v[phase])*1e-6})
-    return {'properties': rows, 'endpoints': endpoints}
+    if (T, P) == (1600., 5e7):
+        # Run after the historical endpoint diagnostics: native endpoint
+        # ordering derivatives can depend on the previously supplied state.
+        for phase, samples in LIMIT_SAMPLES.items():
+            indices = data['models'][phase]['native_endmember_indices']
+            for sample in samples:
+                n = np.array(sample)
+                raw = np.zeros(19)
+                raw[indices] = n/n.sum()
+                engine.molarComposition = raw
+                engine.calcMolarProperties(phase)
+                assert not engine.status.failed
+                row = {'phase': phase, 'T_K': T, 'P_Pa': P, 'n_mol': sample,
+                       **{key: n.sum()*float(getattr(engine, field)[phase])*scale
+                          for key, field, scale in [('g_J', 'g', 1.), ('s_J_K', 's', 1.),
+                                                   ('cp_J_K', 'cp', 1.), ('v_m3', 'v', 1e-6)]}}
+                assert all(np.all(np.isfinite(v)) for k, v in row.items() if k != 'phase')
+                # Tiny species use direct molar input, without an oxide
+                # round trip to define their singular insertion potentials.
+                interior_limits.append(row)
+    return {'properties': rows, 'endpoints': endpoints, 'interior_limits': interior_limits}
 
 
 def main():
@@ -110,7 +135,7 @@ def main():
             'generator_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
             'parameter_sha256': hashlib.sha256(PARAMETERS.read_bytes()).hexdigest(),
             'endpoint_policy': 'Native spinel/pyroxene endpoint ordering derivatives can be singular or finite but inconsistent (including negative Cp near -1e13 J/K). Preserve them as diagnostics; use finite endpoint G as a reference and independently test fixed-face derivatives against continuous pure limits and finite differences.',
-            'properties': [], 'endpoints': []}
+            'properties': [], 'endpoints': [], 'interior_limits': []}
     with tempfile.TemporaryDirectory() as folder:
         states = [(t, p) for t in (1200., 1600., 2200.) for p in (1e5, 5e7, 5e8)]
         states += [(1435., 5e7), (1437., 5e7), (1730., 5e7), (1740., 5e7)]
@@ -125,7 +150,7 @@ def main():
                 # Focused checks on either side of the rhombohedral pure-order
                 # transition, including coexistence of local ordering minima.
                 result['properties'] = [r for r in result['properties'] if r['phase'] == 'rhm-oxide']
-            for key in ('properties', 'endpoints'):
+            for key in ('properties', 'endpoints', 'interior_limits'):
                 data[key].extend(result[key])
             print(T, P, flush=True)
     args.output.write_text(json.dumps(data, indent=2)+'\n')
