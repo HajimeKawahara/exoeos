@@ -1,0 +1,1927 @@
+Native JAX magma: silicate liquids and solids
+============================================================
+
+``exoeos.magma`` evaluates a two-component MELTS liquid, pure crystalline
+forsterite, the pure Mg orthopyroxene endpoint and three SiO2 polymorphs in JAX,
+including their standard Gibbs energies. The examples progress from
+forsterite cooling and enstatite insertion to equilibrium phase amounts
+after enstatite appears, then to multiphase equilibrium with silica solids.
+No external MELTS runtime is needed for evaluation, derivatives, the cooling
+examples, or ordinary tests. This is the native JAX Gibbs model for silicate
+magma. The binary multiphase example allows one liquid, forsterite, Mg orthopyroxene,
+quartz, tridymite and cristobalite; it is not the full MgO--SiO2 phase diagram.
+The Fe(II) extension below adds a ternary liquid and a binary
+forsterite--fayalite olivine solution, with a separate closed liquid + olivine
+equilibrium example for Fe/Mg partitioning.
+The Ca/Al extension below adds CaSiO3 and Al2O3 liquid
+coordinates, Di--Hd clinopyroxene and pure anorthite. The following extension
+adds Ca--Mg--Fe compositions and relaxed Mg/Fe site order to both pyroxene
+structures. The preceding restricted examples retain their original APIs
+and candidate sets.
+The Fe(III) extension appends Fe2O3 to the five-component liquid and evaluates
+supplied Fe(II)/Fe(III) compositions. Magnetite and redox equilibrium are not
+included in this extension.
+The dry eleven-component extension adds TiO2, MgCr2O4, Na2SiO3, KAlSiO4
+and Ca3(PO4)2 with all 55 pair interactions and atom-conserving oxide
+conversion. It evaluates supplied liquid compositions; the existing
+restricted cooling examples keep their phase sets.
+The :doc:`native_dry_solids` extension supplies Na/K feldspars, ordered
+spinel and rhombohedral oxides, rutile/corundum, and seven-component
+Al/Na/Ti/Fe(III)-bearing pyroxenes in separate phase modules.
+The :doc:`native_hydrous_liquid` extension appends H2O to the dry liquid,
+including its standard, eleven interactions and extra water mixing entropy.
+
+.. _native-magma-contract:
+
+Shared property contract
+------------------------
+
+Thermodynamic functions in ``exoeos.magma`` use scalar temperature in K and pressure
+in Pa. Solution functions take **absolute component amounts in mol**, not
+mole fractions or oxide masses, and return extensive G in J. Pure-phase
+functions return molar G; multiply by the corresponding formula amount to
+form an extensive phase energy. The component order and amount basis are:
+
+.. list-table:: Public amount bases
+   :header-rows: 1
+   :widths: 26 44 30
+
+   * - Function
+     - Ordered coordinates
+     - Energy basis
+   * - ``liquid_gibbs``
+     - ``COMPONENTS`` = (SiO2, Mg2SiO4);
+       ``TERNARY_COMPONENTS`` adds Fe2SiO4;
+       ``CMAS_COMPONENTS`` = (SiO2, Mg2SiO4, CaSiO3, Al2O3);
+       ``CMFAS_COMPONENTS`` = (SiO2, Mg2SiO4, Fe2SiO4, CaSiO3, Al2O3);
+       ``FERRIC_COMPONENTS`` appends Fe2O3 to CMFAS;
+       ``DRY11_COMPONENTS`` then appends TiO2, MgCr2O4, Na2SiO3,
+       KAlSiO4, Ca3(PO4)2; ``HYDROUS_COMPONENTS`` appends H2O to DRY11.
+     - J for the supplied 2, 3, 4, 5, 6, 11 or 12 component amounts.
+   * - ``olivine_gibbs``
+     - ``OLIVINE_COMPONENTS`` = (Mg2SiO4, Fe2SiO4).
+     - J; each coordinate is mol of one-Si formula units.
+   * - ``clinopyroxene_gibbs``
+     - ``CLINOPYROXENE_COMPONENTS`` = (CaMgSi2O6, CaFeSi2O6).
+     - J; each coordinate is mol of two-Si formula units.
+   * - ``pyroxene_gibbs``
+     - ``PYROXENE_COMPONENTS`` = (CaSiO3, MgSiO3, FeSiO3), for either structure.
+     - J; each coordinate contains one mol Si. Formula amount is sum(n)/2.
+   * - ``forsterite_gibbs``, ``fayalite_gibbs``
+     - Mg2SiO4, Fe2SiO4, respectively.
+     - J/mol of the named formula.
+   * - ``enstatite_gibbs``, ``anorthite_gibbs``
+     - MgSiO3, CaAl2Si2O8, respectively.
+     - J/mol of the named formula; anorthite contains two mol Si.
+   * - ``silica_gibbs``
+     - SiO2 for each entry in ``SILICA_POLYMORPHS``.
+     - Three molar energies in J/mol SiO2, not a three-component solution.
+
+``liquid_standard_gibbs`` and ``clinopyroxene_standard_gibbs`` return molar
+standard vectors in the corresponding liquid and Di--Hd bases. Select the
+liquid standard flags to match the liquid component tuple.
+
+Element inventories and coordinate changes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``ELEMENTS = ("O", "Mg", "Si", "Fe", "Al", "Ca", "Na", "K", "Ti", "Cr", "P", "H", "C")`` fixes the row order of
+``element_matrix(components)``. Its columns give atom counts (including
+half-integers for Ti-bearing pyroxenes) for
+the supplied ordered formula strings. Thus :math:`b=A n` is the elemental
+inventory in mol of atoms, and inventories from different phases add in
+this common row order. Repeated formulas are allowed for separate phases.
+The lookup describes supported component and oxide formulas; it does not
+choose a phase, perform an oxide conversion, or check site feasibility.
+The dry11 extension appended five element rows; the hydrous extension
+appends H. The separate :doc:`native_carbonate_liquid` extension appends C.
+Existing dry columns have zero H/C. Consumers must use
+``len(ELEMENTS)`` instead of a fixed row count.
+
+For example, one mol Di corresponds to ``[1, 1, 0]`` in the new pyroxene
+coordinates; one mol Hd corresponds to ``[1, 0, 1]``. If :math:`n=B m`
+changes amount coordinates, require :math:`A_n B=A_m` and use
+:math:`G_m(T,P,m)=G_n(T,P,Bm)`. Where composition derivatives exist,
+:math:`\mu_m=B^{\mathsf T}\mu_n`. Merely relabeling the molar units is
+insufficient. On the Ca-saturated pyroxene edge the energy equivalence
+holds, but the full three-coordinate composition gradient is unsupported.
+
+.. code-block:: python
+
+   import jax
+   jax.config.update("jax_enable_x64", True)
+   import jax.numpy as jnp
+   from exoeos.magma import CMFAS_COMPONENTS, ELEMENTS, element_matrix, liquid_gibbs
+
+   A = element_matrix(CMFAS_COMPONENTS)  # shape (len(ELEMENTS), 5); static metadata
+   n = jnp.array([0.4, 0.25, 0.075, 0.25, 0.12])
+   element_moles = A @ n                # ordered as ELEMENTS
+   T, P = 1700., 1e5
+   G = liquid_gibbs(T, P, n)             # J, including all mixing terms
+   mu = jax.grad(liquid_gibbs, 2)(T, P, n)  # J/mol of each API coordinate
+   common_R = 8.31446261815324
+   G_RT = G / (common_R * T)             # mol, not dimensionless
+   mu_RT = mu / (common_R * T)           # dimensionless
+
+Standards and reduced units
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The phase energies include their standard, mixing and pressure terms.
+Do not add another ideal/excess term or pass this full G as an excess model
+to ``total_solution_gibbs_RT``. The physical MELTS mixing entropy retains
+``R = 8.3143`` J/(mol K); division by the consumer's R*T changes only the
+output convention. Thermodynamic derivatives use dimensional G:
+:math:`S=-G_T`, :math:`C_P=-T G_{TT}`, :math:`V=G_P`, in J/K, J/K and m3
+for an extensive energy. Keep all standard-state T/P dependence inside
+the differentiated function, including any reference conversion.
+
+Standards follow the pinned MELTS model and the phase-specific corrections
+documented below, including the silica runtime offsets and the shared
+monoclinic pyroxene reference. These standards are not automatically aligned
+with arbitrary gas or alloy data. At a supplied T/P, an elemental reference
+shift :math:`G'=G+\lambda^{\mathsf T}A n` changes component potentials by
+:math:`A^{\mathsf T}\lambda`. If the same elemental shift is applied to every
+phase, it cancels from atom-balanced reaction energies and changes a closed
+assemblage's energy by a conserved constant. A component-specific reaction
+correction generally does not cancel and defines a different physical model.
+An elemental reference shift cannot repair incompatible reaction standards.
+
+Input and derivative domains
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The caller validates finite positive T/P and finite nonnegative amounts
+before JAX transformations; the evaluators check static shapes. Enable x64
+and use ``vmap`` for batches. Oxide inventories must map into the declared
+nonnegative liquid basis, including the residual-SiO2 constraint below.
+Pyroxenes additionally require ``n_Ca <= n_Mg + n_Fe``. Their relaxed
+first/second derivatives apply in the composition interior over 1200--2200 K
+and 1--5000 bar. A static phase name selects the pyroxene structure.
+
+An absent solution has exactly zero G and no chemical potentials; any AD
+output at its zero vector is not a chemical-potential contract. Individual
+zero amounts use continuous energy limits. Composition derivatives are
+supported in positive interiors (also strictly inside site constraints for
+pyroxenes); absent ideal-component potentials have a divergent limit.
+At composition edges, use only the documented energy and fixed-composition
+T/P derivatives. Temperature/structural branches retain their own derivative
+domains, including the liquid SiO2 Cp jump at 1480 K and silica polymorph
+branch switches. Finite reference comparisons do not establish an empirical
+calibration domain or authorize extrapolation to arbitrary pressures.
+
+Internal site relaxation belongs to the phase property model. Assemblage
+minimization, phase appearance/disappearance, multiple compositions of one
+phase, and derivatives of the equilibrium solution belong to the equilibrium
+consumer; absolute reservoirs and planetary closure belong to its caller.
+
+.. _native-ferric-liquid:
+
+Fe(III) liquid component
+------------------------
+
+``FERRIC_COMPONENTS`` is the ordered basis
+:math:`[Q,F,A,C,L,B]=[\mathrm{SiO_2},\mathrm{Mg_2SiO_4},\mathrm{Fe_2SiO_4},
+\mathrm{CaSiO_3},\mathrm{Al_2O_3},\mathrm{Fe_2O_3}]`.
+``liquid_gibbs`` selects it for a six-entry amount vector. The new standard
+flag ``include_ferric=True`` requires ``include_fe=True, include_ca_al=True``;
+the existing default and 2--5 component orders are preserved.
+
+Fe2O3 is a **liquid thermodynamic component**, not a hematite solid phase.
+Fe3O4 (magnetite), other ferric solids, oxygen exchange, imposed oxygen
+fugacity and a redox equilibrium solver are outside this addition.
+All existing solids and cooling examples retain their Fe(II) compositions.
+
+Basis, mixing and chemical potentials
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The oxide mapping retains the existing residual silica condition:
+
+.. math::
+
+   n_F=\frac{n_{\mathrm{MgO}}}{2},\quad
+   n_A=\frac{n_{\mathrm{FeO}}}{2},\quad n_C=n_{\mathrm{CaO}},\quad
+   n_L=n_{\mathrm{Al_2O_3}},\quad n_B=n_{\mathrm{Fe_2O_3}},\qquad
+   n_Q=n_{\mathrm{SiO_2}}-n_F-n_A-n_C\ge0.
+
+The Fe2O3 column of ``element_matrix(FERRIC_COMPONENTS)`` is
+``[3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]`` in ``ELEMENTS`` order. It contributes three O atoms
+and two Fe atoms per formula mol; the Fe3+/total-Fe fraction is
+:math:`n_B/(n_A+n_B)` when iron is present. Valence is encoded by component
+stoichiometry, while the ledger conserves total elemental Fe and O.
+
+With :math:`N=\sum_i n_i`, :math:`x_i=n_i/N`, and symmetric
+:math:`W_{ij}=W_{ji}`, :math:`W_{ii}=0`, the same regular-solution form is used:
+
+.. math::
+
+   G=\sum_i n_i g_i^0(T,P)+R T\sum_i n_i\ln x_i
+       +N g^{\mathrm{ex}},\qquad
+   g^{\mathrm{ex}}=\sum_{i<j}W_{ij}x_ix_j,
+
+.. math::
+
+   \mu_i=g_i^0+RT\ln x_i+\sum_jW_{ij}x_j-g^{\mathrm{ex}}.
+
+Here :math:`R=8.3143` J/(mol K). Existing interactions are unchanged.
+The five added values are from ``meltsModelParameters`` in the pinned
+``param_struct_data_v34.h``; their excess entropy and volume coefficients
+are zero, so these W values have no T/P dependence.
+
+.. list-table:: New Fe2O3 interactions
+   :header-rows: 1
+
+   * - Partner
+     - W with Fe2O3 (J/mol)
+   * - SiO2
+     - 8110.3
+   * - Mg2SiO4
+     - -71518.6
+   * - Fe2SiO4
+     - -179064.9
+   * - CaSiO3
+     - 12076.6
+   * - Al2O3
+     - -17089.4
+
+Standard Gibbs energy and pressure
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Fe2O3 liquid uses the MELTS fusion construction. The solid reference
+has :math:`H_r=-822000` J/mol, :math:`S_r=87.40` J/(mol K), and
+:math:`T_r=298.15` K. Its background heat capacity and additional anomaly are
+
+.. math::
+
+   C_{P,b}(T)=146.86-\frac{5.5768\times10^6}{T^2}
+                    +\frac{5.2563\times10^8}{T^3},\qquad
+   C_{P,\lambda}(T)=T(l_1+l_2T)^2,
+
+where :math:`l_1=-7.403\times10^{-2}`, :math:`l_2=27.921\times10^{-5}`
+in the source's K/J/mol convention. The anomaly integral ends at
+:math:`T_c=955` K, and a transition enthalpy :math:`\Delta H_c=1287` J/mol
+is also included. With :math:`T_m=1895` K and
+:math:`\Delta S_f=60.41` J/(mol K), the liquid reference at fusion is
+
+.. math::
+
+   H_m=H_r+\int_{T_r}^{T_m}C_{P,b}\,dT
+       +\int_{T_r}^{T_c}C_{P,\lambda}\,dT+\Delta H_c+T_m\Delta S_f,
+
+.. math::
+
+   S_m=S_r+\int_{T_r}^{T_m}\frac{C_{P,b}}{T}\,dT
+       +\int_{T_r}^{T_c}\frac{C_{P,\lambda}}{T}\,dT
+       +\frac{\Delta H_c}{T_c}+\Delta S_f.
+
+For constant liquid :math:`C_{P,l}=240.9` J/(mol K),
+
+.. math::
+
+   g_B^0(T,P)=H_m+C_{P,l}(T-T_m)
+       -T\left[S_m+C_{P,l}\ln(T/T_m)\right]+I_P(T,P).
+
+The 955 K feature belongs to the **solid reference integral**. It does not
+introduce a liquid branch at 955 K. Omitting it shifts the liquid standard
+and entropy even at magma temperatures.
+
+Use :math:`d=T-1673` K and :math:`q=P/10^5-1` bar for the integrated Kress EOS:
+
+.. math::
+
+   I_P=(v+a d)q+\frac{b+c d}{2}q^2+\frac{e}{6}q^3,
+
+.. list-table:: Fe2O3 liquid pressure coefficients
+   :header-rows: 1
+
+   * - Coefficient
+     - Value
+     - Unit
+   * - v
+     - 4.213
+     - J/(bar mol)
+   * - a
+     - 9.09e-4
+     - J/(bar mol K)
+   * - b
+     - -2.53e-5
+     - J/(bar² mol)
+   * - c
+     - 3.1e-8
+     - J/(bar² mol K)
+   * - e
+     - 4.4e-10
+     - J/(bar³ mol)
+
+Automatic differentiation gives :math:`S=-G_T`, :math:`V=G_P`,
+:math:`C_P=-TG_{TT}`, :math:`V_T=G_{PT}`, and :math:`V_P=G_{PP}` in SI units.
+For this liquid the mixing volume and excess mixing entropy are zero;
+:math:`C_P=\sum_i n_i C_{P,i}^0`. The ideal entropy contribution remains
+:math:`-R\sum_i n_i\ln x_i`.
+
+Independent comparisons and zero-ferric limit
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``tests/reference/generate_ferric_reference.py`` imports no ExoEOS/JAX
+thermodynamic code. It generates two independent references:
+
+* ``ferric_source_v1.json``: 24 pure-standard states, using 96-point
+  Gauss--Legendre quadrature for Cp, Cp/T and the pressure integral, including
+  the solid anomaly. The extra 298.15 and 955 K states are formula checks.
+* ``ferric_melts_v1.json``: 110 supplied-liquid states from the hash-pinned
+  rhyolite-MELTS 1.0.2 runtime, including 72 six-component interiors with μ.
+  The grid spans 1200, 1479, 1481, 1600, 1895 and 2200 K at 1, 500 and
+  5000 bar. It includes trace Fe2O3, finite Fe2O3, doubled amounts,
+  zero Fe2O3 and the pure Fe2O3 endpoint, plus two available binary faces.
+
+Each T/P request uses a fresh process with oxygen buffering disabled.
+Oxide amounts and component fractions are checked after conversion; the
+largest oxide round-trip error is below 1e-9 g. Native S, Cp, V, V_T and V_P
+are compared directly with JAX derivatives, without finite-differencing
+ExoEOS. Native cm3 and cm3/bar are converted to m3 and m3/Pa.
+
+.. list-table:: Maximum absolute differences from the 110 saved MELTS states
+   :header-rows: 1
+
+   * - Quantity
+     - Maximum difference
+     - Test tolerance
+   * - Standard G (J/mol)
+     - 4.66e-10
+     - 3e-8
+   * - Total G (J)
+     - 1.91e-5
+     - 5e-5
+   * - Interior μ (J/mol), 72 states
+     - 5.36e-7
+     - 2e-6
+   * - S (J/K)
+     - 3.33e-9
+     - 1e-8
+   * - Cp (J/K)
+     - 1.82e-9
+     - 1e-8
+   * - V (m3)
+     - 5.89e-15
+     - 1e-14
+   * - V_T (m3/K)
+     - 8.02e-20
+     - 2e-19
+   * - V_P (m3/Pa)
+     - 4.94e-26
+     - 2e-24
+
+.. figure:: _static/magma/ferric_validation.png
+   :alt: Ferric standard G, entropy and volume match MELTS points; residual panels show the largest sampled G, chemical-potential and heat-capacity differences.
+   :width: 100%
+
+   Pure Fe2O3 properties and sampled comparison errors. Circles in the top
+   row are independent MELTS evaluations. The bottom row reports maximum
+   errors over the six compositions at each T/P, with μ restricted to the
+   positive interiors. These finite comparisons are model checks, not an
+   empirical calibration or a uniform error bound outside the sample.
+
+Three requested binary faces (Fe2O3 with Mg2SiO4, Fe2SiO4 or CaSiO3) fail
+the pinned runtime's oxide conversion with negative SiO2. They are listed
+in ``unavailable_cases`` and are not replaced by perturbed compositions.
+All five added interactions participate in the positive-interior comparisons.
+
+At :math:`n_B=0`, energy and fixed-composition T/P derivatives recover the
+five-component model; the saved 1700 K, 500 bar example has exactly zero
+differences for G, S, Cp, V, V_T and V_P. At this boundary the full
+six-component composition gradient is outside the API contract. As
+:math:`n_B\to0^+`, the five present chemical potentials converge to those
+of the existing model, while :math:`\mu_B\to-\infty` through the ideal term.
+No finite floor or finite zero-amount ferric chemical potential is supplied.
+
+.. figure:: _static/magma/ferric_zero_limit.png
+   :alt: Total G and the five present chemical potentials approach the five-component values as Fe2O3 tends to zero, while ferric chemical potential diverges logarithmically.
+   :width: 100%
+
+   Fe2O3 dilution at fixed other amounts
+   :math:`[0.4,0.275,0.075,0.25,0.12]` mol, 1700 K and 500 bar.
+   At 1e-12 mol Fe2O3, the total-G difference is 1.60e-6 J and the largest
+   present-μ difference is 1.54e-7 J/mol. This is a property limit with
+   changing elemental inventory, not a closed redox reaction path.
+
+Reproduce the figures and numerical summary without MELTS:
+
+.. code-block:: console
+
+   JAX_PLATFORMS=cpu python examples/magma_ferric.py --output results/magma_ferric
+   python -m pytest tests/unittests/magma_ferric_test.py
+
+Optional reference regeneration requires the separately installed pinned
+runtime and ``tinynumpy`` only for the second command:
+
+.. code-block:: console
+
+   python tests/reference/generate_ferric_reference.py --output tests/reference/ferric_source_v1.json
+   python tests/reference/generate_ferric_reference.py --runtime /path/to/pinned/runtime --output tests/reference/ferric_melts_v1.json
+
+The formulas and coefficients are pinned to MAGMA revision
+``705a0fb315e5054d18275a580562f6121c8e458c``:
+`liquid standards <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/liq_struct_data.h>`_,
+`fusion and transition integrals <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/gibbs.c>`_, and
+`mixing coefficients <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/param_struct_data_v34.h>`_.
+Both fixtures record source hashes; the runtime fixture also records wrapper
+and library hashes. The release binary's thermodynamic C build identity is
+not independently established by these formula comparisons.
+
+.. _native-dry11:
+
+Dry eleven-component liquid
+---------------------------
+
+``liquid_gibbs(T, P, n)`` accepts eleven absolute component amounts in mol,
+with ``DRY11_COMPONENTS`` ordered as
+``(SiO2, Mg2SiO4, Fe2SiO4, CaSiO3, Al2O3, Fe2O3, TiO2, MgCr2O4,
+Na2SiO3, KAlSiO4, Ca3(PO4)2)``. ``liquid_standard_gibbs(T, P,
+include_dry11=True)`` returns the matching molar standards and implies the
+Fe, Ca/Al and ferric flags. Old shapes, orders and default flags retain
+their meanings. Fe(II) and Fe(III) are supplied independently.
+
+This is a single supplied liquid property model. The extension does not
+add a phase-selection solver or new solids. Water, CO2, Mn, Ni and Co
+components remain outside this eleven-component API.
+
+Energy and standard states
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+With :math:`N=\sum_i n_i`, :math:`x_i=n_i/N`, and :math:`R_b=8.3143`
+J/(mol K), the extensive energy is
+
+.. math::
+
+   G=\sum_{i=1}^{11}n_i g_i^0(T,P)
+     +R_b T\sum_{i=1}^{11}n_i\ln x_i
+     +N\sum_{i<j}W_{ij}x_i x_j.
+
+All :math:`11\times10/2=55` distinct pairs are included. Their enthalpy
+coefficients come from ``meltsModelParameters`` in the pinned
+``param_struct_data_v34.h``; all pair entropy and volume coefficients on
+this face are zero. The implementation uses one upper-triangular table,
+also selecting every earlier composition face from that table.
+The complete coefficient table is available as
+:download:`CSV <_static/magma/dry11_interactions.csv>` (J/mol, J/(mol K),
+J/(mol bar)). No new parameters are fitted to BSE or any other composition.
+
+The five new standards use the Berman reference heat capacity
+:math:`C_{p,s}=k_0+k_1/\sqrt{T}+k_2/T^2+k_3/T^3`, integrated from
+:math:`T_r=298.15` K to fusion. At fusion,
+
+.. math::
+
+   H_f=H_r+\int_{T_r}^{T_m}C_{p,s}(t)\,dt+\Delta H_\lambda+T_m\Delta S_f,
+   \qquad
+   S_f=S_r+\int_{T_r}^{T_m}\frac{C_{p,s}(t)}{t}\,dt+\Delta S_\lambda+\Delta S_f.
+
+Then :math:`H_l=H_f+C_{p,l}(T-T_m)` and
+:math:`S_l=S_f+C_{p,l}\ln(T/T_m)`. For KAlSiO4 and Ca3(PO4)2,
+the solid-reference anomaly is :math:`C_{p,\lambda}=T(l_1+l_2T)^2`, with
+
+.. math::
+
+   \Delta H_\lambda=\int_{T_r}^{T_c}C_{p,\lambda}(t)\,dt+L_c,
+   \qquad
+   \Delta S_\lambda=\int_{T_r}^{T_c}\frac{C_{p,\lambda}(t)}{t}\,dt+\frac{L_c}{T_c}.
+
+These are constant reference corrections, not liquid branches at
+:math:`T_c`. The other three new standards have no such anomaly.
+
+.. list-table:: Added liquid standards
+   :header-rows: 1
+
+   * - Component
+     - Tm (K)
+     - Fusion entropy (J/mol/K)
+     - Liquid Cp (J/mol/K)
+     - Solid Tc (K); latent heat (J/mol)
+   * - TiO2
+     - 1870
+     - 35.824
+     - 109.2
+     - none
+   * - MgCr2O4
+     - 2673.15
+     - 73.22
+     - 335.1
+     - none
+   * - Na2SiO3
+     - 1361
+     - 38.34
+     - 180.2
+     - none
+   * - KAlSiO4
+     - 2023.15
+     - 24.5
+     - 217
+     - 800.15; 1154
+   * - Ca3(PO4)2
+     - 1943.15
+     - 35.690
+     - 574.67
+     - 1373; 14059
+
+For :math:`\Delta p=P/10^5-1` in bar and :math:`\Delta T=T-1673` K,
+the same integrated Kress EOS gives
+
+.. math::
+
+   g_i^0=H_{l,i}-TS_{l,i}
+   +(v_i+v_{T,i}\Delta T)\Delta p
+   +\tfrac12(v_{P,i}+v_{TP,i}\Delta T)\Delta p^2
+   +\tfrac16 v_{PP,i}\Delta p^3.
+
+The volume coefficients use J/bar units; differentiating API pressure in
+Pa gives SI volume. Cp and EOS coefficients are transcribed from
+``liq_struct_data.h`` at the same source revision as the ferric model above.
+The liquid phosphate has constant volume in this model.
+The existing silica branch at 1480 K and ferric reference integral remain.
+
+Oxide conversion and conservation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``DRY11_OXIDES`` is ordered as ``(SiO2, MgO, FeO, CaO, Al2O3, Fe2O3,
+TiO2, Cr2O3, Na2O, K2O, P2O5)``. For oxide **mol** amounts :math:`m`,
+``liquid_moles_from_oxides(m)`` implements
+
+.. math::
+
+   \begin{aligned}
+   n_{MgCr_2O_4}&=m_{Cr_2O_3},& n_{Mg_2SiO_4}&=(m_{MgO}-m_{Cr_2O_3})/2,\\
+   n_{KAlSiO_4}&=2m_{K_2O},& n_{Al_2O_3}&=m_{Al_2O_3}-m_{K_2O},\\
+   n_{Ca_3(PO_4)_2}&=m_{P_2O_5},& n_{CaSiO_3}&=m_{CaO}-3m_{P_2O_5},\\
+   n_{Fe_2SiO_4}&=m_{FeO}/2,& n_{Na_2SiO_3}&=m_{Na_2O},\\
+   n_{TiO_2}&=m_{TiO_2},& n_{Fe_2O_3}&=m_{Fe_2O_3},\\
+   n_{SiO_2}&=m_{SiO_2}-n_{Mg_2SiO_4}-n_{Fe_2SiO_4}
+              -n_{CaSiO_3}-n_{Na_2SiO_3}-n_{KAlSiO_4}.
+   \end{aligned}
+
+``oxide_moles_from_liquid(n)`` is the inverse transform. Both are linear
+JAX functions using shape (11,) for this dry basis; shape (12,) appends
+H2O as described in :doc:`native_hydrous_liquid`. Validate finite nonnegative oxide
+and resulting component amounts **before** evaluating G. In particular,
+MgO >= Cr2O3, Al2O3 >= K2O, CaO >= 3 P2O5 and residual SiO2 >= 0
+are required. Negative residuals are returned unchanged; there is no
+floor, clipping or normalization. Convert oxide masses to mol first.
+
+Writing :math:`n=B m`, the element matrices satisfy exactly
+:math:`A_l B=A_o`, including oxygen and both supplied iron valences.
+Thus mass is conserved for any consistent atomic-mass table. The corresponding
+derivatives are :math:`\mu_o=B^{\mathsf T}\mu_l` and
+:math:`H_o=B^{\mathsf T}H_lB`; they are not obtained by relabeling components.
+
+.. code-block:: python
+
+   from exoeos.magma import liquid_moles_from_oxides, oxide_moles_from_liquid
+   # DRY11_OXIDES order, mol; validate before JIT/grad.
+   m = jnp.array([2., 1., .4, .5, .3, .1, .07, .02, .08, .04, .03])
+   n = liquid_moles_from_oxides(m)
+   assert bool(jnp.all(jnp.isfinite(n) & (n >= 0)))
+   G = liquid_gibbs(1700., 5e7, n)
+   mu = jax.grad(liquid_gibbs, 2)(1700., 5e7, n)
+   m_again = oxide_moles_from_liquid(n)
+
+Independent comparison and existing faces
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The saved source fixture contains **210** quadrature states for the five
+new standards, including reference, transition and fusion temperatures, and
+all **55** interactions parsed directly from the hash-checked source header.
+The native fixture contains **96** supplied states: four recipes at six
+temperatures and three pressures (72), eight random interiors, a sevenfold
+scaled recipe, and 15 available pure/binary edge states. **63** states have
+strictly positive amounts in all eleven coordinates and support full AD mu
+comparisons. BSE has exactly zero ferric amount.
+
+.. csv-table:: Oxide mass percent of the 100 g comparison recipes
+   :header: "Oxide", "BSE", "Basalt-like", "Rhyolite-like", "Alkali-rich"
+
+   SiO2,45.0699,49,73,52
+   MgO,37.8587,8,0.5,4
+   FeO,8.0625,8,1.5,5
+   CaO,3.55551,11,1.5,6
+   Al2O3,4.45691,15,14,18
+   Fe2O3,0,2,0.5,2
+   TiO2,0.201312,2,0.3,1
+   Cr2O3,0.384596,0.1,0.01,0.1
+   Na2O,0.360559,3,4,6
+   K2O,0.029045,1,4.5,5
+   P2O5,0.0210326,0.9,0.19,0.9
+
+BSE uses the existing McDonough--Sun Table 4 recipe. The other recipes are
+synthetic composition controls, not measured rocks. The comparison samples
+1200, 1479, 1480, 1481, 1800 and 2200 K at 1, 500 and 5000 bar. These
+finite checks do not establish an empirical calibration range.
+
+.. figure:: _static/magma/dry11_validation.png
+   :alt: Supplied BSE and three non-BSE liquid recipes agree with independent MELTS in G, entropy and volume; small residuals are shown separately.
+   :width: 100%
+
+   Lines are JAX, circles are MELTS. Top panels use 500 bar and 100 g of
+   each recipe. Bottom panels show the largest error over three pressures;
+   BSE is omitted from full-composition mu because its Fe2O3 amount is zero.
+
+Across all 96 states, including the 700 g scaled recipe, maximum absolute
+differences are G **5.80e-5 J**, S **8.53e-9 J/K**, Cp **4.24e-9 J/K**,
+V **1.54e-14 m3**, dV/dT **6.97e-20 m3/K**, dV/dP **9.95e-26 m3/Pa**,
+interior mu **4.36e-6 J/mol**, and standards **9.32e-10 J/mol**.
+Each 100 g recipe has G error below **1.11e-5 J**. Atom-inventory errors
+are at most **4.45e-16 mol** in these conversions.
+
+Of 66 attempted pure/binary native states, **51 are explicitly unavailable**:
+the pinned runtime's oxide conversion reports negative SiO2 (50 cases)
+or CaSiO3 (one case) on exact boundaries. Their compositions and failures are
+saved, without perturbed substitutes. All eleven JAX endpoints and all 55
+binary energies are checked separately against standards and published
+interactions. Source-formula checks, native comparisons and experimental
+validation are distinct claims.
+
+.. figure:: _static/magma/dry11_faces.png
+   :alt: All 55 interactions and the agreement of existing two- through six-component faces, including chemical-potential dilution limits.
+   :width: 100%
+
+   Exact zero-padding recovers G and fixed-composition T/P derivatives of
+   every earlier liquid basis, including the noncontiguous CMAS selection.
+   Present mu approaches the old model as the added amounts tend to zero.
+   Absent-component mu has no finite boundary value. The plot uses 1700 K,
+   500 bar; tests also cover 1200 K/1 bar, 1600 K/500 bar and 2200 K/5000 bar.
+
+Tests also check the inverse transform, invalid negative residuals,
+mass conservation, composition-gradient/Hessian transformations, Euler
+homogeneity, Hessian symmetry, finite differences, JIT/vmap and zero phase.
+Full numerical results are in
+:download:`dry11_comparison.json <_static/magma/dry11_comparison.json>`.
+
+.. code-block:: console
+
+   JAX_PLATFORMS=cpu MPLBACKEND=Agg python examples/magma_dry11.py --output documents/_static/magma
+   python -m pytest tests/unittests/magma_dry11_test.py
+   # Optional regeneration; the pinned sources/runtime are separate dependencies.
+   python tests/reference/generate_dry11_reference.py --source /path/to/pinned/sources --output tests/reference/dry11_source_v1.json
+   python tests/reference/generate_dry11_reference.py --runtime /path/to/pinned/runtime --output tests/reference/dry11_melts_v1.json
+
+.. _native-pyroxene:
+
+Ca--Mg--Fe clinopyroxene and orthopyroxene
+------------------------------------------
+
+``pyroxene_gibbs(T, P, n, phase=...)`` extends the Ca-saturated Di--Hd face
+and pure Mg orthopyroxene of `PR #65 <https://github.com/HajimeKawahara/exoeos/pull/65>`_.
+Both structures now admit variable Ca and Fe/Mg, with Mg/Fe exchange between
+M1 and M2. Iron remains Fe(II); Na, Al and Ti are absent from these pyroxenes.
+The liquid still contains Al2O3 and competes with pure anorthite.
+
+.. list-table:: Minerals admitted by the extended dry example
+   :header-rows: 1
+   :widths: 20 32 48
+
+   * - Phase
+     - Formula / useful endpoints
+     - Composition treatment
+   * - Olivine
+     - Mg2SiO4 (Fo), Fe2SiO4 (Fa)
+     - Existing binary solution; two Mg/Fe sites.
+   * - Clinopyroxene
+     - CaMgSi2O6 (Di), CaFeSi2O6 (Hd), Mg2Si2O6, Fe2Si2O6
+     - Monoclinic Ca--Mg--Fe model, including Ca-poor compositions.
+   * - Orthopyroxene
+     - Mg2Si2O6 (En), Fe2Si2O6 (Fs), dissolved Ca
+     - Orthorhombic Ca--Mg--Fe model; its Ca-rich values are metastable extensions.
+   * - Anorthite
+     - CaAl2Si2O8
+     - Existing pure feldspar endpoint; no Na/K.
+   * - Silica
+     - SiO2
+     - Existing quartz, tridymite and cristobalite standards.
+
+Physical coordinates and site ordering
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The new API takes **mol of [CaSiO3, MgSiO3, FeSiO3]**, not Di--En--Hd
+endmember amounts. These are inventory coordinates, not three independent
+stable minerals. If :math:`N=(n_{Ca}+n_{Mg}+n_{Fe})/2`, the bulk cation
+contents per two-Si formula unit are :math:`c=n_{Ca}/N` and :math:`f=n_{Fe}/N`.
+Require nonnegative amounts and :math:`n_{Ca}\le n_{Mg}+n_{Fe}`, equivalently
+:math:`0\le c\le1`, :math:`0\le f\le2-c`. Ca occupies M2 only. With
+:math:`b` the Fe occupancy on M2, the site fractions are
+
+.. math::
+
+   (y_{Mg}^{M1},y_{Fe}^{M1})=(1-f+b,f-b),\qquad
+   (y_{Ca}^{M2},y_{Mg}^{M2},y_{Fe}^{M2})=(c,1-c-b,b),
+
+   \max(0,f-1)\le b\le\min(f,1-c).
+
+One mol of these API coordinates contains one mol Si, whereas one mol of
+the original Di--Hd API contains two mol Si. For example,
+``pyroxene_gibbs(T,P,[1,.8,.2])`` equals
+``clinopyroxene_gibbs(T,P,[.8,.2])``. The orthopyroxene call with ``[0,1,0]``
+equals ``enstatite_gibbs(T,P)``. The Fe-rich corner ``[0,0,2]`` is admitted.
+
+For structure :math:`\phi\in\{cpx,opx\}`, the implemented energy is
+
+.. math::
+
+   G_\phi=N\min_b\left[(c-f)g^0_{Di}+(1-c)g^0_{cEn}+fg^0_{Hd}
+     +C_\phi+B_\phi b+A_\phi b^2
+     +R_bT\sum_{s\in\{M1,M2\}}\sum_i y_i^s\ln y_i^s\right],
+
+   (C_\phi,B_\phi,A_\phi)=\boldsymbol h_\phi(c,f)
+      -T\boldsymbol s_\phi(c,f)+(P_{bar}-1)\boldsymbol v_\phi(c,f).
+
+The Berman standards are the same Di, **monoclinic** En and Hd standards
+used by both MELTS structures. Their formal fractions :math:`(c-f,1-c,f)`
+sum to one but Di can be negative. This is an algebraic standard-state
+basis; it does not mean a negative physical phase amount. The implementation
+subtracts the monoclinic pure mixing reference for both structures,
+including :math:`g^{mix,pure}_{cEn}=1.08018328T` J/mol. Substituting an
+orthopyroxene standard and then retaining this correction would count the
+structural offset twice.
+
+The coefficient vectors in ``magma._pyroxene_coefficients`` are the explicit
+restriction of the pinned Sack--Ghiorso MELTS polynomials, using
+:math:`r_0=f`, :math:`r_5=1-c`, :math:`s_1=2b-1+c`, and all other
+:math:`r_i,s_i=0`. The existing independent full-site transcription in
+``examples/m2_solid_mixing/parameters.json`` is checked against this reduction.
+For example, the ordering quadratic coefficients are
+
+.. math::
+
+   A_{cpx}=42781.4c+679.9f-12939.02
+       +(P_{bar}-1)(-0.39748c-0.023012f+0.037656),
+
+   A_{opx}=82006.4c+836.8f-19455.6
+       +(P_{bar}-1)(-0.6276c-0.029288f+0.029288).
+
+All coefficients retain J/mol, J/(mol K) and J/(mol bar), with pressure
+converted from Pa at the public API. Source equations and parameters are
+in pinned `clinopyroxene.c <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/clinopyroxene.c>`_
+and `orthopyroxene.c <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/orthopyroxene.c>`_.
+This is one MELTS energy per structural type, not an additional selector
+between named clinopyroxene polymorphs.
+
+Relaxed thermodynamic derivatives
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The one-dimensional interior stationarity equation is
+
+.. math::
+
+   0=B_\phi+2A_\phi b+R_bT\ln\frac{(1-f+b)b}{(f-b)(1-c-b)}.
+
+Its derivative is :math:`2A_\phi+R_bT[1/(1-f+b)+1/(f-b)+1/b+1/(1-c-b)]`.
+In the supported 1200--2200 K, 1--5000 bar box, :math:`A_\phi\ge-19455.6`
+and the reciprocal sum is at least eight, so the root is unique and is
+the minimum over site order. A 64-step bounded bisection locates it;
+``jax.lax.custom_root`` differentiates the stationarity equation. If
+:math:`\widehat G(q,b)` denotes the energy before relaxing :math:`b`,
+
+.. math::
+
+   \frac{dG}{dq}=\widehat G_q,\qquad
+   \frac{d^2G}{dq\,dr}=\widehat G_{qr}
+       -\frac{\widehat G_{qb}\widehat G_{br}}{\widehat G_{bb}}.
+
+Consequently :math:`S=-G_T`, :math:`V=G_P`, :math:`C_P=-TG_{TT}` and
+:math:`\mu_i=G_{n_i}` include ordering relaxation. Holding site order fixed
+would give the wrong curvature and heat capacity. ``jit``, ``vmap``, and
+first/second derivatives are supported inside the stated composition and
+T/P domain. At exact composition edges only the continuous G and
+fixed-composition T/P derivatives are supported; a zero phase returns
+exactly zero G. Low-temperature ordering branches are outside this contract.
+
+.. code-block:: python
+
+   import jax
+   import jax.numpy as jnp
+   from exoeos.magma import pyroxene_gibbs
+
+   jax.config.update("jax_enable_x64", True)
+   n = jnp.array([0.05, 1.50, 0.45])
+   opx = lambda T, P, n: pyroxene_gibbs(T, P, n, phase="orthopyroxene")
+   G = jax.jit(opx)(1600., 1e5, n)  # J for 2 mol Si
+   mu = jax.grad(opx, 2)(1600., 1e5, n)  # J/mol of each API coordinate
+
+MELTS comparisons and closed cooling
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``tests/reference/pyroxene_melts_v1.json`` records 198 requested phase states
+at three temperatures, three pressures and eleven compositions for both
+structures. It uses the independently hash-pinned alphaMELTS 2.3.2 /
+rhyolite-MELTS 1.0.2 runtime already used by PR #65. Nonfinite native endpoint
+G values are marked unavailable. Exact-edge native derivative singularities
+are excluded from the derivative reference; their continuous energy limits
+are checked separately. Interior comparisons include signed native Di
+fractions, scaled amounts, G, chemical potentials, S, Cp and V.
+Of the 198 requests, 162 have finite native G, 36 are unavailable exact
+endpoints, and 72 support all interior derivative comparisons. Maximum
+absolute errors are 1.9e-9 J for G, 1.2e-9 J/mol for chemical potentials,
+9.1e-13 J/K for S, 4.6e-13 J/K for Cp, and 5.5e-20 m3 for V.
+The four independent assemblage roots agree within 9.5e-12 mol in amounts
+and 7.4e-6 J in total G; the larger total-G discrepancy is inherited from
+the independently evaluated liquid. These are finite comparison errors,
+not uniform accuracy bounds.
+
+.. figure:: _static/magma/pyroxene_melts_comparison.png
+   :alt: Native JAX and MELTS agree on the orthopyroxene minus clinopyroxene energy at three compositions and two pressures.
+   :width: 100%
+
+   Negative values favor orthopyroxene at the **same composition**. This
+   comparison checks the two structural energies, not the stability of a
+   full assemblage or a two-pyroxene coexistence boundary.
+
+``examples/magma_pyroxene.py`` admits one liquid, Fo--Fa olivine, both
+Ca--Mg--Fe pyroxenes, pure An and the lowest-G implemented silica polymorph.
+It minimizes total G with :math:`n_l+B n_s=n_{bulk}`. Each pyroxene contributes
+CaSiO3, MgSiO3 and FeSiO3 columns :math:`(0,0,0,1,0)`,
+:math:`(1/2,1/2,0,0,0)` and :math:`(1/2,0,1/2,0,0)` to the liquid basis
+[Q,F,A,C,L]. Thus all Ca, Mg, Fe, Al, Si and O inventories are conserved.
+
+The default oxide bulk is the one from #65,
+SiO2:MgO:FeO:CaO:Al2O3 = 1:0.55:0.15:0.25:0.12 mol. At 1475 K its cpx
+has Ca(M2) = 0.70937 and Fe/(Mg+Fe) = 0.13222. At 1465 K both pyroxenes
+coexist with olivine, anorthite and liquid. The second bulk,
+1:0.9:0.1:0.04:0.02 mol, highlights Ca-bearing, Fe-bearing orthopyroxene.
+
+.. figure:: _static/magma/pyroxene_cooling.png
+   :alt: Retained-crystal cooling in two dry bulks, with phase mass fractions and variable cpx and opx Ca/Fe compositions.
+   :width: 100%
+
+   The circles are four independent chemical-potential roots using actual
+   MELTS properties and specified liquid/olivine/pyroxene assemblages; they
+   are not full MELTS phase selection. Lines use the JAX example with all
+   the admitted solids. Absent pyroxenes have no reported composition.
+
+The example uses multistart constrained minimization, then polishes
+coexistence chemical potentials and searches solid tangent gaps from six
+composition starts per pyroxene. It returns only resolved states with all
+five liquid components positive. Failure near liquid disappearance or
+unresolved solid splitting raises an exception; the plot ending at 1460 K
+does not locate the solidus. Multiple liquids, multiple instances of one
+pyroxene structure, Al-bearing pyroxenes, spinel and garnet are not included.
+These finite numerical checks do not certify a global phase diagram or
+experimental calibration. The full MELTS comparison from #65 below retains
+its historical, more restricted native candidate set.
+
+.. code-block:: bash
+
+   JAX_ENABLE_X64=1 MPLBACKEND=Agg python examples/magma_pyroxene.py \
+       --output documents/_static/magma
+   # Reference regeneration only; requires the pinned runtime and tinynumpy:
+   python tests/reference/generate_pyroxene_reference.py \
+       --runtime /path/to/pinned/runtime --python /path/to/worker/python \
+       --output tests/reference/pyroxene_melts_v1.json
+
+.. _native-dry-magma:
+
+CaO and Al2O3: competing dry minerals
+-------------------------------------
+
+The preceding PR #65 example covers **CaO--MgO--FeO--Al2O3--SiO2 (CMFAS)**,
+with Fe fixed to Fe(II), no volatiles and no Na/K. It adds the Ca-saturated
+diopside--hedenbergite clinopyroxene face and the pure anorthite feldspar
+endpoint. These can compete with the existing Fo--Fa olivine, pure Mg
+orthopyroxene and three silica polymorphs. That example does not include Ca-poor or
+Al-bearing pyroxene solutions, Fe-bearing orthopyroxene, spinel, garnet,
+corundum, or alkali feldspar components. This is an incremental Gibbs
+provider, with a restricted numerical equilibrium example.
+
+Liquid basis and mixing equation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The five coordinates are
+:math:`[Q,F,A,C,L]=[\mathrm{SiO_2},\mathrm{Mg_2SiO_4},\mathrm{Fe_2SiO_4},
+\mathrm{CaSiO_3},\mathrm{Al_2O_3}]`. For oxide **mol** inventories,
+
+.. math::
+
+   n_F=\tfrac12 n_{\mathrm{MgO}},\quad n_A=\tfrac12 n_{\mathrm{FeO}},\quad
+   n_C=n_{\mathrm{CaO}},\quad n_L=n_{\mathrm{Al_2O_3}},\quad
+   n_Q=n_{\mathrm{SiO_2}}-n_F-n_A-n_C.
+
+Nonnegative oxide inventories alone do not ensure nonnegative model
+coordinates: the liquid basis requires :math:`n_Q\ge0`. Al2O3 is alumina;
+an Al2O species is not introduced. The extensive liquid energy is
+
+.. math::
+
+   G_l=\sum_i n_i g_{i,l}^0+R_bT\sum_i n_i\ln x_i
+       +\frac{1}{N_l}\sum_{i<j}W_{ij}n_i n_j,\qquad
+   N_l=\sum_i n_i,\quad x_i=n_i/N_l.
+
+All ten interaction energies (J/mol) are retained from the pinned
+``param_struct_data_v34.h``; they have no T/P dependence:
+
+.. list-table:: Upper-triangular liquid interaction matrix
+   :header-rows: 1
+
+   * - Pair
+     - Q--F
+     - Q--A
+     - Q--C
+     - Q--L
+     - F--A
+   * - W (J/mol)
+     - 3421
+     - 23660.9
+     - -863.7
+     - -39120
+     - -37256.7
+   * - Pair
+     - F--C
+     - F--L
+     - A--C
+     - A--L
+     - C--L
+   * - W (J/mol)
+     - -31731.9
+     - -32880.3
+     - -12970.8
+     - -30509
+     - -57917.9
+
+The new liquid standards use the same fusion construction and integrated
+Kress volume polynomial as the existing olivine components:
+
+.. math::
+
+   g_l^0(T,P)=H_s(T_m)+T_m\Delta S_f+C_{p,l}(T-T_m)
+   -T\left[S_s(T_m)+\Delta S_f+C_{p,l}\ln(T/T_m)\right]
+   +\int_{1\,\mathrm{bar}}^{P}V_l(T,p)\,dp.
+
+.. list-table:: New liquid fusion parameters
+   :header-rows: 1
+
+   * - Component
+     - Tm (K)
+     - Delta S (J/mol/K)
+     - Liquid Cp (J/mol/K)
+   * - CaSiO3
+     - 1817
+     - 31.5
+     - 172.4
+   * - Al2O3
+     - 2319.65
+     - 48.61
+     - 170.3
+
+Di--Hd clinopyroxene and anorthite
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+On the Ca-saturated face, Ca fills M2, Si fills the tetrahedral sites,
+and Mg/Fe mix on M1. The restriction of the Sack--Ghiorso MELTS pyroxene
+model is a one-site regular solution:
+
+.. math::
+
+   G_{\rm cpx}=n_{\rm Di}g_{\rm Di}^0+n_{\rm Hd}g_{\rm Hd}^0
+     +R_bT\left(n_{\rm Di}\ln x_{\rm Di}+n_{\rm Hd}\ln x_{\rm Hd}\right)
+     +7029.12\frac{n_{\rm Di}n_{\rm Hd}}{n_{\rm Di}+n_{\rm Hd}}.
+
+Here Di = CaMgSi2O6 and Hd = CaFeSi2O6, both per mol of six oxygens.
+The coefficient is :math:`cW_{H12}=1.68\times1000\times4.184` J/mol;
+its volume coefficient is zero. No ordering freedom or pure-reference
+mixing correction remains on this face. Its ideal entropy has one mixed
+site, whereas the Fo--Fa olivine face has two.
+
+With Na/K absent, feldspar is pure An = CaAl2Si2O8:
+:math:`G_{\rm An}=n_{\rm An}g_{\rm An}^0`. The solid standards use
+
+.. math::
+
+   C_p=k_0+k_1T^{-1/2}+k_2T^{-2}+k_3T^{-3},\quad
+   g^0=H_r+\int_{298.15}^{T}C_p\,dt
+       -T\left(S_r+\int_{298.15}^{T}C_p/t\,dt\right)+\int V_s\,dp.
+
+The Berman pressure integral is
+:math:`V_r[(1+v_3\Delta T+v_4\Delta T^2)\Delta p+
+v_1\Delta p^2/2+v_2\Delta p^3/3]`, with pressure in bar internally.
+Anorthite includes the tabulated Carpenter I1--C1 correction
+:math:`\Delta H=3.7\times4184` J/mol and
+:math:`\Delta S=\Delta H/2200` J/(mol K); it adds
+:math:`\Delta H-T\Delta S`, without a new branch switch. The coefficients
+are transcribed in ``magma.py`` from the pinned ``sol_struct_data.h``.
+
+API and closed-system example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``liquid_standard_gibbs(..., include_ca_al=True)`` returns the four-component
+``CMAS_COMPONENTS`` basis. Also setting ``include_fe=True`` returns
+``CMFAS_COMPONENTS``. ``liquid_gibbs`` chooses these orders from static
+shapes (4,) and (5,); its original (2,) and (3,) APIs retain their results.
+``clinopyroxene_standard_gibbs`` returns [Di, Hd] in J/mol,
+``clinopyroxene_gibbs`` accepts [n_Di, n_Hd] mol and returns J, and
+``anorthite_gibbs`` returns J/mol An. All use scalar K/Pa, support JAX
+``jit``, ``vmap`` and differentiation, and follow the positive-interior
+composition derivative contract described below.
+
+The additional solid columns in the liquid basis are
+
+.. math::
+
+   b_{\rm Di}=(1/2,1/2,0,1,0)^\mathsf{T},\quad
+   b_{\rm Hd}=(1/2,0,1/2,1,0)^\mathsf{T},\quad
+   b_{\rm An}=(1,0,0,1,1)^\mathsf{T}.
+
+``examples/magma_dry.py`` minimizes :math:`G_l+\sum_\alpha G_\alpha`
+subject to :math:`n_l+B n_s=n_{\rm bulk}` and nonnegative phase amounts.
+It uses SciPy SLSQP with JAX gradients, searches the composition of absent
+binary minerals, polishes coexistence chemical potentials and checks all
+admitted solid insertion gaps. Pure silica selects the lowest of its
+three standards. Crystal amounts are retained; no fractional removal occurs.
+The script is an eager example, not a differentiable equilibrium API or
+a global stability certificate against multiple liquids.
+
+The example supports resolved liquid interiors at 1200--2200 K and
+1--5000 bar. It raises at liquid disappearance, an unresolved component
+boundary or failed stationarity/stability checks. Solver tolerances are
+not changes to the underlying Gibbs model. The committed demonstration
+uses 1800--1400 K at 1 bar and oxide mol
+**SiO2:MgO:FeO:CaO:Al2O3 = 1:0.55:0.15:0.25:0.12**.
+No calibration over this numerical T/P box is claimed.
+
+.. figure:: _static/magma/dry_cooling_comparison.png
+   :width: 100%
+
+   One liquid plus the declared mineral compositions. Olivine appears
+   first, followed by anorthite and clinopyroxene near 1460 K. Crystals
+   preferentially retain Mg while the remaining liquid gains Fe.
+   Lines are JAX results; circles are independent equilibrium roots
+   using actual pinned MELTS G and chemical potentials.
+
+At the eight saved restricted equilibria, the maximum amount difference
+is **5.2e-12 mol** and the total-G difference is **1.2e-5 J**. Across 24
+property states (1400--2000 K at 1, 500 and 5000 bar), new solid standards
+agree to the saved precision; liquid standards differ by at most
+4.7e-10 J/mol, cpx G by 1.9e-9 J, and cpx chemical potentials by
+1.4e-9 J/mol. Liquid G and chemical-potential differences are at most
+1.2e-5 J and 2.7e-7 J/mol. These are finite comparisons with
+alphaMELTS 2.3.2 / rhyolite-MELTS 1.0.2, not experimental error bounds.
+
+.. figure:: _static/magma/dry_full_melts_comparison.png
+   :width: 100%
+
+   Full MELTS phase selection for the same bulk admits additional
+   mineral compositions. It forms Ca-poor and Fe-bearing pyroxenes,
+   and has no liquid at the sampled temperatures 1450 K and below.
+   At 1400 K, the restricted JAX model still has about 34% liquid by mass.
+   The extra components change the competition even though the shared
+   Gibbs expressions agree. The 1450 K full run has two clinopyroxene
+   compositions, grouped together in the bar chart. Connecting lines
+   between saved full-MELTS states do not locate exact phase boundaries.
+
+The reference generator rejects full-MELTS runs at 1800 and 2000 K because
+their native logs report iteration/convergence warnings despite returning
+success. The attempted conditions and log hashes remain in the JSON;
+they are not plotted as converged results. Native supplied cpx G is
+nonfinite at the exact Di/Hd endpoints in all 24 sampled T/P states.
+Those endpoints are recorded as unavailable; standards are checked at
+interior native probes, while JAX endpoint energies are checked against
+their analytic continuous limits.
+
+Reproduce the figures and quantitative comparison without a MELTS runtime:
+
+.. code-block:: bash
+
+   JAX_ENABLE_X64=1 MPLBACKEND=Agg python examples/magma_dry.py \
+       --output documents/_static/magma
+
+Regenerate native evidence only with the separately installed, hash-pinned
+runtime and a worker Python containing SciPy and tinynumpy:
+
+.. code-block:: bash
+
+   python tests/reference/generate_dry_magma_reference.py \
+       --runtime /path/to/pinned/runtime --python /path/to/worker/python \
+       --output tests/reference/dry_magma_melts_v1.json
+
+The fixture includes runtime and source hashes and separate records for
+supplied properties, restricted equilibria, and full phase selection.
+The source revision is `MAGMA 705a0fb
+<https://github.com/magmasource/MAGMA/tree/705a0fb315e5054d18275a580562f6121c8e458c>`_;
+the additional model source is ``sources/clinopyroxene.c``. The
+`MELTS phase-property documentation
+<https://melts.ofm-research.org/CORBA_CTserver/phaseProp.html>`_ lists the
+Sack--Ghiorso pyroxene references. Public-source/binary build identity
+and accuracy against experimental phase diagrams remain separate questions.
+
+Gibbs energy and component basis
+--------------------------------
+
+Let :math:`Q=\mathrm{SiO_2}` and :math:`F=\mathrm{Mg_2SiO_4}` be liquid
+endmembers. They are composition coordinates, not a statement that the
+liquid contains only those molecules. The model is
+
+.. math::
+
+   G_l=n_Q g_Q^0+n_F g_F^0
+       +R_bT(n_Q\ln x_Q+n_F\ln x_F)
+       +W\frac{n_Q n_F}{n_Q+n_F},\qquad x_i=\frac{n_i}{n_Q+n_F}.
+
+The MELTS constants are :math:`R_b=8.3143` J/(mol K) and
+:math:`W=3421` J/mol. Using oxide mole fractions in the entropy term would
+define a different model.
+
+The original binary functions have scalar ``T`` in K and ``P`` in Pa:
+
+.. list-table:: API in ``exoeos.magma``
+   :header-rows: 1
+   :widths: 43 57
+
+   * - Function
+     - Result
+   * - ``liquid_standard_gibbs(T, P)``
+     - J/mol, shape (2,), ordered **SiO2, Mg2SiO4**.
+   * - ``liquid_gibbs(T, P, n)``
+     - Extensive G in J; ``n`` is shape (2,) in mol, in that same order.
+   * - ``forsterite_gibbs(T, P)``
+     - Crystalline Mg2SiO4 standard G in J/mol.
+   * - ``enstatite_gibbs(T, P)``
+     - Pure Mg orthopyroxene G in J per mol **MgSiO3**.
+   * - ``silica_gibbs(T, P)``
+     - J/mol SiO2, shape (3,), ordered **quartz, tridymite, cristobalite**,
+       also exported as ``SILICA_POLYMORPHS``.
+
+Use positive finite T/P and finite nonnegative amounts; validate material
+inputs before entering JAX transformations. Static shapes are checked by
+the functions. Enable x64 before calculations. Zero component amounts use
+the continuous energy limit and an absent phase has exactly zero G.
+Composition derivatives apply to positive interiors. The absent component's
+ideal potential tends to minus infinity; an absent phase has no composition
+or chemical potentials. Boundary energy evaluation is not a boundary
+chemical-potential API.
+
+.. code-block:: python
+
+   import jax
+   jax.config.update("jax_enable_x64", True)
+   import jax.numpy as jnp
+   from exoeos.magma import liquid_gibbs
+
+   T, P = 2000.0, 1.0e5
+   n = jnp.array([0.25, 0.75])
+   G = jax.jit(liquid_gibbs)(T, P, n)             # J
+   mu = jax.grad(liquid_gibbs, 2)(T, P, n)       # J/mol
+   entropy = -jax.grad(liquid_gibbs, 0)(T, P, n) # J/K
+   volume = jax.grad(liquid_gibbs, 1)(T, P, n)   # m3
+   values = jax.jit(jax.vmap(liquid_gibbs, in_axes=(0, None, None)))(
+       jnp.array([2000.0, 2050.0, 2100.0]), P, n
+   )
+
+For existing reduced interfaces, divide the dimensional G by the caller's
+common R*T. This conversion does not change :math:`R_b` inside the physical
+mixing entropy. ``total_solution_gibbs_RT`` gives the same result with the
+same standards, interaction and gas constant. Standards retain their T/P
+dependence when taking thermal and pressure derivatives.
+
+Standard states
+---------------
+
+The solid uses the Berman reference at 298.15 K and 1 bar:
+:math:`H_r=-2174420` J/mol, :math:`S_r=94.010` J/(mol K), and
+
+.. math::
+
+   C_{p,s}(T)=238.64-2001.3/\sqrt{T}-1.1624\,10^8/T^3.
+
+Integrate Cp and Cp/T for H and S, then use G=H-TS and the integrated
+Berman pressure polynomial. Liquid F starts from the solid reference at
+2163 K, adds fusion entropy 57.2 J/(mol K), and uses liquid Cp=271 J/(mol K).
+Liquid Q follows the dedicated ``gibbs.c`` SiO2 formula, with a branch
+change at 1480 K. G and its first temperature derivative are continuous;
+the heat capacity can jump. The high-temperature branch is selected at
+equality. The general tabulated SiO2 fusion formula is not used.
+
+Both liquids use the integrated Kress pressure polynomial relative to
+1 bar, with reference temperature 1673 K. Internal volumes are J/(bar mol),
+so pressure is converted from Pa to bar before integration. Differentiating
+the returned G with respect to Pa gives SI volume. Pressure checks are
+formula checks, not high-pressure calibration.
+
+Conservation and minimization
+-----------------------------
+
+An initial oxide inventory of M mol MgO and S mol SiO2 gives
+:math:`a=M/2` mol F and :math:`b=S-M/2` mol Q. This nonnegative basis requires
+:math:`0\le M/S\le2` with S>0. Crystallizing :math:`\xi` mol forsterite leaves
+:math:`n_F=a-\xi` and :math:`n_Q=b`, conserving Mg, Si, O and mass. Crystals
+remain in the closed system. Minimize
+
+.. math::
+
+   G_{\rm total}(\xi)=G_l(T,P,[b,a-\xi])+\xi g_{F,s}^0,
+   \qquad 0\le\xi\le a.
+
+Its derivative is
+
+.. math::
+
+   \frac{dG_{\rm total}}{d\xi}=g_{F,s}^0-\mu_{F,l},\qquad
+   \mu_{F,l}=g_{F,l}^0+R_bT\ln x_F+W x_Q^2.
+
+A nonnegative initial slope selects zero crystals. A negative initial
+slope favors crystallization; an interior minimum satisfies equality of
+the solid and liquid potentials. The example bisects the derivative of
+this same G. It requires T>W/(2R_b), where the binary liquid is strictly
+convex. The pure F case compares the two standards directly; at equality
+any phase fraction minimizes G, and the example returns zero crystals.
+General phase equilibrium and phase selection remain ExoGibbs responsibilities.
+
+Cooling example
+---------------
+
+Run from the source checkout with the optional plotting dependency:
+
+.. code-block:: bash
+
+   JAX_ENABLE_X64=1 MPLBACKEND=Agg python examples/magma_cooling.py \
+       --output documents/_static/magma
+
+For M=1.5 mol, S=1 mol, P=1 bar, the restricted onset is **2077.600179 K**.
+
+.. list-table:: Closed equilibrium cooling
+   :header-rows: 1
+
+   * - T (K)
+     - Crystalline forsterite (mol)
+     - Residual liquid x_F
+   * - 2100
+     - 0
+     - 0.750000
+   * - 2050
+     - 0.220119
+     - 0.679438
+   * - 2000
+     - 0.425209
+     - 0.565059
+
+.. figure:: _static/magma/gibbs_minima.png
+   :alt: Gibbs minima shift from zero crystals at 2100 K to finite amounts on cooling.
+   :width: 85%
+
+   The energy minimum determines the crystalline amount; points mark the minima.
+
+.. figure:: _static/magma/cooling_curve.png
+   :alt: Crystal amount increases and liquid forsterite fraction decreases below the restricted onset.
+   :width: 85%
+
+   Dashed lines mark the restricted onset. Cooling proceeds from left to right.
+
+Enstatite and silica solids are omitted from this minimization. The next
+section tests enstatite insertion without calculating its equilibrium amount.
+Competing phase stability must be examined before interpreting this as the
+physical binary phase diagram. MgO/SiO2>2 requires a different basis.
+
+Enstatite insertion and comparison with MELTS
+-----------------------------------------------
+
+``enstatite_gibbs(T, P)`` returns the pure Mg **orthopyroxene** endpoint,
+in J per mol MgSiO3. It is not a minimum over enstatite polymorphs or a
+pyroxene solid-solution model. The MELTS endmember basis is Mg2Si2O6,
+so one native mole corresponds to two API moles.
+
+The tabulated Mg2Si2O6 standard is monoclinic, including for orthopyroxene.
+The total orthopyroxene endpoint also needs its site energy minus the
+monoclinic pure-reference energy. At the pure Mg end there is no ordering
+freedom or configurational site entropy. Reducing the published expression
+gives, per native mole, :math:`\Delta H=-5020.8` J/mol,
+:math:`\Delta S=-2.3237936` J/(mol K), and
+:math:`\Delta V=-0.0619232` J/(bar mol). With :math:`P_b=P/10^5`,
+
+.. math::
+
+   g_{\rm En}=\frac{1}{2}\left[g_{\rm CEn}^0(T,P)
+        -5020.8+2.3237936T-0.0619232(P_b-1)\right].
+
+The monoclinic standard follows the Berman Cp and pressure integrals in
+``sol_struct_data.h``. The endpoint correction comes from
+`orthopyroxene.c <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/orthopyroxene.c>`_
+at the same pinned revision. Comparing a raw endmember standard alone
+would miss this correction.
+
+.. figure:: _static/magma/enstatite_melts_comparison.png
+   :alt: JAX orthopyroxene energies overlay independent MELTS points at three pressures; the lower panel shows their signed differences.
+   :width: 85%
+
+   Pure Mg orthopyroxene at 1, 500 and 5000 bar. Lines are JAX; circles are
+   actual pinned MELTS evaluations, converted from Mg2Si2O6 to MgSiO3.
+   The maximum absolute difference across these 12 states is 7e-10 J/mol.
+   Pressure comparisons check formulas, not empirical high-pressure accuracy.
+
+One mol of MgSiO3 consumes half a mol each of liquid Q and F. For a
+present liquid with both amounts positive, the insertion derivative is
+
+.. math::
+
+   \Delta g_{\rm En}=g_{\rm En}-\frac{\mu_{Q,l}+\mu_{F,l}}{2}
+      =\left.\frac{\partial}{\partial\eta}
+       \left[G_l(T,P,[n_Q-\eta/2,n_F-\eta/2])+\eta g_{\rm En}\right]
+       \right|_{\eta=0}.
+
+``examples/magma_cooling.py::enstatite_insertion_energy`` evaluates this
+derivative using the same JAX liquid G. A negative value proves the supplied
+state is unstable to this candidate. A nonnegative value checks only Mg
+orthopyroxene and does not establish stability against every omitted phase.
+Enstatite insertion conserves Mg, Si, O and mass.
+
+On the existing 1 bar, 1.5 mol MgO + 1 mol SiO2 closed cooling path, the
+derivative crosses zero at **1908.603653 K**, with 0.584374215 mol
+forsterite. At 2000 K it is +2578.340908 J/mol; at 1900 K it is
+-167.806610 J/mol. The continuation below the crossing remains a restricted
+liquid + forsterite calculation and is unstable when orthopyroxene is allowed.
+The following equilibrium example also allows enstatite and calculates
+the phase amounts beyond this crossing.
+
+.. figure:: _static/magma/enstatite_saturation.png
+   :alt: Enstatite insertion energy crosses zero near 1909 K; JAX and independently solved MELTS restricted paths agree.
+   :width: 85%
+
+   Cooling proceeds from left to right. Circles use a separate bisection
+   of actual MELTS liquid chemical potentials against pure forsterite G.
+   The upper panel tests enstatite insertion on each independently computed
+   path; the lower panel compares the restricted forsterite amounts.
+   The shaded continuation is unstable to enstatite insertion.
+
+``tests/reference/enstatite_source_v1.json`` independently integrates Cp,
+Cp/T and V and evaluates the previously transcribed site polynomials at
+the exact Mg endpoint. It records G, S, Cp and V at 12 T/P states.
+``tests/reference/enstatite_melts_v1.json`` separately records 12 actual
+MELTS endpoint evaluations and 12 restricted cooling states. The latter
+use fresh workers and 40 bisections of native chemical potentials, with
+no JAX thermodynamic model or MELTS phase-assemblage solver. The maximum
+JAX/backend differences are 2.2e-7 J/mol for insertion energies and
+2.1e-11 mol for forsterite amounts. Tests allow 1e-6 J/mol and 1e-9 mol,
+respectively. Source agreement and these finite backend comparisons do
+not validate a complete experimental phase diagram.
+
+Regenerate the figures and numerical summary without an external runtime:
+
+.. code-block:: bash
+
+   JAX_ENABLE_X64=1 MPLBACKEND=Agg python examples/magma_enstatite.py \
+       --output documents/_static/magma
+
+Regenerate either independent fixture:
+
+.. code-block:: bash
+
+   python tests/reference/generate_enstatite_reference.py \
+       --output tests/reference/enstatite_source_v1.json
+   python tests/reference/generate_enstatite_reference.py --runtime /path/to/pinned/runtime \
+       --python /path/to/worker/python --output tests/reference/enstatite_melts_v1.json
+
+Equilibrium after enstatite appears
+-----------------------------------
+
+``examples/magma_equilibrium.py`` minimizes the same G over liquid,
+pure forsterite (Fo) and pure Mg orthopyroxene (En). With retained crystals,
+:math:`\xi` mol Fo and :math:`\eta` mol MgSiO3 leave
+
+.. math::
+
+   n_Q=b-\eta/2,\qquad n_F=a-\xi-\eta/2,\qquad
+   G_{\rm total}=G_l(T,P,[n_Q,n_F])+\xi g_{\rm Fo}+\eta g_{\rm En}.
+
+All four amounts must be nonnegative. These constraints conserve Mg, Si,
+O and mass, including when previously crystallized Fo is consumed.
+The two crystallization derivatives are :math:`g_{\rm Fo}-\mu_F`
+and :math:`g_{\rm En}-(\mu_Q+\mu_F)/2`.
+
+For T>W/(2R_b), the liquid is strictly convex in composition. The small
+example compares the liquid + Fo edge, the liquid + En edge, and the
+all-solid state :math:`(\xi,\eta)=(a-b,2b)` when a>=b. Each liquid/solid
+edge is a one-dimensional minimization; the pure-composition cases compare
+energies directly. A three-phase stationary point has a flat direction
+that reaches these edges, so an interior two-dimensional optimizer is
+unnecessary. The all-liquid state is included explicitly. Absent liquid
+contributes exactly zero G and is never assigned chemical potentials.
+This eager, scalar example adds no solver dependency to ExoEOS; general
+phase selection remains an ExoGibbs responsibility.
+
+At fixed pressure a binary three-phase equilibrium is invariant, consistent
+with the `phase rule <https://goldbook.iupac.org/terms/view/P04533>`_.
+At **1908.603653 K**, the common liquid has :math:`x_F=0.398497376`.
+Its Q:F ratio is preserved while liquid and Fo react into En. For the
+original 1.5 mol MgO + 1 mol SiO2 inventory, the equilibrium endpoints are
+
+.. math::
+
+   [n_Q,n_F,\xi,\eta]
+   =[0.25,0.165625785,0.584374215,0]
+   \quad\hbox{and}\quad [0,0,0.5,0.5].
+
+Every convex combination has the same G at the invariant. Temperature,
+pressure and bulk inventory alone do not fix the amount along this segment;
+an additional enthalpy or heat-removal condition would be needed. A prescribed
+temperature path therefore has a jump, not an interval of three-phase
+coexistence. Below the invariant the original inventory is all solid in
+this phase set: **0.5 mol Fo + 0.5 mol MgSiO3**. Forsterite decreases during
+the reaction instead of following the unstable Fo-only continuation.
+
+``equilibrium(T, P=1e5, mgo_mol=1.5, sio2_mol=1.)`` returns
+``amounts_mol`` in **[liquid Q, liquid F, solid Fo, solid En]** order,
+``g_J``, ``degenerate``, and ``equilibrium_endpoints_mol``. It requires x64
+and the same T/P/inventory domain as the Fo-only example. Distinct endpoints
+whose energies differ by at most 1e-7 J per initial mol Si flag degeneracy;
+``amounts_mol`` then selects the endpoint with least liquid as a convention,
+and the full conserved segment is retained. The equilibrium selector itself
+is not a JAX-transformable or differentiable phase solver.
+
+.. list-table:: Equilibrated amounts at 1900 K and 1 bar
+   :header-rows: 1
+
+   * - Initial MgO / SiO2 (mol/mol)
+     - Liquid [Q, F] (mol)
+     - Fo (mol)
+     - En (mol MgSiO3)
+   * - 1.5 / 1
+     - [0, 0]
+     - 0.5
+     - 0.5
+   * - 0.9 / 1
+     - [0.232967246, 0.132967246]
+     - 0
+     - 0.634065507
+
+.. figure:: _static/magma/enstatite_equilibrium.png
+   :alt: Closed cooling with Fo and En compared with MELTS property roots; liquid disappears for MgO/SiO2=1.5 but persists with En for 0.9.
+   :width: 100%
+
+   JAX lines and independent restricted equilibria using MELTS properties
+   (circles). Dotted vertical segments represent the nonunique invariant
+   amounts. Each plotted amount is mol Si in that phase: liquid Q+F, mol Fo,
+   or mol MgSiO3. The 0.9/1 inventory consumes all Fo at the invariant and
+   continues as liquid + En. Omitted silica solids can affect that path.
+
+An absent liquid also needs a stability test. With both solids present,
+their supporting chemical potentials are
+:math:`\lambda_Q=2g_{\rm En}-g_{\rm Fo}`, :math:`\lambda_F=g_{\rm Fo}`.
+Minimize :math:`g_l(x)-[(1-x)\lambda_Q+x\lambda_F]` over liquid composition
+:math:`x=x_F`. A positive minimum means liquid formation raises G.
+This line extends below x=1/2 as a chemical-potential reference; a physical
+Fo+En mixture itself only spans 1/2<=x<=1.
+
+.. figure:: _static/magma/enstatite_liquid_stability.png
+   :alt: The minimum liquid energy relative to the Fo-En supporting line changes from negative to zero to positive on cooling.
+   :width: 85%
+
+   The liquid minimum is negative at 1925 K, zero at the invariant and
+   positive at 1900 K. Circles are minima found independently from actual
+   MELTS chemical potentials. This verifies liquid disappearance for the
+   Fo+En inventory without differentiating an absent phase.
+
+``tests/reference/magma_equilibrium_melts_v1.json`` stores 13 equilibria
+for the two inventories and a separately solved invariant. Its generator
+uses pinned MELTS liquid G/mu and pure olivine/orthopyroxene properties,
+supporting-line stability, and SciPy roots. It imports neither the JAX
+thermodynamic model nor this example's equilibrium selector. The comparison
+is to the **same restricted phase set using MELTS properties**, not the
+full MELTS phase-assemblage solver or an experimental phase diagram.
+The maximum amount difference is 9.9e-12 mol, total-G difference 1.5e-5 J,
+and invariant-temperature difference 3.1e-11 K in this run. Ordinary tests
+read the saved fixture and check conservation, coexistence, disappearance,
+invariant segments, scaling, and energies against a feasible 2-D grid.
+
+.. code-block:: bash
+
+   JAX_ENABLE_X64=1 MPLBACKEND=Agg python examples/magma_equilibrium.py \
+       --output documents/_static/magma
+   # Reference regeneration only; requires the pinned runtime and SciPy:
+   python tests/reference/generate_magma_equilibrium_reference.py \
+       --runtime /path/to/pinned/runtime --python /path/to/worker/python \
+       --output tests/reference/magma_equilibrium_melts_v1.json
+
+Silica polymorphs and multiple solids
+-------------------------------------
+
+``silica_gibbs`` extends the native JAX Gibbs model with quartz, tridymite
+and cristobalite. Each includes its MELTS alpha/beta thermal branch and
+Berman pressure integral. At pressure in bar, the switch temperatures are
+848+0.0237(P-1), 383, and 535+0.0480(P-1) K, respectively; equality selects
+the alpha branch. The low-temperature lambda heat capacity is integrated
+from the source's shifted lower limit (373 K for quartz, 298.15 K for the
+other two, before the pressure shift). These tabulated branch joins are
+not smoothed or assumed to be exactly continuous. JAX derivatives describe
+each branch, not a derivative through a structural switch or phase selection.
+
+The pinned **rhyolite-MELTS 1.0.2** runtime has constant offsets from the
+unadjusted public MAGMA silica formulas:
+
+.. list-table:: Included standard-state offsets
+   :header-rows: 1
+
+   * - Polymorph
+     - Offset (J/mol SiO2)
+     - Evidence
+   * - Quartz
+     - -1291
+     - Public ``RHYOLITE_ADJUSTMENTS`` in ``gibbs.c`` and runtime checks.
+   * - Tridymite
+     - -2625
+     - Transcribed constant difference from the hash-pinned runtime.
+   * - Cristobalite
+     - -450
+     - Transcribed constant difference from the hash-pinned runtime.
+
+The last two offsets are **not present in the pinned public source**.
+They are explicit runtime transcriptions, checked over 48 T/P states
+including both sides of the alpha/beta switches, not adjustments fitted to
+the cooling curves. Their source-build identity is unestablished.
+Without these offsets the model is a different standard-state convention
+and gives different phase selection. The runtime convention is fixed here;
+there is no new calibration or empirical phase-diagram claim.
+
+.. figure:: _static/magma/silica_melts_comparison.png
+   :alt: Three SiO2 polymorph energies relative to quartz at 1, 500 and 5000 bar, with independent MELTS points and numerical residuals.
+   :width: 100%
+
+   Lines are native JAX, circles are actual pinned MELTS properties, and
+   the lower panels show differences after including the declared offsets.
+   The maximum absolute difference is 2.4e-10 J/mol. These pressure checks
+   validate formulas, not experimental high-pressure applicability.
+
+``examples/magma_multiphase.py`` minimizes the combined G with all five
+solid candidates. Its amount order is **[liquid Q, liquid F, Fo, En,
+quartz, tridymite, cristobalite]**, in mol of one-Si formula units. Write
+:math:`s=\sum_j s_j` for the total silica-solid amount. Conservation gives
+
+.. math::
+
+   n_Q=b-\eta/2-s,\qquad n_F=a-\xi-\eta/2,\qquad
+   G=G_l+\xi g_{\rm Fo}+\eta g_{\rm En}+\sum_j s_j g_j.
+
+All amounts are nonnegative. Each liquid/single-solid edge is convex for
+T>W/(2R_b), so bisection finds its minimum. Comparing those edges with
+every feasible all-solid pair suffices: two conserved components and a
+strictly convex liquid ensure that a multiphase minimum has an endpoint
+in this list. Same-composition silica ties are retained as distinct
+endpoints. There is no optimizer dependency or general solver in the package.
+
+``equilibrium`` returns ``amounts_mol``, ``g_J``, ``phases``, ``liquid_x_F``,
+``liquid_MgO_SiO2``, ``degenerate`` and ``equilibrium_endpoints_mol``.
+The residual liquid oxide ratio is **2*x_F**, not an oxide mole fraction.
+Both liquid-composition fields are ``None`` after the liquid disappears.
+An equal-energy endpoint set describes its convex hull of permitted amounts;
+the least-liquid endpoint is only a reporting convention. Ties use
+1e-7 J per initial mol Si. ``phases`` lists amounts above 1e-10 of initial Si;
+this reporting threshold does not enter the minimization.
+
+``cooling_path`` independently equilibrates each decreasing temperature
+with the full bulk inventory, retaining crystals. It returns states and
+``events`` with ``appeared``, ``disappeared`` and ``T_bracket_K``. These are
+sampled brackets; they do not assert an exact event temperature. This is
+closed equilibrium cooling, not fractional crystallization or kinetics.
+
+.. figure:: _static/magma/multiphase_cooling.png
+   :alt: Four closed cooling paths show solid appearance, consumption of forsterite, liquid disappearance and residual liquid composition, with MELTS comparison points.
+   :width: 100%
+
+   Each inventory contains 1 mol SiO2 initially. Lines are JAX; circles are
+   independently solved equilibria using MELTS properties with the same
+   candidates. Shaded bands bracket sampled phase changes. No residual-liquid
+   curve is drawn after solidification.
+
+At 1 bar the predicted sequences on cooling from 2600 to 1600 K are:
+
+.. list-table:: Crystallization in the declared model
+   :header-rows: 1
+
+   * - MgO / SiO2
+     - Sequence (L: liquid, Trd: tridymite)
+     - Solids at 1800 K (mol)
+   * - 0.1
+     - L -> L+Trd -> En+Trd
+     - En 0.1, Trd 0.9
+   * - 0.5
+     - L -> L+En -> En+Trd
+     - En 0.5, Trd 0.5
+   * - 0.9
+     - L -> L+Fo -> L+En -> En+Trd
+     - En 0.9, Trd 0.1
+   * - 1.5
+     - L -> L+Fo -> Fo+En
+     - Fo 0.5, En 0.5
+
+The En+Trd+L invariant is **1818.067260 K**, with liquid
+**x_F=0.208047861** (MgO/SiO2=0.416095723). Below it the silica-rich
+inventories have no liquid. The Fo+En+L invariant remains 1908.603653 K.
+The fixed runtime selects tridymite over cristobalite on these 1 bar paths;
+cristobalite is evaluated and rejected by energy, not suppressed.
+Its quartz/tridymite crossing is 582.694782 K. This unusually low model
+crossing must not be read as an experimental silica transition. The lower
+temperature standards are formula checks; extrapolated liquid behavior at
+such temperatures is not a calibrated cooling prediction. Coesite,
+stishovite, other MgSiO3 polymorphs and solid solutions remain omitted.
+
+The saved ``silica_melts_v1.json`` contains 48 silica standard states,
+four native finite-difference derivative checks, 21 independent restricted
+equilibria and two transition roots. Its generator uses fresh MELTS workers,
+SciPy roots and global supporting-line checks; it imports neither JAX
+thermodynamics nor the example selector. Maximum differences in this run
+are 9.9e-12 mol for amounts and 1.5e-5 J for total G. Comparisons concern
+the same candidates using MELTS properties, not MELTS full phase selection.
+Ordinary tests use saved values and verify conservation, phase stability,
+invariant endpoint sets, scaling, derivatives and feasible simultaneous-solid
+trial energies without an external runtime.
+
+.. code-block:: bash
+
+   JAX_ENABLE_X64=1 MPLBACKEND=Agg python examples/magma_multiphase.py \
+       --output documents/_static/magma
+   # Customize inventory, pressure (Pa) and sampling:
+   JAX_ENABLE_X64=1 MPLBACKEND=Agg python examples/magma_multiphase.py \
+       --mgo 0.9 --pressure 100000 --temperature-min 1700 --step 1
+   # Reference regeneration only:
+   python tests/reference/generate_silica_reference.py \
+       --runtime /path/to/pinned/runtime --python /path/to/worker/python \
+       --output tests/reference/silica_melts_v1.json
+
+Fe(II), ternary liquid and olivine partitioning
+------------------------------------------------------------
+
+Olivine is the solid solution :math:`(\mathrm{Mg,Fe})_2\mathrm{SiO_4}`
+between forsterite (Fo, Mg2SiO4) and fayalite (Fa, Fe2SiO4). Thus the new
+crystallization example describes **olivine precipitation**, with a variable
+crystal composition. All iron is Fe(II); there is no Fe(III), metal, redox
+equilibrium, oxygen buffer or oxygen exchange.
+
+The added Gibbs-energy model is the **Q--F--A restriction of the MELTS
+liquid**, with pairwise regular-solution interactions, together with the
+**Fo--Fa restriction of MELTS olivine**, with two cation sites and a symmetric
+excess term. Both include temperature- and pressure-dependent standard
+states. The equations and coefficients are ported from the pinned MAGMA
+revision below; no new parameters are fitted to the partitioning results.
+
+The liquid basis extends to :math:`[Q,F,A]=[\mathrm{SiO_2},\mathrm{Mg_2SiO_4},
+\mathrm{Fe_2SiO_4}]`, exported as ``TERNARY_COMPONENTS``. For oxide amounts
+M=MgO, E=FeO and S=SiO2 in mol,
+
+.. math::
+
+   [b,a,c]=[S-(M+E)/2,\ M/2,\ E/2].
+
+A nonnegative basis requires M,E>=0 and M+E<=2S. The same extensive
+``liquid_gibbs`` now accepts either two or three component amounts.
+``liquid_standard_gibbs(T,P,include_fe=True)`` returns all three standards;
+the default and ``COMPONENTS`` retain their original two-component order.
+``include_fe`` is a static choice: use a closure or
+``jax.jit(..., static_argnames=("include_fe",))``. Shape-(3,) with zero Fe
+recovers the original energy, without a composition floor.
+
+For the liquid, :math:`N_l=n_Q+n_F+n_A` and :math:`x_i=n_i/N_l`.
+Its extensive energy separates into standard, ideal-mixing and excess terms:
+
+.. math::
+
+   G_l=\underbrace{\sum_{i=Q,F,A}n_i g_{i,l}^0(T,P)}_{G_l^{\mathrm{std}}}
+       +\underbrace{R_bT\sum_{i=Q,F,A}n_i\ln x_i}_{G_l^{\mathrm{id}}}
+       +\underbrace{N_l\sum_{i<j}W_{ij}x_ix_j}_{G_l^{\mathrm{E}}},
+
+.. math::
+
+   (W_{QF},W_{QA},W_{FA})=(3421,\ 23660.9,\ -37256.7)\ \mathrm{J/mol}.
+
+Here :math:`R_b=8.3143` J/(mol K), G is in J, the standards are in J/mol,
+and amounts are in mol. The liquid interaction coefficients are independent
+of T and P. Setting :math:`n_A=0` recovers the earlier binary energy;
+the new liquid terms are the A standard and mixing contribution and the
+Q--A and F--A interactions. These are endmember fractions, not oxide fractions.
+
+``olivine_gibbs(T,P,[n_Fo,n_Fa])`` returns extensive G in J. Its binary
+reduction of the published ``olivine.c`` model uses
+:math:`N_{ol}=n_{Fo}+n_{Fa}` and :math:`y_i=n_i/N_{ol}`:
+
+.. math::
+
+   G_{ol}=n_{Fo}g_{Fo}^0+n_{Fa}g_{Fa}^0
+       +2R_bT\sum_{i=Fo,Fa}n_i\ln y_i
+       +N_{ol}W_{ol}y_{Fo}y_{Fa},
+
+.. math::
+
+   W_{ol}=20300+0.015(P/10^5-1)\ \mathrm{J/mol}.
+
+The first two terms are the crystalline standards, followed by the
+two-site ideal mixing and the excess term; P is supplied in Pa.
+There are two cation sites per formula unit. With only Fe/Mg at magmatic
+temperatures their equilibrium Fe occupancies are equal, so the ideal
+entropy has the factor **2**. The remaining interaction includes an excess
+volume of :math:`0.015y_{Fo}y_{Fa}` J/(bar mol). No internal ordering solve
+is needed on this face. These are single-phase properties, not a convex
+envelope or a general low-temperature olivine unmixing calculation.
+Both solid endpoints and absent phases have continuous energy limits;
+composition derivatives require positive amounts in each present phase.
+
+The new Fe standards are constructed explicitly as follows. At
+:math:`T_r=298.15` K and 1 bar, the Fa reference has
+:math:`H_r=-1479360` J/mol and :math:`S_r=150.930` J/(mol K):
+
+.. math::
+
+   \begin{aligned}
+   C_{p,Fa}(T)&=248.93-1923.9/\sqrt{T}-1.3910\times10^8/T^3,\\
+   h_{Fa}(T)&=H_r+\int_{T_r}^{T}C_{p,Fa}(\theta)\,d\theta,\\
+   s_{Fa}(T)&=S_r+\int_{T_r}^{T}\frac{C_{p,Fa}(\theta)}{\theta}\,d\theta.
+   \end{aligned}
+
+The heat capacity is in J/(mol K); h and s denote the 1-bar thermal parts.
+The crystalline Fa and liquid A standards are
+
+.. math::
+
+   \begin{aligned}
+   g_{Fa}^0(T,P)&=h_{Fa}(T)-Ts_{Fa}(T)+\Pi_B(T,P),\\
+   g_{A,l}^0(T,P)&=h_{Fa}(T_m)-Ts_{Fa}(T_m)+(T_m-T)\Delta S_f\\
+       &\quad+C_{p,l}\left[T-T_m-T\ln(T/T_m)\right]+\Pi_K(T,P).
+   \end{aligned}
+
+Here the 1-bar fusion reference is :math:`T_m=1490` K,
+:math:`\Delta S_f=59.9` J/(mol K), and the constant liquid
+:math:`C_{p,l}=240.2` J/(mol K). Define :math:`\Delta T_s=T-298.15`,
+:math:`\Delta T_l=T-1673`, and :math:`\Delta p=P/10^5-1`, using numerical
+T in K and P in Pa. The integrated Berman and Kress pressure terms, in J/mol,
+are respectively
+
+.. math::
+
+   \begin{aligned}
+   \Pi_B&=4.630\left[
+       (1+26.546\times10^{-6}\Delta T_s+79.482\times10^{-10}\Delta T_s^2)
+       \Delta p-\frac{0.730\times10^{-6}}{2}\Delta p^2\right],\\
+   \Pi_K&=(5.420+5.84\times10^{-4}\Delta T_l)\Delta p\\
+       &\quad+\frac{-2.79\times10^{-5}-2.3\times10^{-8}\Delta T_l}{2}\Delta p^2
+       +\frac{14.6\times10^{-10}}{6}\Delta p^3.
+   \end{aligned}
+
+The pressure increment is evaluated in bar; the volume coefficients use
+J/(bar mol). Thus both terms vanish at 1 bar, and differentiation with
+respect to API pressure in Pa returns SI volume.
+``fayalite_gibbs`` uses the **olivine endmember's Berman EOS**; the separate
+pure-fayalite phase in MELTS uses a Vinet EOS. The Q and F liquid standards
+and the crystalline Fo standard retain the construction described above.
+
+Retaining the crystals, :math:`u` mol Fo and :math:`v` mol Fa in one olivine
+leave liquid :math:`[b,a-u,c-v]`. Minimize
+
+.. math::
+
+   G_{total}(u,v)=G_l(T,P,[b,a-u,c-v])+G_{ol}(T,P,[u,v]),
+   \quad 0\le u\le a,\quad 0\le v\le c.
+
+The same model gives :math:`\mu_i=(\partial G/\partial n_i)_{T,P,n_{j\ne i}}`.
+Writing :math:`g_l^{\mathrm{E}}=\sum_{i<j}W_{ij}x_ix_j`, its explicit potentials are
+
+.. math::
+
+   \begin{aligned}
+   \mu_{i,l}&=g_{i,l}^0+R_bT\ln x_i+\sum_{j\ne i}W_{ij}x_j-g_l^{\mathrm{E}},\\
+   \mu_{Fo,ol}&=g_{Fo}^0+2R_bT\ln y_{Fo}+W_{ol}y_{Fa}^2,\\
+   \mu_{Fa,ol}&=g_{Fa}^0+2R_bT\ln y_{Fa}+W_{ol}y_{Fo}^2.
+   \end{aligned}
+
+Here :math:`W_{ji}=W_{ij}`. The constrained total G conserves Mg, Fe, Si, O
+and mass. Interior coexistence requires
+:math:`\mu_{Fo,ol}=\mu_{F,l}` and :math:`\mu_{Fa,ol}=\mu_{A,l}`.
+The resulting exchange coefficient is an **output**, not a prescribed 0.3:
+
+.. math::
+
+   K_D^{Fe/Mg}=\frac{(Fe/Mg)_{ol}}{(Fe/Mg)_l}
+       =\frac{v/u}{(c-v)/(a-u)}.
+
+``examples/magma_olivine.py::equilibrium`` uses two nested bisections of
+derivatives of this same JAX G. At fixed total crystal amount it equilibrates
+Fe/Mg exchange, then equilibrates the crystal amount. Before creating an
+absent solid it minimizes its insertion energy over Fo/Fa composition.
+The example requires positive Q, F and A inventories, T>=1600 K and
+1<=P/bar<=5000. The ternary liquid is strictly convex above 1539.756 K
+(a composition-independent curvature bound for these W values); olivine
+is also strictly convex in the example's domain. These restrictions support
+the unique minimum and are not empirical calibration limits. Positive Q
+ensures some liquid remains. Pure endpoints are supported by the property
+API, while the example deliberately excludes zero-inventory faces and
+all-solid/degenerate cases. The eager selector is not a differentiable
+equilibrium API.
+
+At 1 bar with M=1.2, E=0.3 and S=1 mol, olivine first appears at
+**1987.882448 K**. Results below describe a closed system in which existing
+crystals continue to equilibrate, not fractional crystallization:
+
+.. list-table:: Fe/Mg partitioning from total G
+   :header-rows: 1
+
+   * - T (K)
+     - Olivine (mol)
+     - Liquid Fe/(Mg+Fe)
+     - Olivine Fe/(Mg+Fe)
+     - Kd
+   * - 2000
+     - 0
+     - 0.200000
+     - undefined
+     - undefined
+   * - 1900
+     - 0.292098
+     - 0.275259
+     - 0.082021
+     - 0.235253
+   * - 1800
+     - 0.496054
+     - 0.347613
+     - 0.124432
+     - 0.266718
+   * - 1600
+     - 0.705063
+     - 0.344209
+     - 0.190809
+     - 0.449252
+
+.. figure:: _static/magma/olivine_partitioning.png
+   :alt: JAX cooling curves and independent MELTS points agree for phase amounts, Fe fractions and the changing Fe/Mg exchange coefficient.
+   :width: 90%
+
+   Cooling proceeds to the right; the dashed line is olivine onset. Olivine
+   is Mg-rich relative to the liquid. Fe enrichment of the residual liquid
+   is not monotonic because retained crystals reequilibrate as Kd changes.
+   The liquid's Fe/(Mg+Fe) is x_A/(x_F+x_A), not x_A. Amounts in the upper
+   panel are mol Si and sum to one. Absent-olivine composition and Kd are
+   returned as ``None``; incipient composition is a separate diagnostic.
+
+.. figure:: _static/magma/olivine_melts_comparison.png
+   :alt: Signed JAX minus MELTS energy differences are about 1e-5 J for the ternary liquid and 1e-9 J for olivine at three pressures.
+   :width: 85%
+
+   Supplied liquid [Q,F,A]=[0.25,0.6,0.15] mol and olivine [Fo,Fa]=[0.8,0.2]
+   mol, at 1, 500 and 5000 bar. Differences are shown explicitly rather
+   than hidden by the roughly megajoule absolute energy scale.
+
+``olivine_melts_v1.json`` records **15 distinct liquid states, 60 olivine
+states including both endpoints, and 30 independent restricted equilibria**
+for two bulk Fe/Mg ratios. The generator uses actual hash-pinned alphaMELTS
+2.3.2 / rhyolite-MELTS 1.0.2 properties, verifies oxide/component inventories,
+disables oxygen buffering, and solves native chemical-potential roots using
+SciPy. It imports neither JAX thermodynamics nor the example solver.
+Maximum observed differences are 1.25e-5 J for liquid/total G, 1.4e-9 J for
+olivine G, 1.1e-11 mol for phase amounts and 2.7e-12 for Kd. These finite
+checks concern the **same liquid + olivine phase set**, not MELTS full phase
+selection or validation of an experimental ternary phase diagram.
+Pyroxenes (including Fe-bearing ones), silica solids and all other candidates
+are omitted from this new equilibrium example; they can destabilize its path.
+The earlier Fe-free examples keep their original phase sets.
+
+.. code-block:: bash
+
+   JAX_ENABLE_X64=1 MPLBACKEND=Agg python examples/magma_olivine.py \
+       --output documents/_static/magma
+   # Optional independent reference regeneration; SciPy + pinned runtime:
+   python tests/reference/generate_olivine_reference.py \
+       --runtime /path/to/pinned/runtime --python /path/to/worker/python \
+       --output tests/reference/olivine_melts_v1.json
+
+Normal tests require no MELTS or SciPy. They check independent reference
+energies/potentials/partitioning, conservation, coexistence, an independent
+feasible composition grid, onset, scaling, zero-phase and pure-endmember
+energies, two-site entropy, pressure units, JIT/vmap and joint derivatives.
+The additional source is
+`olivine.c at the same MAGMA revision <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/olivine.c>`_
+(SHA256 ``872fa74c5c7601dccdb41560c70a996af558917ff1e82589e277dd459a93a080``).
+
+Provenance and independent checks
+---------------------------------
+
+The port uses MAGMA revision ``705a0fb315e5054d18275a580562f6121c8e458c``:
+`standard-state equations <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/gibbs.c>`_,
+`liquid coefficients <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/liq_struct_data.h>`_,
+`solid coefficients <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/sol_struct_data.h>`_, and
+`liquid interaction <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/param_struct_data_v34.h>`_.
+
+``tests/reference/magma_source_v1.json`` records independent numerical
+integration of the published Cp, Cp/T and V, with source hashes.
+It tests G, entropy, heat capacity and volume at 11 T/P states, including
+both sides of 1480 K. This is source-formula validation, not a compiled
+MAGMA run. Existing saved MELTS liquid standards are also checked.
+
+``tests/reference/magma_melts_v1.json`` separately records 13 supplied
+states from the hash-pinned alphaMELTS 2.3.2 / rhyolite-MELTS 1.0.2 runtime.
+The maximum absolute standard-state differences are 4.7e-10 J/mol for the
+liquids and 1.4e-9 J/mol for solid F. Maximum differences for mixed G and
+interior chemical potentials are 1.7e-5 J and 2.4e-5 J/mol, respectively
+(test tolerance 3e-5). Pure F liquid oxide conversion fails in the pinned
+worker with negative SiO2; that unavailable case is retained explicitly.
+The JAX endpoint is covered by the continuous energy and standard-state checks.
+
+Regenerate either independent fixture without importing the JAX model:
+
+.. code-block:: bash
+
+   python tests/reference/generate_magma_reference.py \
+       --output tests/reference/magma_source_v1.json
+   python tests/reference/generate_magma_reference.py --runtime /path/to/pinned/runtime \
+       --python /path/to/worker/python --output tests/reference/magma_melts_v1.json
+
+Only the second command needs MELTS and its Python worker dependencies.
+Ordinary tests read the saved JSON files. They also check composition
+derivatives, extensivity, elemental/mass conservation, onset, coexistence,
+energy boundaries, jit/vmap, and joint T/P/composition differentiation.
+The public source revision's identity with the distributed thermodynamic C
+build remains unestablished. Formula consistency, these finite binary
+comparisons, and experimental phase-diagram validation are distinct claims.

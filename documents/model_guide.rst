@@ -23,6 +23,16 @@ Choose an entry point
    * - Fluid pressure and fugacity at known molar density
      - ``state_trho(eos, T, rho, x)``
      - Supply molar density in mol/m3 and normalized mole fractions.
+   * - Pure H2O fluid G on the native magma reference
+     - ``exoeos.magma_fluid.water_fluid_gibbs(T, P, n, eos=...)``
+     - Scalar K, Pa, mol; explicitly select a pure-water EOS, enable x64
+       and read :doc:`native_magma_fluid` for standards and boundaries.
+   * - Carbonate liquid and H2O--CO2 fluid G
+     - ``exoeos.magma_carbonate.liquid_gibbs`` and
+       ``exoeos.magma_fluid.mixed_fluid_gibbs``
+     - Select mode-4 liquid, thirteen component amounts and an explicit
+       binary fluid EOS. Read :doc:`native_carbonate_liquid` for internal
+       reaction relaxation and independent comparisons.
    * - Excess Gibbs and activities
      - ``solution_state(model, T, P, x)``
      - Match the model's component order and symmetric standards.
@@ -33,6 +43,30 @@ Choose an entry point
      - ``mass_fraction_solute_state(...)``
      - Supply consistent host G/mu, masses, and a host-composition-independent
        solute standard; retain the host derivative correction.
+   * - Native dry silicate liquid and mineral G
+     - ``exoeos.magma.liquid_gibbs``, ``forsterite_gibbs``, ``enstatite_gibbs``,
+       ``silica_gibbs``, ``olivine_gibbs``, ``clinopyroxene_gibbs``, ``pyroxene_gibbs``, ``anorthite_gibbs``
+     - K, Pa, mol; liquid bases from binary MgO--SiO2 through eleven dry
+       components, including Fe(III).
+       Enable x64 and read the
+       restricted equilibrium scope in :doc:`native_magma`. Enstatite is
+       the Mg orthopyroxene endpoint, per mol MgSiO3. Silica order is
+       quartz, tridymite, cristobalite, per mol SiO2.
+       ``clinopyroxene_gibbs`` retains its Di--Hd face. ``pyroxene_gibbs``
+       admits Ca--Mg--Fe in both structures on [CaSiO3, MgSiO3, FeSiO3] mol
+       coordinates, with relaxed site order. ``anorthite_gibbs`` is pure
+       anorthite; Na/Ca/K feldspar solutions use ``magma_solids.feldspar``.
+   * - Native hydrous silicate liquid G
+     - ``exoeos.magma.liquid_gibbs`` with ``HYDROUS_COMPONENTS``
+     - Twelve absolute component amounts, including H2O; enable x64
+       and read :doc:`native_hydrous_liquid` for the mode-1 water model.
+   * - Native dry and hydrous mineral solutions
+     - ``exoeos.magma_solids`` phase modules: ``gibbs(T, P, n)``
+     - Use each module's component basis and physical site domain, with
+       x64 enabled. :doc:`native_dry_solids` covers feldspars, spinel,
+       oxides and extended pyroxenes; :doc:`native_hydrous_solids` covers
+       biotite, hornblende and clino/orthoamphiboles. Phase selection
+       remains separate.
    * - H/He caloric table properties
      - ``table.state_tp(T, P)`` or ``table.state_trho(T, rho_mass)``
      - Select a fixed Chabrier--Debras variant and load its verified tables.

@@ -11,8 +11,9 @@ pressure and composition.
 The original capability survey used source commit
 `f049cfc <https://github.com/HajimeKawahara/exoeos/tree/f049cfcb3f42e198124c8f6c921385ff0d67f69d>`_
 (reviewed on 2026-10-08); this overview also covers the subsequent total
-Helmholtz derivative engine. A historical calculation elsewhere in the
-documentation retains its own source revision, inputs, and validation scope.
+Helmholtz derivative engine and native dry, hydrous and carbonate magma models. A historical
+calculation elsewhere in the documentation retains its own source revision,
+inputs, and validation scope.
 The `Japanese explanation <https://github.com/HajimeKawahara/doc_ExoEOS>`_
 is maintained separately in ``doc_ExoEOS/main_ja.tex``. English API and usage
 updates belong here; the older ``doc_ExoEOS/main_en.tex`` is a historical edition.
@@ -114,6 +115,37 @@ package's ``src/`` build configuration.
        liquid mixing, and declarations for the 20-model native solution catalog.
      - Native evaluations need a separately installed runtime. Published
        expressions and native evaluations have distinct provenance.
+   * - Native JAX magma
+     - ``exoeos.magma``: binary through eleven-component dry and
+       twelve-component hydrous liquid G and standards,
+       Fo--Fa olivine, Ca--Mg--Fe clinopyroxene/orthopyroxene, anorthite
+       and quartz/tridymite/cristobalite; native JAX derivatives.
+       ``exoeos.magma_carbonate`` adds a separate thirteen-component
+       mode-4 liquid with internal carbonate reaction relaxation.
+     - No external runtime. :doc:`native_magma` follows closed cooling
+       through enstatite appearance, crystal reaction and liquid disappearance.
+       The multiphase example adds silica solids, phase-change brackets
+       and residual liquid composition. The dry CMFAS example compares
+       competing minerals with restricted and full MELTS calculations.
+       In that restricted cooling example,
+       Al-bearing pyroxene components and Na/K feldspars are omitted.
+       The Ca--Mg--Fe pyroxene extension relaxes Mg/Fe site order and
+       compares both structures and cooling paths with MELTS properties.
+       See :doc:`native_hydrous_liquid` and :doc:`native_carbonate_liquid`
+       for the separate water/carbon models and their domains.
+   * - Native JAX dry and hydrous minerals
+     - ``exoeos.magma_solids``: Na/Ca/K feldspars, spinel, Fe/Ti oxides,
+       rutile/corundum, extended pyroxenes, biotite, hornblende and
+       clino/orthoamphiboles; relaxed internal order where applicable.
+     - Supplied-phase properties and derivatives, without an external
+       runtime. Phase selection remains separate; see
+       :doc:`native_dry_solids` and :doc:`native_hydrous_solids`.
+   * - Native magma fluid connections
+     - ``exoeos.magma_fluid``: pure H2O and mixed H2O--CO2 full Gibbs
+       energies on explicit gas standards with a selected EOS.
+     - EOS choice and standard alignment are explicit. Saturation and
+       fluid amounts remain separate; see :doc:`native_magma_fluid`
+       and :doc:`native_carbonate_liquid`.
    * - M2 material references
      - Checkout tools for water, H/O/Mg/Na/K/P/He references and conditional
        models, material assessment, and a consistent major-gas potential.

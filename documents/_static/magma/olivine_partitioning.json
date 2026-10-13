@@ -1,0 +1,135 @@
+{
+  "scope": "Closed Fe(II) liquid + binary olivine only; no other solids or redox.",
+  "onset_T_K": 1987.8824480687686,
+  "max_liquid_g_difference_J": 1.2453645467758179e-05,
+  "max_olivine_g_difference_J": 1.3969838619232178e-09,
+  "max_total_g_difference_J": 1.2453645467758179e-05,
+  "max_amount_difference_mol": 1.0310918785449985e-11,
+  "max_Kd_difference": 2.6468272018576045e-12,
+  "states": [
+    {
+      "T_K": 2200.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "MgO": 1.2,
+        "FeO": 0.3,
+        "SiO2": 1.0
+      },
+      "amounts_mol": [
+        0.25,
+        0.6,
+        0.15,
+        0.0,
+        0.0
+      ],
+      "g_J": -2315550.793900622,
+      "liquid_fe_fraction": 0.19999999999999998,
+      "olivine_fe_fraction": null,
+      "Kd_Fe_Mg": null,
+      "initial_insertion_J_mol": 12088.755921470933,
+      "incipient_olivine_fe_fraction": 0.0595932764104784,
+      "coexistence_residual_J_mol": null
+    },
+    {
+      "T_K": 2000.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "MgO": 1.2,
+        "FeO": 0.3,
+        "SiO2": 1.0
+      },
+      "amounts_mol": [
+        0.25,
+        0.6,
+        0.15,
+        0.0,
+        0.0
+      ],
+      "g_J": -2231829.5246272087,
+      "liquid_fe_fraction": 0.19999999999999998,
+      "olivine_fe_fraction": null,
+      "Kd_Fe_Mg": null,
+      "initial_insertion_J_mol": 647.6244005290791,
+      "incipient_olivine_fe_fraction": 0.05386122290393247,
+      "coexistence_residual_J_mol": null
+    },
+    {
+      "T_K": 1900.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "MgO": 1.2,
+        "FeO": 0.3,
+        "SiO2": 1.0
+      },
+      "amounts_mol": [
+        0.25,
+        0.33185987388073557,
+        0.12604167730155477,
+        0.2681401261192644,
+        0.023958322698445222
+      ],
+      "g_J": -2192313.4850085727,
+      "liquid_fe_fraction": 0.27525933680748255,
+      "olivine_fe_fraction": 0.08202139653742883,
+      "Kd_Fe_Mg": 0.2352530002228753,
+      "initial_insertion_J_mol": -4530.117696236819,
+      "incipient_olivine_fe_fraction": 0.05128706903470659,
+      "coexistence_residual_J_mol": [
+        -4.656612873077393e-10,
+        -4.656612873077393e-10
+      ]
+    },
+    {
+      "T_K": 1800.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "MgO": 1.2,
+        "FeO": 0.3,
+        "SiO2": 1.0
+      },
+      "amounts_mol": [
+        0.25,
+        0.16567099142895414,
+        0.08827482865539801,
+        0.43432900857104584,
+        0.06172517134460198
+      ],
+      "g_J": -2155157.8115114192,
+      "liquid_fe_fraction": 0.34761284366120343,
+      "olivine_fe_fraction": 0.12443231776637406,
+      "Kd_Fe_Mg": 0.2667184480914528,
+      "initial_insertion_J_mol": -9310.807549870107,
+      "incipient_olivine_fe_fraction": 0.04892662134621528,
+      "coexistence_residual_J_mol": [
+        0.0,
+        -2.3283064365386963e-10
+      ]
+    },
+    {
+      "T_K": 1600.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "MgO": 1.2,
+        "FeO": 0.3,
+        "SiO2": 1.0
+      },
+      "amounts_mol": [
+        0.25,
+        0.029469393794094523,
+        0.015467788616946171,
+        0.5705306062059055,
+        0.13453221138305382
+      ],
+      "g_J": -2086161.384158361,
+      "liquid_fe_fraction": 0.34420913344014786,
+      "olivine_fe_fraction": 0.19080883011687055,
+      "Kd_Fe_Mg": 0.4492522983989664,
+      "initial_insertion_J_mol": -17554.796288845595,
+      "incipient_olivine_fe_fraction": 0.044936620476621836,
+      "coexistence_residual_J_mol": [
+        0.0,
+        0.0
+      ]
+    }
+  ]
+}

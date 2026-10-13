@@ -1,0 +1,35 @@
+{
+  "scope": "Pure Mg orthopyroxene insertion test on closed liquid + forsterite cooling; no enstatite phase amounts or full phase selection.",
+  "reference_sha256": "515633d8abed401756c36d70d44319c767075f4e076b0c3a20d026a22178d3f0",
+  "P_Pa": 100000.0,
+  "initial_oxide_moles": {
+    "MgO": 1.5,
+    "SiO2": 1.0
+  },
+  "enstatite_saturation_T_K": 1908.603652904132,
+  "max_standard_difference_J_mol_MgSiO3": 6.984919309616089e-10,
+  "max_insertion_difference_J_mol_MgSiO3": 2.1350570023059845e-07,
+  "max_forsterite_amount_difference_mol": 2.0198342998156704e-11,
+  "states": [
+    {
+      "T_K": 2000.0,
+      "insertion_J_mol_MgSiO3": 2578.340908016078,
+      "forsterite_mol": 0.42520883646361374
+    },
+    {
+      "T_K": 1908.603652904132,
+      "insertion_J_mol_MgSiO3": -2.3283064365386963e-10,
+      "forsterite_mol": 0.5843742153590041
+    },
+    {
+      "T_K": 1900.0,
+      "insertion_J_mol_MgSiO3": -167.80660971067846,
+      "forsterite_mol": 0.5932373026363398
+    },
+    {
+      "T_K": 1800.0,
+      "insertion_J_mol_MgSiO3": -1588.8545849483926,
+      "forsterite_mol": 0.6621340867237213
+    }
+  ]
+}

@@ -12,6 +12,8 @@ permissions:
 jobs:
   pytest:
     runs-on: ubuntu-latest
+    env:
+      OPENBLAS_NUM_THREADS: "1"
     strategy:
       matrix:
         include:
@@ -40,7 +42,8 @@ jobs:
           python -m pip install -e ".[test]"
 
       - name: Run unit tests
-        run: pytest tests/unittests
+        # Split expensive mineral suites by phase while reusing JAX compilations.
+        run: python -m pytest tests/unittests -n 2 --dist loadgroup --durations=20
 
   docs:
     name: Build documentation

@@ -1,0 +1,3158 @@
+{
+  "backend": {
+    "model": "rhyolite-MELTS 1.0.2",
+    "calculation_mode": 1,
+    "version_string": "2.3.2 (Jul 21 2026 17:06:24)",
+    "release": "v2.3.2",
+    "source_commit": "9b92b1e0e6d1538a0f498572d6c6651d5d3aca7e",
+    "source_url": "https://github.com/magmasource/alphaMELTS/tree/9b92b1e0e6d1538a0f498572d6c6651d5d3aca7e",
+    "archive_url": "https://github.com/magmasource/alphaMELTS/releases/download/v2.3.2/alphamelts-py-2.3.2-ubuntu_22_04-x86_64.zip",
+    "archive_sha256": "97ec2cdb53cae69822a41b5639d8b93edf95b2c361bc15e64e53b192ea9e1425",
+    "runtime_sha256": {
+      "meltsdynamic.py": "c9b12a82ee2d8dfc317af33e571e441158e0d4422af5bcdc11cf2197dbb71ce8",
+      "meltsengine.py": "05a41c1f842e6359fd44541638cb34389258a7539c47e5f205090434f6082af9",
+      "meltsstatus.py": "4869341cdd18e8eac01a4fe612e14bc350ea0f8ecdec7fa498a7f0e8e65e99ee",
+      "libalphamelts.so": "c218ef6f7ba5aef4b0760f3176530d1335457d6e2716823a1d0de3a5d13301e5",
+      "libgsl.so.28": "62dcb82585a2970edf2054e8e7c7df1a1aa4c307c936e7ff95b1331a4ababb2e",
+      "libgslcblas.so.0": "bb1d1273d2596ff756cbc881bc8a51837ed9cfbfa59ed55309ae42e3d9496948"
+    },
+    "license": "AGPL-3.0; backend is not redistributed",
+    "build_provenance": "Release binary pinned by hash; thermodynamic C build commit is not independently established."
+  },
+  "liquid_order": [
+    "SiO2",
+    "Mg2SiO4",
+    "Fe2SiO4",
+    "CaSiO3",
+    "Al2O3"
+  ],
+  "phase_order": [
+    "olivine",
+    "clinopyroxene",
+    "anorthite",
+    "orthopyroxene",
+    "silica"
+  ],
+  "method": "Native supplied properties; independent SLSQP and chemical-potential roots for restricted equilibria; separate full MELTS equilibrium workers. No JAX imports.",
+  "iron_valence_restricted": 2,
+  "oxygen_buffer": null,
+  "full_equilibrium_scope": "All native phases and their full solution models; closed oxygen, no imposed oxygen buffer. Not the restricted JAX candidate set.",
+  "generator_sha256": "006a4b504c5c3a0ba1b8414886637d4eb2911c8eef87ca830c016987f3681c23",
+  "source_revision": "705a0fb315e5054d18275a580562f6121c8e458c",
+  "source_sha256": {
+    "sources/gibbs.c": "2eceff9f315210ebdcf9dfc9bacd77f625cf04dbdc5084104c093caba34d4166",
+    "includes/liq_struct_data.h": "206b298d054d9110f28dd544dab1240aa252bb39650bcdf21e032fee0e7d95b4",
+    "includes/sol_struct_data.h": "ebc47d7b66e7cd9bebf36d2a058270360f70fe65872f4f799f9c400f058e0033",
+    "includes/param_struct_data_v34.h": "ad78f9ac9a59c030aeee240893b00efc034ea81aed4d551abaed770215af7059",
+    "sources/clinopyroxene.c": "0a50a5171ec75f77fc439bebcd1b96f70962859eaf3c0f532d072d847fa585a0"
+  },
+  "evaluator_sha256": "9f0248b0b6eb1f8b2ec338f0b374e4af83738813f57569fcee02c6534023c436",
+  "generator_python_version": "3.12.7",
+  "properties": [
+    {
+      "T_K": 1400.0,
+      "P_Pa": 100000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1927342.5883234516,
+      "liquid_mu_J_mol": [
+        -1039641.7918084486,
+        -2455260.332061433,
+        -1890570.8938686352,
+        -1876128.0799539017,
+        -1878870.3605396417
+      ],
+      "liquid_standard_J_mol": [
+        -1031411.7608958187,
+        -2432749.6824393147,
+        -1857953.9312898,
+        -1849213.1545398147,
+        -1821570.0353198294
+      ],
+      "anorthite_g_J_mol": -4791173.86044317,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3568268.27143808,
+          "mu_J_mol": [
+            -3627880.3727421886,
+            -3329819.8662216444
+          ],
+          "standard_J_mol": [
+            -3625564.1421420197,
+            -3315584.6135321525
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3382280.55427216,
+          "mu_J_mol": [
+            -3639799.3948315117,
+            -3317900.8441323214
+          ],
+          "standard_J_mol": [
+            -3625564.1421420197,
+            -3315584.6135321525
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7076409.282104529,
+          "mu_J_mol": [
+            -3629083.224822966,
+            -3326154.612253963
+          ],
+          "standard_J_mol": [
+            -3625564.1421420197,
+            -3315584.6135321525
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1425.0,
+      "P_Pa": 100000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1935019.2242635754,
+      "liquid_mu_J_mol": [
+        -1043480.6139350223,
+        -2464587.83629449,
+        -1902973.2286079132,
+        -1883426.2244097325,
+        -1885714.795589937
+      ],
+      "liquid_standard_J_mol": [
+        -1035036.568904382,
+        -2441785.2897106996,
+        -1869794.3033545334,
+        -1856199.5910982748,
+        -1827950.2014749446
+      ],
+      "anorthite_g_J_mol": -4807496.774358094,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3580809.332678901,
+          "mu_J_mol": [
+            -3640178.140605658,
+            -3343334.1009718715
+          ],
+          "standard_J_mol": [
+            -3637815.5279447716,
+            -3328764.314541496
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3395378.6046369355,
+          "mu_J_mol": [
+            -3652385.314375147,
+            -3331126.927202382
+          ],
+          "standard_J_mol": [
+            -3637815.5279447716,
+            -3328764.314541496
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7101722.988287317,
+          "mu_J_mol": [
+            -3641408.7481878777,
+            -3339584.568040482
+          ],
+          "standard_J_mol": [
+            -3637815.5279447716,
+            -3328764.314541496
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1450.0,
+      "P_Pa": 100000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1942777.174419126,
+      "liquid_mu_J_mol": [
+        -1047351.5768552667,
+        -2474034.206274663,
+        -1915480.9196293221,
+        -1890799.9867799652,
+        -1892633.9274547482
+      ],
+      "liquid_standard_J_mol": [
+        -1038693.5177066161,
+        -2450939.7627292005,
+        -1881740.0317013974,
+        -1863261.6455711366,
+        -1834405.0644445757
+      ],
+      "anorthite_g_J_mol": -4823968.966644255,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3593464.5385433924,
+          "mu_J_mol": [
+            -3652589.809972639,
+            -3356963.4528264026
+          ],
+          "standard_J_mol": [
+            -3650180.8152510356,
+            -3342059.1326551433
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3408591.528985857,
+          "mu_J_mol": [
+            -3665085.135422295,
+            -3344468.127376747
+          ],
+          "standard_J_mol": [
+            -3650180.8152510356,
+            -3342059.1326551433
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7127265.226837604,
+          "mu_J_mol": [
+            -3653848.1730563017,
+            -3353129.640931304
+          ],
+          "standard_J_mol": [
+            -3650180.8152510356,
+            -3342059.1326551433
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1475.0,
+      "P_Pa": 100000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1950615.046872492,
+      "liquid_mu_J_mol": [
+        -1051254.1518416235,
+        -2483597.3923876258,
+        -1928092.150263632,
+        -1898248.0631771095,
+        -1899626.4681292058
+      ],
+      "liquid_standard_J_mol": [
+        -1042382.0785749624,
+        -2460211.0518804914,
+        -1893789.2996611625,
+        -1870398.01407091,
+        -1840933.3362238533
+      ],
+      "anorthite_g_J_mol": -4840588.234943466,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3606232.124150581,
+          "mu_J_mol": [
+            -3665113.620576836,
+            -3370706.1384455594
+          ],
+          "standard_J_mol": [
+            -3662658.2437945153,
+            -3355467.2845334164
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3421917.5485939216,
+          "mu_J_mol": [
+            -3677897.0977066583,
+            -3357922.6613157373
+          ],
+          "standard_J_mol": [
+            -3662658.2437945153,
+            -3355467.2845334164
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7153032.463378768,
+          "mu_J_mol": [
+            -3666399.7391619408,
+            -3366788.0475867526
+          ],
+          "standard_J_mol": [
+            -3662658.2437945153,
+            -3355467.2845334164
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1500.0,
+      "P_Pa": 100000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1958531.9240708132,
+      "liquid_mu_J_mol": [
+        -1055188.8960276404,
+        -2493275.4145076615,
+        -1940805.1654326234,
+        -1905769.1939197117,
+        -1906691.1732760044
+      ],
+      "liquid_standard_J_mol": [
+        -1046102.8086429691,
+        -2469597.177038855,
+        -1905940.352155609,
+        -1877607.4369161415,
+        -1847533.772475472
+      ],
+      "anorthite_g_J_mol": -4857352.442136737,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3619110.378366501,
+          "mu_J_mol": [
+            -3677747.8657249133,
+            -3384560.4289328507
+          ],
+          "standard_J_mol": [
+            -3675246.106881875,
+            -3368987.041279824
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3435354.9390052706,
+          "mu_J_mol": [
+            -3690819.4945349023,
+            -3371488.800122862
+          ],
+          "standard_J_mol": [
+            -3675246.106881875,
+            -3368987.041279824
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7179021.271202246,
+          "mu_J_mol": [
+            -3679061.7398114605,
+            -3380558.0591103355
+          ],
+          "standard_J_mol": [
+            -3675246.106881875,
+            -3368987.041279824
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1600.0,
+      "P_Pa": 100000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1990972.6195349703,
+      "liquid_mu_J_mol": [
+        -1071261.2025742545,
+        -2533098.5042769914,
+        -1992641.9586165713,
+        -1936560.4940940188,
+        -1935648.1618320134
+      ],
+      "liquid_standard_J_mol": [
+        -1061319.0587175419,
+        -2508252.6789614963,
+        -1955529.2946413779,
+        -1907151.9055009652,
+        -1874633.6854507609
+      ],
+      "anorthite_g_J_mol": -4925818.044750806,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3671697.6094974307,
+          "mu_J_mol": [
+            -3729356.8031848143,
+            -3441060.834747898
+          ],
+          "standard_J_mol": [
+            -3726669.5160989068,
+            -3424149.312131336
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3490185.4871168886,
+          "mu_J_mol": [
+            -3743581.0387154687,
+            -3426836.5992172435
+          ],
+          "standard_J_mol": [
+            -3726669.5160989068,
+            -3424149.312131336
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7285127.188430311,
+          "mu_J_mol": [
+            -3730781.6992771314,
+            -3436721.349070548
+          ],
+          "standard_J_mol": [
+            -3726669.5160989068,
+            -3424149.312131336
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1800.0,
+      "P_Pa": 100000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -2059323.5636745617,
+      "liquid_mu_J_mol": [
+        -1104902.5825547404,
+        -2617729.4309239895,
+        -2100733.7599491267,
+        -2001314.2029351701,
+        -1996694.6202449535
+      ],
+      "liquid_standard_J_mol": [
+        -1093248.325753945,
+        -2590548.4299151176,
+        -2059125.3945775754,
+        -1969411.95116315,
+        -1931965.992702261
+      ],
+      "anorthite_g_J_mol": -5069127.975226111,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3781722.6386685865,
+          "mu_J_mol": [
+            -3837415.1765530678,
+            -3558952.487130659
+          ],
+          "standard_J_mol": [
+            -3834356.832981422,
+            -3539364.6945870267
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3604727.3556319494,
+          "mu_J_mol": [
+            -3853944.6255250545,
+            -3542423.038158673
+          ],
+          "standard_J_mol": [
+            -3834356.832981422,
+            -3539364.6945870267
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7507050.2251658775,
+          "mu_J_mol": [
+            -3839062.1166569246,
+            -3553938.7697436404
+          ],
+          "standard_J_mol": [
+            -3834356.832981422,
+            -3539364.6945870267
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 2000.0,
+      "P_Pa": 100000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -2131874.846638589,
+      "liquid_mu_J_mol": [
+        -1140355.9906797279,
+        -2708395.032796921,
+        -2214174.376740241,
+        -2069906.945019683,
+        -2061533.3487352985
+      ],
+      "liquid_standard_J_mol": [
+        -1126989.6209348496,
+        -2678878.856094673,
+        -2168070.3099723314,
+        -2035511.0300686962,
+        -1993090.570031166
+      ],
+      "anorthite_g_J_mol": -5220257.187765963,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3897670.6254768763,
+          "mu_J_mol": [
+            -3951384.4119202006,
+            -3682815.479703578
+          ],
+          "standard_J_mol": [
+            -3947955.0118628163,
+            -3660551.4172328757
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3725228.4686989123,
+          "mu_J_mol": [
+            -3970219.0743335187,
+            -3663980.81729026
+          ],
+          "standard_J_mol": [
+            -3947955.0118628163,
+            -3660551.4172328757
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7740831.272813968,
+          "mu_J_mol": [
+            -3953253.3960355967,
+            -3677127.530606891
+          ],
+          "standard_J_mol": [
+            -3947955.0118628163,
+            -3660551.4172328757
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1400.0,
+      "P_Pa": 50000000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1925197.2061831735,
+      "liquid_mu_J_mol": [
+        -1038302.2692650831,
+        -2452847.925340555,
+        -1887948.5320274143,
+        -1874000.0831218292,
+        -1877057.9861346937
+      ],
+      "liquid_standard_J_mol": [
+        -1030072.2383524532,
+        -2430337.275718437,
+        -1855331.569448579,
+        -1847085.1577077422,
+        -1819757.6609148814
+      ],
+      "anorthite_g_J_mol": -4786061.923497975,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3564810.8314864524,
+          "mu_J_mol": [
+            -3624443.2214995055,
+            -3326281.2714342372
+          ],
+          "standard_J_mol": [
+            -3622126.9908993365,
+            -3312046.0187447453
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3378762.248193697,
+          "mu_J_mol": [
+            -3636362.2435888285,
+            -3314362.249344914
+          ],
+          "standard_J_mol": [
+            -3622126.9908993365,
+            -3312046.0187447453
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7069474.113492329,
+          "mu_J_mol": [
+            -3625646.0735802827,
+            -3322616.017466556
+          ],
+          "standard_J_mol": [
+            -3622126.9908993365,
+            -3312046.0187447453
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1425.0,
+      "P_Pa": 50000000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1932870.197858558,
+      "liquid_mu_J_mol": [
+        -1042141.0509289942,
+        -2462168.9331362746,
+        -1900343.6529544797,
+        -1881294.6346778597,
+        -1883899.0686971515
+      ],
+      "liquid_standard_J_mol": [
+        -1033697.0058983539,
+        -2439366.3865524842,
+        -1867164.7277010998,
+        -1854068.001366402,
+        -1826134.4745821592
+      ],
+      "anorthite_g_J_mol": -4802382.289112098,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3577347.9857394444,
+          "mu_J_mol": [
+            -3636737.1647521136,
+            -3339791.269688766
+          ],
+          "standard_J_mol": [
+            -3634374.5520912274,
+            -3325221.4832583903
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3391856.1444397424,
+          "mu_J_mol": [
+            -3648944.338521603,
+            -3327584.0959192766
+          ],
+          "standard_J_mol": [
+            -3634374.5520912274,
+            -3325221.4832583903
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7094779.923322491,
+          "mu_J_mol": [
+            -3637967.7723343335,
+            -3336041.736757376
+          ],
+          "standard_J_mol": [
+            -3634374.5520912274,
+            -3325221.4832583903
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1450.0,
+      "P_Pa": 50000000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1940624.5037493694,
+      "liquid_mu_J_mol": [
+        -1046011.9733865762,
+        -2471608.80667911,
+        -1912844.1301636763,
+        -1888664.8041482924,
+        -1890814.8480741251
+      ],
+      "liquid_standard_J_mol": [
+        -1037353.9142379255,
+        -2448514.3631336475,
+        -1879103.2422357516,
+        -1861126.4629394638,
+        -1832585.9850639529
+      ],
+      "anorthite_g_J_mol": -4818851.906712904,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3589999.2500841343,
+          "mu_J_mol": [
+            -3649144.975201807,
+            -3353416.3496134416
+          ],
+          "standard_J_mol": [
+            -3646735.9804802034,
+            -3338512.0294421823
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3405064.8794613215,
+          "mu_J_mol": [
+            -3661640.3006514627,
+            -3340921.024163786
+          ],
+          "standard_J_mol": [
+            -3646735.9804802034,
+            -3338512.0294421823
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7120314.196230662,
+          "mu_J_mol": [
+            -3650403.3382854695,
+            -3349582.537718343
+          ],
+          "standard_J_mol": [
+            -3646735.9804802034,
+            -3338512.0294421823
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1475.0,
+      "P_Pa": 50000000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1948458.731937996,
+      "liquid_mu_J_mol": [
+        -1049914.5079102705,
+        -2481165.4963547355,
+        -1925448.1469857732,
+        -1896109.2876456366,
+        -1897804.0362607455
+      ],
+      "liquid_standard_J_mol": [
+        -1041042.4346436094,
+        -2457779.155847601,
+        -1891145.2963833038,
+        -1868259.238539437,
+        -1839110.904355393
+      ],
+      "anorthite_g_J_mol": -4835468.573942204,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3602762.859639548,
+          "mu_J_mol": [
+            -3661664.8925822885,
+            -3367154.727868586
+          ],
+          "standard_J_mol": [
+            -3659209.5157999676,
+            -3351915.873956443
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3418386.6745334333,
+          "mu_J_mol": [
+            -3674448.3697121106,
+            -3354371.2507387637
+          ],
+          "standard_J_mol": [
+            -3659209.5157999676,
+            -3351915.873956443
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7146073.397840218,
+          "mu_J_mol": [
+            -3662951.011167393,
+            -3363236.637009779
+          ],
+          "standard_J_mol": [
+            -3659209.5157999676,
+            -3351915.873956443
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1500.0,
+      "P_Pa": 50000000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1956371.9648715784,
+      "liquid_mu_J_mol": [
+        -1053849.211633625,
+        -2490837.022037434,
+        -1938153.9483425524,
+        -1903626.825488439,
+        -1904865.3889197065
+      ],
+      "liquid_standard_J_mol": [
+        -1044763.1242489537,
+        -2467158.7845686274,
+        -1903289.135065538,
+        -1875465.0684848689,
+        -1845707.988119174
+      ],
+      "anorthite_g_J_mol": -4852230.153681009,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3615637.1032717205,
+          "mu_J_mol": [
+            -3674295.210200223,
+            -3381004.675557708
+          ],
+          "standard_J_mol": [
+            -3671793.451357185,
+            -3365431.287904681
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3431819.805200218,
+          "mu_J_mol": [
+            -3687366.839010212,
+            -3367933.0467477194
+          ],
+          "standard_J_mol": [
+            -3671793.451357185,
+            -3365431.287904681
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7172054.101442593,
+          "mu_J_mol": [
+            -3675609.0842867703,
+            -3377002.3057351927
+          ],
+          "standard_J_mol": [
+            -3671793.451357185,
+            -3365431.287904681
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1600.0,
+      "P_Pa": 50000000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1988798.0832767785,
+      "liquid_mu_J_mol": [
+        -1069921.3563295892,
+        -2530634.1260574134,
+        -1989961.8862776503,
+        -1934403.7540635462,
+        -1933808.9675243658
+      ],
+      "liquid_standard_J_mol": [
+        -1059979.2124728765,
+        -2505788.3007419184,
+        -1952849.2223024569,
+        -1904995.1654704926,
+        -1872794.4911431132
+      ],
+      "anorthite_g_J_mol": -4920684.98263167,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3668207.946747928,
+          "mu_J_mol": [
+            -3725888.094475283,
+            -3437487.3558385083
+          ],
+          "standard_J_mol": [
+            -3723200.8073893753,
+            -3420575.8332219464
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3486632.9622474704,
+          "mu_J_mol": [
+            -3740112.3300059373,
+            -3423263.120307854
+          ],
+          "standard_J_mol": [
+            -3723200.8073893753,
+            -3420575.8332219464
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7278126.908891333,
+          "mu_J_mol": [
+            -3727312.9905676,
+            -3433147.8701611585
+          ],
+          "standard_J_mol": [
+            -3723200.8073893753,
+            -3420575.8332219464
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1800.0,
+      "P_Pa": 50000000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -2057119.8732984557,
+      "liquid_mu_J_mol": [
+        -1103562.4126087748,
+        -2615213.0812057117,
+        -2097995.977112506,
+        -1999128.7197062974,
+        -1994828.606034606
+      ],
+      "liquid_standard_J_mol": [
+        -1091908.1558079794,
+        -2588032.0801968398,
+        -2056387.6117409545,
+        -1967226.4679342771,
+        -1930099.9784919135
+      ],
+      "anorthite_g_J_mol": -5063972.099321526,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3778198.543074929,
+          "mu_J_mol": [
+            -3833912.7147653503,
+            -3555341.8563132416
+          ],
+          "standard_J_mol": [
+            -3830854.3711937047,
+            -3535754.063769609
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3601138.3586204713,
+          "mu_J_mol": [
+            -3850442.163737337,
+            -3538812.4073412553
+          ],
+          "standard_J_mol": [
+            -3830854.3711937047,
+            -3535754.063769609
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7499980.400172623,
+          "mu_J_mol": [
+            -3835559.654869207,
+            -3550328.138926223
+          ],
+          "standard_J_mol": [
+            -3830854.3711937047,
+            -3535754.063769609
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 2000.0,
+      "P_Pa": 50000000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -2129642.002144569,
+      "liquid_mu_J_mol": [
+        -1139015.4970324624,
+        -2705826.711579943,
+        -2211378.88340592,
+        -2067692.7185924102,
+        -2059640.5146222508
+      ],
+      "liquid_standard_J_mol": [
+        -1125649.1272875841,
+        -2676310.5348776947,
+        -2165274.8166380106,
+        -2033296.8036414234,
+        -1991197.7359181184
+      ],
+      "anorthite_g_J_mol": -5215076.809464419,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3894109.8869927856,
+          "mu_J_mol": [
+            -3947846.00144296,
+            -3679165.429192087
+          ],
+          "standard_J_mol": [
+            -3944416.6013855757,
+            -3656901.3667213847
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3721600.746194271,
+          "mu_J_mol": [
+            -3966680.663856278,
+            -3660330.766778769
+          ],
+          "standard_J_mol": [
+            -3944416.6013855757,
+            -3656901.3667213847
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7733687.467838937,
+          "mu_J_mol": [
+            -3949714.985558356,
+            -3673477.4800954
+          ],
+          "standard_J_mol": [
+            -3944416.6013855757,
+            -3656901.3667213847
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1400.0,
+      "P_Pa": 500000000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1906061.2805980705,
+      "liquid_mu_J_mol": [
+        -1026467.4865737731,
+        -2431196.1469333735,
+        -1864513.0704221292,
+        -1854926.9222783286,
+        -1861042.7893392937
+      ],
+      "liquid_standard_J_mol": [
+        -1018237.4556611432,
+        -2408685.4973112554,
+        -1831896.107843294,
+        -1828011.9968642415,
+        -1803742.4641194814
+      ],
+      "anorthite_g_J_mol": -4740105.116961136,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3533698.1594523573,
+          "mu_J_mol": [
+            -3593511.3309428087,
+            -3294445.4734905483
+          ],
+          "standard_J_mol": [
+            -3591195.1003426397,
+            -3280210.2208010564
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3347107.231727407,
+          "mu_J_mol": [
+            -3605430.3530321317,
+            -3282526.4514012253
+          ],
+          "standard_J_mol": [
+            -3591195.1003426397,
+            -3280210.2208010564
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7007067.987946739,
+          "mu_J_mol": [
+            -3594714.183023586,
+            -3290780.219522867
+          ],
+          "standard_J_mol": [
+            -3591195.1003426397,
+            -3280210.2208010564
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1425.0,
+      "P_Pa": 500000000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1913701.6499892054,
+      "liquid_mu_J_mol": [
+        -1030302.2478251843,
+        -2440462.225141593,
+        -1876849.604386695,
+        -1862193.5720343594,
+        -1867846.0468142517
+      ],
+      "liquid_standard_J_mol": [
+        -1021858.2027945439,
+        -2417659.6785578025,
+        -1843670.679133315,
+        -1834966.9387229017,
+        -1810081.4526992594
+      ],
+      "anorthite_g_J_mol": -4756402.501906716,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3546200.0803481783,
+          "mu_J_mol": [
+            -3605770.78371671,
+            -3307917.2668740493
+          ],
+          "standard_J_mol": [
+            -3603408.1710558236,
+            -3293347.4804436737
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3360163.6659808885,
+          "mu_J_mol": [
+            -3617977.957486199,
+            -3295710.09310456
+          ],
+          "standard_J_mol": [
+            -3603408.1710558236,
+            -3293347.4804436737
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7032302.588184096,
+          "mu_J_mol": [
+            -3607001.3912989297,
+            -3304167.7339426596
+          ],
+          "standard_J_mol": [
+            -3603408.1710558236,
+            -3293347.4804436737
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1450.0,
+      "P_Pa": 500000000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1921423.3335957667,
+      "liquid_mu_J_mol": [
+        -1034169.1498702662,
+        -2449847.1690969286,
+        -1889291.4946333913,
+        -1869535.8397047922,
+        -1874724.0011037253
+      ],
+      "liquid_standard_J_mol": [
+        -1025511.0907216156,
+        -2426752.725551466,
+        -1855550.6067054665,
+        -1841997.4984959636,
+        -1816495.1380935528
+      ],
+      "anorthite_g_J_mol": -4772848.900902113,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3558815.7999251173,
+          "mu_J_mol": [
+            -3618143.7943110983,
+            -3321503.822381192
+          ],
+          "standard_J_mol": [
+            -3615734.7995894947,
+            -3306599.5022099325
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3373334.6214973796,
+          "mu_J_mol": [
+            -3630639.119760754,
+            -3309008.496931536
+          ],
+          "standard_J_mol": [
+            -3615734.7995894947,
+            -3306599.5022099325
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7057765.026644321,
+          "mu_J_mol": [
+            -3619402.1573947608,
+            -3317670.0104860933
+          ],
+          "standard_J_mol": [
+            -3615734.7995894947,
+            -3306599.5022099325
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1475.0,
+      "P_Pa": 500000000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1929224.9395001433,
+      "liquid_mu_J_mol": [
+        -1038067.6639814604,
+        -2459348.929185054,
+        -1901836.9244929885,
+        -1876952.4214021363,
+        -1881675.3642028454
+      ],
+      "liquid_standard_J_mol": [
+        -1029195.5907147994,
+        -2435962.5886779195,
+        -1867534.073890519,
+        -1849102.3722959368,
+        -1822982.232297493
+      ],
+      "anorthite_g_J_mol": -4789442.111589136,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3571543.5533022024,
+          "mu_J_mol": [
+            -3630628.602459678,
+            -3335203.356672297
+          ],
+          "standard_J_mol": [
+            -3628173.225677357,
+            -3319964.502760154
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3386618.3195518805,
+          "mu_J_mol": [
+            -3643412.0795895,
+            -3322419.879542475
+          ],
+          "standard_J_mol": [
+            -3628173.225677357,
+            -3319964.502760154
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7083451.76895079,
+          "mu_J_mol": [
+            -3631914.7210447825,
+            -3331285.2658134904
+          ],
+          "standard_J_mol": [
+            -3628173.225677357,
+            -3319964.502760154
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1500.0,
+      "P_Pa": 500000000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1937105.550149475,
+      "liquid_mu_J_mol": [
+        -1041998.3472923149,
+        -2468965.525280252,
+        -1914484.1388872673,
+        -1884442.0574449385,
+        -1888698.8917743063
+      ],
+      "liquid_standard_J_mol": [
+        -1032912.2599076435,
+        -2445287.2878114455,
+        -1879619.325610253,
+        -1856280.3004413683,
+        -1829541.4909737739
+      ],
+      "anorthite_g_J_mol": -4806179.9968487965,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3584381.6293454655,
+          "mu_J_mol": [
+            -3643223.5014691134,
+            -3349014.1408508746
+          ],
+          "standard_J_mol": [
+            -3640721.742626075,
+            -3333440.753197848
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3400013.0356885297,
+          "mu_J_mol": [
+            -3656295.1302791024,
+            -3335942.512040886
+          ],
+          "standard_J_mol": [
+            -3640721.742626075,
+            -3333440.753197848
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7109359.388394939,
+          "mu_J_mol": [
+            -3644537.3755556606,
+            -3345011.7710283594
+          ],
+          "standard_J_mol": [
+            -3640721.742626075,
+            -3333440.753197848
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1600.0,
+      "P_Pa": 500000000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -1969401.1794176754,
+      "liquid_mu_J_mol": [
+        -1058054.410338279,
+        -2508542.910950232,
+        -1966057.7289723654,
+        -1915107.3788200456,
+        -1917491.1700289652
+      ],
+      "liquid_standard_J_mol": [
+        -1048112.2664815664,
+        -2483697.085634737,
+        -1928945.064997172,
+        -1885698.790226992,
+        -1856476.6936477127
+      ],
+      "anorthite_g_J_mol": -4874537.668514207,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3636804.6883602478,
+          "mu_J_mol": [
+            -3694671.6175442,
+            -3405336.971624439
+          ],
+          "standard_J_mol": [
+            -3691984.3304582923,
+            -3388425.449007877
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3454669.359489999,
+          "mu_J_mol": [
+            -3708895.8530748542,
+            -3391112.7360937847
+          ],
+          "standard_J_mol": [
+            -3691984.3304582923,
+            -3388425.449007877
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7215133.610659376,
+          "mu_J_mol": [
+            -3696096.513636517,
+            -3400997.4859470893
+          ],
+          "standard_J_mol": [
+            -3691984.3304582923,
+            -3388425.449007877
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 1800.0,
+      "P_Pa": 500000000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -2037461.9911653528,
+      "liquid_mu_J_mol": [
+        -1091663.303317465,
+        -2592682.4293985297,
+        -2073623.1241072211,
+        -1979609.130062797,
+        -1978208.2078392059
+      ],
+      "liquid_standard_J_mol": [
+        -1080009.0465166694,
+        -2565501.4283896578,
+        -2032014.7587356695,
+        -1947706.8782907769,
+        -1913479.5802965134
+      ],
+      "anorthite_g_J_mol": -5017619.049663937,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3746484.7680566,
+          "mu_J_mol": [
+            -3802391.851357642,
+            -3522856.4348524273
+          ],
+          "standard_J_mol": [
+            -3799333.5077859964,
+            -3503268.642308795
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3568845.8487702785,
+          "mu_J_mol": [
+            -3818921.300329629,
+            -3506326.985880441
+          ],
+          "standard_J_mol": [
+            -3799333.5077859964,
+            -3503268.642308795
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7436359.938525343,
+          "mu_J_mol": [
+            -3804038.791461499,
+            -3517842.7174654086
+          ],
+          "standard_J_mol": [
+            -3799333.5077859964,
+            -3503268.642308795
+          ]
+        }
+      ]
+    },
+    {
+      "T_K": 2000.0,
+      "P_Pa": 500000000.0,
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "liquid_g_J": -2109723.1417374667,
+      "liquid_mu_J_mol": [
+        -1127084.2244411523,
+        -2682856.623072762,
+        -2186537.334700635,
+        -2047949.91454891,
+        -2042717.5157268506
+      ],
+      "liquid_standard_J_mol": [
+        -1113717.854696274,
+        -2653340.4463705136,
+        -2140433.2679327256,
+        -2013553.9995979231,
+        -1974274.7370227182
+      ],
+      "anorthite_g_J_mol": -5168502.796307205,
+      "clinopyroxene": [
+        {
+          "n_mol": [
+            1.0,
+            0.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [1.0, 0.0]."
+        },
+        {
+          "n_mol": [
+            0.8,
+            0.2
+          ],
+          "g_J": -3862065.6650667414,
+          "mu_J_mol": [
+            -3916000.9514563857,
+            -3646324.519508163
+          ],
+          "standard_J_mol": [
+            -3912571.5513990014,
+            -3624060.4570374605
+          ]
+        },
+        {
+          "n_mol": [
+            0.2,
+            0.8
+          ],
+          "g_J": -3688959.008449817,
+          "mu_J_mol": [
+            -3934835.613869704,
+            -3627489.857094845
+          ],
+          "standard_J_mol": [
+            -3912571.5513990014,
+            -3624060.4570374605
+          ]
+        },
+        {
+          "n_mol": [
+            0.0,
+            1.0
+          ],
+          "status": "unavailable_nonfinite_native_endpoint",
+          "reason": "Pinned MELTS returned nonfinite clinopyroxene G at [0.0, 1.0]."
+        },
+        {
+          "n_mol": [
+            1.4,
+            0.6
+          ],
+          "g_J": -7669399.85204738,
+          "mu_J_mol": [
+            -3917869.935571782,
+            -3640636.570411476
+          ],
+          "standard_J_mol": [
+            -3912571.5513990014,
+            -3624060.4570374605
+          ]
+        }
+      ]
+    }
+  ],
+  "restricted_equilibria": [
+    {
+      "T_K": 1400.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "SiO2": 1.0,
+        "MgO": 0.55,
+        "FeO": 0.15,
+        "CaO": 0.25,
+        "Al2O3": 0.12
+      },
+      "liquid_mol": [
+        0.28571213631096515,
+        0.03167730641820904,
+        0.016512843665705157,
+        0.08859387318373571,
+        0.052830399438194536
+      ],
+      "solid_mol": [
+        0.2013201107867757,
+        0.053371476002080705,
+        0.08400516559003054,
+        0.010231360664428278,
+        0.06716960056180546,
+        0.0,
+        0.0
+      ],
+      "phase_mol": [
+        0.2546915867888564,
+        0.09423652625445882,
+        0.06716960056180546,
+        0.0,
+        0.0
+      ],
+      "g_J": -1929278.2585675071,
+      "solid_insertion_J_mol": [
+        4.656612873077393e-10,
+        -9.313225746154785e-10,
+        -9.313225746154785e-10,
+        1214.2880336055532,
+        534.2705501207383
+      ]
+    },
+    {
+      "T_K": 1425.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "SiO2": 1.0,
+        "MgO": 0.55,
+        "FeO": 0.15,
+        "CaO": 0.25,
+        "Al2O3": 0.12
+      },
+      "liquid_mol": [
+        0.31518606810657673,
+        0.04969365353422747,
+        0.025174276006988135,
+        0.1308892091869878,
+        0.0694829270261656
+      ],
+      "solid_mol": [
+        0.19448988866324368,
+        0.04634532287595183,
+        0.06163291560505776,
+        0.006960802234120053,
+        0.05051707297383439,
+        0.0,
+        0.0
+      ],
+      "phase_mol": [
+        0.24083521153919552,
+        0.06859371783917781,
+        0.05051707297383439,
+        0.0,
+        0.0
+      ],
+      "g_J": -1936485.682920841,
+      "solid_insertion_J_mol": [
+        0.0,
+        4.656612873077393e-10,
+        0.0,
+        1606.4577476133127,
+        1642.2206501247128
+      ]
+    },
+    {
+      "T_K": 1450.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "SiO2": 1.0,
+        "MgO": 0.55,
+        "FeO": 0.15,
+        "CaO": 0.25,
+        "Al2O3": 0.12
+      },
+      "liquid_mol": [
+        0.3763560524221675,
+        0.08915284192551892,
+        0.03925876745972078,
+        0.21892464590705732,
+        0.10378745893727764
+      ],
+      "solid_mol": [
+        0.17907202748176912,
+        0.03508495661788101,
+        0.013550261185423934,
+        0.0013125518447964098,
+        0.016212541062722345,
+        0.0,
+        0.0
+      ],
+      "phase_mol": [
+        0.21415698409965014,
+        0.014862813030220344,
+        0.016212541062722345,
+        0.0,
+        0.0
+      ],
+      "g_J": -1943887.2598596935,
+      "solid_insertion_J_mol": [
+        0.0,
+        -4.656612873077393e-10,
+        9.313225746154785e-10,
+        2059.8133724816144,
+        3149.946829105378
+      ]
+    },
+    {
+      "T_K": 1475.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "SiO2": 1.0,
+        "MgO": 0.55,
+        "FeO": 0.15,
+        "CaO": 0.25,
+        "Al2O3": 0.12
+      },
+      "liquid_mol": [
+        0.4,
+        0.11324346463087445,
+        0.04648142688903427,
+        0.25,
+        0.12
+      ],
+      "solid_mol": [
+        0.16175653536912557,
+        0.02851857311096573,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "phase_mol": [
+        0.1902751084800913,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "g_J": -1951521.049339443,
+      "solid_insertion_J_mol": [
+        0.0,
+        1511.28628290724,
+        1416.187986982055,
+        2235.7330078964587,
+        3805.709110247786
+      ]
+    },
+    {
+      "T_K": 1500.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "SiO2": 1.0,
+        "MgO": 0.55,
+        "FeO": 0.15,
+        "CaO": 0.25,
+        "Al2O3": 0.12
+      },
+      "liquid_mol": [
+        0.4,
+        0.1266472133850876,
+        0.05042171534316198,
+        0.25,
+        0.12
+      ],
+      "solid_mol": [
+        0.1483527866149124,
+        0.02457828465683802,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "phase_mol": [
+        0.17293107127175045,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "g_J": -1959253.882015723,
+      "solid_insertion_J_mol": [
+        0.0,
+        3212.1874697348103,
+        3756.570497903973,
+        2280.180128826527,
+        4072.912947734352
+      ]
+    },
+    {
+      "T_K": 1600.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "SiO2": 1.0,
+        "MgO": 0.55,
+        "FeO": 0.15,
+        "CaO": 0.25,
+        "Al2O3": 0.12
+      },
+      "liquid_mol": [
+        0.4,
+        0.19744666872336886,
+        0.06530231197324718,
+        0.25,
+        0.12
+      ],
+      "solid_mol": [
+        0.07755333127663115,
+        0.009697688026752811,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "phase_mol": [
+        0.08725101930338396,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "g_J": -1991129.7678935635,
+      "solid_insertion_J_mol": [
+        4.656612873077393e-10,
+        10702.251842373982,
+        14222.53843484167,
+        2515.170005763648,
+        5372.5499625822995
+      ]
+    },
+    {
+      "T_K": 1800.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "SiO2": 1.0,
+        "MgO": 0.55,
+        "FeO": 0.15,
+        "CaO": 0.25,
+        "Al2O3": 0.12
+      },
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "solid_mol": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "phase_mol": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "g_J": -2059323.5636745617,
+      "solid_insertion_J_mol": [
+        6227.60259478353,
+        27458.400131709408,
+        33783.430508753285,
+        6549.013407797087,
+        8205.215925228316
+      ]
+    },
+    {
+      "T_K": 2000.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "SiO2": 1.0,
+        "MgO": 0.55,
+        "FeO": 0.15,
+        "CaO": 0.25,
+        "Al2O3": 0.12
+      },
+      "liquid_mol": [
+        0.4,
+        0.275,
+        0.075,
+        0.25,
+        0.12
+      ],
+      "solid_mol": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "phase_mol": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "g_J": -2131874.846638589,
+      "solid_insertion_J_mol": [
+        17582.936564310454,
+        45366.408884592354,
+        51539.09666874632,
+        13221.303092750954,
+        10779.57028303342
+      ]
+    }
+  ],
+  "full_equilibria": [
+    {
+      "T_K": 1400.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "SiO2": 1.0,
+        "MgO": 0.55,
+        "FeO": 0.15,
+        "CaO": 0.25,
+        "Al2O3": 0.12
+      },
+      "phases": [
+        {
+          "name": "olivine1",
+          "mass_g": 10.925807092097532,
+          "oxide_wt_percent": [
+            38.495105803404776,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            22.171688591088827,
+            0.0,
+            38.88443621824049,
+            0.0,
+            0.0,
+            0.4487693872658964,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "orthopyroxene1",
+          "mass_g": 43.20847673485487,
+          "oxide_wt_percent": [
+            55.723620828487654,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            13.473580947878395,
+            0.0,
+            27.312040598195406,
+            0.0,
+            0.0,
+            3.4907576254385497,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "clinopyroxene1",
+          "mass_g": 31.76448617304751,
+          "oxide_wt_percent": [
+            54.71783539591266,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            7.973668997706868,
+            0.0,
+            19.260077965470227,
+            0.0,
+            0.0,
+            18.048417640910245,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "plagioclase1",
+          "mass_g": 33.38511360000013,
+          "oxide_wt_percent": [
+            43.1935987182015,
+            0.0,
+            36.649129748655255,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            20.157271533143227,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "solver_message": "Successful run.  No errors."
+    },
+    {
+      "T_K": 1425.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "SiO2": 1.0,
+        "MgO": 0.55,
+        "FeO": 0.15,
+        "CaO": 0.25,
+        "Al2O3": 0.12
+      },
+      "phases": [
+        {
+          "name": "olivine1",
+          "mass_g": 10.923053393624205,
+          "oxide_wt_percent": [
+            38.50481040799288,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            22.090647625668982,
+            0.0,
+            38.91007598004109,
+            0.0,
+            0.0,
+            0.4944659862970486,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "orthopyroxene1",
+          "mass_g": 41.542497991285074,
+          "oxide_wt_percent": [
+            55.72983974937163,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            13.321409159518016,
+            0.0,
+            27.257437580012283,
+            0.0,
+            0.0,
+            3.6913135110980693,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "clinopyroxene1",
+          "mass_g": 33.43321861509065,
+          "oxide_wt_percent": [
+            54.755719610343846,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            8.464457654908026,
+            0.0,
+            19.722394191122685,
+            0.0,
+            0.0,
+            17.05742854362543,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "plagioclase1",
+          "mass_g": 33.38511360000013,
+          "oxide_wt_percent": [
+            43.1935987182015,
+            0.0,
+            36.649129748655255,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            20.157271533143227,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "solver_message": "Successful run.  No errors."
+    },
+    {
+      "T_K": 1450.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "SiO2": 1.0,
+        "MgO": 0.55,
+        "FeO": 0.15,
+        "CaO": 0.25,
+        "Al2O3": 0.12
+      },
+      "phases": [
+        {
+          "name": "olivine1",
+          "mass_g": 10.859077459021272,
+          "oxide_wt_percent": [
+            38.7316603629571,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            20.85784081689801,
+            0.0,
+            39.88035531684043,
+            0.0,
+            0.0,
+            0.5301435033044526,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "orthopyroxene1",
+          "mass_g": 11.830123579286253,
+          "oxide_wt_percent": [
+            55.883760769355405,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            12.629188600890968,
+            0.0,
+            27.62962212622119,
+            0.0,
+            0.0,
+            3.8574285035324394,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "clinopyroxene1",
+          "mass_g": 44.945918539413505,
+          "oxide_wt_percent": [
+            55.226176457276175,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            12.130972541747916,
+            0.0,
+            24.10206556291943,
+            0.0,
+            0.0,
+            8.540785438056473,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "clinopyroxene2",
+          "mass_g": 18.2636504222788,
+          "oxide_wt_percent": [
+            54.89119932510865,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            8.572028143425062,
+            0.0,
+            20.45192523181102,
+            0.0,
+            0.0,
+            16.084847299655273,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "plagioclase1",
+          "mass_g": 33.38511360000012,
+          "oxide_wt_percent": [
+            43.19359871820151,
+            0.0,
+            36.64912974865526,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            20.15727153314323,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "solver_message": "Successful run.  No errors."
+    },
+    {
+      "T_K": 1475.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "SiO2": 1.0,
+        "MgO": 0.55,
+        "FeO": 0.15,
+        "CaO": 0.25,
+        "Al2O3": 0.12
+      },
+      "phases": [
+        {
+          "name": "liquid1",
+          "mass_g": 85.84005713864256,
+          "oxide_wt_percent": [
+            53.555849806165604,
+            0.0,
+            14.253664323916228,
+            0.0,
+            0.0,
+            7.357376445062,
+            0.0,
+            9.767982438212043,
+            0.0,
+            0.0,
+            15.065126986644128,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "olivine1",
+          "mass_g": 28.412512548922784,
+          "oxide_wt_percent": [
+            39.88123559585579,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            14.726369097897308,
+            0.0,
+            44.86225723587478,
+            0.0,
+            0.0,
+            0.5301380703721217,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "clinopyroxene1",
+          "mass_g": 5.031313912434606,
+          "oxide_wt_percent": [
+            55.267210620501636,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            5.510536463005761,
+            0.0,
+            20.592708880927518,
+            0.0,
+            0.0,
+            18.629544035565086,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "solver_message": "Successful run.  No errors."
+    },
+    {
+      "T_K": 1500.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "SiO2": 1.0,
+        "MgO": 0.55,
+        "FeO": 0.15,
+        "CaO": 0.25,
+        "Al2O3": 0.12
+      },
+      "phases": [
+        {
+          "name": "liquid1",
+          "mass_g": 92.50652591267537,
+          "oxide_wt_percent": [
+            53.35727692542686,
+            0.0,
+            13.226476164016765,
+            0.0,
+            0.0,
+            7.653154576275641,
+            0.0,
+            10.760426861010277,
+            0.0,
+            0.0,
+            15.002665473270472,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "olivine1",
+          "mass_g": 26.77735768732464,
+          "oxide_wt_percent": [
+            40.053753323685875,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            13.80753329709838,
+            0.0,
+            45.61063522442458,
+            0.0,
+            0.0,
+            0.5280781547911557,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "solver_message": "Successful run.  No errors."
+    },
+    {
+      "T_K": 1600.0,
+      "P_Pa": 100000.0,
+      "initial_oxide_moles": {
+        "SiO2": 1.0,
+        "MgO": 0.55,
+        "FeO": 0.15,
+        "CaO": 0.25,
+        "Al2O3": 0.12
+      },
+      "phases": [
+        {
+          "name": "liquid1",
+          "mass_g": 105.69710865999103,
+          "oxide_wt_percent": [
+            51.62672069291578,
+            0.0,
+            11.575864046914445,
+            0.0,
+            0.0,
+            8.788821587823087,
+            0.0,
+            14.800613832181634,
+            0.0,
+            0.0,
+            13.207979840165047,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "olivine1",
+          "mass_g": 13.586774940008949,
+          "oxide_wt_percent": [
+            40.600870743613555,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            10.947628874059394,
+            0.0,
+            48.01433117320056,
+            0.0,
+            0.0,
+            0.43716920912649493,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "solver_message": "Successful run.  No errors."
+    }
+  ],
+  "unavailable_full_equilibria": [
+    {
+      "T_K": 1800.0,
+      "P_Pa": 100000.0,
+      "full_equilibrium": true,
+      "returncode": 0,
+      "reason": "Iteration exceeded; convergence was acceptable",
+      "worker_log_sha256": "7965c764559a8139b7eba8dea8340396808fd80f76e1e55f429e430179f7a1b5"
+    },
+    {
+      "T_K": 2000.0,
+      "P_Pa": 100000.0,
+      "full_equilibrium": true,
+      "returncode": 0,
+      "reason": "Iteration exceeded; convergence was acceptable",
+      "worker_log_sha256": "f075245b1b7d6108d205e1ebd23946b2e7029ae51eddf5509e990c0c33513b08"
+    }
+  ],
+  "python_version": "3.12.7",
+  "scipy_version": "1.14.1",
+  "tinynumpy_version": "1.2.1"
+}

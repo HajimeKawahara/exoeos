@@ -14,12 +14,15 @@ original temperature-pressure state interface.
 ## Installation
 
 ```bash
-python -m pip install "exoeos>=0.2.0"
+python -m pip install "exoeos>=0.3.0"
 ```
 
-Version `0.2.0` includes the residual Helmholtz, TP inversion, excess Gibbs,
-and total Helmholtz thermodynamics APIs documented below, alongside the
-caloric ideal-gas API from `0.1.0`.
+Version `0.3.0` adds native JAX Gibbs models for dry, hydrous and
+carbonate-bearing silicate liquids, dry and hydrous minerals, and H2O/CO2
+fluid connections. These phase-property models and their derivatives run
+without an external MELTS runtime; phase-equilibrium solvers remain separate.
+The fluid, solution and caloric thermodynamics APIs from earlier releases
+remain available.
 
 To install from a repository checkout:
 
@@ -37,8 +40,73 @@ outputs change with temperature, pressure or composition, with reproducible
 code and explicit source conditions.
 The [Helmholtz derivative guide](documents/thermodynamic_derivatives.rst)
 covers heat capacities, sound speed and atmospheric/RCE use.
+The [native JAX magma example](documents/native_magma.rst) evaluates
+MgO--SiO2 liquid and solid standards, derivatives, and closed cooling with
+forsterite, enstatite and three SiO2 polymorphs without an external MELTS
+runtime. The native JAX Gibbs model follows crystallization order, phase
+appearance/disappearance and residual liquid composition, with comparison
+plots against independent restricted equilibria using pinned MELTS properties.
+The Fe(II) extension adds a three-component liquid and a forsterite--fayalite
+olivine solution. Its [closed cooling example](examples/magma_olivine.py)
+computes crystal amounts and liquid/crystal Fe/Mg partitioning from the same G.
+The CaO/Al2O3 extension adds four- and five-component liquids, Di--Hd
+clinopyroxene and pure anorthite. Its [dry cooling example](examples/magma_dry.py)
+allows these minerals to compete with olivine, Mg orthopyroxene and silica.
+Comparisons show both agreement with the same restricted MELTS model and
+the different crystallization obtained with full MELTS mineral compositions.
+The [Ca--Mg--Fe pyroxene extension](documents/native_magma.rst#ca-mg-fe-clinopyroxene-and-orthopyroxene)
+adds both pyroxene structures with relaxed Mg/Fe site order and implicit JAX
+derivatives. Its [cooling example](examples/magma_pyroxene.py) includes variable
+Ca and Fe in both pyroxenes and compares with independent MELTS property roots.
+The [shared magma property contract](documents/native_magma.rst#shared-property-contract)
+defines component amount bases, the `element_matrix` atom ledger, standard-state
+alignment, reduced units and derivative domains for these functions.
+The [dry eleven-component liquid](documents/native_magma.rst#dry-eleven-component-liquid)
+adds TiO2, MgCr2O4, Na2SiO3, KAlSiO4 and Ca3(PO4)2, all 55 interactions,
+and atom-conserving oxide conversion. Its [comparison example](examples/magma_dry11.py)
+checks supplied BSE, basalt-like, rhyolite-like and alkali-rich compositions
+against pinned MELTS, plus the existing two- through six-component faces.
+The [ferric liquid extension](documents/native_magma.rst#fe-iii-liquid-component)
+appends Fe2O3 to the five-component liquid, including its standard, pressure
+and mixing terms. Independent MELTS comparisons cover G, chemical potentials
+and thermodynamic derivatives; a zero-ferric check recovers the existing model.
+This supplies phase properties without a redox solve.
+The [dry solid extension](documents/native_dry_solids.rst) adds Na/Ca/K
+feldspars, ordered spinel and Fe/Ti oxides, rutile/corundum, and
+Al/Na/Ti/Fe(III)-bearing pyroxenes in small phase modules under
+`exoeos.magma_solids`. Standards, mixing, site relaxation and implicit
+first/second derivatives are checked against independent MELTS properties.
+Its [comparison example](examples/magma_dry_solids.py) plots the phase
+characteristics and numerical errors; assemblage selection remains separate.
 The [Japanese explanation](https://github.com/HajimeKawahara/doc_ExoEOS) is
 maintained separately; current English documentation lives in `documents/`.
+
+The [hydrous liquid extension](documents/native_hydrous_liquid.rst) appends
+H2O to the dry eleven-component basis, with the MELTS Haar/Robie standard,
+all eleven water interactions and the extra water mixing entropy. Its
+[comparison example](examples/magma_hydrous.py) reproduces supplied wet
+BSE, basalt-like and rhyolite-like properties without an external runtime.
+This is the MELTS water option; empirical solubility models remain separate.
+
+The [hydrous mineral extension](documents/native_hydrous_solids.rst) adds
+biotite, hornblende and ordered clino/orthoamphiboles, with a phase/reference
+table and independent MELTS comparisons. Its [example](examples/magma_hydrous_solids.py)
+also verifies water-induced changes in restricted liquid-plus-forsterite
+crystallization; full hydrous phase selection remains separate.
+
+The [H2O fluid connection](documents/native_magma_fluid.rst) combines an
+explicit Haar ideal-gas standard with a selected existing EOS. It provides
+extensive G and JAX derivatives on the liquid's reference convention.
+The [comparison example](examples/magma_fluid.py) plots liquid/fluid water
+chemical potentials; saturation and fluid amounts remain ExoGibbs tasks.
+
+The separate [carbonate liquid and mixed fluid](documents/native_carbonate_liquid.rst)
+extension implements the mode-4 liquid in `exoeos.magma_carbonate`: thirteen
+independent amounts, internal CaCO3 formation, and implicit reaction relaxation
+in first/second derivatives. `magma_fluid.mixed_fluid_gibbs` adds H2O--CO2
+fluid G with an explicit EOS. The [example](examples/magma_carbonate.py)
+compares pinned mode-4 liquids and independent ZD09 fluid references.
+Mode 4 changes water thermodynamics even at zero carbon; S/N remains separate.
 
 Install the documentation dependencies and build the committed notebook-based
 tutorials with:
