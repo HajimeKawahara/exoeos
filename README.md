@@ -85,6 +85,12 @@ all eleven water interactions and the extra water mixing entropy. Its
 BSE, basalt-like and rhyolite-like properties without an external runtime.
 This is the MELTS water option; empirical solubility models remain separate.
 
+The [hydrous mineral extension](documents/native_hydrous_solids.rst) adds
+biotite, hornblende and ordered clino/orthoamphiboles, with a phase/reference
+table and independent MELTS comparisons. Its [example](examples/magma_hydrous_solids.py)
+also verifies water-induced changes in restricted liquid-plus-forsterite
+crystallization; full hydrous phase selection remains separate.
+
 The [H2O fluid connection](documents/native_magma_fluid.rst) combines an
 explicit Haar ideal-gas standard with a selected existing EOS. It provides
 extensive G and JAX derivatives on the liquid's reference convention.

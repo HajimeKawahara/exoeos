@@ -1,0 +1,76 @@
+{
+  "source_revision": "705a0fb315e5054d18275a580562f6121c8e458c",
+  "source_url": "https://github.com/magmasource/MAGMA",
+  "source_sha256": {
+    "sources/amphibole.c": "82f786630e0eda70c36313b9c4c1a7e84b78d1e491834e9f422f3da0a7a87fe0",
+    "sources/biotite.c": "d8f1a7499c361cf656ec5520282c8f690a9b1ed7292c2bdb4a9af62adbce3981",
+    "sources/hornblende.c": "ef4212a2bee7f86dd7ed0f8a7b2efdf1cfa44c680560b66539cca937bc686f93",
+    "sources/gibbs.c": "2eceff9f315210ebdcf9dfc9bacd77f625cf04dbdc5084104c093caba34d4166",
+    "includes/sol_struct_data.h": "ebc47d7b66e7cd9bebf36d2a058270360f70fe65872f4f799f9c400f058e0033"
+  },
+  "transcription_sha256": "abf8e929122bba24d81d3505310dea95f6f6f65f8655e4b804171341b057d808",
+  "phases": {
+    "biotite": {
+      "source_file": "biotite.c",
+      "source_sha256": "d8f1a7499c361cf656ec5520282c8f690a9b1ed7292c2bdb4a9af62adbce3981",
+      "endmember_names": [
+        "annite",
+        "phlogopite"
+      ],
+      "native_endmember_indices": [
+        0,
+        1
+      ]
+    },
+    "hornblende": {
+      "source_file": "hornblende.c",
+      "source_sha256": "ef4212a2bee7f86dd7ed0f8a7b2efdf1cfa44c680560b66539cca937bc686f93",
+      "endmember_names": [
+        "pargasite",
+        "ferropargasite",
+        "magnesiohastingsite"
+      ],
+      "native_endmember_indices": [
+        0,
+        1,
+        2
+      ]
+    },
+    "clinoamphibole": {
+      "source_file": "amphibole.c",
+      "source_sha256": "82f786630e0eda70c36313b9c4c1a7e84b78d1e491834e9f422f3da0a7a87fe0",
+      "endmember_names": [
+        "cummingtonite",
+        "grunerite",
+        "tremolite"
+      ],
+      "native_endmember_indices": [
+        0,
+        1,
+        2
+      ]
+    },
+    "orthoamphibole": {
+      "source_file": "amphibole.c",
+      "source_sha256": "82f786630e0eda70c36313b9c4c1a7e84b78d1e491834e9f422f3da0a7a87fe0",
+      "endmember_names": [
+        "cummingtonite",
+        "grunerite",
+        "tremolite"
+      ],
+      "native_endmember_indices": [
+        0,
+        1,
+        2
+      ]
+    }
+  },
+  "standard_state": "Berman Cp/EOS rows in MELTS sol_struct_data.h; no added runtime alignment offsets. Both amphiboles share monoclinic standards; ortho offsets are in its site polynomial.",
+  "hornblende_reference": "Native conHrn oxide projection changes the requested component fractions. Retain its result as a diagnostic; compare mu from direct actHrn SECOND at requested fractions plus native standards.",
+  "references": {
+    "Berman_1988": "https://doi.org/10.1093/petrology/29.2.445",
+    "Ghiorso_Evans_2002_background": "https://doi.org/10.2138/am-2002-0109",
+    "MELTS_limitations": "https://melts.ofm-research.org/"
+  },
+  "literature_scope": "The exact numerical authority is the pinned source and runtime, not a claim that its older amphibole implementation reproduces every coefficient of the 2002 publication. No empirical water correction is added."
+}

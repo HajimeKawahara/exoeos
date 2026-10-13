@@ -1,4 +1,4 @@
-"""Small shared polynomial and implicit-order operations for dry solids."""
+"""Small shared polynomial and implicit-order operations for mineral solids."""
 
 import jax
 import jax.numpy as jnp
