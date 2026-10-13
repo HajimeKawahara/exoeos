@@ -91,8 +91,8 @@ def test_atom_ledger_tracks_both_iron_valences_and_oxygen():
     n = jnp.array([.4, .275, .075, .25, .12, .025])
     # Oxides: SiO2=1, MgO=.55, FeO=.15, CaO=.25, Al2O3=.12, Fe2O3=.025 mol.
     np.testing.assert_allclose(element_matrix(FERRIC_COMPONENTS) @ n,
-                               [3.385, .55, 1., .2, .24, .25, 0., 0., 0., 0., 0., 0.], rtol=0, atol=1e-15)
-    np.testing.assert_array_equal(element_matrix(("Fe2O3",))[:, 0], [3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0])
+                               [3.385, .55, 1., .2, .24, .25, 0., 0., 0., 0., 0., 0., 0.], rtol=0, atol=1e-15)
+    np.testing.assert_array_equal(element_matrix(("Fe2O3",))[:, 0], [3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
 
 def test_extensivity_hessian_jit_vmap_and_endpoints():

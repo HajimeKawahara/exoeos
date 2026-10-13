@@ -27,6 +27,12 @@ Choose an entry point
      - ``exoeos.magma_fluid.water_fluid_gibbs(T, P, n, eos=...)``
      - Scalar K, Pa, mol; explicitly select a pure-water EOS, enable x64
        and read :doc:`native_magma_fluid` for standards and boundaries.
+   * - Carbonate liquid and H2O--CO2 fluid G
+     - ``exoeos.magma_carbonate.liquid_gibbs`` and
+       ``exoeos.magma_fluid.mixed_fluid_gibbs``
+     - Select mode-4 liquid, thirteen component amounts and an explicit
+       binary fluid EOS. Read :doc:`native_carbonate_liquid` for internal
+       reaction relaxation and independent comparisons.
    * - Excess Gibbs and activities
      - ``solution_state(model, T, P, x)``
      - Match the model's component order and symmetric standards.

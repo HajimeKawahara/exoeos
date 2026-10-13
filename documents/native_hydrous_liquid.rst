@@ -40,11 +40,13 @@ API and conserved inventory
    * - ``liquid_moles_from_oxides`` / ``oxide_moles_from_liquid``
      - Accept shape (11,) or (12,); H2O passes through unchanged
    * - ``element_matrix(HYDROUS_COMPONENTS)``
-     - Twelve rows in ``ELEMENTS`` order; the new final row is H
+     - Thirteen rows in current ``ELEMENTS`` order; H precedes C, which
+       is zero for this basis.
 
 H2O contributes one O and two H atoms per formula mol. All older dry
 columns gain a zero H entry. This changes the number of element rows
-from 11 to 12; consumers must use ``len(ELEMENTS)``. The component orders,
+from 11 to 12 at that stage; the later :doc:`native_carbonate_liquid`
+extension appends a zero C row here. Consumers must use ``len(ELEMENTS)``. The component orders,
 defaults and energies of the existing dry APIs are retained. Both oxide
 transforms preserve signed residuals: callers must validate nonnegative
 oxide and component amounts, including the existing dry-host constraints.

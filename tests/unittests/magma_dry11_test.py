@@ -114,8 +114,8 @@ def test_basis_transform_conserves_atoms_mass_and_composition_derivatives():
     np.testing.assert_allclose(n, expected, rtol=0, atol=3e-16)
     np.testing.assert_allclose(oxide_moles_from_liquid(n), oxide, rtol=0, atol=3e-16)
     a, ao = element_matrix(DRY11_COMPONENTS), element_matrix(DRY11_OXIDES)
-    # O, Mg, Si, Fe, Al, Ca, Na, K, Ti, Cr, P, H, from the oxide formulas.
-    atoms = [7.57, 1., 2., .6, .6, .5, .16, .08, .07, .04, .06, 0.]
+    # O, Mg, Si, Fe, Al, Ca, Na, K, Ti, Cr, P, H, C, from the oxide formulas.
+    atoms = [7.57, 1., 2., .6, .6, .5, .16, .08, .07, .04, .06, 0., 0.]
     np.testing.assert_allclose(a@n, atoms, rtol=0, atol=2e-15)
     np.testing.assert_allclose(ao@oxide, atoms, rtol=0, atol=2e-15)
     b = jax.jacfwd(liquid_moles_from_oxides)(oxide)
@@ -123,7 +123,7 @@ def test_basis_transform_conserves_atoms_mass_and_composition_derivatives():
     np.testing.assert_array_equal(a@b, ao)
     np.testing.assert_array_equal(c@b, np.eye(11))
     atomic_g = jnp.array([15.9994, 24.305, 28.0855, 55.845, 26.9815386, 40.078,
-                          22.98976928, 39.0983, 47.867, 51.9961, 30.973762, 1.00794])
+                          22.98976928, 39.0983, 47.867, 51.9961, 30.973762, 1.00794, 12.0107])
     np.testing.assert_allclose(atomic_g@a@n, atomic_g@ao@oxide, rtol=2e-16)
     def fun(m):
         return liquid_gibbs(1700., 5e7, liquid_moles_from_oxides(m))

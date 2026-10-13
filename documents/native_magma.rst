@@ -84,7 +84,7 @@ liquid standard flags to match the liquid component tuple.
 Element inventories and coordinate changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``ELEMENTS = ("O", "Mg", "Si", "Fe", "Al", "Ca", "Na", "K", "Ti", "Cr", "P", "H")`` fixes the row order of
+``ELEMENTS = ("O", "Mg", "Si", "Fe", "Al", "Ca", "Na", "K", "Ti", "Cr", "P", "H", "C")`` fixes the row order of
 ``element_matrix(components)``. Its columns give atom counts (including
 half-integers for Ti-bearing pyroxenes) for
 the supplied ordered formula strings. Thus :math:`b=A n` is the elemental
@@ -93,7 +93,8 @@ this common row order. Repeated formulas are allowed for separate phases.
 The lookup describes supported component and oxide formulas; it does not
 choose a phase, perform an oxide conversion, or check site feasibility.
 The dry11 extension appended five element rows; the hydrous extension
-appends H. Existing dry columns have zero H. Consumers must use
+appends H. The separate :doc:`native_carbonate_liquid` extension appends C.
+Existing dry columns have zero H/C. Consumers must use
 ``len(ELEMENTS)`` instead of a fixed row count.
 
 For example, one mol Di corresponds to ``[1, 1, 0]`` in the new pyroxene
@@ -201,7 +202,7 @@ The oxide mapping retains the existing residual silica condition:
    n_Q=n_{\mathrm{SiO_2}}-n_F-n_A-n_C\ge0.
 
 The Fe2O3 column of ``element_matrix(FERRIC_COMPONENTS)`` is
-``[3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]`` in ``ELEMENTS`` order. It contributes three O atoms
+``[3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]`` in ``ELEMENTS`` order. It contributes three O atoms
 and two Fe atoms per formula mol; the Fe3+/total-Fe fraction is
 :math:`n_B/(n_A+n_B)` when iron is present. Valence is encoded by component
 stoichiometry, while the ledger conserves total elemental Fe and O.
