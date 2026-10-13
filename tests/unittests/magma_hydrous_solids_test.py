@@ -25,7 +25,8 @@ def properties(fun, t, p, n):
                       -t*jax.grad(jax.grad(fun))(t, p, n), jax.grad(fun, 1)(t, p, n)])
 
 
-@pytest.fixture(params=tuple(MODELS), scope='module')
+@pytest.fixture(params=[pytest.param(name, marks=pytest.mark.xdist_group(f'{__name__}:{name}'))
+                        for name in MODELS], scope='module')
 def phase(request):
     name = request.param
     module = MODELS[name]

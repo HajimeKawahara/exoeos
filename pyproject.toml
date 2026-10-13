@@ -57,6 +57,7 @@ reference = [
 ]
 test = [
   "pytest>=7",
+  "pytest-xdist>=3.6",
 ]
 
 [project.urls]
@@ -75,3 +76,6 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests/unittests"]
+markers = [
+  "xdist_group: Keep tests that share JAX compilations in the same worker.",
+]

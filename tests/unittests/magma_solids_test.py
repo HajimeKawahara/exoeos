@@ -19,7 +19,8 @@ MODELS = {'plagioclase': feldspar, 'alkali-feldspar': feldspar, 'spinel': spinel
           'rhm-oxide': oxides, 'clinopyroxene': pyroxene, 'orthopyroxene': pyroxene}
 
 
-@pytest.fixture(params=tuple(MODELS), scope='module')
+@pytest.fixture(params=[pytest.param(name, marks=pytest.mark.xdist_group(f'{__name__}:{name}'))
+                        for name in MODELS], scope='module')
 def phase(request):
     name = request.param
     module = MODELS[name]
