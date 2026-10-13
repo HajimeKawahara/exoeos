@@ -17,8 +17,132 @@ Saturation, fluid amounts, phase selection, redox and carbonate solids are
 separate extensions/consumer responsibilities. S/N chemistry remains a
 separate extension. No empirical solubility offset is added.
 
+What mode 4 selects
+--------------------
+
+``mode`` is the integer thermodynamic-model selector in alphaMELTS
+(``MELTSdynamic(4)`` in the reference generator), as documented by its
+versioned interface [AM232]_. The model version **1.2.0** and the
+alphaMELTS distribution version **2.3.2** identify different things.
+
+.. list-table:: alphaMELTS model selection and the role of water/carbon
+   :header-rows: 1
+   :widths: 10 28 62
+
+   * - Mode
+     - Model
+     - Relevant distinction
+   * - 1
+     - rhyolite-MELTS 1.0.2
+     - Original rhyolite-MELTS calibration; pure-H2O fluid. The existing
+       native hydrous liquid uses this water model.
+   * - 2
+     - pMELTS
+     - Separate liquid calibration for mantle melting; not used here.
+   * - 3
+     - rhyolite-MELTS 1.1.0
+     - Adds CO2 and mixed-fluid terms while retaining the older liquid
+       H2O standard and water/anhydrous interactions.
+   * - **4**
+     - **rhyolite-MELTS 1.2.0**
+     - Uses the revised H2O--CO2 model, including recalibrated liquid
+       H2O properties and water/anhydrous interactions [GG15]_.
+
+Rhyolite-MELTS builds on MELTS with revised quartz and sanidine free
+energies [RM12]_. The upstream version guide [VERS]_ associates 1.1.x
+with the quartz--two-feldspar--fluid ternary minimum and 1.2.x with other
+bulk compositions. These are descriptions of the upstream equilibrium
+models; this provider evaluates the supplied liquid and its internal
+reaction only. Its zero-carbon face retains the revised mode-4 water
+model, which explains the difference from mode 1.
+
+The pinned upstream liquid has 19 independent components and 20 internal
+species [MAGMA]_. ExoEOS retains the thirteen components below; the
+Mn-, Ni-, Co-, S-, Cl- and F-bearing coordinates are held at zero. The
+additional species is dissolved CaCO3. This restriction also leaves
+the choice of fluid EOS explicit: upstream mode 4 uses Duan--Zhang
+(2006) [DZ06]_, whereas the example here uses Zhang--Duan (2009) [ZD09]_.
+
 Inputs, independent amounts and species
 ----------------------------------------
+
+The independent inputs :math:`n_i` specify the conserved liquid inventory
+before internal redistribution. For reaction progress :math:`\xi` in mol,
+the species amounts :math:`m_a` used in the mixing energy are as follows.
+Indices are **zero-based**, matching ``COMPONENTS`` and ``SPECIES``.
+
+.. list-table:: Thirteen independent components and fourteen internal species
+   :header-rows: 1
+   :widths: 10 30 30 30
+
+   * - Index
+     - Independent component
+     - Internal liquid species
+     - Amount after reaction (mol)
+   * - 0
+     - SiO2
+     - SiO2
+     - :math:`n_0+\xi`
+   * - 1
+     - Mg2SiO4
+     - Mg2SiO4
+     - :math:`n_1`
+   * - 2
+     - Fe2SiO4
+     - Fe2SiO4
+     - :math:`n_2`
+   * - 3
+     - CaSiO3
+     - CaSiO3
+     - :math:`n_3-\xi`
+   * - 4
+     - Al2O3
+     - Al2O3
+     - :math:`n_4`
+   * - 5
+     - Fe2O3
+     - Fe2O3
+     - :math:`n_5`
+   * - 6
+     - TiO2
+     - TiO2
+     - :math:`n_6`
+   * - 7
+     - MgCr2O4
+     - MgCr2O4
+     - :math:`n_7`
+   * - 8
+     - Na2SiO3
+     - Na2SiO3
+     - :math:`n_8`
+   * - 9
+     - KAlSiO4
+     - KAlSiO4
+     - :math:`n_9`
+   * - 10
+     - Ca3(PO4)2
+     - Ca3(PO4)2
+     - :math:`n_{10}`
+   * - 11
+     - H2O
+     - H2O
+     - :math:`n_{11}`
+   * - 12
+     - CO2
+     - CO2
+     - :math:`n_{12}-\xi`
+   * - 13
+     - None (no independent input)
+     - CaCO3
+     - :math:`\xi`
+
+Thus input ``n[12]`` is the **total carbon amount in the liquid**, while
+``species[12]`` is only its molecular-CO2 part; ``species[13]`` contains the
+carbonate part. These are thermodynamic liquid-basis species: Mg2SiO4 and
+CaCO3 here do not introduce olivine or calcite solid phases. H2O remains
+one water-equivalent coordinate; this extension introduces no separate OH
+amount. The fourteen species have one internal reaction degree of freedom,
+so they are not fourteen independent user inputs.
 
 .. list-table:: Public contracts
    :header-rows: 1
@@ -311,15 +435,72 @@ dependencies.
    python -m pytest tests/unittests/magma_carbonate_test.py \
      tests/unittests/magma_mixed_fluid_test.py
 
-Sources: `liquid_CO2_H2O.c
-<https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/liquid_CO2_H2O.c>`_,
-`param_struct_data_CO2_H2O.h
-<https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/param_struct_data_CO2_H2O.h>`_,
-`gibbs.c
-<https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/gibbs.c>`_,
-`fluidPhase.c
-<https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/fluidPhase.c>`_,
-and `Zhang and Duan (2009) <https://doi.org/10.1016/j.gca.2009.01.021>`_.
+References and their roles
+---------------------------
+
+The papers identify the thermodynamic models; the pinned source files
+specify the exact coefficients and conventions reproduced by this port.
+The binary reference is recorded separately from the source revision.
+
+.. [RM12] Gualda, G. A. R., Ghiorso, M. S., Lemons, R. V. and Carley, T. L.
+   (2012). Rhyolite-MELTS: a Modified Calibration of MELTS Optimized for
+   Silica-rich, Fluid-bearing Magmatic Systems. *Journal of Petrology*,
+   **53**, 875--890. `doi:10.1093/petrology/egr080
+   <https://doi.org/10.1093/petrology/egr080>`_. Background of rhyolite-MELTS
+   and its quartz/feldspar calibration.
+
+.. [GG15] Ghiorso, M. S. and Gualda, G. A. R. (2015). An H2O--CO2 mixed
+   fluid saturation model compatible with rhyolite-MELTS.
+   *Contributions to Mineralogy and Petrology*, **169**, article 53.
+   `doi:10.1007/s00410-015-1141-8
+   <https://doi.org/10.1007/s00410-015-1141-8>`_. Scientific basis of the
+   dissolved-water/carbon model; saturation calculations from the paper
+   are outside this supplied-state provider.
+
+.. [DZ06] Duan, Z. and Zhang, Z. (2006). Equation of state of the H2O,
+   CO2, and H2O--CO2 systems up to 10 GPa and 2573.15 K: Molecular dynamics
+   simulations with ab initio potential surface. *Geochimica et
+   Cosmochimica Acta*, **70**, 2311--2324.
+   `doi:10.1016/j.gca.2006.02.009
+   <https://doi.org/10.1016/j.gca.2006.02.009>`_. Upstream mode-4 fluid EOS;
+   this liquid port uses its pure-CO2 real 1-bar reference.
+
+.. [ZD09] Zhang, C. and Duan, Z. (2009). A model for C--O--H fluid in the
+   Earth's mantle. *Geochimica et Cosmochimica Acta*, **73**, 2089--2102.
+   `doi:10.1016/j.gca.2009.01.021
+   <https://doi.org/10.1016/j.gca.2009.01.021>`_. The example's selected
+   H2O--CO2 EOS and binary mixing factors; its broader reacting C--O--H
+   equilibrium model is not invoked here.
+
+.. [VERS] OFM Research. `Understanding rhyolite-MELTS versions
+   <https://melts.ofm-research.org/Support/Understanding-rhyolite-MELTS-versions.html>`_.
+   Official explanation of the 1.0.x, 1.1.x and 1.2.x model differences.
+
+.. [AM232] alphaMELTS `v2.3.2 release
+   <https://github.com/magmasource/alphaMELTS/releases/tag/v2.3.2>`_ and
+   `MELTSdynamic model selector
+   <https://github.com/magmasource/alphaMELTS/blob/v2.3.2/bases/alphamelts/py/meltsdynamic.py>`_.
+   Mode numbering and the distribution used for the fixed binary controls;
+   binary hashes are saved in ``carbonate_melts_v1.json``.
+
+.. [MAGMA] MAGMA revision ``705a0fb315e5054d18275a580562f6121c8e458c``:
+   `liquid_CO2_H2O.c
+   <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/liquid_CO2_H2O.c>`_
+   (internal reaction), `param_struct_data_CO2_H2O.h
+   <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/param_struct_data_CO2_H2O.h>`_
+   (interactions), `liq_struct_data.h
+   <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/liq_struct_data.h>`_
+   (component/species and standard tables), `gibbs.c
+   <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/gibbs.c>`_
+   (mode-dependent standards), `water.c
+   <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/water.c>`_
+   and `fluidPhase.c
+   <https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/fluidPhase.c>`_
+   (water/CO2 reference kernels). All six hashes are checked by the
+   independent reference generator.
+
+API reference
+---------------
 
 .. automodule:: exoeos.magma_carbonate
    :members: liquid_gibbs, liquid_standard_gibbs, liquid_species_moles, liquid_moles_from_oxides, oxide_moles_from_liquid
