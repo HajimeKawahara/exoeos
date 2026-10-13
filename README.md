@@ -14,12 +14,15 @@ original temperature-pressure state interface.
 ## Installation
 
 ```bash
-python -m pip install "exoeos>=0.2.0"
+python -m pip install "exoeos>=0.3.0"
 ```
 
-Version `0.2.0` includes the residual Helmholtz, TP inversion, excess Gibbs,
-and total Helmholtz thermodynamics APIs documented below, alongside the
-caloric ideal-gas API from `0.1.0`.
+Version `0.3.0` adds native JAX Gibbs models for dry, hydrous and
+carbonate-bearing silicate liquids, dry and hydrous minerals, and H2O/CO2
+fluid connections. These phase-property models and their derivatives run
+without an external MELTS runtime; phase-equilibrium solvers remain separate.
+The fluid, solution and caloric thermodynamics APIs from earlier releases
+remain available.
 
 To install from a repository checkout:
 
