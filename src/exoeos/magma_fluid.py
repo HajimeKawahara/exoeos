@@ -1,7 +1,7 @@
-"""Pure H2O fluid Gibbs energy on the native magma reference convention.
+"""Pure H2O and mixed H2O--CO2 Gibbs energies on the magma reference convention.
 
-The ideal-gas standard is the dilute limit of the pinned MELTS Haar model,
-including its Berman reference shift. An explicitly selected existing EOS
+Water uses the dilute limit of the pinned MELTS Haar model, including its
+Berman reference shift; CO2 uses the pinned idealGasCO2 caloric standard. An explicitly selected existing EOS
 supplies the residual contribution. This is a hybrid property model, not
 the MELTS fluid EOS or a saturation/phase-amount solver. Enable JAX x64.
 """
@@ -11,8 +11,53 @@ import jax.numpy as jnp
 
 from exoeos._arrays import scalar_array
 from exoeos._magma_water import _haar_ideal
+from exoeos._magma_carbon import _co2_ideal_gibbs
 from exoeos.constants import MOLAR_GAS_CONSTANT
 from exoeos.helmholtz import state_tp
+
+
+FLUID_COMPONENTS = ("H2O", "CO2")
+
+
+def co2_gas_standard_gibbs(T):
+    """Ideal CO2 gas G at 1 bar, J/mol; scalar K, T >= 700 K, x64.
+
+    Analytic H-T*S from idealGasCO2 in the pinned MAGMA fluidPhase.c.
+    Retains its 8.31451 Cp constant and H/S reference offsets. This is
+    the zero-density standard, not the finite-pressure Duan fluid at 1 bar.
+    """
+    return _co2_ideal_gibbs(scalar_array(T, "T").astype(float))
+
+
+def mixed_fluid_gibbs(T, P, n, *, eos):
+    """Extensive H2O--CO2 fluid G, J; scalar K/Pa and shape-(2,) mol.
+
+    Order is FLUID_COMPONENTS. Explicitly supply a matching binary EOS,
+    e.g. ZhangDuanEOS.from_species(FLUID_COMPONENTS); species identity is
+    the caller's responsibility. Its vapor root and differentiability
+    restrictions apply. This hybrid uses the native magma gas standards
+    with the selected EOS, not the MELTS mixed-fluid EOS or a saturation
+    solver. The published ZD09 binary coefficients are retained by that EOS.
+
+    G = n@g0 + R*T*(sum(n_i*ln(x_i)) + N*(ln(P/1e5)+gres_RT)).
+    All derivatives follow this scalar. Positive T >= 700 K, P and finite
+    nonnegative n are caller contracts. Composition derivatives require
+    both amounts positive. Pure endpoints support G and fixed-face T/P
+    derivatives; the all-zero phase has G=0 and no chemical potentials.
+    """
+    T, P = (scalar_array(value, name).astype(float) for value, name in ((T, "T"), (P, "P")))
+    n = jnp.asarray(n, dtype=float)
+    if n.shape != (2,):
+        raise ValueError("n must have shape (2,) in (H2O, CO2) order.")
+
+    def present(n):
+        x = n/n.sum()
+        standards = jnp.stack((water_gas_standard_gibbs(T), co2_gas_standard_gibbs(T)))
+        residual = state_tp(eos, T, P, x).gres_RT
+        ideal = jnp.sum(n*jnp.log(jnp.where(x > 0, x, 1.)))
+        return n@standards+MOLAR_GAS_CONSTANT*T*(ideal+n.sum()*(jnp.log(P/1e5)+residual))
+
+    return jax.lax.cond(jnp.all(n == 0), lambda n: jnp.zeros_like(T+P+n.sum()), present, n)
 
 
 def water_gas_standard_gibbs(T):

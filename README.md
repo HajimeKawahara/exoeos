@@ -97,6 +97,14 @@ extensive G and JAX derivatives on the liquid's reference convention.
 The [comparison example](examples/magma_fluid.py) plots liquid/fluid water
 chemical potentials; saturation and fluid amounts remain ExoGibbs tasks.
 
+The separate [carbonate liquid and mixed fluid](documents/native_carbonate_liquid.rst)
+extension implements the mode-4 liquid in `exoeos.magma_carbonate`: thirteen
+independent amounts, internal CaCO3 formation, and implicit reaction relaxation
+in first/second derivatives. `magma_fluid.mixed_fluid_gibbs` adds H2O--CO2
+fluid G with an explicit EOS. The [example](examples/magma_carbonate.py)
+compares pinned mode-4 liquids and independent ZD09 fluid references.
+Mode 4 changes water thermodynamics even at zero carbon; S/N remains separate.
+
 Install the documentation dependencies and build the committed notebook-based
 tutorials with:
 

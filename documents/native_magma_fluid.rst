@@ -7,6 +7,9 @@ the MELTS Haar reference convention is combined with an existing residual
 EOS. All kernels and coefficients are installed with ExoEOS; evaluation
 requires neither ``examples/`` nor external MELTS.
 
+The separate :doc:`native_carbonate_liquid` extension adds the CO2 gas
+standard and an H2O--CO2 mixed-fluid function using the same construction.
+
 This is a **hybrid property model**: the reference is inherited from Haar,
 and the pressure dependence comes from the selected EOS. In particular,
 Zhang--Duan plus this standard is not the MELTS fluid implementation.

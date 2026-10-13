@@ -45,7 +45,7 @@ OLIVINE_COMPONENTS = ("Mg2SiO4", "Fe2SiO4")
 CLINOPYROXENE_COMPONENTS = ("CaMgSi2O6", "CaFeSi2O6")
 PYROXENE_COMPONENTS = ("CaSiO3", "MgSiO3", "FeSiO3")
 SILICA_POLYMORPHS = ("quartz", "tridymite", "cristobalite")
-ELEMENTS = ("O", "Mg", "Si", "Fe", "Al", "Ca", "Na", "K", "Ti", "Cr", "P", "H")
+ELEMENTS = ("O", "Mg", "Si", "Fe", "Al", "Ca", "Na", "K", "Ti", "Cr", "P", "H", "C")
 _ELEMENT_COUNTS = {
     # Dry atom counts per mol; the H row is appended below.
     "SiO2": (2, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -98,6 +98,9 @@ _ELEMENT_COUNTS.update({
     "Fe7Si8O22(OH)2": (24, 0, 8, 7, 0, 0, 0, 0, 0, 0, 0, 2),
     "Ca2Mg5Si8O22(OH)2": (24, 5, 8, 0, 0, 2, 0, 0, 0, 0, 0, 2),
 })
+_ELEMENT_COUNTS = {name: counts + (0,) for name, counts in _ELEMENT_COUNTS.items()}
+_ELEMENT_COUNTS["CO2"] = (2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1)
+_ELEMENT_COUNTS["CaCO3"] = (3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1)
 R = 8.3143  # J/(mol K); retain the MELTS entropy convention.
 W = 3421.0  # J/mol; SiO2--Mg2SiO4 liquid interaction.
 # Upper triangle in DRY11_COMPONENTS order; all 55 H interactions (J/mol).

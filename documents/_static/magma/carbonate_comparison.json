@@ -1,0 +1,61 @@
+{
+  "scope": "Mode-4 supplied liquid; Haar/CO2 ideal standards plus selected ZD09 binary fluid. No saturation or phase-amount solution, no S/N extension.",
+  "liquid_states": 53,
+  "interior_mu_states": 50,
+  "source_standard_states": 63,
+  "fluid_states": 45,
+  "liquid_maximum_absolute_errors": {
+    "g_J": 6.118603050708771e-05,
+    "s_J_K": 9.026052794069983e-09,
+    "cp_J_K": 4.486309990170412e-09,
+    "v_m3": 1.4330659055261652e-14,
+    "dvdt_m3_K": 1.0155350147053337e-18,
+    "dvdp_m3_Pa": 1.774132398623951e-24
+  },
+  "interior_mu_maximum_absolute_error_J_mol": 6.4801424741744995e-06,
+  "species_maximum_absolute_error_mol": 7.869610518795866e-11,
+  "fluid_maximum_absolute_errors": {
+    "g_J": 8.149072527885437e-10,
+    "s_J_K": 5.900346877751872e-11,
+    "cp_J_K": 9.415685013891562e-07,
+    "v_m3": 6.106226635438361e-16,
+    "dvdt_m3_K": 3.7643499428696714e-16,
+    "dvdp_m3_Pa": 3.711274858394717e-18
+  },
+  "maximum_Cp_relaxation_J_K": 0.0012258071287476469,
+  "zero_carbon_mode4_minus_mode1_J": -197.81735021458007,
+  "unavailable_runtime_cases": [
+    {
+      "T_K": 1700.0,
+      "P_Pa": 50000000.0,
+      "samples": [
+        {
+          "name": "zero_calcium",
+          "n_mol": [
+            0.5,
+            0.15,
+            0.05,
+            0.0,
+            0.1,
+            0.01,
+            0.01,
+            0.002,
+            0.02,
+            0.01,
+            0.002,
+            0.05,
+            0.001
+          ]
+        }
+      ],
+      "reason": "Native oxide conversion produces negative roundoff CaSiO3 and aborts; input is not perturbed."
+    }
+  ],
+  "trace_carbon_diagnostic": {
+    "n_CO2_mol": 1e-09,
+    "MELTS_carbonate_mol": 0.0,
+    "JAX_carbonate_mol": 7.412349647844982e-11,
+    "JAX_minus_MELTS_mu_CO2_J_mol": -1088.5456740309019,
+    "interpretation": "Pinned runtime leaves carbonate at zero at trace carbon; exclude this trace potential from the regular-interior agreement statistic. Preserve raw reference; native trace stationarity and dilution are checked separately."
+  }
+}

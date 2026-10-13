@@ -10,7 +10,7 @@ import jax.numpy as jnp
 import numpy as np
 import pytest
 
-from exoeos.magma import (HYDROUS_COMPONENTS, HYDROUS_OXIDES, element_matrix,
+from exoeos.magma import (ELEMENTS, HYDROUS_COMPONENTS, HYDROUS_OXIDES, element_matrix,
                          liquid_gibbs, liquid_moles_from_oxides)
 from exoeos.magma_solids import amphibole, biotite, hornblende
 
@@ -104,7 +104,8 @@ def test_atom_ledger_and_signed_physical_domains(phase):
     indices = [data['oxide_order'].index(x.lower()) for x in HYDROUS_OXIDES]
     expected = element_matrix(HYDROUS_OXIDES)@matrix[indices]
     np.testing.assert_array_equal(element_matrix(module.COMPONENTS), expected)
-    np.testing.assert_array_equal(expected[-1], np.full(len(module.COMPONENTS), 2))
+    np.testing.assert_array_equal(expected[ELEMENTS.index("H")], np.full(len(module.COMPONENTS), 2))
+    np.testing.assert_array_equal(expected[ELEMENTS.index("C")], np.zeros(len(module.COMPONENTS)))
     if module is hornblende:
         n = jnp.array([-.2, .6, .6])
     elif module is amphibole:

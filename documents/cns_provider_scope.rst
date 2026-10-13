@@ -42,6 +42,12 @@ gas/alloy standards, or the stability of its chosen phases. The original
 the exact-zero carbon control belongs to mode 4, without requiring numerical
 equality to mode 1.
 
+The separate :doc:`native_carbonate_liquid` now implements the restricted
+thirteen-component mode-4 liquid in native JAX, including internal carbonate
+relaxation. It also adds H2O--CO2 fluid G with explicit gas standards and a
+selected EOS. These are supplied-state properties; S/N remain independent
+extensions. Internal liquid speciation belongs to the phase property model.
+
 Remaining physical inputs and ownership
 ---------------------------------------
 

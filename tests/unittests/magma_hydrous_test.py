@@ -96,8 +96,8 @@ def test_hydrous_inventory_conversion_and_amount_derivatives():
     n = jax.jit(liquid_moles_from_oxides)(oxide)
     np.testing.assert_allclose(oxide_moles_from_liquid(n), oxide, rtol=0, atol=4e-16)
     a, ao = element_matrix(HYDROUS_COMPONENTS), element_matrix(HYDROUS_OXIDES)
-    expected = [7.82, 1., 2., .6, .6, .5, .16, .08, .07, .04, .06, .5]
-    assert ELEMENTS[-1] == "H"
+    expected = [7.82, 1., 2., .6, .6, .5, .16, .08, .07, .04, .06, .5, 0.]
+    assert ELEMENTS[-2:] == ("H", "C")
     np.testing.assert_allclose(a@n, expected, rtol=0, atol=2e-15)
     np.testing.assert_allclose(ao@oxide, expected, rtol=0, atol=2e-15)
     b = jax.jacfwd(liquid_moles_from_oxides)(oxide)
