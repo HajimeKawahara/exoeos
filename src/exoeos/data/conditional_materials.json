@@ -1,0 +1,653 @@
+{
+  "schema": "native_conditional_material_inputs_v1",
+  "scope": "Extracted numerical inputs for the existing conditional water/H2/He and associated-alloy scalars; no new calibration or material admission.",
+  "source_commit": "d7681db4393fd85904846b083013230d81d45d4e",
+  "source_file_sha256": {
+    "examples/m2_material/associate_sources.json": "eeeab1e019382f3ebf2f88b95c34573a5635b5f4755b95200c21eaa3887bf511",
+    "examples/m2_material/hydrogen_oxygen_sources.json": "c9cace0f4772c5900d2fef797ca7f39fb88e5f5112c0db05f1e21f20ba624cad",
+    "examples/m2_material/na_helium_transfer_sources.json": "3faca86ae8d1c1595e40cfdc4fa8a39967849723dfdbc05c3e02ea3ac7af0a75",
+    "examples/m2_material/validation/20260928_sodium_host_calibration/assessment.json": "f24cb74a1cd860a3eebcd0eff5f1e05fa3e0c7cc82c99c53c952138a91175370",
+    "tests/reference/melts_silicate_v1.json": "71ab9f583dde7629e561babd7a9575606e0777d9588a28b163406701ea4ec334",
+    "examples/m2_material/water_calibration.py": "4976462a910e9b880d60675423c2f941953c68f2531096bd0461fb1ddb74d450",
+    "examples/m2_material/phosphorus_reference.py": "b700bc76415f2158a86218f713724179bc238ecd6fa78305557d3d9741f047c6"
+  },
+  "associate": {
+    "schema": "m2_associated_metal_primary_inputs_v1",
+    "source": "https://doi.org/10.1007/s11663-004-0050-4",
+    "source_locations": [
+      "Table I, p.495",
+      "Table II, p.496",
+      "Section V, p.501",
+      "Appendix II, pp.504\u2013506"
+    ],
+    "retrieval_note": "Numerical facts transcribed from the primary paper reproduced at https://www.scribd.com/document/1075781008/A-Thermodynamic-Model-for-Deoxidation-Equilibria-in-Steel; same-author model description https://doi.org/10.2355/isijinternational.44.527. Full papers are not redistributed.",
+    "standard_convention": "Mole-fraction infinite-dilution Henry reference; gamma relative to each stated pure phase.",
+    "gamma_order": [
+      "coefficient_1_over_T",
+      "constant"
+    ],
+    "henry": {
+      "O": {
+        "pure_phase": "0.5 O2(g)",
+        "ln_gamma": [
+          -15280.0,
+          3.5
+        ]
+      },
+      "Mg": {
+        "pure_phase": "Mg(g)",
+        "ln_gamma": [
+          13774.8,
+          0.0
+        ]
+      },
+      "Ca": {
+        "pure_phase": "Ca(g)",
+        "ln_gamma": [
+          14894.9,
+          0.0
+        ]
+      },
+      "Al": {
+        "pure_phase": "Al(l)",
+        "ln_gamma": [
+          -7596.7,
+          1.2
+        ]
+      },
+      "Cr": {
+        "pure_phase": "Cr(cr)",
+        "ln_gamma": [
+          0.0,
+          0.0
+        ]
+      },
+      "Ti": {
+        "pure_phase": "Ti(l)",
+        "ln_gamma": [
+          -5898.7,
+          0.0
+        ]
+      }
+    },
+    "self_epsilon": {
+      "Mg": [
+        0.0,
+        0.0
+      ],
+      "Ca": [
+        0.0,
+        0.0
+      ],
+      "Al": [
+        3802.7,
+        0.4
+      ],
+      "Cr": [
+        0.0,
+        0.0
+      ],
+      "Ti": [
+        3467.6,
+        0.0
+      ]
+    },
+    "association_delta_g_J_mol": {
+      "MgO": -218272.0,
+      "CaO": -305828.0,
+      "AlO": -108614.0,
+      "CrO": -41840.0,
+      "TiO": -96145.0,
+      "Al2O": -179912.0,
+      "Cr2O": -62760.0,
+      "Ti2O": -142256.0
+    },
+    "cross_epsilon": {
+      "Ca,Al": [
+        -13072.0,
+        0.0
+      ],
+      "Ca,Si": [
+        -23220.0,
+        0.0
+      ],
+      "Si,Al": [
+        13111.0,
+        0.0
+      ]
+    },
+    "pure_phase_janaf": {
+      "Al": {
+        "phase": "liquid",
+        "url": "https://janaf.nist.gov/tables/Al-003.html",
+        "hf298": 10.562,
+        "rows": [
+          [
+            2100,
+            96.957,
+            55.169
+          ],
+          [
+            2200,
+            98.434,
+            58.344
+          ],
+          [
+            2300,
+            99.845,
+            61.519
+          ],
+          [
+            2400,
+            101.196,
+            64.694
+          ]
+        ]
+      },
+      "Cr": {
+        "phase": "crystal",
+        "url": "https://janaf.nist.gov/tables/Cr-002.html",
+        "hf298": 0.0,
+        "rows": [
+          [
+            2100,
+            87.046,
+            66.411
+          ],
+          [
+            2200,
+            89.634,
+            71.975
+          ],
+          [
+            2300,
+            92.209,
+            77.769
+          ],
+          [
+            2400,
+            94.774,
+            83.795
+          ]
+        ]
+      },
+      "Ti": {
+        "phase": "liquid",
+        "url": "https://janaf.nist.gov/tables/Ti-004.html",
+        "hf298": 13.652,
+        "rows": [
+          [
+            2100,
+            101.249,
+            63.493
+          ],
+          [
+            2200,
+            103.446,
+            68.216
+          ],
+          [
+            2300,
+            105.546,
+            72.94
+          ],
+          [
+            2400,
+            107.557,
+            77.664
+          ]
+        ]
+      }
+    },
+    "atomic_janaf": {
+      "Al": {
+        "url": "https://janaf.nist.gov/tables/Al-005.html",
+        "species": "Al(g)",
+        "formation_enthalpy_298_kJ_mol": 329.699,
+        "entropy_298_J_mol_K": 164.553,
+        "data": [
+          [
+            2100,
+            205.419,
+            187.513,
+            37.603
+          ],
+          [
+            2200,
+            206.386,
+            188.349,
+            39.682
+          ],
+          [
+            2300,
+            207.311,
+            189.153,
+            41.762
+          ],
+          [
+            2400,
+            208.196,
+            189.928,
+            43.841
+          ]
+        ]
+      },
+      "Cr": {
+        "url": "https://janaf.nist.gov/tables/Cr-005.html",
+        "species": "Cr(g)",
+        "formation_enthalpy_298_kJ_mol": 397.48,
+        "entropy_298_J_mol_K": 174.311,
+        "data": [
+          [
+            2100,
+            215.84,
+            197.201,
+            39.142
+          ],
+          [
+            2200,
+            217.024,
+            198.075,
+            41.688
+          ],
+          [
+            2300,
+            218.186,
+            198.925,
+            44.301
+          ],
+          [
+            2400,
+            219.328,
+            199.751,
+            46.984
+          ]
+        ]
+      },
+      "Ti": {
+        "url": "https://janaf.nist.gov/tables/Ti-006.html",
+        "species": "Ti(g)",
+        "formation_enthalpy_298_kJ_mol": 473.629,
+        "entropy_298_J_mol_K": 180.297,
+        "data": [
+          [
+            2100,
+            224.028,
+            204.769,
+            40.443
+          ],
+          [
+            2200,
+            225.208,
+            205.672,
+            42.979
+          ],
+          [
+            2300,
+            226.361,
+            206.546,
+            45.573
+          ],
+          [
+            2400,
+            227.489,
+            207.396,
+            48.225
+          ]
+        ]
+      }
+    },
+    "atomic_excerpt_origin_sha256": "4a9d51e8dd58f513b334b5025f0de49476ec5359e1ca811f9e9fd3daab829518",
+    "janaf_scope": "2100\u20132400 K Hermite interpolation of Hf298+dH\u2212T*S. Original paper used FactSage5.1; replacing pure standards is a declared choice. Cr remains metastable crystal above 2130 K.",
+    "measurement_limits": [
+      "Mg/Ca binary coefficients at one temperature; authors assume purely enthalpic 1/T continuation.",
+      "Authors prefer closed-container Mg experiments Han1997 and Seo/Kim2000 over conflicting Itoh1997 series.",
+      "Measured subsystem models do not establish a simultaneous Fe-Si-O-H-P-Mg-Ca-Al-Cr-Ti error bound.",
+      "Ma/P host is retained; O standard and nonideality differ from original complete Jung host."
+    ],
+    "extra_cross": {
+      "P,Al": {
+        "epsilon": 4.6,
+        "reported_error": 0.7,
+        "temperature_K": 1873.15,
+        "source": "https://doi.org/10.2355/isijinternational1966.23.51"
+      },
+      "P,Cr": {
+        "epsilon": -3.8,
+        "reported_error": 0.7,
+        "temperature_K": 1873.15,
+        "source": "https://doi.org/10.2355/isijinternational1966.23.51"
+      },
+      "P,Ti": {
+        "epsilon": -8.0,
+        "reported_error": 2.0,
+        "temperature_K": 1873.15,
+        "source": "https://doi.org/10.2355/isijinternational1966.23.51"
+      },
+      "H,Cr": {
+        "mass_percent_e_H_Cr": -0.0056,
+        "solute_molar_mass_g_mol": 51.9961,
+        "temperature_interval_K": [
+          1823.15,
+          1943.15
+        ],
+        "max_Cr_mass_percent": 20.0,
+        "source": "https://doi.org/10.2355/tetsutohagane1955.53.2_101",
+        "pdf": "https://tetsutohagane.net/articles/search/files/53/2/KJ00002650099.pdf"
+      }
+    },
+    "gas_standard_pressure_Pa": 100000.0,
+    "gas_standard_pressure_evidence": "Primary Jung et al. (2004), Appendix II, p.504, Figs. IIb and IIc: equilibrium Ca and Mg partial pressures are explicitly reported in bar. The Table I gas references are used on that 1 bar convention; no 1 atm conversion is applied."
+  },
+  "hydrogen_oxygen": {
+    "record_id": "schenck1961_HO_contemporary_abstract_v1",
+    "original_doi": "10.1002/srin.196103272",
+    "original_authors": [
+      "H.Schenck",
+      "H.Wuensch"
+    ],
+    "original_locator": "Archiv fuer das Eisenhuettenwesen32(11),1961,779-790",
+    "original_full_text_verified": false,
+    "inspected_record": "Tetsu-to-Hagane49(1),1963,p96 contemporary Japanese abstract by H.Sakao",
+    "inspected_record_url": "https://tetsutohagane.net/articles/search/files/49/1/KJ00002706857.pdf",
+    "reported_temperature_K": 1883.15,
+    "reported_temperature_C": 1610,
+    "reported_gas_ratio_H2O_over_H2": [
+      0.1,
+      0.3
+    ],
+    "reported_total_pressure": "p_H2O+p_H2=1; pressure unit not independently recovered from original full text",
+    "reported_log10_gamma_H_derivative_wrt_O_mole_fraction": 52.4,
+    "reported_numerical_example": {
+      "O_mole_fraction": 0.00343,
+      "gamma_H_due_to_O": 1.52,
+      "gas_ratio_H2O_over_H2": 0.3
+    },
+    "measured_H_O_concentration_table_verified": false,
+    "interaction_coefficient_uncertainty": null,
+    "natural_log_conversion": "epsilon_HO = ln(10) * 52.4",
+    "scalar_continuation": "G_add/RT = N_species * epsilon_HO * x_H * x_O; free H/O fractions use the complete18-species denominator",
+    "temperature_continuations": {
+      "constant": "epsilon_HO independent of T",
+      "enthalpic": "epsilon_HO(T)=epsilon_HO(1883.15K)*1883.15/T"
+    },
+    "scope": [
+      "Contemporary abstract equation and independent numerical example agree in base10; this is not a retrieval of the original concentration observations.",
+      "The1967 Tohoku retelling lists epsilon52.4 with e_O^H2.71; that pair is not substituted for the explicit1963 log10 convention.",
+      "A reciprocal quadratic continuation reproduces the dilute derivative; finite-concentration behavior is not uniquely determined by that derivative.",
+      "No H-H interaction, pressure response, uncertainty band or BSE applicability domain is inferred.",
+      "Other metal species retain their existing terms; zero added H-O returns the previous provider."
+    ],
+    "raw_sha256": {
+      "Schenck1961_1963abstract.pdf": "a2d550b170588aeabbac44c0e892180a50bcb92f36dd531971b845a5b06a53c6",
+      "Schenck1961_1963abstract_p1.png": "17521fc7aabd7c49ac0663da332a929fdf60459fec74c3450f140fe292fa5f85",
+      "Tohoku1967_FeO.pdf": "c561e27dab41d70f637a24b8acf798a94b85cfb9a571c12c41725036196dde8b",
+      "Tohoku1967_FeO_p11.png": "acc70bfb09a169e4538e829a37ae23e61ffede3380d92732a24cc1cdf7382258"
+    }
+  },
+  "helium": {
+    "arxiv": "1112.2055",
+    "url": "https://arxiv.org/pdf/1112.2055",
+    "retrieved_pdf_sha256": "041291e1236f22664ec94a58988d05cfb5a8fe4ea44ec84f681e5e864733a0c5",
+    "retrieved_pdf_bytes": 919624,
+    "redistributed_pdf": false,
+    "location": "Appendix C, PDF page 35; values visually checked.",
+    "type": "molecular dynamics model, not new experimental observations",
+    "S_units": "cm3 STP / g dry melt / bar",
+    "pressure": "approximately zero pressure Henry limit",
+    "He_rows": [
+      {
+        "host": "olivine",
+        "T_K": 1673.0,
+        "S": 0.000188
+      },
+      {
+        "host": "olivine",
+        "T_K": 1873.0,
+        "S": 0.000305
+      },
+      {
+        "host": "olivine",
+        "T_K": 2273.0,
+        "S": 0.000648
+      },
+      {
+        "host": "MORB",
+        "T_K": 1673.0,
+        "S": 0.000596
+      },
+      {
+        "host": "MORB",
+        "T_K": 2273.0,
+        "S": 0.001141
+      },
+      {
+        "host": "rhyolite",
+        "T_K": 1673.0,
+        "S": 0.00186
+      },
+      {
+        "host": "rhyolite",
+        "T_K": 2273.0,
+        "S": 0.00269
+      },
+      {
+        "host": "enstatite",
+        "T_K": 1673.0,
+        "S": 0.000199
+      },
+      {
+        "host": "enstatite",
+        "T_K": 1873.0,
+        "S": 0.000315
+      }
+    ],
+    "cautions": [
+      "Some low-temperature pure-host simulations are supercooled melts.",
+      "Host alternatives are not an empirical bracket for wet BSE.",
+      "MORB low-pressure agreement partly follows model calibration to existing noble-gas data."
+    ]
+  },
+  "sodium_fits": [
+    {
+      "projection": "remove_potassium_0.25",
+      "liquid_model": "native",
+      "temperature_policy": "constant_delta",
+      "intercept_A_rt": 6.759748818893529,
+      "inverse_temperature_B_K": 0.0,
+      "active_runs": [
+        "GGK9"
+      ]
+    },
+    {
+      "projection": "remove_potassium_0.25",
+      "liquid_model": "native",
+      "temperature_policy": "published_exchange_slope",
+      "intercept_A_rt": -10.775604464980406,
+      "inverse_temperature_B_K": 33019.07023353462,
+      "active_runs": [
+        "GGK9"
+      ]
+    },
+    {
+      "projection": "remove_potassium_0.25",
+      "liquid_model": "published",
+      "temperature_policy": "constant_delta",
+      "intercept_A_rt": 6.75974881888054,
+      "inverse_temperature_B_K": 0.0,
+      "active_runs": [
+        "GGK9"
+      ]
+    },
+    {
+      "projection": "remove_potassium_0.25",
+      "liquid_model": "published",
+      "temperature_policy": "published_exchange_slope",
+      "intercept_A_rt": -10.775604464993394,
+      "inverse_temperature_B_K": 33019.07023353462,
+      "active_runs": [
+        "GGK9"
+      ]
+    },
+    {
+      "projection": "remove_potassium_0.5",
+      "liquid_model": "native",
+      "temperature_policy": "constant_delta",
+      "intercept_A_rt": 6.921915463782868,
+      "inverse_temperature_B_K": 0.0,
+      "active_runs": [
+        "GGK9"
+      ]
+    },
+    {
+      "projection": "remove_potassium_0.5",
+      "liquid_model": "native",
+      "temperature_policy": "published_exchange_slope",
+      "intercept_A_rt": -10.613437820091066,
+      "inverse_temperature_B_K": 33019.07023353462,
+      "active_runs": [
+        "GGK9"
+      ]
+    },
+    {
+      "projection": "remove_potassium_0.5",
+      "liquid_model": "published",
+      "temperature_policy": "constant_delta",
+      "intercept_A_rt": 6.9219154637680465,
+      "inverse_temperature_B_K": 0.0,
+      "active_runs": [
+        "GGK9"
+      ]
+    },
+    {
+      "projection": "remove_potassium_0.5",
+      "liquid_model": "published",
+      "temperature_policy": "published_exchange_slope",
+      "intercept_A_rt": -10.613437820105888,
+      "inverse_temperature_B_K": 33019.07023353462,
+      "active_runs": [
+        "GGK9"
+      ]
+    },
+    {
+      "projection": "remove_potassium_0.9",
+      "liquid_model": "native",
+      "temperature_policy": "constant_delta",
+      "intercept_A_rt": 7.194308059818505,
+      "inverse_temperature_B_K": 0.0,
+      "active_runs": [
+        "GGK9"
+      ]
+    },
+    {
+      "projection": "remove_potassium_0.9",
+      "liquid_model": "native",
+      "temperature_policy": "published_exchange_slope",
+      "intercept_A_rt": -10.34104522405543,
+      "inverse_temperature_B_K": 33019.07023353462,
+      "active_runs": [
+        "GGK9"
+      ]
+    },
+    {
+      "projection": "remove_potassium_0.9",
+      "liquid_model": "published",
+      "temperature_policy": "constant_delta",
+      "intercept_A_rt": 7.1943080598004645,
+      "inverse_temperature_B_K": 0.0,
+      "active_runs": [
+        "GGK9"
+      ]
+    },
+    {
+      "projection": "remove_potassium_0.9",
+      "liquid_model": "published",
+      "temperature_policy": "published_exchange_slope",
+      "intercept_A_rt": -10.34104522407347,
+      "inverse_temperature_B_K": 33019.07023353462,
+      "active_runs": [
+        "GGK9"
+      ]
+    },
+    {
+      "projection": "add_aluminum_silica_0.9",
+      "liquid_model": "native",
+      "temperature_policy": "constant_delta",
+      "intercept_A_rt": 7.546548701457356,
+      "inverse_temperature_B_K": 0.0,
+      "active_runs": [
+        "GGK9"
+      ]
+    },
+    {
+      "projection": "add_aluminum_silica_0.9",
+      "liquid_model": "native",
+      "temperature_policy": "published_exchange_slope",
+      "intercept_A_rt": -9.988804582416579,
+      "inverse_temperature_B_K": 33019.07023353462,
+      "active_runs": [
+        "GGK9"
+      ]
+    },
+    {
+      "projection": "add_aluminum_silica_0.9",
+      "liquid_model": "published",
+      "temperature_policy": "constant_delta",
+      "intercept_A_rt": 7.546548701435421,
+      "inverse_temperature_B_K": 0.0,
+      "active_runs": [
+        "GGK9"
+      ]
+    },
+    {
+      "projection": "add_aluminum_silica_0.9",
+      "liquid_model": "published",
+      "temperature_policy": "published_exchange_slope",
+      "intercept_A_rt": -9.988804582438513,
+      "inverse_temperature_B_K": 33019.07023353462,
+      "active_runs": [
+        "GGK9"
+      ]
+    }
+  ],
+  "oxide_masses_kg_mol": {
+    "sio2": 0.0600843,
+    "tio2": 0.07989879999999999,
+    "al2o3": 0.10196127999999999,
+    "fe2o3": 0.1596922,
+    "cr2o3": 0.15199020000000002,
+    "feo": 0.0718464,
+    "mno": 0.0709374,
+    "mgo": 0.040304400000000004,
+    "nio": 0.07470940000000001,
+    "coo": 0.07493259999999999,
+    "cao": 0.0560794,
+    "na2o": 0.06197894,
+    "k2o": 0.09420339999999999,
+    "p2o5": 0.14194452000000002,
+    "h2o": 0.0180152,
+    "co2": 0.0440098,
+    "so3": 0.0800582,
+    "cl2o-1": 0.05490660000000001,
+    "f2o-1": 0.021997405999999997
+  },
+  "water": {
+    "B_K": [
+      -1511.1,
+      886.5,
+      -1015.2,
+      890.6,
+      -1755.9
+    ],
+    "oxide_order": [
+      "CaO",
+      "SiO2",
+      "MgO",
+      "Al2O3",
+      "FeO"
+    ],
+    "A_per_sqrt_bar": 0.000719,
+    "OH_kg_mol": 0.017008,
+    "water_kg_mol": 0.0180153
+  }
+}

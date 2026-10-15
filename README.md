@@ -78,6 +78,9 @@ Al/Na/Ti/Fe(III)-bearing pyroxenes in small phase modules under
 first/second derivatives are checked against independent MELTS properties.
 Its [comparison example](examples/magma_dry_solids.py) plots the phase
 characteristics and numerical errors; assemblage selection remains separate.
+The [conditional native M2 materials](documents/conditional_materials.rst) package
+the fourteen-component volatile-bearing liquid and twenty-species associated
+alloy as full JAX Gibbs scalars, with explicit standards and conditional domains.
 The [Japanese explanation](https://github.com/HajimeKawahara/doc_ExoEOS) is
 maintained separately; current English documentation lives in `documents/`.
 
