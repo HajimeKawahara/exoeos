@@ -47,6 +47,7 @@ Physical model references
    melts_silicate_reference
    melts_liquid_evaluator
    native_magma
+   conditional_materials
    native_dry_solids
    native_hydrous_liquid
    native_hydrous_solids
