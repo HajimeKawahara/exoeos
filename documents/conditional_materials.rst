@@ -27,6 +27,55 @@ table knots and material branch switches are not smooth derivative interiors.
 ``water_parameters`` exports the exact scalar coefficients for independent
 interval proofs. Capacity and water continuations remain conditional models.
 
+Alternative water contributions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``gibbs_j(..., water_model=...)`` selects one water contribution; its default
+``"thompson2025"`` preserves the original scalar. H2, trace He, dry standards,
+and the caller's offsets are unchanged. Model names are static JAX arguments.
+
+* ``"power_law"`` requires a positive ``water_capacity_1bar`` (C) and
+  ``water_pressure_exponent`` (alpha). The binary dry-host/water relation is
+  ``w = C * (f_H2O / bar)**alpha``, with
+  ``w = mass_H2O / (mass_dry + mass_H2O)``. The caller selects the empirical
+  relation and its domain; ExoEOS supplies its integrable extensive scalar.
+  ExoGibbs' ``solubility.h2o_lichtenberg2021`` can supply C at 1e5 Pa and
+  alpha from its logarithmic derivative. ExoEOS does not duplicate that fit.
+* ``"melts_mode1"`` uses ``magma.liquid_gibbs`` on the hydrous twelve-component
+  basis, including its original water standard and interactions.
+* ``"melts_mode4"`` uses ``magma_carbonate.hydrous_liquid_gibbs``. This new
+  twelve-component restriction fixes carbon and carbonate at zero; positive
+  hydrous amounts support first and second derivatives tangent to that face.
+  It matches the thirteen-component energy at zero carbon, without claiming
+  a derivative in the excluded carbon direction. Mode 4 changes the water
+  standard and water interactions, while preserving all 55 dry pairs.
+
+For the power law, let S be dry mass divided by water molar mass and h be
+water mol. The additional dimensionless extensive energy is
+
+.. math::
+
+   G_w/(RT) = h(\mu^0_{w,g}/RT - \log C/\alpha + \delta_w)
+       + [S\log(S/(S+h)) + h\log(h/(S+h))]/\alpha.
+
+This includes the host response and gives
+``mu_water/RT = mu0_gas/RT + log(w/C)/alpha + delta_water`` before H2 dilution.
+With molecular H2 present, its existing host dilution also contributes to
+water's chemical potential. Neither H2 nor He enters the water mass fraction.
+Native hydrous choices instead add only
+``n_water * (R*T*(gas_standard_rt + water_offset_rt) - g0_native_water_gas)``
+to their full native G. ``magma_fluid.water_gas_standard_gibbs`` supplies the
+ideal one-bar native reference, preserving the native liquid--gas difference.
+This alignment is not a solubility fit and does not add a second water term.
+
+The numerical domain is not an empirical validity claim. In particular,
+Lichtenberg's high-pressure data compilation does not validate a 2173 K BSE
+melt, and neither native MELTS option establishes wet-BSE accuracy there.
+Selecting a water contribution cannot remove restrictions on a separate alloy.
+``tests/unittests/conditional_water_test.py`` checks fugacity recovery, dry-host
+response, extensivity, the common gas gauge, curvature, and the restricted
+mode-4 face. The original conditional tests remain the default parity check.
+
 Associated alloy
 ----------------
 

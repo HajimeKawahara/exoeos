@@ -1,14 +1,14 @@
 """Native dry MELTS with the existing conditional H2O, H2 and trace-He laws.
 
-These are constitutive continuations, not a wet-BSE calibration. The water
-law replaces native hydrous mixing; no native H2O contribution is added.
+These are constitutive continuations, not a wet-BSE calibration. Select one
+water contribution; the default remains the integrated Thompson law.
 """
 
 import jax
 import jax.numpy as jnp
 import numpy as np
 
-from . import magma
+from . import magma, magma_carbonate, magma_fluid
 from ._conditional_data import DATA, R
 
 COMPONENTS = magma.DRY11_COMPONENTS + ("H2O", "H2", "He")
@@ -59,7 +59,8 @@ def _xlog_ratio(n, denominator):
 
 
 def gibbs_j(temperature_k, pressure_pa, amounts_mol, gas_standards_rt,
-            helium_dry_molar_masses_kg_mol, *, h2_offset_rt=0., water_offset_rt=0., helium_host="olivine"):
+            helium_dry_molar_masses_kg_mol, *, h2_offset_rt=0., water_offset_rt=0., helium_host="olivine",
+            water_model="thompson2025", water_capacity_1bar=None, water_pressure_exponent=None):
     """Return full extensive G [J] for dry11 + H2O + H2 + He [mol].
 
     ``gas_standards_rt`` follows H2O, H2, He on the caller's common R*T and
@@ -69,6 +70,17 @@ def gibbs_j(temperature_k, pressure_pa, amounts_mol, gas_standards_rt,
     The supported interior has positive dry components and nonnegative guests,
     with H2O amount no greater than dry-host oxygen. No composition floor or
     phase solver is supplied. The SiO2 1480 K branch remains nonsmooth.
+
+    ``water_model`` is a static selection: ``thompson2025`` (default),
+    ``power_law``, ``melts_mode1`` or ``melts_mode4``. The power law requires
+    positive supplied C=``water_capacity_1bar`` and alpha=
+    ``water_pressure_exponent`` for w=C*(f_H2O/bar)**alpha, where w is H2O
+    mass/(dry mass + H2O mass). Its integrated scalar includes host dilution.
+    H2 dilution also contributes to water's chemical potential when present.
+    Native hydrous models use the same dry standards and align their H2O gas
+    reference to the supplied one-bar standard without fitting an offset.
+    Mode 4 fixes carbon at zero. Each water model retains its own empirical
+    limitations; selecting it does not establish a shared calibration domain.
     """
     n = jnp.asarray(amounts_mol)
     gas, he_masses = jnp.asarray(gas_standards_rt), jnp.asarray(helium_dry_molar_masses_kg_mol)
@@ -77,19 +89,34 @@ def gibbs_j(temperature_k, pressure_pa, amounts_mol, gas_standards_rt,
     t, p = jnp.asarray(temperature_k), jnp.asarray(pressure_pa)
     dry, water, hydrogen, helium = n[:11], n[11], n[12], n[13]
     dry_total = jnp.sum(dry)
-    dry_mass = jnp.asarray(_MASSES) @ dry
-    equivalent = dry_mass / _WATER_MASS
-    log_c = _LOG_CAPACITY + (jnp.asarray(_TEMPERATURE_WEIGHTS) @ dry) / (t * (jnp.asarray(_COUNTS) @ dry))
-    # Integrated mass-fraction water law, including its host response.
-    water_g = water * (gas[0] - 2*log_c + water_offset_rt)
-    water_g += 2 * (-equivalent*jnp.log1p(water/equivalent) + _xlog_ratio(water, equivalent+water))
+    if water_model in ("thompson2025", "power_law"):
+        equivalent = (jnp.asarray(_MASSES) @ dry) / _WATER_MASS
+        if water_model == "thompson2025":
+            log_c = _LOG_CAPACITY + (jnp.asarray(_TEMPERATURE_WEIGHTS) @ dry) / (t * (jnp.asarray(_COUNTS) @ dry))
+            beta = 2.
+        else:
+            if water_capacity_1bar is None or water_pressure_exponent is None:
+                raise ValueError("Supply the one-bar mass fraction and pressure exponent for power_law.")
+            c, alpha = jnp.asarray(water_capacity_1bar), jnp.asarray(water_pressure_exponent)
+            log_c = jnp.log(jnp.where(c > 0, c, jnp.nan))
+            beta = 1/jnp.where(alpha > 0, alpha, jnp.nan)
+        # Integrated mass-fraction water law, including its host response.
+        water_g = water * (gas[0] - beta*log_c + water_offset_rt)
+        water_g += beta * (-equivalent*jnp.log1p(water/equivalent) + _xlog_ratio(water, equivalent+water))
+        base_g = magma.liquid_gibbs(t, p, dry)
+    elif water_model in ("melts_mode1", "melts_mode4"):
+        hydrous = magma.liquid_gibbs if water_model == "melts_mode1" else magma_carbonate.hydrous_liquid_gibbs
+        base_g = hydrous(t, p, n[:12])
+        water_g = water * (gas[0] - magma_fluid.water_gas_standard_gibbs(t)/(R*t) + water_offset_rt)
+    else:
+        raise ValueError("Unknown water model.")
     # Only dilution by H2 is added to the already mixed dry/water host.
     host = dry_total + water
     hydrogen_g = hydrogen * (gas[1] + 11.403 + .76*p/1e9 + h2_offset_rt)
     hydrogen_g += -host*jnp.log1p(hydrogen/host) + _xlog_ratio(hydrogen, host+hydrogen)
     capacity = helium_capacity(t, host=helium_host)
     helium_g = helium * (gas[2] - 1.) + _xlog_ratio(helium, (he_masses @ dry)*capacity)
-    value = magma.liquid_gibbs(t, p, dry) + R*t*(water_g + hydrogen_g + helium_g)
+    value = base_g + R*t*(water_g + hydrogen_g + helium_g)
     oxygen = magma.element_matrix(magma.DRY11_COMPONENTS)[magma.ELEMENTS.index("O")] @ dry
     valid = (jnp.all(n >= 0) & (dry_total > 0) & (water <= oxygen) & (t > 0) & (p > 0))
     return jnp.where(valid, value, jnp.nan)
