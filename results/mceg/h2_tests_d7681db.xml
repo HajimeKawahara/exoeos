@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.681" timestamp="2026-10-15T21:27:47.099035+09:00"><testcase classname="tests.unittests.zhang_duan_test" name="test_published_species_factory_inserts_table_parameters" time="0.178" /></testsuite></testsuites>

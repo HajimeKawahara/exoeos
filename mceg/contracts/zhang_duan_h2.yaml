@@ -1,0 +1,131 @@
+schema_version: '0.1'
+model:
+  id: exoeos.zhang_duan_h2
+  name: Zhang-Duan 2009 EOS for pure molecular hydrogen
+  description: The published H2 parameterization of the homogeneous-fluid residual EOS, constructed with
+    ZhangDuanEOS.from_species(('H2',)) and composition [1].
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: d7681db4393fd85904846b083013230d81d45d4e
+    entry_points:
+    - exoeos.ZhangDuanEOS.from_species
+    - exoeos.state_tp
+assumptions:
+- statement: The fluid is homogeneous pure molecular H2; epsilon/k = 31.2 K and sigma = 2.93e-10 m are
+    fitted corresponding-states parameters.
+  evidence:
+  - implementation
+  - equations
+- statement: The physical compressibility is Z = P/(rho R T). The implementation derives residual chemical
+    potentials and fugacity from its integrated residual Helmholtz energy.
+  evidence:
+  - implementation
+  - equations
+domains:
+- kind: scientific_applicability
+  status: documented
+  description: Reported pure-H2 experimental-data envelope, as transcribed in the upstream tutorial from
+    Zhang and Duan (2009), Table 5. These separate bounds do not guarantee accuracy everywhere inside
+    their rectangle.
+  conditions:
+  - Pure molecular H2; reported temperatures span 250 to 423 K.
+  - Reported pressures span 2 to 700 MPa.
+  evidence:
+  - reported_domain
+- kind: scientific_applicability
+  status: unknown
+  description: Joint temperature-pressure coverage, state-specific fugacity errors, and a quantitative
+    validity domain for this implementation are unknown in this audit; the broad fitted-mixture domains
+    cannot be assigned to H2.
+  conditions: []
+  evidence:
+  - reported_domain
+- kind: numerical_evaluation
+  status: documented
+  description: Caller preconditions and branch selection; these do not guarantee numerical convergence
+    or physical validity throughout this set.
+  conditions:
+  - T > 0 in K and P > 0 in Pa; scalar state inputs and composition [1].
+  - phase is vapor, selecting the first mechanically stable low-density-branch root.
+  evidence:
+  - implementation
+claims:
+- id: ideal_density_limit
+  kind: theoretical
+  status: supported
+  statement: Z approaches 1 as molar density approaches zero at fixed positive T.
+  scope: Algebraic limit of the specified correlation, not an empirical accuracy claim.
+  evidence:
+  - equations
+- id: published_parameter_loading
+  kind: numerical_verification
+  status: supported
+  statement: The upstream species-factory comparison with the published parameter table passed.
+  scope: Includes H2 parameters; it does not test pure-H2 fugacity against physical data.
+  evidence:
+  - provider_test_run
+- id: physical_accuracy
+  kind: physical_validation
+  status: unknown
+  statement: State-specific physical accuracy of this implementation is unknown in this audit.
+  scope: No direct experimental comparison of the implemented pure-H2 fugacity was reproduced here. This
+    does not deny the original paper's data comparisons.
+  evidence:
+  - reported_domain
+evidence:
+- id: implementation
+  kind: implementation
+  summary: Published H2 parameters, factory, scalar-state interface and density-root policy.
+  sources:
+  - src/exoeos/zhang_duan.py
+  - documents/thermodynamic_state_contract.md
+  scope: Pure H2 with the published parameters; phase stability is not established.
+- id: equations
+  kind: theory
+  summary: The upstream tutorial states Z, the integrated residual energy, and the ideal density limit.
+  sources:
+  - documents/tutorials/zhang_duan_eos.rst
+  scope: Mathematical properties of this empirical correlation, not validation against nature.
+- id: reported_domain
+  kind: literature
+  summary: The tutorial reports the H2 experimental-data bounds from Zhang and Duan (2009), Table 5.
+  sources:
+  - documents/tutorials/zhang_duan_eos.rst#L365-L395
+  - https://doi.org/10.1016/j.gca.2009.01.021
+  scope: A reported data envelope, not a reproduced experiment, a joint coverage map, or a fugacity error
+    bound; no H2 molecular-dynamics range is listed.
+- id: numerical_tests
+  kind: numerical_test
+  result: passed
+  summary: test_published_species_factory_inserts_table_parameters passed in the recorded audit run.
+  sources:
+  - https://github.com/HajimeKawahara/exoeos/blob/d7681db4393fd85904846b083013230d81d45d4e/tests/unittests/zhang_duan_test.py#L268-L294
+  - https://github.com/HajimeKawahara/mceg/blob/ffcfb23cc7f135a3d8c505b4c1f5af8a5327986e/docs/en/h2_solubility.md#verification
+  scope: Factory constants and interaction matrices only; 1 passed using Python 3.12.7, JAX 0.6.2, NumPy
+    2.1.0, pytest 8.3.3, CPU and x64. Historical execution at upstream revision d7681db4393fd85904846b083013230d81d45d4e;
+    not the new pilot run.
+- id: provider_test_run
+  kind: numerical_test
+  result: passed
+  summary: The selected provider tests passed in the adoption run (1 tests).
+  sources:
+  - results/mceg/h2_tests_d7681db.json
+  - results/mceg/h2_tests_d7681db.xml
+  scope: Only the recorded test selectors at implementation revision d7681db4393fd85904846b083013230d81d45d4e.
+    Source hashes and execution environment are preserved in the receipt; these checks do not establish
+    physical accuracy.
+limitations:
+- statement: The vapor selector does not prove vapor stability. Phase separation, reaction speciation
+    and dissociation are outside this homogeneous EOS.
+  evidence:
+  - implementation
+  - reported_domain
+- statement: Successful root finding outside the reported H2 data envelope is extrapolation; it supplies
+    no physical accuracy bound.
+  evidence:
+  - reported_domain
+- statement: The implementation uses physical Z instead of the additional scaling printed on the left
+    of the paper's Equation 8, as documented upstream. This interpretation is part of implementation provenance.
+  evidence:
+  - implementation
+  - equations
