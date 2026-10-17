@@ -76,6 +76,48 @@ Selecting a water contribution cannot remove restrictions on a separate alloy.
 response, extensivity, the common gas gauge, curvature, and the restricted
 mode-4 face. The original conditional tests remain the default parity check.
 
+Two-power water isotherm
+~~~~~~~~~~~~~~~~~~~~~~~
+
+``water_model="two_power_law"`` takes length-two arrays in
+``water_capacity_1bar`` and ``water_pressure_exponent``. ExoEOS integrates
+``w=sum(C_i*p**a_i)`` without owning a particular empirical fit. One concrete
+consumer is ExoGibbs' ``h2o_sun_yao2026_terms``. Evaluate its T/P/composition
+coefficients inside the differentiated liquid callback; freezing composition
+before differentiation would omit Na/Al host chemical potentials.
+
+Let h be water mol, S be dry mass / water molar mass, and z=ln(p), where p
+is the dimensionless driving pressure in bar. With w=h/(S+h), the extra
+scalar, before the existing H2 and He terms, is
+
+.. math::
+
+   G_w/(RT) = h(\mu^0_{w,g}/RT + \delta_w + z)
+      - S\int_{-\infty}^{z} \frac{w(v)}{1-w(v)}\,dv,
+   \qquad w(v)=\sum_{i=1}^{2} C_i e^{a_i v}.
+
+The unique monotone inverse uses log-space bisection and implicit JAX
+first/second derivatives. A transformed 64-point Gauss rule evaluates the
+integral, including derivatives of supplied coefficients. Tests compare it
+with independent SciPy integration and the exact single-exponent limit.
+The supported numerical domain is C_i>0, 0.25<=a_i<=1, S>0, and 0<=w<=0.5.
+The existing dry11 host-oxygen constraint already enforces w<0.5, so this
+adds no interior composition cap to that source model. G is zero at h=0;
+water chemical potentials and Hessians are only supported in the positive
+interior. Scaling all amounts scales G and preserves chemical potentials.
+
+Before H2 dilution, dG_w/dh/(RT) equals the supplied gas standard plus
+ln(p) and the optional offset. The unchanged molecular-H2 host mixing
+adds ``ln(n_dry_plus_water/(n_dry_plus_water+n_H2))`` to water's chemical
+potential. Thus a coupled ideal-gas consumer replays the bare isotherm at
+``p_eff=p_H2O*(1+n_H2/n_dry_plus_water)`` when its offset is zero. This is
+an explicit constitutive extension, not the unmodified binary-fluid law.
+He is excluded from both the water mass basis and the H2 host count.
+Partial-pressure empirical laws require an ideal gas or an additional,
+explicitly justified nonideal mapping; ExoEOS does not silently equate
+partial pressure and fugacity. No fitted Sun--Yao coefficients or provider
+imports are added to ExoEOS.
+
 Associated alloy
 ----------------
 
