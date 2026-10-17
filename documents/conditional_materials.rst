@@ -77,7 +77,7 @@ response, extensivity, the common gas gauge, curvature, and the restricted
 mode-4 face. The original conditional tests remain the default parity check.
 
 Two-power water isotherm
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``water_model="two_power_law"`` takes length-two arrays in
 ``water_capacity_1bar`` and ``water_pressure_exponent``. ExoEOS integrates
