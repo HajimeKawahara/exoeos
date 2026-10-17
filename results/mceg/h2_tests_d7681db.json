@@ -1,0 +1,67 @@
+{
+  "record_format": "mceg_provider_test_execution_v0.1",
+  "repository": "https://github.com/HajimeKawahara/exoeos",
+  "audited_revision": "d7681db4393fd85904846b083013230d81d45d4e",
+  "recorded_at_utc": "2026-10-15T12:42:22.449185+00:00",
+  "pytest_started_at": "2026-10-15T21:27:47.099035+09:00",
+  "command": [
+    "python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/unittests/zhang_duan_test.py::test_published_species_factory_inserts_table_parameters",
+    "--junitxml=results/mceg/h2_tests_d7681db.xml"
+  ],
+  "environment": {
+    "python": "3.12.7",
+    "versions": {
+      "jax": "0.6.2",
+      "jaxlib": "0.6.2",
+      "numpy": "2.1.0",
+      "pytest": "8.3.3"
+    },
+    "requested": {
+      "JAX_PLATFORMS": "cpu",
+      "JAX_ENABLE_X64": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1"
+    },
+    "imports": "The selected provider source checkouts were supplied on PYTHONPATH."
+  },
+  "outcome": {
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "tests": [
+    {
+      "class": "tests.unittests.zhang_duan_test",
+      "name": "test_published_species_factory_inserts_table_parameters",
+      "result": "passed"
+    }
+  ],
+  "selected_file_sha256": {
+    "src/exoeos/__init__.py": "b53b3a90a57cbec34b794fd084379aed6e45526e38ee574ec6483e7e79d78592",
+    "src/exoeos/zhang_duan.py": "bacbb5d7d1295258fa3d888067bb8060450a01a4bbfa8a40eb499483a3bee986",
+    "src/exoeos/helmholtz.py": "75d7ab3a68781c73e8d8197c05151f0a8adb076595bcfad296a544f00860318e",
+    "src/exoeos/constants.py": "69e57fe70ad4ea775f2d97722548276c87d3a91c76eb6be8f1be43ac30f83fa4",
+    "src/exoeos/_arrays.py": "020679ce40515c27ce0bf31f5b71b1f737737d4a5ebc0301198a9e2bcbedf507",
+    "src/exoeos/state.py": "76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54",
+    "tests/unittests/zhang_duan_test.py": "40153705cf2f2bc4ad258fc1eef9c70eac02e8c20354ec6c310dbf716de84844",
+    "documents/thermodynamic_state_contract.md": "6cde3050a8b2b1242e879d9bd4ea3e2bee1d607ceaaa2d203d4f83f5e6d15d67",
+    "documents/tutorials/zhang_duan_eos.rst": "d3f8f7f615e8b0e371916d7dde32c3f21e3fe5252cbdf54ca8c6c94b907e615c"
+  },
+  "junit_xml": "results/mceg/h2_tests_d7681db.xml",
+  "junit_sha256": "f131d57bae5289bd961ac74a97a6b859eccfbd57cfece54723ad47673dab2d0a",
+  "junit_processing": "Removed hostnames; test results, timestamps and durations are unchanged.",
+  "dependencies": {},
+  "contract_origin": {
+    "repository": "https://github.com/HajimeKawahara/mceg",
+    "revision": "ffcfb23cc7f135a3d8c505b4c1f5af8a5327986e",
+    "path": "contracts/zhang_duan_h2.yaml",
+    "sha256": "514ff6ae813f059ef37e93ea46f9818eceb8a4dac555bdc891e5c2b91683ebd6"
+  },
+  "scope": "Selected file identity and finite numerical tests, not a complete dependency closure or physical validation.",
+  "physical_validation": "unknown"
+}

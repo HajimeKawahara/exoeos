@@ -32,6 +32,10 @@ python -m pip install .
 
 ## Documentation
 
+The [experimental MCEG metadata](mceg/README.md) records assumptions, evidence
+and limitations for the pure-H2 Zhang-Duan model. It uses the frozen MCEG v0.1
+format and adds no package dependency.
+
 Start with the [capability overview](documents/overview.rst) and
 [model selection and usage guide](documents/model_guide.rst). They distinguish
 package APIs, checkout examples, and the evidence supporting each model.
