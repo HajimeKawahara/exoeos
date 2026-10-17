@@ -72,6 +72,9 @@ package-dir = { "" = "src" }
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+exoeos = ["data/*.json"]
+
 [tool.setuptools_scm]
 
 [tool.pytest.ini_options]

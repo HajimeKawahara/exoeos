@@ -156,3 +156,26 @@ def liquid_gibbs(T, P, n):
         return n@liquid_standard_gibbs(T, P)+n.sum()*_mixing_gibbs(T, P, x, s, w)
 
     return jax.lax.cond(jnp.all(n == 0), lambda n: jnp.zeros_like(T+P+n.sum()), present, n)
+
+
+def hydrous_liquid_gibbs(T, P, n):
+    """Return mode-4 G [J] restricted to the carbon-free hydrous face.
+
+    Supply twelve mol amounts in ``magma.HYDROUS_COMPONENTS`` order.
+    Carbon and carbonate are fixed at zero, so the internal reaction has
+    identically zero extent. First and second composition derivatives are
+    supported for positive supplied amounts, tangent to this face only;
+    they do not describe carbon insertion. T >= 700 K and P > 0 apply.
+    An absent phase has G=0 and no chemical potentials.
+    """
+    T, P = magma._tp(T, P)
+    n = jnp.asarray(n, dtype=float)
+    if n.shape != (12,):
+        raise ValueError("n must have shape (12,) in magma.HYDROUS_COMPONENTS order.")
+
+    def present(n):
+        full = jnp.append(n, 0.)
+        return (n @ liquid_standard_gibbs(T, P)[:12]
+                + n.sum()*_mixing_gibbs(T, P, full/n.sum(), 0., _interaction_matrix()))
+
+    return jax.lax.cond(jnp.all(n == 0), lambda n: jnp.zeros_like(T+P+n.sum()), present, n)
