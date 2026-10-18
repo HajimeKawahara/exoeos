@@ -137,6 +137,34 @@ The declared finite-standard sodium fit is selected with
 ``sodium_reference_parameters``; its projection and temperature policy have no
 implicit default.
 
+Finite phosphorus association
+-----------------------------
+
+``phosphorus_association`` supplies the Fe/P/Fe2P liquid scalar of
+Oikawa and Ueshima (2026), DOI 10.2355/tetsutohagane.TETSU-2025-090.
+The five binary parameters were checked against both Table 1 and the
+original supplementary TDB. Fe2P counts two Fe atoms and one P atom;
+it is a species inside the liquid, not a solid phase. The provider supplies
+the extensive scalar and derivatives; ExoGibbs equilibrates its amounts.
+
+``binary_gibbs_j`` takes the three species amounts and two pure-liquid
+elemental standards. ``henry_shift_rt`` converts a supplied infinite-dilution
+P standard to the free-P standard by adding ln(1+K), with
+K=exp(-(association_G+L0_Fe_Fe2P+L1_Fe_Fe2P)/(RT)). This preserves the
+equilibrated binary dilute reference when connecting to an existing gas
+anchor; it does not reproduce the paper's absolute unary/gas database.
+
+The multicomponent ``gibbs_j(..., model="association")`` takes the twenty
+parent species followed by Fe2P. It replaces the old quadratic P-P term,
+counts ideal species mixing once, and evaluates retained host/cross terms
+on the exactly collapsed Fe/P ledger. The ``quadratic`` control reproduces
+the parent scalar with its continuous pure-P endpoint. Neither variant
+defines a P composition cap. The host extension, temperature continuation
+and omitted pressure response remain conditional. The binary paper does
+not validate Si/O/H/K/Na cross interactions or establish a planetary phase
+boundary. See ``examples/m2_material/phosphorus_association.md`` and its
+source ledger for the equations and evidence limits.
+
 Validation and ownership
 ------------------------
 
