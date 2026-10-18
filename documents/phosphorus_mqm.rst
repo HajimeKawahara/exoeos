@@ -55,3 +55,69 @@ Tests check the source entropy form, atom basis, extensivity, elemental
 gauge shifts, finite differences, endpoints and independent dilute limits.
 The ExoInventory S1 example records the joint absolute-reference and
 concentration comparison without changing the existing production alloy.
+
+Conditional multicomponent connection
+------------------------------------
+
+``phosphorus_mqm_alloy`` connects the binary scalar to the existing
+twenty-component host. This construction is a declared hypothesis, not the
+published multicomponent You assessment. Its 21 coordinates replace Fe and P
+with FeFe and PP pairs and append FeP. Other coordinates still count chemical
+species. ``collapse_matrix(model=...)`` returns their exact mapping to the
+parent chemical ledger; the caller multiplies its parent atom matrix by this
+mapping. Pair counts must never be treated as molecular or atomic amounts.
+
+The scalar counts global ideal entropy on the collapsed ledger once, removes
+the binary Fe/P ideal term, then adds the complete binary MQM Gibbs energy.
+It retains the parent host and P-cross excess terms and removes the old
+quadratic P-self interaction. Na remains pseudo-Fe in the host excess only.
+This recovers the binary MQM with other components absent and the parent
+host when P is absent. Host composition restrictions remain the caller's
+responsibility; there is no phosphorus concentration cap.
+
+Pass pure-liquid Fe/P standards to ``phosphorus_mqm_alloy.gibbs_j``. For a
+joint absolute reference, ``pure_p_standard_rt(T, gas_p2_standard_rt)`` in
+``phosphorus_mqm`` translates SGTE liquid P using the caller's one-bar P2
+gas standard and the `NIST SRD69 P2 Shomate reference
+<https://webbook.nist.gov/cgi/cbook.cgi?ID=C12185090&Mask=1>`_. The gas standard
+must exclude its partial-pressure logarithm. To construct a separate
+Henry-preserving concentration control, subtract ``henry_log_gamma`` from
+the chosen Henry standard instead. These are different physical references,
+not equivalent gauges.
+
+The required keyword ``delta_v_p_m3_mol`` declares an additional constant
+P partial volume relative to the supplied standards. Its extensive energy
+is :math:`n_P(P-10^5\,\mathrm{Pa})\Delta V_P`. Zero explicitly continues the
+one-bar P standard. A nonzero value is a caller assumption; no measured
+coefficient, pressure ceiling or uncertainty interval is supplied.
+
+Stoichiometric phosphide candidates
+----------------------------------
+
+``phosphorus_phosphides`` transcribes HT-Fe3P, Fe2P, FeP and FeP2 from the
+same You thesis Table 3.2. Energies and heat capacities count formula units.
+``standard_gibbs_j`` integrates the stated heat capacities from 298.15 K
+using the formation enthalpies and absolute entropies on the alpha-Fe and
+white-P SER. HT-Fe3P includes its 1000 J/mol transition at 698 K and the
+Hillert--Jarl magnetic term with four atoms per formula.
+
+The explicit Fe3P heat-capacity endpoint is 2000 K. The other three formulas
+have no printed endpoints. This candidate set conservatively requires
+``high_temperature_continuation=True`` above 2000 K, continuing the final
+heat-capacity expressions only up to 3000 K. Outside 298.15--3000 K it returns
+NaN. The flag does not establish measured high-temperature applicability.
+The low-temperature Fe3P polymorph and Fe/P solid solutions are not supplied.
+
+``common_gibbs_j`` translates every solid with the same native Fe-liquid
+and P2 standards that anchor the alloy. It uses SGTE GLIQFE and NIST P2 to
+preserve reaction energies under elemental gauge changes. Supply four
+``delta_volumes_m3_mol_formula`` explicitly; these are additional one-bar
+volume increments, not tabulated measured values. Each compound can be
+registered as a separate one-component ExoGibbs phase. Their presence,
+absence and competition then follow from the coupled finite inventory.
+
+Tests check atom mappings, binary and P-free limits, extensivity, gradients,
+Hessians, volume derivatives, common-reference reaction invariance and
+independent numerical integration of heat capacities. The ExoInventory
+comparison also checks the published Fe2P and FeP congruent temperatures.
+These four candidates do not constitute a complete phase-diagram proof.

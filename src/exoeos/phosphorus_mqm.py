@@ -97,3 +97,46 @@ def sgte_liquid_p_j(temperature_k):
     t = jnp.asarray(temperature_k)
     value = -7232.449+133.291873*t-26.326*t*jnp.log(jnp.where(t > 0, t, 1.))
     return jnp.where((t >= 317.3) & (t <= 3000.), value, jnp.nan)
+
+
+def sgte_liquid_fe_j(temperature_k):
+    """SGTE UNARY 5.0 GLIQFE, J/mol Fe on the alpha-Fe SER.
+
+    The liquid unary is metastable below its melting point. Its tabulation
+    range (298.15--6000 K) is not a liquid-alloy admission range.
+    """
+    t = jnp.asarray(temperature_k)
+    logt = jnp.log(jnp.where(t > 0, t, 1.))
+    ser = (1225.7+124.134*t-23.5143*t*logt-4.39752e-3*t**2
+           -.058927e-6*t**3+77359/t)
+    low = 12040.17-6.55843*t-367.516e-23*t**7+ser
+    high = -10838.83+291.302*t-46*t*logt
+    return jnp.where((t >= 298.15) & (t <= 6000.),
+                     jnp.where(t < 1811., low, high), jnp.nan)
+
+
+def nist_p2_gas_j(temperature_k):
+    """NIST SRD69 P2(g), one bar, J/mol molecule; 298--6000 K.
+
+    https://webbook.nist.gov/cgi/cbook.cgi?ID=C12185090&Mask=1
+    Chase (1998) Shomate coefficients, last reviewed June 1961. Restore the
+    formation enthalpy, so coefficient H cancels from H(T)-H(298)+Hf(298).
+    This function supplies a reference, not a gas EOS at finite pressure.
+    """
+    t = jnp.asarray(temperature_k)
+    x = t/1000.
+    a, b, c, d, e, f, g = (35.92198, 1.483806, -.339811, .028919,
+                           -.401919, 131.5232, 258.8557)
+    h = 1000*(a*x+b*x*x/2+c*x**3/3+d*x**4/4-e/x+f)
+    s = a*jnp.log(jnp.where(x > 0, x, 1.))+b*x+c*x*x/2+d*x**3/3-e/(2*x*x)+g
+    return jnp.where((t >= 298.) & (t <= 6000.), h-t*s, jnp.nan)
+
+
+def pure_p_standard_rt(temperature_k, gas_p2_standard_rt):
+    """Translate SGTE liquid P into the caller's one-bar P2 elemental gauge.
+
+    The supplied gas standard excludes ln(partial pressure/bar). No Henry
+    shift is added: the MQM scalar generates its own concentration law.
+    """
+    t = temperature_k
+    return .5*gas_p2_standard_rt+(sgte_liquid_p_j(t)-.5*nist_p2_gas_j(t))/(R*t)
