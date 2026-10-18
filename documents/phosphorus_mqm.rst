@@ -57,7 +57,7 @@ The ExoInventory S1 example records the joint absolute-reference and
 concentration comparison without changing the existing production alloy.
 
 Conditional multicomponent connection
-------------------------------------
+-------------------------------------
 
 ``phosphorus_mqm_alloy`` connects the binary scalar to the existing
 twenty-component host. This construction is a declared hypothesis, not the
@@ -92,7 +92,7 @@ one-bar P standard. A nonzero value is a caller assumption; no measured
 coefficient, pressure ceiling or uncertainty interval is supplied.
 
 Stoichiometric phosphide candidates
-----------------------------------
+-----------------------------------
 
 ``phosphorus_phosphides`` transcribes HT-Fe3P, Fe2P, FeP and FeP2 from the
 same You thesis Table 3.2. Energies and heat capacities count formula units.
