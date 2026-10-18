@@ -108,6 +108,14 @@ heat-capacity expressions only up to 3000 K. Outside 298.15--3000 K it returns
 NaN. The flag does not establish measured high-temperature applicability.
 The low-temperature Fe3P polymorph and Fe/P solid solutions are not supplied.
 
+The Fe3P magnetic normalization follows Eq. 3.4's per-atom wording. The
+smaller heat-capacity peak in the thesis Fig. 3.3 suggests that its software
+may instead apply the magnetic term per formula. That implementation is not
+available, so reproduction of that figure is not claimed. The S1 consumer
+reports the one-versus-four multiplier energy span; above 2100 K it is below
+5 J/mol formula. The four-atom convention lowers the competitor's energy
+more. Neither convention resolves the broader high-temperature continuation.
+
 ``common_gibbs_j`` translates every solid with the same native Fe-liquid
 and P2 standards that anchor the alloy. It uses SGTE GLIQFE and NIST P2 to
 preserve reaction energies under elemental gauge changes. Supply four
