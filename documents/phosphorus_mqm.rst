@@ -1,5 +1,5 @@
 Fe-P modified quasichemical liquids
-==================================
+======================================
 
 ``exoeos.phosphorus_mqm`` exposes an extensive, differentiable Gibbs scalar
 for the binary liquid models I and II of `Bernhard et al. (2020)
