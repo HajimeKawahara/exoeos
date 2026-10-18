@@ -69,3 +69,19 @@ stoichiometry, the dilute reference conversion, parent and binary limits,
 extensivity, elemental gauge invariance, reciprocity and T derivatives.
 The frozen Inventory experiment performs separate source and insertion
 calculations; numerical acceptance does not establish material admission.
+
+The preserved Henry **standard** must not be confused with the dilute
+P-P derivative. Writing `k=K/(1+K)`, the binary model gives
+
+```text
+epsilon_P_P = 4*k + 2*(-k*L0 - k*(2+k)*L1 + M0*k*(1-k))/(R*T).
+```
+
+At 1873.15 K this is **3.57770**, versus the independently reported
+**7.3 +/- 0.1** in [Yamada and Kato (1979)](https://doi.org/10.2355/tetsutohagane1955.65.2_264)
+(0.7--3.2 mass percent P, extrapolated dilute derivative). At 2173.15 K it
+is 1.51298; the old conditional quadratic uses 7.3. A 39-point binary
+numerical replay confirms the analytical limit and smooth finite-P response,
+but does not resolve this disagreement between material descriptions.
+No coefficient is adjusted to conceal it. The candidate is therefore a
+**sensitivity model, not an admitted replacement** for the existing alloy.

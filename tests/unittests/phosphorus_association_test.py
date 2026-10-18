@@ -117,3 +117,16 @@ def test_invalid_static_contracts_are_rejected():
         new.binary_nonideal_j(2173.15, jnp.ones(4))
     with pytest.raises(ValueError):
         new.gibbs_j(2173.15, 1e5, jnp.ones(20), jnp.zeros(20), jnp.ones(4), jnp.zeros((18, 18)), model="association")
+
+
+def test_preserving_the_henry_standard_does_not_preserve_the_old_self_slope():
+    t, x = 1873.15, 1e-6
+    dg, l0, l1, m0, _ = np.asarray(new.parameters_j_mol(t))
+    k = 1/(1+np.exp((dg+l0+l1)/(R*t)))
+    expected = 4*k+2*(-k*l0-k*(2+k)*l1+m0*k*(1-k))/(R*t)
+    n = binary_reference(t, x)
+    mu = jax.grad(lambda v: binary_energy(t, v))(jnp.asarray(n))/(R*t)
+    secant = (float(mu[1]+new.henry_shift_rt(t))-np.log(x))/x
+    np.testing.assert_allclose(secant, expected, atol=1e-5, rtol=0)
+    assert 3.57 < expected < 3.59
+    assert abs(expected-7.3) > 3.7
