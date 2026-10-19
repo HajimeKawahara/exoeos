@@ -1,0 +1,93 @@
+{
+  "schema": "oikawa2026_finite_phosphorus_sources_v1",
+  "retrieved": "2026-10-18",
+  "primary_reference": {
+    "authors": [
+      "Katsunari Oikawa",
+      "Nobufumi Ueshima"
+    ],
+    "title": "Thermodynamic Reassessment and Phase Diagram Calculations of the Fe–P and Fe–C–P Systems",
+    "journal": "Tetsu-to-Hagane",
+    "volume": 112,
+    "pages": "351–364",
+    "year": 2026,
+    "doi": "10.2355/tetsutohagane.TETSU-2025-090"
+  },
+  "retrievals": {
+    "Oikawa2026.pdf": {
+      "source": "https://www.jstage.jst.go.jp/article/tetsutohagane/112/6/112_TETSU-2025-090/_pdf/-char/en",
+      "bytes": 7450125,
+      "sha256": "e9a50be6b1828e45f01df66c04f750894dfceeef4e4699ab80d65e7613064c6f"
+    },
+    "Oikawa2026_supplement.zip": {
+      "source": "https://www.jstage.jst.go.jp/article/tetsutohagane/112/6/112_TETSU-2025-090/_supplement/_download/112_TETSU-2025-090_1.zip",
+      "bytes": 20659,
+      "sha256": "8393a61a4eee7f96f0113eb2b98b4f7cc96aa5c663383b68027240408c5124d1"
+    },
+    "Table_S1.docx": {
+      "source": "Supporting_Information_Fig.S1/Table_S1.docx",
+      "bytes": 23400,
+      "sha256": "b8926cf28d382cc08ce17fc6d5631afc6e22aca9bfdfbc405cd5c0d283a43ec8"
+    },
+    "Table_S1.txt": {
+      "source": "word/document.xml paragraph text, extracted in order",
+      "bytes": 9175,
+      "sha256": "718a56fa5624c5d9ffc5eb380718afe923ef5fa5240f64f526313b82f358fff7"
+    }
+  },
+  "transcription": {
+    "location": "Table 1, printed p.355 / PDF p.5, visually inspected; independently matched to original Table S1 TDB",
+    "temperature_unit": "K",
+    "energy_unit": "J/mol chemical species",
+    "order": [
+      "association_G",
+      "Fe_Fe2P_L0",
+      "Fe_Fe2P_L1",
+      "Fe2P_P_L0",
+      "Fe2P_P_L1"
+    ],
+    "intercept": [
+      -147357.0,
+      -27783.0,
+      -29128.0,
+      -31649.0,
+      -37695.0
+    ],
+    "temperature_slope": [
+      27.537,
+      8.676,
+      18.174,
+      0.0,
+      0.0
+    ],
+    "binary_ideal_basis": "chemical species Fe, P, Fe2P; atomic counts Fe=n_Fe+2*n_Fe2P and P=n_P+n_Fe2P",
+    "table_and_supplement_agree": true
+  },
+  "scope": {
+    "primary_parameter_replay": true,
+    "original_thermocalc_execution_replayed": false,
+    "full_phase_diagram_reproduced": false,
+    "original_experimental_residuals_recomputed": false,
+    "absolute_SGTE_SSUB_standard_reconstructed": false,
+    "common_reference": "Analytical binary Henry-to-free-P conversion, preserving the existing measured gas-anchored Henry standard. No phase-outcome fit.",
+    "multicomponent_extension": "Retain existing host/cross terms on collapsed total Fe/P amounts; replace only the old P-P self term. This is a declared constitutive extension, not binary-data validation of all cross interactions.",
+    "pressure": "No calibrated pressure response for the new binary term.",
+    "temperature": "Activity examples at 1673/1873 K do not validate the 2173.15 K multicomponent continuation.",
+    "high_P": "The paper explicitly notes sparse liquid thermodynamic evidence beyond about 40 atomic percent P."
+  },
+  "other_primary_candidates": [
+    {
+      "doi": "10.1016/j.calphad.2020.101795",
+      "authors": "Bernhard et al. (2020)",
+      "liquid_model": "Modified Quasichemical Model",
+      "implemented": false
+    },
+    {
+      "doi": "10.1007/s11663-020-01939-0",
+      "authors": "You and Jung (2020)",
+      "liquid_model": "Modified Quasichemical Model",
+      "implemented": false
+    }
+  ],
+  "decision": "Use the accessible five-parameter liquid association law for a conditional finite-P comparison. No empirical multicomponent admission or new physical composition cap."
+}
