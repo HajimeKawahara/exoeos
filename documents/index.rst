@@ -56,3 +56,4 @@ Physical model references
    cns_provider_scope
    m2_material_contract
    m2_reaction_calibration
+   phosphorus_mqm
