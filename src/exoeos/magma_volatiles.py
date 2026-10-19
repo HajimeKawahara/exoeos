@@ -10,6 +10,7 @@ import numpy as np
 
 from . import magma, magma_carbonate, magma_fluid
 from ._conditional_data import DATA, R
+from ._water_isotherm import two_power_water_g_rt
 
 COMPONENTS = magma.DRY11_COMPONENTS + ("H2O", "H2", "He")
 MODEL_ID = "native_dry11_thompson_water_hirschmann_h2_trace_he_v1"
@@ -72,10 +73,16 @@ def gibbs_j(temperature_k, pressure_pa, amounts_mol, gas_standards_rt,
     phase solver is supplied. The SiO2 1480 K branch remains nonsmooth.
 
     ``water_model`` is a static selection: ``thompson2025`` (default),
-    ``power_law``, ``melts_mode1`` or ``melts_mode4``. The power law requires
+    ``power_law``, ``two_power_law``, ``melts_mode1`` or ``melts_mode4``. The power law requires
     positive supplied C=``water_capacity_1bar`` and alpha=
     ``water_pressure_exponent`` for w=C*(f_H2O/bar)**alpha, where w is H2O
     mass/(dry mass + H2O mass). Its integrated scalar includes host dilution.
+    ``two_power_law`` takes length-two capacities and exponents for
+    w=sum(C_i*(p_water/bar)**alpha_i), with 0.25<=alpha_i<=1 and w<=0.5.
+    The caller must evaluate composition-dependent capacities inside the
+    differentiated scalar; freezing them loses the host response. ExoEOS
+    supplies no fitted coefficients. Partial-pressure laws require an ideal
+    gas or an explicit additional gas-model convention from the caller.
     H2 dilution also contributes to water's chemical potential when present.
     Native hydrous models use the same dry standards and align their H2O gas
     reference to the supplied one-bar standard without fitting an offset.
@@ -89,7 +96,14 @@ def gibbs_j(temperature_k, pressure_pa, amounts_mol, gas_standards_rt,
     t, p = jnp.asarray(temperature_k), jnp.asarray(pressure_pa)
     dry, water, hydrogen, helium = n[:11], n[11], n[12], n[13]
     dry_total = jnp.sum(dry)
-    if water_model in ("thompson2025", "power_law"):
+    if water_model == "two_power_law":
+        if water_capacity_1bar is None or water_pressure_exponent is None:
+            raise ValueError("Supply two capacities and exponents for two_power_law.")
+        equivalent = (jnp.asarray(_MASSES) @ dry) / _WATER_MASS
+        water_g = water*(gas[0]+water_offset_rt)
+        water_g += two_power_water_g_rt(water, equivalent, water_capacity_1bar, water_pressure_exponent)
+        base_g = magma.liquid_gibbs(t, p, dry)
+    elif water_model in ("thompson2025", "power_law"):
         equivalent = (jnp.asarray(_MASSES) @ dry) / _WATER_MASS
         if water_model == "thompson2025":
             log_c = _LOG_CAPACITY + (jnp.asarray(_TEMPERATURE_WEIGHTS) @ dry) / (t * (jnp.asarray(_COUNTS) @ dry))
