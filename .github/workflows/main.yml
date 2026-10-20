@@ -60,6 +60,11 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install Graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes graphviz
+
       - name: Install package and documentation dependencies
         run: |
           python -m pip install --upgrade pip
