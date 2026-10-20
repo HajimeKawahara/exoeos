@@ -6,6 +6,11 @@ applicability, claims and scoped evidence. This checkout pilots its frozen
 [pure-H2 Zhang-Duan](contracts/zhang_duan_h2.yaml). MCEG is not an ExoEOS
 runtime or test dependency; the model implementation is unchanged.
 
+The [2026-10-20 model inventory](model_inventory.md) adds v0.2 contracts for the
+solubility/magma survey, with separate numerical and physical Assessments and
+fresh receipts. The new records use the companion MCEG volatile-quantity
+extension. Existing H2 and source-study histories retain their original scope.
+
 ## Ownership and references
 
 This provider owns the model contract. The fixed 1700 K, 7500 bar H2 connection,
@@ -60,3 +65,19 @@ without a run are `not_run`, and current numerical claims without support are
 The JSON receipt is a pilot artifact, not an extension to the v0.1 contract
 schema. These files are checkout metadata; wheel-level contract discovery and
 automatic scientific decisions are outside this pilot.
+
+## Inventory coverage
+
+The [machine-readable inventory](models.yaml) maps code and model choices to
+contracts, including known uncontracted families. `mceg coverage .` checks these
+links and reports new/changed or unreviewed source files without importing this
+package. The current partial inventory intentionally returns exit code 1.
+See the [inventory notes](model_inventory.md#machine-readable-inventory-and-coverage)
+for baseline counts, mutation checks and the limits of implicit-model detection.
+
+## Models and evidence HTML
+
+Run `python -m mceg docs --config mceg/docs.yaml` to generate RST only, or
+`./update_doc.sh` from the repository root to regenerate and build HTML.
+See [the documentation build guide](../documents/mceg/build.rst) for installation,
+input selection and output locations. Generated files are ignored by Git.

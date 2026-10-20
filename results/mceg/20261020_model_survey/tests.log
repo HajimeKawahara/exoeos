@@ -1,0 +1,58 @@
+
+COMMAND: ["/home/kawahara/miniconda3/bin/python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests/unittests/conditional_water_test.py", "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_0.xml"]
+..............                                                           [100%]
+- generated xml file: /tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_0.xml -
+14 passed in 44.84s
+
+COMMAND: ["/home/kawahara/miniconda3/bin/python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests/unittests/ma_fe_si_o_h_test.py", "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_1.xml"]
+....................                                                     [100%]
+- generated xml file: /tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_1.xml -
+20 passed in 7.92s
+
+COMMAND: ["/home/kawahara/miniconda3/bin/python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests/unittests/ma_fe_si_o_test.py", "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_2.xml"]
+.......................................                                  [100%]
+- generated xml file: /tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_2.xml -
+39 passed in 7.91s
+
+COMMAND: ["/home/kawahara/miniconda3/bin/python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests/unittests/magma_carbonate_test.py", "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_3.xml"]
+........................................................................ [ 58%]
+....................................................                     [100%]
+- generated xml file: /tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_3.xml -
+124 passed in 84.55s (0:01:24)
+
+COMMAND: ["/home/kawahara/miniconda3/bin/python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests/unittests/magma_dry11_test.py", "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_4.xml"]
+........................................................................ [ 19%]
+........................................................................ [ 38%]
+........................................................................ [ 57%]
+........................................................................ [ 76%]
+........................................................................ [ 96%]
+...............                                                          [100%]
+- generated xml file: /tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_4.xml -
+375 passed in 17.44s
+
+COMMAND: ["/home/kawahara/miniconda3/bin/python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests/unittests/magma_fluid_test.py", "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_5.xml"]
+................................................                         [100%]
+- generated xml file: /tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_5.xml -
+48 passed in 43.80s
+
+COMMAND: ["/home/kawahara/miniconda3/bin/python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests/unittests/magma_hydrous_test.py", "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_6.xml"]
+........................................................................ [ 40%]
+........................................................................ [ 80%]
+....................................                                     [100%]
+- generated xml file: /tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_6.xml -
+180 passed in 24.88s
+
+COMMAND: ["/home/kawahara/miniconda3/bin/python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests/unittests/magma_mixed_fluid_test.py", "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_7.xml"]
+.................................................                        [100%]
+- generated xml file: /tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_7.xml -
+49 passed in 34.76s
+
+COMMAND: ["/home/kawahara/miniconda3/bin/python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests/unittests/mass_fraction_solute_test.py", "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_8.xml"]
+........                                                                 [100%]
+- generated xml file: /tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_8.xml -
+8 passed in 3.81s
+
+COMMAND: ["/home/kawahara/miniconda3/bin/python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests/unittests/two_power_water_test.py", "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_9.xml"]
+....................                                                     [100%]
+- generated xml file: /tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_9.xml -
+20 passed in 15.81s

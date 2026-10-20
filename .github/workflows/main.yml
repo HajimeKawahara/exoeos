@@ -60,10 +60,17 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install Graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes graphviz
+
       - name: Install package and documentation dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e ".[docs]"
+          python -m pip install "mceg @ git+https://github.com/HajimeKawahara/mceg.git@471e2516d644031b561e7bef4f4d4093b52fe07e"
+          dot -V
 
       - name: Build documentation
         run: ./update_doc.sh -W --keep-going

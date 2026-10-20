@@ -1,0 +1,1397 @@
+{
+  "status": "gaps",
+  "scope": "2026-10-20 solubility/magma inventory at 37b9173f37866495949fd7c90340a02b7ceaa78d. Scan all packaged source/data. Explicit priority models and located remaining families; unlisted files remain unreviewed. Family registrations do not certify every internal variant, caller-supplied EOS, water/helium cross-product, external table, or examples outside src.",
+  "source_roots": [
+    "src/exoeos"
+  ],
+  "contract_roots": [
+    "mceg/contracts"
+  ],
+  "summary": {
+    "source_files": 50,
+    "current_files": 43,
+    "files_needing_review": 7,
+    "models": 45,
+    "registered_models": 17,
+    "uncontracted_models": 28,
+    "invalid_models": 0,
+    "discovered_contracts": 9,
+    "issues": 35
+  },
+  "files": [
+    {
+      "path": "src/exoeos/__init__.py",
+      "status": "current",
+      "role": "support",
+      "expected": "b53b3a90a57cbec34b794fd084379aed6e45526e38ee574ec6483e7e79d78592",
+      "actual": "b53b3a90a57cbec34b794fd084379aed6e45526e38ee574ec6483e7e79d78592"
+    },
+    {
+      "path": "src/exoeos/_arrays.py",
+      "status": "current",
+      "role": "support",
+      "expected": "020679ce40515c27ce0bf31f5b71b1f737737d4a5ebc0301198a9e2bcbedf507",
+      "actual": "020679ce40515c27ce0bf31f5b71b1f737737d4a5ebc0301198a9e2bcbedf507"
+    },
+    {
+      "path": "src/exoeos/_conditional_data.py",
+      "status": "current",
+      "role": "support",
+      "expected": "cfbd50ec42685cbb61f547f6d3778c41ff1afae4459347b62b008cfe53da231e",
+      "actual": "cfbd50ec42685cbb61f547f6d3778c41ff1afae4459347b62b008cfe53da231e"
+    },
+    {
+      "path": "src/exoeos/_magma_carbon.py",
+      "status": "current",
+      "role": "model",
+      "expected": "7030f9c70da6d51fc680cf1b5810078ef22e31fdf501b8d34a6bd5af99cd1b99",
+      "actual": "7030f9c70da6d51fc680cf1b5810078ef22e31fdf501b8d34a6bd5af99cd1b99"
+    },
+    {
+      "path": "src/exoeos/_magma_water.py",
+      "status": "current",
+      "role": "model",
+      "expected": "8c93e90181741952f56da7ae15007043db438ff15452cc07b968d3e80f921934",
+      "actual": "8c93e90181741952f56da7ae15007043db438ff15452cc07b968d3e80f921934"
+    },
+    {
+      "path": "src/exoeos/_table_loader.py",
+      "status": "needs_review",
+      "role": null,
+      "expected": null,
+      "actual": "201fa7d0105384d0faf07edb3786a5819f1d2572a23d88d4fbf600962ffa809b"
+    },
+    {
+      "path": "src/exoeos/_water_isotherm.py",
+      "status": "current",
+      "role": "model",
+      "expected": "432f52b3ecae370b35b6775d1199f38f17dc2bb601e5617f5e158af03141c5fa",
+      "actual": "432f52b3ecae370b35b6775d1199f38f17dc2bb601e5617f5e158af03141c5fa"
+    },
+    {
+      "path": "src/exoeos/associated_metal.py",
+      "status": "current",
+      "role": "model",
+      "expected": "e80c8ac40cbb1ec450d0e4df6c74fecf9db3f3742aaa0670f2114ef74b2dbaed",
+      "actual": "e80c8ac40cbb1ec450d0e4df6c74fecf9db3f3742aaa0670f2114ef74b2dbaed"
+    },
+    {
+      "path": "src/exoeos/chabrier_debras.py",
+      "status": "current",
+      "role": "model",
+      "expected": "45fbfa72913833109e6eed38a47ce874c0a710538cb3e696380f60f505e512d1",
+      "actual": "45fbfa72913833109e6eed38a47ce874c0a710538cb3e696380f60f505e512d1"
+    },
+    {
+      "path": "src/exoeos/constants.py",
+      "status": "current",
+      "role": "support",
+      "expected": "69e57fe70ad4ea775f2d97722548276c87d3a91c76eb6be8f1be43ac30f83fa4",
+      "actual": "69e57fe70ad4ea775f2d97722548276c87d3a91c76eb6be8f1be43ac30f83fa4"
+    },
+    {
+      "path": "src/exoeos/contracts.py",
+      "status": "current",
+      "role": "support",
+      "expected": "ba1052326b066d7d3e5a57b5e63ac3dba5cc388e7d0bb9d2bf38431fe996d580",
+      "actual": "ba1052326b066d7d3e5a57b5e63ac3dba5cc388e7d0bb9d2bf38431fe996d580"
+    },
+    {
+      "path": "src/exoeos/critical_properties.py",
+      "status": "needs_review",
+      "role": null,
+      "expected": null,
+      "actual": "d3e3d5285577d1e3f040a672d3b8164fc75719b87967616c121f636eced83de8"
+    },
+    {
+      "path": "src/exoeos/data/conditional_materials.json",
+      "status": "current",
+      "role": "model",
+      "expected": "4c3b4417e5378f377df08a0e50e2f1971449b9bc4b407f4d767dcf3fa182b4a4",
+      "actual": "4c3b4417e5378f377df08a0e50e2f1971449b9bc4b407f4d767dcf3fa182b4a4"
+    },
+    {
+      "path": "src/exoeos/density.py",
+      "status": "current",
+      "role": "model",
+      "expected": "781165f20f12498565eac73e7b6b06d356b7b4c3953bfd974214c6c595c292d3",
+      "actual": "781165f20f12498565eac73e7b6b06d356b7b4c3953bfd974214c6c595c292d3"
+    },
+    {
+      "path": "src/exoeos/gibbs_excess.py",
+      "status": "current",
+      "role": "model",
+      "expected": "c3354acd4f79940cee2723ec3d2c5500751c767666d295f8c04c3c97b8cfc7b3",
+      "actual": "c3354acd4f79940cee2723ec3d2c5500751c767666d295f8c04c3c97b8cfc7b3"
+    },
+    {
+      "path": "src/exoeos/helmholtz.py",
+      "status": "current",
+      "role": "model",
+      "expected": "75d7ab3a68781c73e8d8197c05151f0a8adb076595bcfad296a544f00860318e",
+      "actual": "75d7ab3a68781c73e8d8197c05151f0a8adb076595bcfad296a544f00860318e"
+    },
+    {
+      "path": "src/exoeos/helmholtz_table.py",
+      "status": "current",
+      "role": "model",
+      "expected": "88a4c737c06fa3c009c71aa47411fa3596e697e2f52796c214822e730a61fb4e",
+      "actual": "88a4c737c06fa3c009c71aa47411fa3596e697e2f52796c214822e730a61fb4e"
+    },
+    {
+      "path": "src/exoeos/ideal.py",
+      "status": "current",
+      "role": "model",
+      "expected": "556d07bb0ffe4d2b3d00a0ea451be128185e1f789382c5ac54f0ad7363c90b6b",
+      "actual": "556d07bb0ffe4d2b3d00a0ea451be128185e1f789382c5ac54f0ad7363c90b6b"
+    },
+    {
+      "path": "src/exoeos/ideal_gas.py",
+      "status": "current",
+      "role": "model",
+      "expected": "d838b9841c42dad11c31d866837c32b59cc2e27a069ae768d696e62742153b07",
+      "actual": "d838b9841c42dad11c31d866837c32b59cc2e27a069ae768d696e62742153b07"
+    },
+    {
+      "path": "src/exoeos/ideal_solution.py",
+      "status": "current",
+      "role": "model",
+      "expected": "b581faffae27988866fa88e0d2031413a81a0f1da33ceee9f524d663a758e4d0",
+      "actual": "b581faffae27988866fa88e0d2031413a81a0f1da33ceee9f524d663a758e4d0"
+    },
+    {
+      "path": "src/exoeos/ma_fe_si_o.py",
+      "status": "current",
+      "role": "model",
+      "expected": "32b526dc260d39a5071e25b198cc06fd331b1ceae89483d509702629ab5c7cde",
+      "actual": "32b526dc260d39a5071e25b198cc06fd331b1ceae89483d509702629ab5c7cde"
+    },
+    {
+      "path": "src/exoeos/ma_fe_si_o_h.py",
+      "status": "current",
+      "role": "model",
+      "expected": "131931749adf57a63642a156d93827c3429941b4c442256bc098c9d0cb86765d",
+      "actual": "131931749adf57a63642a156d93827c3429941b4c442256bc098c9d0cb86765d"
+    },
+    {
+      "path": "src/exoeos/ma_interval.py",
+      "status": "needs_review",
+      "role": null,
+      "expected": null,
+      "actual": "01529ac84b6318b27e905be8e8cd0dd3d11ba7f05f05de6e67450429714a5b68"
+    },
+    {
+      "path": "src/exoeos/magma.py",
+      "status": "current",
+      "role": "model",
+      "expected": "4f085ac25f3781cc4120ac7b56c67446668d1911d8cdaeeef077ff9e529807ed",
+      "actual": "4f085ac25f3781cc4120ac7b56c67446668d1911d8cdaeeef077ff9e529807ed"
+    },
+    {
+      "path": "src/exoeos/magma_carbonate.py",
+      "status": "current",
+      "role": "model",
+      "expected": "1ccdaa2c7a9ebeff2d084365bf14f9fe69ca8e944690655e3b47e4b38f19b2c2",
+      "actual": "1ccdaa2c7a9ebeff2d084365bf14f9fe69ca8e944690655e3b47e4b38f19b2c2"
+    },
+    {
+      "path": "src/exoeos/magma_fluid.py",
+      "status": "current",
+      "role": "model",
+      "expected": "a1c84490d83f6dab4b1fa15e775c53dd011f6120a21aa1b99df2bd187f5bb5da",
+      "actual": "a1c84490d83f6dab4b1fa15e775c53dd011f6120a21aa1b99df2bd187f5bb5da"
+    },
+    {
+      "path": "src/exoeos/magma_solids/__init__.py",
+      "status": "needs_review",
+      "role": null,
+      "expected": null,
+      "actual": "3688c35cbcf3547a9762c4018876d376acfcb4fede665ad9333a94ba1c0cb6e9"
+    },
+    {
+      "path": "src/exoeos/magma_solids/_coefficients.py",
+      "status": "needs_review",
+      "role": null,
+      "expected": null,
+      "actual": "eb6efaaf8b45fd555f0c0d94a5c7a2a22172743663288d5e3fee14cb46a66502"
+    },
+    {
+      "path": "src/exoeos/magma_solids/_common.py",
+      "status": "needs_review",
+      "role": null,
+      "expected": null,
+      "actual": "6b078ea3f897f7d3482feff6027413ebf9f72c582a8ea3f473d3236d958e1cdf"
+    },
+    {
+      "path": "src/exoeos/magma_solids/_hydrous_coefficients.py",
+      "status": "needs_review",
+      "role": null,
+      "expected": null,
+      "actual": "6a305f20e71fbdc58474e5b8ccd12b42ad20a26dad2c82f27d754d3285e64956"
+    },
+    {
+      "path": "src/exoeos/magma_solids/amphibole.py",
+      "status": "current",
+      "role": "model",
+      "expected": "a64d00b4335b47098ef7213e4a0b8567015268620e3c7bbec116ecee7cc471a1",
+      "actual": "a64d00b4335b47098ef7213e4a0b8567015268620e3c7bbec116ecee7cc471a1"
+    },
+    {
+      "path": "src/exoeos/magma_solids/biotite.py",
+      "status": "current",
+      "role": "model",
+      "expected": "989c54d11cae0ca4fbc54c00e825d66734603ef1e3a2f0956d67fdd899071518",
+      "actual": "989c54d11cae0ca4fbc54c00e825d66734603ef1e3a2f0956d67fdd899071518"
+    },
+    {
+      "path": "src/exoeos/magma_solids/feldspar.py",
+      "status": "current",
+      "role": "model",
+      "expected": "2d40a047520f019c560e92083d1946deff842ba974cd4cd9e913f08ccea2779c",
+      "actual": "2d40a047520f019c560e92083d1946deff842ba974cd4cd9e913f08ccea2779c"
+    },
+    {
+      "path": "src/exoeos/magma_solids/hornblende.py",
+      "status": "current",
+      "role": "model",
+      "expected": "a583cd57210a02e14ad908649d3fda18f9d38b22c6ae94b54d48dd227e933712",
+      "actual": "a583cd57210a02e14ad908649d3fda18f9d38b22c6ae94b54d48dd227e933712"
+    },
+    {
+      "path": "src/exoeos/magma_solids/oxides.py",
+      "status": "current",
+      "role": "model",
+      "expected": "5de139556d0ad45ff54af6206a4030a33e0afe4eaf8b4e73f4188bffecf30015",
+      "actual": "5de139556d0ad45ff54af6206a4030a33e0afe4eaf8b4e73f4188bffecf30015"
+    },
+    {
+      "path": "src/exoeos/magma_solids/pyroxene.py",
+      "status": "current",
+      "role": "model",
+      "expected": "c56c269d5362156a3d9c3878483c9a29226cfb4129aa8b37c7617ccfa286da75",
+      "actual": "c56c269d5362156a3d9c3878483c9a29226cfb4129aa8b37c7617ccfa286da75"
+    },
+    {
+      "path": "src/exoeos/magma_solids/spinel.py",
+      "status": "current",
+      "role": "model",
+      "expected": "6ab838868c93795e904c7dcb2e467d8690986a106b25cc9fdb761aaaa1791554",
+      "actual": "6ab838868c93795e904c7dcb2e467d8690986a106b25cc9fdb761aaaa1791554"
+    },
+    {
+      "path": "src/exoeos/magma_volatiles.py",
+      "status": "current",
+      "role": "model",
+      "expected": "eeda6b0c67dd2186221c6ba5426823903b82a0fadee2ba5a4b617c9bd2591494",
+      "actual": "eeda6b0c67dd2186221c6ba5426823903b82a0fadee2ba5a4b617c9bd2591494"
+    },
+    {
+      "path": "src/exoeos/marcum_silicate_hydrogen.py",
+      "status": "current",
+      "role": "model",
+      "expected": "de714311e84a3e88c20334270d0f1c78f3581a206bb24427101f3f32b57de14f",
+      "actual": "de714311e84a3e88c20334270d0f1c78f3581a206bb24427101f3f32b57de14f"
+    },
+    {
+      "path": "src/exoeos/mass_fraction_solute.py",
+      "status": "current",
+      "role": "model",
+      "expected": "d49c698a2814c62b73f128ef8e87a869e940f180334e7ae7b95b994df919830b",
+      "actual": "d49c698a2814c62b73f128ef8e87a869e940f180334e7ae7b95b994df919830b"
+    },
+    {
+      "path": "src/exoeos/peng_robinson.py",
+      "status": "current",
+      "role": "model",
+      "expected": "d41306a6ae5c8ea8360e79d9ef28b75ddd1a73ba31446b55984f6dcbc56316f3",
+      "actual": "d41306a6ae5c8ea8360e79d9ef28b75ddd1a73ba31446b55984f6dcbc56316f3"
+    },
+    {
+      "path": "src/exoeos/phosphorus_association.py",
+      "status": "current",
+      "role": "model",
+      "expected": "1fee6e3769ec61f448b97c38af911540a0d151d1cb8fa8722da346f9d3195df8",
+      "actual": "1fee6e3769ec61f448b97c38af911540a0d151d1cb8fa8722da346f9d3195df8"
+    },
+    {
+      "path": "src/exoeos/phosphorus_mqm.py",
+      "status": "current",
+      "role": "model",
+      "expected": "f05b4c4167873442b11d4e9a5f1ec685b73af050223f42b18c1052885b297a11",
+      "actual": "f05b4c4167873442b11d4e9a5f1ec685b73af050223f42b18c1052885b297a11"
+    },
+    {
+      "path": "src/exoeos/phosphorus_mqm_alloy.py",
+      "status": "current",
+      "role": "model",
+      "expected": "2078991e510299f575fe28a8db5518a1fd69222a36fe373c5ef5d5dca335cd94",
+      "actual": "2078991e510299f575fe28a8db5518a1fd69222a36fe373c5ef5d5dca335cd94"
+    },
+    {
+      "path": "src/exoeos/phosphorus_phosphides.py",
+      "status": "current",
+      "role": "model",
+      "expected": "e9b05522e3af506d7eccbe68b68fb492e8cab91db44ae230a0cf1a676eaf5fcf",
+      "actual": "e9b05522e3af506d7eccbe68b68fb492e8cab91db44ae230a0cf1a676eaf5fcf"
+    },
+    {
+      "path": "src/exoeos/second_virial.py",
+      "status": "current",
+      "role": "model",
+      "expected": "bb9ae0910321a1e7a82af8b3df05e81274f47bfd9e8f6ba1658db0325d9bd5f3",
+      "actual": "bb9ae0910321a1e7a82af8b3df05e81274f47bfd9e8f6ba1658db0325d9bd5f3"
+    },
+    {
+      "path": "src/exoeos/solution_gibbs.py",
+      "status": "current",
+      "role": "model",
+      "expected": "6894b0821ab2955add1c85aa9087766d430b8bb2585b73aa1fe5c97ad463b693",
+      "actual": "6894b0821ab2955add1c85aa9087766d430b8bb2585b73aa1fe5c97ad463b693"
+    },
+    {
+      "path": "src/exoeos/state.py",
+      "status": "current",
+      "role": "support",
+      "expected": "76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54",
+      "actual": "76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54"
+    },
+    {
+      "path": "src/exoeos/thermodynamics.py",
+      "status": "current",
+      "role": "model",
+      "expected": "a0331639a4d5bd73c362c4bcbc3e7ddded3e50e4a518c85d7637e3d8eec3cf58",
+      "actual": "a0331639a4d5bd73c362c4bcbc3e7ddded3e50e4a518c85d7637e3d8eec3cf58"
+    },
+    {
+      "path": "src/exoeos/zhang_duan.py",
+      "status": "current",
+      "role": "model",
+      "expected": "bacbb5d7d1295258fa3d888067bb8060450a01a4bbfa8a40eb499483a3bee986",
+      "actual": "bacbb5d7d1295258fa3d888067bb8060450a01a4bbfa8a40eb499483a3bee986"
+    }
+  ],
+  "models": [
+    {
+      "id": "exoeos.ma_fe_si_o",
+      "registration": "registered",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/ma_fe_si_o.py",
+          "symbol": "MaFeSiOLiquid",
+          "settings": {}
+        },
+        {
+          "path": "src/exoeos/gibbs_excess.py",
+          "symbol": "solution_state",
+          "settings": {}
+        }
+      ],
+      "contracts": [
+        {
+          "path": "mceg/contracts/ma_fe_si_o.yaml",
+          "model_id": "exoeos.ma_fe_si_o.v1"
+        }
+      ]
+    },
+    {
+      "id": "exoeos.ma_fe_si_o_h",
+      "registration": "registered",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/ma_fe_si_o_h.py",
+          "symbol": "MaFeSiOHLiquid",
+          "settings": {}
+        },
+        {
+          "path": "src/exoeos/ma_fe_si_o.py",
+          "symbol": "MaFeSiOLiquid",
+          "settings": {}
+        }
+      ],
+      "contracts": [
+        {
+          "path": "mceg/contracts/ma_fe_si_o_h.yaml",
+          "model_id": "exoeos.ma_fe_si_o_h.v1"
+        }
+      ]
+    },
+    {
+      "id": "exoeos.mass_fraction_solute",
+      "registration": "registered",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/mass_fraction_solute.py",
+          "symbol": "mass_fraction_solute_state",
+          "settings": {}
+        }
+      ],
+      "contracts": [
+        {
+          "path": "mceg/contracts/mass_fraction_solute.yaml",
+          "model_id": "exoeos.mass_fraction_solute.v1"
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_dry_liquid",
+      "registration": "registered",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma.py",
+          "symbol": "liquid_gibbs",
+          "settings": {
+            "component_basis": "dry"
+          }
+        },
+        {
+          "path": "src/exoeos/magma.py",
+          "symbol": "liquid_standard_gibbs",
+          "settings": {}
+        }
+      ],
+      "contracts": [
+        {
+          "path": "mceg/contracts/magma_dry_liquid.yaml",
+          "model_id": "exoeos.magma_dry_liquid.v1"
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_hydrous_liquid",
+      "registration": "registered",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma.py",
+          "symbol": "liquid_gibbs",
+          "settings": {
+            "component_basis": "HYDROUS_COMPONENTS"
+          }
+        },
+        {
+          "path": "src/exoeos/_magma_water.py",
+          "symbol": "_water_standard_gibbs",
+          "settings": {}
+        }
+      ],
+      "contracts": [
+        {
+          "path": "mceg/contracts/magma_hydrous_liquid.yaml",
+          "model_id": "exoeos.magma_hydrous_liquid.v1"
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_carbonate_liquid",
+      "registration": "registered",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_carbonate.py",
+          "symbol": "liquid_gibbs",
+          "settings": {}
+        },
+        {
+          "path": "src/exoeos/magma_carbonate.py",
+          "symbol": "hydrous_liquid_gibbs",
+          "settings": {}
+        },
+        {
+          "path": "src/exoeos/_magma_carbon.py",
+          "settings": {}
+        }
+      ],
+      "contracts": [
+        {
+          "path": "mceg/contracts/magma_carbonate_liquid.yaml",
+          "model_id": "exoeos.magma_carbonate_liquid.v1"
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_volatiles.water.thompson2025",
+      "registration": "registered",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_volatiles.py",
+          "symbol": "gibbs_j",
+          "settings": {
+            "water_model": "thompson2025"
+          }
+        },
+        {
+          "path": "src/exoeos/data/conditional_materials.json",
+          "settings": {}
+        }
+      ],
+      "contracts": [
+        {
+          "path": "mceg/contracts/magma_volatiles.yaml",
+          "model_id": "exoeos.magma_volatiles.v1"
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_volatiles.water.power_law",
+      "registration": "registered",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_volatiles.py",
+          "symbol": "gibbs_j",
+          "settings": {
+            "water_model": "power_law"
+          }
+        },
+        {
+          "path": "src/exoeos/data/conditional_materials.json",
+          "settings": {}
+        }
+      ],
+      "contracts": [
+        {
+          "path": "mceg/contracts/magma_volatiles.yaml",
+          "model_id": "exoeos.magma_volatiles.v1"
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_volatiles.water.two_power_law",
+      "registration": "registered",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_volatiles.py",
+          "symbol": "gibbs_j",
+          "settings": {
+            "water_model": "two_power_law"
+          }
+        },
+        {
+          "path": "src/exoeos/data/conditional_materials.json",
+          "settings": {}
+        },
+        {
+          "path": "src/exoeos/_water_isotherm.py",
+          "symbol": "two_power_water_g_rt",
+          "settings": {}
+        }
+      ],
+      "contracts": [
+        {
+          "path": "mceg/contracts/magma_volatiles.yaml",
+          "model_id": "exoeos.magma_volatiles.v1"
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_volatiles.water.melts_mode1",
+      "registration": "registered",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_volatiles.py",
+          "symbol": "gibbs_j",
+          "settings": {
+            "water_model": "melts_mode1"
+          }
+        },
+        {
+          "path": "src/exoeos/data/conditional_materials.json",
+          "settings": {}
+        }
+      ],
+      "contracts": [
+        {
+          "path": "mceg/contracts/magma_volatiles.yaml",
+          "model_id": "exoeos.magma_volatiles.v1"
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_volatiles.water.melts_mode4",
+      "registration": "registered",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_volatiles.py",
+          "symbol": "gibbs_j",
+          "settings": {
+            "water_model": "melts_mode4"
+          }
+        },
+        {
+          "path": "src/exoeos/data/conditional_materials.json",
+          "settings": {}
+        }
+      ],
+      "contracts": [
+        {
+          "path": "mceg/contracts/magma_volatiles.yaml",
+          "model_id": "exoeos.magma_volatiles.v1"
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_volatiles.helium.olivine",
+      "registration": "registered",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_volatiles.py",
+          "symbol": "helium_capacity",
+          "settings": {
+            "host": "olivine"
+          }
+        },
+        {
+          "path": "src/exoeos/data/conditional_materials.json",
+          "settings": {}
+        }
+      ],
+      "contracts": [
+        {
+          "path": "mceg/contracts/magma_volatiles.yaml",
+          "model_id": "exoeos.magma_volatiles.v1"
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_volatiles.helium.MORB",
+      "registration": "registered",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_volatiles.py",
+          "symbol": "helium_capacity",
+          "settings": {
+            "host": "MORB"
+          }
+        },
+        {
+          "path": "src/exoeos/data/conditional_materials.json",
+          "settings": {}
+        }
+      ],
+      "contracts": [
+        {
+          "path": "mceg/contracts/magma_volatiles.yaml",
+          "model_id": "exoeos.magma_volatiles.v1"
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_volatiles.helium.rhyolite",
+      "registration": "registered",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_volatiles.py",
+          "symbol": "helium_capacity",
+          "settings": {
+            "host": "rhyolite"
+          }
+        },
+        {
+          "path": "src/exoeos/data/conditional_materials.json",
+          "settings": {}
+        }
+      ],
+      "contracts": [
+        {
+          "path": "mceg/contracts/magma_volatiles.yaml",
+          "model_id": "exoeos.magma_volatiles.v1"
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_volatiles.helium.enstatite",
+      "registration": "registered",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_volatiles.py",
+          "symbol": "helium_capacity",
+          "settings": {
+            "host": "enstatite"
+          }
+        },
+        {
+          "path": "src/exoeos/data/conditional_materials.json",
+          "settings": {}
+        }
+      ],
+      "contracts": [
+        {
+          "path": "mceg/contracts/magma_volatiles.yaml",
+          "model_id": "exoeos.magma_volatiles.v1"
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_fluid",
+      "registration": "registered",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_fluid.py",
+          "symbol": "water_fluid_gibbs",
+          "settings": {}
+        },
+        {
+          "path": "src/exoeos/magma_fluid.py",
+          "symbol": "mixed_fluid_gibbs",
+          "settings": {}
+        },
+        {
+          "path": "src/exoeos/_magma_water.py",
+          "settings": {}
+        },
+        {
+          "path": "src/exoeos/_magma_carbon.py",
+          "settings": {}
+        }
+      ],
+      "contracts": [
+        {
+          "path": "mceg/contracts/magma_fluid.yaml",
+          "model_id": "exoeos.magma_fluid.v1"
+        }
+      ]
+    },
+    {
+      "id": "exoeos.zhang_duan_h2",
+      "registration": "registered",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/zhang_duan.py",
+          "symbol": "ZhangDuanEOS.from_species",
+          "settings": {
+            "species": "H2"
+          }
+        },
+        {
+          "path": "src/exoeos/helmholtz.py",
+          "symbol": "state_tp",
+          "settings": {}
+        }
+      ],
+      "contracts": [
+        {
+          "path": "mceg/contracts/zhang_duan_h2.yaml",
+          "model_id": "exoeos.zhang_duan_h2"
+        }
+      ]
+    },
+    {
+      "id": "exoeos.ideal",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/ideal.py",
+          "symbol": "IdealEOS",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.second_virial",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/second_virial.py",
+          "symbol": "SecondVirialEOS",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.peng_robinson",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/peng_robinson.py",
+          "symbol": "PengRobinsonEOS",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.ideal_gas",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/ideal_gas.py",
+          "symbol": "IdealGas",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.ideal_solution",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/ideal_solution.py",
+          "symbol": "IdealSolution",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.total_helmholtz",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/thermodynamics.py",
+          "symbol": "HelmholtzThermodynamics",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.density_composites",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/density.py",
+          "symbol": "AdditiveVolumeCompositeDensityProvider",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.chabrier_debras",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/chabrier_debras.py",
+          "symbol": "ChabrierDebrasEOS",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.marcum_silicate_hydrogen",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/marcum_silicate_hydrogen.py",
+          "symbol": "MarcumSilicateHydrogenEOS",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.helmholtz_table",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/helmholtz_table.py",
+          "symbol": "HelmholtzTable",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.gibbs_excess",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/gibbs_excess.py",
+          "symbol": "solution_state",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.solution_gibbs",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/solution_gibbs.py",
+          "symbol": "total_solution_state",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.associated_metal",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/associated_metal.py",
+          "symbol": "gibbs_j",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.phosphorus_association",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/phosphorus_association.py",
+          "symbol": "gibbs_j",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.phosphorus_mqm_alloy",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/phosphorus_mqm_alloy.py",
+          "symbol": "gibbs_j",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.phosphorus_phosphides",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/phosphorus_phosphides.py",
+          "symbol": "common_gibbs_j",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.zhang_duan_other",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/zhang_duan.py",
+          "symbol": "ZhangDuanEOS",
+          "settings": {
+            "species_scope": "non-H2 pure species and mixtures"
+          }
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.phosphorus_mqm.bernhard2020_I",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/phosphorus_mqm.py",
+          "symbol": "gibbs_j",
+          "settings": {
+            "model": "bernhard2020_I"
+          }
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.phosphorus_mqm.bernhard2020_II",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/phosphorus_mqm.py",
+          "symbol": "gibbs_j",
+          "settings": {
+            "model": "bernhard2020_II"
+          }
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.phosphorus_mqm.you2020",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/phosphorus_mqm.py",
+          "symbol": "gibbs_j",
+          "settings": {
+            "model": "you2020"
+          }
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.magma_native_solids",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma.py",
+          "symbol": "pyroxene_gibbs",
+          "settings": {}
+        },
+        {
+          "path": "src/exoeos/magma.py",
+          "symbol": "olivine_gibbs",
+          "settings": {}
+        },
+        {
+          "path": "src/exoeos/magma.py",
+          "symbol": "silica_gibbs",
+          "settings": {}
+        },
+        {
+          "path": "src/exoeos/magma.py",
+          "symbol": "anorthite_gibbs",
+          "settings": {}
+        },
+        {
+          "path": "src/exoeos/magma.py",
+          "symbol": "enstatite_gibbs",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.magma_solids.pyroxene",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_solids/pyroxene.py",
+          "symbol": "gibbs",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.magma_solids.feldspar",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_solids/feldspar.py",
+          "symbol": "gibbs",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.magma_solids.oxides",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_solids/oxides.py",
+          "symbol": "gibbs",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.magma_solids.spinel",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_solids/spinel.py",
+          "symbol": "gibbs",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.magma_solids.amphibole",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_solids/amphibole.py",
+          "symbol": "gibbs",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.magma_solids.biotite",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_solids/biotite.py",
+          "symbol": "gibbs",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    },
+    {
+      "id": "exoeos.magma_solids.hornblende",
+      "registration": "uncontracted",
+      "source_status": "current",
+      "bindings": [
+        {
+          "path": "src/exoeos/magma_solids/hornblende.py",
+          "symbol": "gibbs",
+          "settings": {}
+        }
+      ],
+      "contracts": []
+    }
+  ],
+  "issues": [
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.associated_metal",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.chabrier_debras",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.density_composites",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.gibbs_excess",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.helmholtz_table",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.ideal",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.ideal_gas",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.ideal_solution",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.magma_native_solids",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.magma_solids.amphibole",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.magma_solids.biotite",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.magma_solids.feldspar",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.magma_solids.hornblende",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.magma_solids.oxides",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.magma_solids.pyroxene",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.magma_solids.spinel",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.marcum_silicate_hydrogen",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.peng_robinson",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.phosphorus_association",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.phosphorus_mqm.bernhard2020_I",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.phosphorus_mqm.bernhard2020_II",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.phosphorus_mqm.you2020",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.phosphorus_mqm_alloy",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.phosphorus_phosphides",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.second_virial",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.solution_gibbs",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.total_helmholtz",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "uncontracted_model",
+      "path": null,
+      "model": "exoeos.zhang_duan_other",
+      "message": "No contract is linked to this model"
+    },
+    {
+      "kind": "unreviewed_file",
+      "path": "src/exoeos/_table_loader.py",
+      "model": null,
+      "message": "Classify this file and review its model bindings"
+    },
+    {
+      "kind": "unreviewed_file",
+      "path": "src/exoeos/critical_properties.py",
+      "model": null,
+      "message": "Classify this file and review its model bindings"
+    },
+    {
+      "kind": "unreviewed_file",
+      "path": "src/exoeos/ma_interval.py",
+      "model": null,
+      "message": "Classify this file and review its model bindings"
+    },
+    {
+      "kind": "unreviewed_file",
+      "path": "src/exoeos/magma_solids/__init__.py",
+      "model": null,
+      "message": "Classify this file and review its model bindings"
+    },
+    {
+      "kind": "unreviewed_file",
+      "path": "src/exoeos/magma_solids/_coefficients.py",
+      "model": null,
+      "message": "Classify this file and review its model bindings"
+    },
+    {
+      "kind": "unreviewed_file",
+      "path": "src/exoeos/magma_solids/_common.py",
+      "model": null,
+      "message": "Classify this file and review its model bindings"
+    },
+    {
+      "kind": "unreviewed_file",
+      "path": "src/exoeos/magma_solids/_hydrous_coefficients.py",
+      "model": null,
+      "message": "Classify this file and review its model bindings"
+    }
+  ]
+}

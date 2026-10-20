@@ -29,9 +29,11 @@ copyright = "2026, ExoEOS contributors"
 author = "ExoEOS contributors"
 release = exoeos.__version__
 
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon"]
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon", "sphinx.ext.graphviz"]
 templates_path = []
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 html_theme = "sphinx_rtd_theme"
-html_static_path = ["_static"]
+html_static_path = ["_static", "mceg/_generated/_static"]
+html_css_files = ["mceg.css"]
+graphviz_output_format = "svg"

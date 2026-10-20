@@ -12,6 +12,7 @@ Start here
 
    overview
    model_guide
+   mceg/index
    thermodynamic_derivatives
    potential_tables
    feature_plots
