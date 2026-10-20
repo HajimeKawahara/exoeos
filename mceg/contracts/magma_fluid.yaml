@@ -132,6 +132,95 @@ evidence:
     inspection: inspected
     note: Fresh local pytest execution; tests consume stored references where applicable. No external
       reference program or experiment was rerun.
+- id: zd2009_20261021
+  kind: literature
+  summary: Original residual EOS used by the explicit Zhang-Duan fluid example.
+  sources:
+  - https://doi.org/10.1016/j.gca.2009.01.021
+  - https://efs.idsse.ac.cn/module1/citation/2009-04-01/article.pdf
+  scope: Eq. 8 and Tables 3-4 specify the residual correlation and H2O/CO2 constants. They do not
+    prescribe the provider MELTS energy offsets. The implementation uses physical Z rather than
+    the additional scaling printed on the left of Eq. 8; water volume controls do not establish
+    hybrid solubility accuracy.
+  provenance:
+    role: primary
+    location: 'Printed pp. 2091-2093 (PDF pp. 3-5): Section 2.2, Eqs. 7-11 and Tables 3-6.'
+    inspection: inspected
+    note: Retrieved and inspected on 2026-10-21; the scope names the passages reviewed.
+  artifacts:
+  - source: https://efs.idsse.ac.cn/module1/citation/2009-04-01/article.pdf
+    sha256: 6d72a0eed45e9a83887a73f01ae08d10f77fa251720662195dfb66a1f159d9d6
+- id: melts_versions_20261021
+  kind: literature
+  summary: Official distinction between rhyolite-MELTS 1.0.x, 1.1.x and 1.2.x.
+  sources:
+  - https://melts.ofm-research.org/Support/Understanding-rhyolite-MELTS-versions.html
+  scope: The 1.0.x model retains pure-H2O fluid; 1.1.x adds CO2/mixed terms while retaining older
+    water parameters; 1.2.x uses revised water parameters and the Duan-Zhang (2006) fluid EOS. These
+    model versions differ from the alphaMELTS software release number.
+  provenance:
+    role: primary
+    location: 'Understanding rhyolite-MELTS versions: descriptions of all three model versions.'
+    inspection: inspected
+    note: Retrieved and inspected on 2026-10-21; the scope names the passages reviewed.
+  artifacts:
+  - source: https://melts.ofm-research.org/Support/Understanding-rhyolite-MELTS-versions.html
+    sha256: f6af0243da8c7d1fbfe55ddb2c9f770decfcb1e700790f1d80a794645a10a298
+- id: magma_source_20261021
+  kind: implementation
+  summary: Inspected pinned MAGMA equations, coefficients and reference conventions.
+  sources:
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/water.c
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/fluidPhase.c
+  scope: Analytic zero-density H2O and idealGasCO2 one-bar standards. This inspection does not validate
+    the original Haar calibration or the complete native MELTS mixed-fluid implementation.
+  provenance:
+    role: primary
+    location: water.c whaar ideal term ci and MELTS energy-reference shift; fluidPhase.c idealCoeff
+      and idealGasCO2.
+    inspection: inspected
+    note: Inspected downloaded or cached source bytes; hashes identify the pinned files. This does
+      not establish which C revision built the separately archived alphaMELTS binary.
+  artifacts:
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/water.c
+    sha256: 5ee8b5d59eb813c50fd66d2a9b47b317a0cde327c6ac924967d2521f770a8b08
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/fluidPhase.c
+    sha256: 2aa11edc637c2aadc7722c8a606ce6e7ccde87a59add5c7f8d9abefdb8048cc0
+- id: implementation_source_review_20261021
+  kind: implementation
+  summary: Selected provider conventions are now linked to inspected original sources.
+  sources:
+  - src/exoeos/magma_fluid.py
+  - src/exoeos/_magma_water.py
+  - src/exoeos/_magma_carbon.py
+  - documents/native_magma_fluid.rst
+  - tests/reference/generate_magma_fluid_reference.py
+  scope: The water ideal term and fixed reference shift follow water.c; the CO2 ideal polynomial
+    and H/S offsets follow idealGasCO2. Standards, ideal pressure/mixing and the selected residual
+    contribution are counted once. Real one-bar liquid references cannot replace these zero-density
+    gas standards.
+  subject: survey_20261020
+  context: source_review_20261021
+  provenance:
+    role: implementation
+    location: Named provider functions and the source locations linked below.
+    inspection: inspected
+    note: Scoped source comparison; no empirical accuracy claim or external runtime execution.
+    derived_from:
+    - evidence: magma_source_20261021
+      comparison: consistent
+      note: The water ideal term and fixed reference shift follow water.c; the CO2 ideal polynomial
+        and H/S offsets follow idealGasCO2. Standards, ideal pressure/mixing and the selected residual
+        contribution are counted once. Real one-bar liquid references cannot replace these zero-density
+        gas standards.
+    - evidence: zd2009_20261021
+      comparison: not_checked
+      note: The residual coefficients were read, but the documented physical-Z interpretation differs
+        from the printed Eq. 8 left side; complete paper-to-hybrid equivalence is not asserted.
+    - evidence: melts_versions_20261021
+      comparison: consistent
+      note: The provider documents its explicit 2009 EOS choice separately from the native 1.2.x
+        Duan-Zhang (2006) fluid model.
 limitations:
 - statement: Saved pressure-integral and derivative comparisons are implementation evidence, not physical
     validation of solubility, saturation or the selected fluid mixture.
@@ -186,6 +275,14 @@ contexts:
     backend: cpu
     x64: true
     test_selection: tests/unittests/magma_fluid_test.py; tests/unittests/magma_mixed_fluid_test.py
+- id: source_review_20261021
+  scope: Source inspection and formulation comparison; no empirical application or uncertainty target
+    is assigned.
+  settings:
+    review_date: '2026-10-21'
+    model_choice: MELTS-reference ideal standards plus an explicitly selected residual EOS; example
+      uses Zhang-Duan (2009).
+    source_hash_policy: Hashes identify retrieved bytes; MCEG does not download or verify URI artifacts.
 conditions: []
 assessments:
 - id: numerical_review
@@ -226,6 +323,31 @@ assessments:
   - Numerical agreement and membership in metadata intervals do not establish physical accuracy.
   status: unknown
   origin: reviewed
+- id: physical_review_20261021
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: source_review_20261021
+  method:
+    id: inspect_published_formulation
+    revision: '1'
+    description: Compare inspected source passages and pinned code; separate implementation provenance
+      from empirical support.
+  evidence:
+  - implementation_source_review_20261021
+  - zd2009_20261021
+  - melts_versions_20261021
+  reasons:
+  - Selected equations, parameter choices and reference conventions now have inspected source locations
+    and byte hashes.
+  - Original Haar calibration data, the Eq. 8 convention and independent observations for the selected
+    hybrid remain outside this review. Agreement with stored pressure-integral controls is numerical
+    evidence only.
+  - No new empirical error bound or joint applicability domain is established; the earlier survey
+    and test receipt remain historical.
+  status: unknown
+  origin: reviewed
 follow_ups:
 - id: empirical_scope
   target_kind: claim
@@ -242,3 +364,24 @@ follow_ups:
   sources:
   - https://github.com/magmasource/MAGMA/tree/705a0fb315e5054d18275a580562f6121c8e458c
   - https://doi.org/10.1016/j.gca.2009.01.021
+- id: inspect_accessible_sources
+  target_kind: evidence
+  target: upstream_model
+  action: Inspect accessible model papers and pinned source branches for the declared provider conventions.
+  requires:
+  - Source locations and downloaded-byte hashes.
+  - Explicit scope for branch choices, standard states and remaining source/data gaps.
+  completion: New inspected source records and a scoped comparison are recorded; empirical calibration
+    replay and unavailable sources remain separate work.
+  sources:
+  - https://doi.org/10.1016/j.gca.2009.01.021
+  - https://melts.ofm-research.org/Support/Understanding-rhyolite-MELTS-versions.html
+follow_up_resolutions:
+- follow_up: inspect_accessible_sources
+  evidence:
+  - zd2009_20261021
+  - melts_versions_20261021
+  - magma_source_20261021
+  - implementation_source_review_20261021
+  note: Completed the accessible-source inspection on 2026-10-21. The existing empirical_scope task
+    remains open; no physical validation or full runtime replay is inferred.

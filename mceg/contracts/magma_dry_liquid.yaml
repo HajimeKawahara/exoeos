@@ -125,6 +125,77 @@ evidence:
     inspection: inspected
     note: Fresh local pytest execution; tests consume stored references where applicable. No external
       reference program or experiment was rerun.
+- id: ghiorso_sack1995_20261021
+  kind: literature
+  summary: Original MELTS liquid mixing formulation and calibration context.
+  sources:
+  - https://doi.org/10.1007/BF00307281
+  - https://enki-portal.org/Ghiorso/Contributions%20to%20Mineralogy%20and%20Petrology%201995%20Ghiorso.pdf
+  scope: The molar Gibbs energy combines pure-component standards, ideal mixing, symmetric regular-solution
+    pairs and an extra binary water entropy. The reported calibration uses mineral/liquid equilibria;
+    it does not independently validate this restricted provider basis.
+  provenance:
+    role: primary
+    location: Printed pp. 198-199 (PDF pp. 2-3), basic thermodynamic relations, Eq. 1 and Eqs. 2a-2b;
+      Table 1 calibration-source inventory.
+    inspection: inspected
+    note: Retrieved and inspected on 2026-10-21; the scope names the passages reviewed.
+  artifacts:
+  - source: https://enki-portal.org/Ghiorso/Contributions%20to%20Mineralogy%20and%20Petrology%201995%20Ghiorso.pdf
+    sha256: 5c1063b8c95b9e392814caf118d99773331f7e20f860f45a953cc3e2fa20b55a
+- id: magma_source_20261021
+  kind: implementation
+  summary: Inspected pinned MAGMA equations, coefficients and reference conventions.
+  sources:
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/liquid_v34.c
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/param_struct_data_v34.h
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/liq_struct_data.h
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/gibbs.c
+  scope: MELTS regular-solution form, 55 dry-face pairs, standard-state tables and pressure convention.
+    pMELTS coefficients and unimplemented components are excluded.
+  provenance:
+    role: primary
+    location: liquid_v34.c gmixLiq_v34/actLiq_v34; param_struct_data_v34.h meltsModelParameters;
+      liq_struct_data.h liquid endmembers; gibbs.c liquid standard branches.
+    inspection: inspected
+    note: Inspected downloaded or cached source bytes; hashes identify the pinned files. This does
+      not establish which C revision built the separately archived alphaMELTS binary.
+  artifacts:
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/liquid_v34.c
+    sha256: 584ac446d03abf64ca7406768ad84975e1af346d159bc743c9adafd9441e91f6
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/param_struct_data_v34.h
+    sha256: ad78f9ac9a59c030aeee240893b00efc034ea81aed4d551abaed770215af7059
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/liq_struct_data.h
+    sha256: 206b298d054d9110f28dd544dab1240aa252bb39650bcdf21e032fee0e7d95b4
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/gibbs.c
+    sha256: 2eceff9f315210ebdcf9dfc9bacd77f625cf04dbdc5084104c093caba34d4166
+- id: implementation_source_review_20261021
+  kind: implementation
+  summary: Selected provider conventions are now linked to inspected original sources.
+  sources:
+  - src/exoeos/magma.py
+  - documents/native_magma.rst
+  - tests/reference/generate_dry11_reference.py
+  scope: The DRY11 pair table matches the 55 corresponding upstream H values with zero S/V interactions.
+    The amount-based form is the extensive version of Eq. 1 at zero water; supplied FeO/Fe2O3 is
+    not a redox-equilibrium solve.
+  subject: survey_20261020
+  context: source_review_20261021
+  provenance:
+    role: implementation
+    location: Named provider functions and the source locations linked below.
+    inspection: inspected
+    note: Scoped source comparison; no empirical accuracy claim or external runtime execution.
+    derived_from:
+    - evidence: magma_source_20261021
+      comparison: consistent
+      note: The DRY11 pair table matches the 55 corresponding upstream H values with zero S/V interactions.
+        The amount-based form is the extensive version of Eq. 1 at zero water; supplied FeO/Fe2O3
+        is not a redox-equilibrium solve.
+    - evidence: ghiorso_sack1995_20261021
+      comparison: consistent
+      note: Eq. 1 at Xw=0 has the same ideal plus symmetric-pair structure on the declared component
+        faces.
 limitations:
 - statement: Saved source and alphaMELTS comparisons are numerical verification; they do not establish
     a calibrated phase diagram or arbitrary-pressure applicability.
@@ -171,6 +242,14 @@ contexts:
     backend: cpu
     x64: true
     test_selection: tests/unittests/magma_dry11_test.py
+- id: source_review_20261021
+  scope: Source inspection and formulation comparison; no empirical application or uncertainty target
+    is assigned.
+  settings:
+    review_date: '2026-10-21'
+    model_choice: MELTS dry faces through DRY11; full Gibbs energy in J with component amounts in
+      mol.
+    source_hash_policy: Hashes identify retrieved bytes; MCEG does not download or verify URI artifacts.
 conditions: []
 assessments:
 - id: numerical_review
@@ -212,6 +291,29 @@ assessments:
   - Numerical agreement and membership in metadata intervals do not establish physical accuracy.
   status: unknown
   origin: reviewed
+- id: physical_review_20261021
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: source_review_20261021
+  method:
+    id: inspect_published_formulation
+    revision: '1'
+    description: Compare inspected source passages and pinned code; separate implementation provenance
+      from empirical support.
+  evidence:
+  - implementation_source_review_20261021
+  - ghiorso_sack1995_20261021
+  reasons:
+  - Selected equations, parameter choices and reference conventions now have inspected source locations
+    and byte hashes.
+  - Original calibration observations have not been replayed on the restricted component faces or
+    assembled into an application-specific empirical assessment.
+  - No new empirical error bound or joint applicability domain is established; the earlier survey
+    and test receipt remain historical.
+  status: unknown
+  origin: reviewed
 follow_ups:
 - id: empirical_scope
   target_kind: claim
@@ -227,3 +329,22 @@ follow_ups:
     pass alone does not complete this task.
   sources:
   - https://github.com/magmasource/MAGMA/tree/705a0fb315e5054d18275a580562f6121c8e458c
+- id: inspect_accessible_sources
+  target_kind: evidence
+  target: upstream_model
+  action: Inspect accessible model papers and pinned source branches for the declared provider conventions.
+  requires:
+  - Source locations and downloaded-byte hashes.
+  - Explicit scope for branch choices, standard states and remaining source/data gaps.
+  completion: New inspected source records and a scoped comparison are recorded; empirical calibration
+    replay and unavailable sources remain separate work.
+  sources:
+  - https://doi.org/10.1007/BF00307281
+follow_up_resolutions:
+- follow_up: inspect_accessible_sources
+  evidence:
+  - ghiorso_sack1995_20261021
+  - magma_source_20261021
+  - implementation_source_review_20261021
+  note: Completed the accessible-source inspection on 2026-10-21. The existing empirical_scope task
+    remains open; no physical validation or full runtime replay is inferred.
