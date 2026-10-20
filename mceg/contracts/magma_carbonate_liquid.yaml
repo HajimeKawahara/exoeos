@@ -1,0 +1,233 @@
+schema_version: '0.2'
+model:
+  id: exoeos.magma_carbonate_liquid.v1
+  name: Native rhyolite-MELTS mode-4 carbon-bearing liquid
+  description: A thirteen-component liquid with internally relaxed CaSiO3 + CO2 = SiO2 + CaCO3 and
+    a separate carbon-free hydrous restriction.
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 37b9173f37866495949fd7c90340a02b7ceaa78d
+    entry_points:
+    - exoeos.magma_carbonate.liquid_gibbs
+    - exoeos.magma_carbonate.liquid_species_moles
+    - exoeos.magma_carbonate.hydrous_liquid_gibbs
+assumptions:
+- statement: Independent amounts follow HYDROUS_COMPONENTS then CO2; internal CaCO3 species are determined
+    by relaxation and are not an additional independent inventory.
+  evidence:
+  - implementation
+- statement: Mode 4 changes the water standard and interactions even at zero carbon. The twelve-component
+    hydrous restriction preserves this mode-4 identity.
+  evidence:
+  - implementation
+- statement: K/Pa/mol inputs produce full G in J, with standards and mixing already included.
+  evidence:
+  - implementation
+domains:
+- kind: numerical_evaluation
+  status: documented
+  description: Inspected numerical API and caller obligations; not a physical validation domain.
+  conditions:
+  - Finite scalar T >= 700 K, P > 0 and nonnegative amounts; enable x64 and validate values before
+    tracing.
+  - Full derivatives require supported positive independent interiors; fixed faces permit only their
+    documented tangent derivatives.
+  evidence:
+  - implementation
+- kind: scientific_applicability
+  status: unknown
+  description: Composition-specific physical accuracy and joint applicability remain unestablished
+    by this survey.
+  conditions: []
+  evidence:
+  - upstream_model
+  - implementation
+claims:
+- id: numerical_verification
+  revision: '1'
+  kind: numerical_verification
+  statement: Pinned source standards/interactions and saved mode-4 liquids, internal atom conservation,
+    relaxed Hessians, scaling and boundary semantics in the selected module.
+  scope: Only the selected tests, their asserted tolerances and the recorded CPU/x64 environment.
+- id: physical_accuracy
+  revision: '1'
+  kind: physical_validation
+  statement: The model has quantitatively established physical accuracy for the intended melt/fluid
+    composition and conditions.
+  scope: Requires independent empirical data and explicit composition, reference-state and driving-quantity
+    conventions; not established by this survey.
+evidence:
+- id: upstream_model
+  kind: literature
+  summary: Cited model origin and retained source-review boundary.
+  sources:
+  - https://github.com/magmasource/MAGMA/tree/705a0fb315e5054d18275a580562f6121c8e458c
+  - https://doi.org/10.1007/s00410-015-1141-8
+  scope: Source and binary references are separate archived numerical evidence. The original paper,
+    source generation and external runtime were not rerun or promoted to new empirical evidence.
+  provenance:
+    role: secondary
+    location: Citations and source descriptions in the selected provider code/guide.
+    inspection: not_inspected
+    note: Source and binary references are separate archived numerical evidence. The original paper,
+      source generation and external runtime were not rerun or promoted to new empirical evidence.
+- id: implementation
+  kind: implementation
+  summary: A thirteen-component liquid with internally relaxed CaSiO3 + CO2 = SiO2 + CaCO3 and a separate
+    carbon-free hydrous restriction.
+  sources:
+  - documents/native_carbonate_liquid.rst
+  - src/exoeos/__init__.py
+  - src/exoeos/_arrays.py
+  - src/exoeos/_magma_carbon.py
+  - src/exoeos/_magma_water.py
+  - src/exoeos/constants.py
+  - src/exoeos/contracts.py
+  - src/exoeos/helmholtz.py
+  - src/exoeos/magma.py
+  - src/exoeos/magma_carbonate.py
+  - src/exoeos/magma_fluid.py
+  - src/exoeos/state.py
+  scope: Inspected selected implementation, conventions and caller domains at revision 37b9173f37866495949fd7c90340a02b7ceaa78d.
+  subject: survey_20261020
+  provenance:
+    role: implementation
+    location: Selected provider source files and guide.
+    inspection: inspected
+    note: Code and declarations were read; an empirical calibration or external source replay is not
+      inferred.
+    derived_from:
+    - evidence: upstream_model
+      comparison: not_checked
+      note: Original-source scientific equivalence is not established by this implementation survey.
+- id: test_run
+  kind: numerical_test
+  summary: 124 selected tests passed.
+  sources:
+  - tests/unittests/magma_carbonate_test.py
+  - results/mceg/20261020_model_survey/receipt.json
+  - results/mceg/20261020_model_survey/tests.xml
+  - results/mceg/20261020_model_survey/tests.log
+  scope: Pinned source standards/interactions and saved mode-4 liquids, internal atom conservation,
+    relaxed Hessians, scaling and boundary semantics in the selected module.
+  result: passed
+  subject: survey_20261020
+  context: test_environment
+  artifacts:
+  - source: results/mceg/20261020_model_survey/receipt.json
+    sha256: 290a0e172f914bd74b24be1792e8d1c36f9a6d44f011a39b3d550573cb0874a3
+  - source: results/mceg/20261020_model_survey/tests.xml
+    sha256: 8bb6517ac0069238e42cb0381b56a2039a5e2498c2f7ad088eeadc710d58b78d
+  - source: results/mceg/20261020_model_survey/tests.log
+    sha256: 5b516c56e9e47d73013fe839c8329d18784540b7020e7be1b3adc15823020889
+  provenance:
+    role: primary
+    location: results/mceg/20261020_model_survey/receipt.json and tests.xml
+    inspection: inspected
+    note: Fresh local pytest execution; tests consume stored references where applicable. No external
+      reference program or experiment was rerun.
+limitations:
+- statement: The saved trace-carbon runtime discrepancy is retained; passing the selected tests does
+    not claim agreement of every trace-component potential.
+  evidence:
+  - implementation
+- statement: No sulfur/nitrogen extension, carbonate solids, redox solve, fluid saturation or assemblage
+    phase selection is supplied. Physical accuracy remains unassessed.
+  evidence:
+  - implementation
+subjects:
+- id: survey_20261020
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 37b9173f37866495949fd7c90340a02b7ceaa78d
+    entry_points:
+    - exoeos.magma_carbonate.liquid_gibbs
+    - exoeos.magma_carbonate.liquid_species_moles
+    - exoeos.magma_carbonate.hydrous_liquid_gibbs
+  selected_files:
+    documents/native_carbonate_liquid.rst: 62835cbbf1b63c328f3e7046f3f3f9c69a8a43a1cf5a595b591a375366360f47
+    pyproject.toml: e98593ed10b694c708c13e63d76aa47700c4237d1d957838f8d82237821b5883
+    src/exoeos/__init__.py: b53b3a90a57cbec34b794fd084379aed6e45526e38ee574ec6483e7e79d78592
+    src/exoeos/_arrays.py: 020679ce40515c27ce0bf31f5b71b1f737737d4a5ebc0301198a9e2bcbedf507
+    src/exoeos/_magma_carbon.py: 7030f9c70da6d51fc680cf1b5810078ef22e31fdf501b8d34a6bd5af99cd1b99
+    src/exoeos/_magma_water.py: 8c93e90181741952f56da7ae15007043db438ff15452cc07b968d3e80f921934
+    src/exoeos/constants.py: 69e57fe70ad4ea775f2d97722548276c87d3a91c76eb6be8f1be43ac30f83fa4
+    src/exoeos/contracts.py: ba1052326b066d7d3e5a57b5e63ac3dba5cc388e7d0bb9d2bf38431fe996d580
+    src/exoeos/helmholtz.py: 75d7ab3a68781c73e8d8197c05151f0a8adb076595bcfad296a544f00860318e
+    src/exoeos/magma.py: 4f085ac25f3781cc4120ac7b56c67446668d1911d8cdaeeef077ff9e529807ed
+    src/exoeos/magma_carbonate.py: 1ccdaa2c7a9ebeff2d084365bf14f9fe69ca8e944690655e3b47e4b38f19b2c2
+    src/exoeos/magma_fluid.py: a1c84490d83f6dab4b1fa15e775c53dd011f6120a21aa1b99df2bd187f5bb5da
+    src/exoeos/state.py: 76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54
+    tests/conftest.py: 87d47ae57e35ed7a10960ae12407c8a274188271ea86d5e0016d3d70501e2096
+    tests/reference/carbonate_melts_v1.json: 5a05454144c4b0f98d463b94c78fd07c9f181b20283a9cd2db0fb0a6814a931b
+    tests/reference/carbonate_source_v1.json: 0359915dc41b410eddf149eca197786827b8d31bff8cba9cb5a3a7f621d1474f
+    tests/unittests/magma_carbonate_test.py: a71bc94e2b7343c9010d4c636d82445a46b9ade385e2db6f4909de274356786f
+contexts:
+- id: test_environment
+  scope: Actual local test environment; test files and fixtures define individual calculation inputs.
+  settings:
+    python: 3.12.7
+    jax: 0.6.2
+    jaxlib: 0.6.2
+    numpy: 2.1.0
+    scipy: 1.14.1
+    pytest: 8.3.3
+    backend: cpu
+    x64: true
+    test_selection: tests/unittests/magma_carbonate_test.py
+conditions: []
+assessments:
+- id: numerical_review
+  kind: evidence_support
+  claim: numerical_verification
+  claim_revision: '1'
+  subject: survey_20261020
+  context: test_environment
+  method:
+    id: review_selected_pytest
+    revision: '1'
+    description: Read actual test outcomes and selected file pins; limit support to those numerical
+      assertions.
+  evidence:
+  - test_run
+  reasons:
+  - 124 tests in the selected modules; see the shared receipt for per-module counts.
+  - Selected files matched Git at execution and were unchanged afterward. Other revisions, environments
+    and empirical accuracy need separate review.
+  status: supported
+  origin: reviewed
+- id: physical_review
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: test_environment
+  method:
+    id: review_empirical_support
+    revision: '1'
+    description: Separate numerical verification from experimental or observational support.
+  evidence:
+  - upstream_model
+  - implementation
+  reasons:
+  - Source and binary references are separate archived numerical evidence. The original paper, source
+    generation and external runtime were not rerun or promoted to new empirical evidence.
+  - Numerical agreement and membership in metadata intervals do not establish physical accuracy.
+  status: unknown
+  origin: reviewed
+follow_ups:
+- id: empirical_scope
+  target_kind: claim
+  target: physical_accuracy
+  revision: '1'
+  action: Inspect the original model equations and relevant material-specific data; record a separate
+    empirical assessment for a declared application.
+  requires:
+  - Original source passages, equations and coefficient tables with inspection locations.
+  - Explicit T/P, composition basis, gas driving quantity, standard states and uncertainty criteria.
+  - Reproducible comparison against independent observations or experiments, when available.
+  completion: A new scoped assessment cites inspected evidence and states its remaining gaps; a numerical
+    pass alone does not complete this task.
+  sources:
+  - https://github.com/magmasource/MAGMA/tree/705a0fb315e5054d18275a580562f6121c8e458c
+  - https://doi.org/10.1007/s00410-015-1141-8

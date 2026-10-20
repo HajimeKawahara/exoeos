@@ -217,3 +217,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Retain the execution log pinned by the model-survey contracts.
+!/results/mceg/20261020_model_survey/tests.log
+
+# MCEG-generated documentation sources and assets.
+/documents/mceg/_generated/

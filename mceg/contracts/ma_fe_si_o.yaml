@@ -1,0 +1,223 @@
+schema_version: '0.2'
+model:
+  id: exoeos.ma_fe_si_o.v1
+  name: Ma Fe-Si-O liquid with printed Young coefficients
+  description: Excess Gibbs energy on an atomic Fe, Si, O mole-fraction basis with a completed solvent
+    activity and formal symmetric standards.
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 37b9173f37866495949fd7c90340a02b7ceaa78d
+    entry_points:
+    - exoeos.MaFeSiOLiquid
+    - exoeos.solution_state
+assumptions:
+- statement: The default interaction_K is (12.41*1873, -16500, -5*1873) K, divided by T. Custom coefficients
+    define separate uncalibrated parameter choices.
+  evidence:
+  - implementation
+- statement: The returned excess energy excludes ideal mixing and absolute standard potentials. A
+    consumer must supply compatible standards and apply standard_state_shift_RT when converting the
+    source convention.
+  evidence:
+  - implementation
+domains:
+- kind: numerical_evaluation
+  status: documented
+  description: Inspected numerical API and caller obligations; not a physical validation domain.
+  conditions:
+  - Finite positive scalar T [K] and P [Pa]; normalized nonnegative (Fe, Si, O) fractions with Fe
+    > 0 and solutes below one.
+  - Call validate_state before tracing; the traced evaluator checks static shapes only. Pressure is
+    an accepted input but has no modeled response.
+  evidence:
+  - implementation
+- kind: scientific_applicability
+  status: unknown
+  description: Composition-specific physical accuracy and joint applicability remain unestablished
+    by this survey.
+  conditions: []
+  evidence:
+  - upstream_model
+  - implementation
+claims:
+- id: numerical_verification
+  revision: '1'
+  kind: numerical_verification
+  statement: Agreement with the saved independent Decimal reference, solvent completion, amount derivatives,
+    Euler/Gibbs-Duhem identities and standard conversion in the selected test module.
+  scope: Only the selected tests, their asserted tolerances and the recorded CPU/x64 environment.
+- id: physical_accuracy
+  revision: '1'
+  kind: physical_validation
+  statement: The model has quantitatively established physical accuracy for the intended melt/fluid
+    composition and conditions.
+  scope: Requires independent empirical data and explicit composition, reference-state and driving-quantity
+    conventions; not established by this survey.
+evidence:
+- id: upstream_model
+  kind: literature
+  summary: Cited model origin and retained source-review boundary.
+  sources:
+  - https://doi.org/10.1007/s11663-001-0011-0
+  - https://doi.org/10.1038/s41586-023-05823-0
+  scope: Source identities and distinctions were read in the provider guide; original papers were
+    not re-inspected. The provider implements the printed Young coefficients with the Ma solvent term,
+    not every cited parameterization.
+  provenance:
+    role: secondary
+    location: Citations and source descriptions in the selected provider code/guide.
+    inspection: not_inspected
+    note: Source identities and distinctions were read in the provider guide; original papers were
+      not re-inspected. The provider implements the printed Young coefficients with the Ma solvent
+      term, not every cited parameterization.
+- id: implementation
+  kind: implementation
+  summary: Excess Gibbs energy on an atomic Fe, Si, O mole-fraction basis with a completed solvent
+    activity and formal symmetric standards.
+  sources:
+  - documents/fe_si_o_reference.rst
+  - src/exoeos/__init__.py
+  - src/exoeos/_arrays.py
+  - src/exoeos/constants.py
+  - src/exoeos/contracts.py
+  - src/exoeos/gibbs_excess.py
+  - src/exoeos/ma_fe_si_o.py
+  - src/exoeos/state.py
+  scope: Inspected selected implementation, conventions and caller domains at revision 37b9173f37866495949fd7c90340a02b7ceaa78d.
+  subject: survey_20261020
+  provenance:
+    role: implementation
+    location: Selected provider source files and guide.
+    inspection: inspected
+    note: Code and declarations were read; an empirical calibration or external source replay is not
+      inferred.
+    derived_from:
+    - evidence: upstream_model
+      comparison: not_checked
+      note: Original-source scientific equivalence is not established by this implementation survey.
+- id: test_run
+  kind: numerical_test
+  summary: 39 selected tests passed.
+  sources:
+  - tests/unittests/ma_fe_si_o_test.py
+  - results/mceg/20261020_model_survey/receipt.json
+  - results/mceg/20261020_model_survey/tests.xml
+  - results/mceg/20261020_model_survey/tests.log
+  scope: Agreement with the saved independent Decimal reference, solvent completion, amount derivatives,
+    Euler/Gibbs-Duhem identities and standard conversion in the selected test module.
+  result: passed
+  subject: survey_20261020
+  context: test_environment
+  artifacts:
+  - source: results/mceg/20261020_model_survey/receipt.json
+    sha256: 290a0e172f914bd74b24be1792e8d1c36f9a6d44f011a39b3d550573cb0874a3
+  - source: results/mceg/20261020_model_survey/tests.xml
+    sha256: 8bb6517ac0069238e42cb0381b56a2039a5e2498c2f7ad088eeadc710d58b78d
+  - source: results/mceg/20261020_model_survey/tests.log
+    sha256: 5b516c56e9e47d73013fe839c8329d18784540b7020e7be1b3adc15823020889
+  provenance:
+    role: primary
+    location: results/mceg/20261020_model_survey/receipt.json and tests.xml
+    inspection: inspected
+    note: Fresh local pytest execution; tests consume stored references where applicable. No external
+      reference program or experiment was rerun.
+limitations:
+- statement: The pure Si/O scalar limits do not define full activity vectors or composition derivatives.
+  evidence:
+  - implementation
+- statement: The seven reference states and derivative checks do not establish an experimental Fe-Si-O
+    applicability envelope or phase stability.
+  evidence:
+  - implementation
+subjects:
+- id: survey_20261020
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 37b9173f37866495949fd7c90340a02b7ceaa78d
+    entry_points:
+    - exoeos.MaFeSiOLiquid
+    - exoeos.solution_state
+  selected_files:
+    documents/fe_si_o_reference.rst: 61c39d636ae8a49284175bb4dec06d2607afd76d975c133b5f1599192b5d1e52
+    pyproject.toml: e98593ed10b694c708c13e63d76aa47700c4237d1d957838f8d82237821b5883
+    src/exoeos/__init__.py: b53b3a90a57cbec34b794fd084379aed6e45526e38ee574ec6483e7e79d78592
+    src/exoeos/_arrays.py: 020679ce40515c27ce0bf31f5b71b1f737737d4a5ebc0301198a9e2bcbedf507
+    src/exoeos/constants.py: 69e57fe70ad4ea775f2d97722548276c87d3a91c76eb6be8f1be43ac30f83fa4
+    src/exoeos/contracts.py: ba1052326b066d7d3e5a57b5e63ac3dba5cc388e7d0bb9d2bf38431fe996d580
+    src/exoeos/gibbs_excess.py: c3354acd4f79940cee2723ec3d2c5500751c767666d295f8c04c3c97b8cfc7b3
+    src/exoeos/ma_fe_si_o.py: 32b526dc260d39a5071e25b198cc06fd331b1ceae89483d509702629ab5c7cde
+    src/exoeos/state.py: 76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54
+    tests/conftest.py: 87d47ae57e35ed7a10960ae12407c8a274188271ea86d5e0016d3d70501e2096
+    tests/reference/fe_si_o_ma2001.json: cf59178a3cf6622b924cd8d8ac1d03e7e5feb65c6f2e687dcb3b66820b601e0f
+    tests/reference/generate_fe_si_o_ma2001.py: 164940e336c9c4ab98be886efe9cfd0cd7023325c0bf54f3e51a349650469034
+    tests/unittests/ma_fe_si_o_test.py: e9a2190e07c54376929bd63cd844f1cbefc5de64d0588ca41fe5dab89d3209ca
+contexts:
+- id: test_environment
+  scope: Actual local test environment; test files and fixtures define individual calculation inputs.
+  settings:
+    python: 3.12.7
+    jax: 0.6.2
+    jaxlib: 0.6.2
+    numpy: 2.1.0
+    scipy: 1.14.1
+    pytest: 8.3.3
+    backend: cpu
+    x64: true
+    test_selection: tests/unittests/ma_fe_si_o_test.py
+conditions: []
+assessments:
+- id: numerical_review
+  kind: evidence_support
+  claim: numerical_verification
+  claim_revision: '1'
+  subject: survey_20261020
+  context: test_environment
+  method:
+    id: review_selected_pytest
+    revision: '1'
+    description: Read actual test outcomes and selected file pins; limit support to those numerical
+      assertions.
+  evidence:
+  - test_run
+  reasons:
+  - 39 tests in the selected modules; see the shared receipt for per-module counts.
+  - Selected files matched Git at execution and were unchanged afterward. Other revisions, environments
+    and empirical accuracy need separate review.
+  status: supported
+  origin: reviewed
+- id: physical_review
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: test_environment
+  method:
+    id: review_empirical_support
+    revision: '1'
+    description: Separate numerical verification from experimental or observational support.
+  evidence:
+  - upstream_model
+  - implementation
+  reasons:
+  - Source identities and distinctions were read in the provider guide; original papers were not re-inspected.
+    The provider implements the printed Young coefficients with the Ma solvent term, not every cited
+    parameterization.
+  - Numerical agreement and membership in metadata intervals do not establish physical accuracy.
+  status: unknown
+  origin: reviewed
+follow_ups:
+- id: empirical_scope
+  target_kind: claim
+  target: physical_accuracy
+  revision: '1'
+  action: Inspect the original model equations and relevant material-specific data; record a separate
+    empirical assessment for a declared application.
+  requires:
+  - Original source passages, equations and coefficient tables with inspection locations.
+  - Explicit T/P, composition basis, gas driving quantity, standard states and uncertainty criteria.
+  - Reproducible comparison against independent observations or experiments, when available.
+  completion: A new scoped assessment cites inspected evidence and states its remaining gaps; a numerical
+    pass alone does not complete this task.
+  sources:
+  - https://doi.org/10.1007/s11663-001-0011-0
+  - https://doi.org/10.1038/s41586-023-05823-0

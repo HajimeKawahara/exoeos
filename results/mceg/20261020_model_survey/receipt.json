@@ -1,0 +1,299 @@
+{
+  "audited_revision": "37b9173f37866495949fd7c90340a02b7ceaa78d",
+  "provider": "exoeos",
+  "started_utc": "2026-10-19T22:58:02.773186+00:00",
+  "python": "3.12.7",
+  "executable": "/home/kawahara/miniconda3/bin/python",
+  "versions": {
+    "jax": "0.6.2",
+    "jaxlib": "0.6.2",
+    "numpy": "2.1.0",
+    "scipy": "1.14.1",
+    "pytest": "8.3.3"
+  },
+  "provider_import": "/home/kawahara/exoeos/src/exoeos/__init__.py",
+  "backend": "cpu",
+  "x64": true,
+  "selected_file_sha256": {
+    "documents/conditional_materials.rst": "4b42c1903f2cd619916d58de39bb1f4cbcc1bfffd1e5ab617784f6350ff4265f",
+    "documents/fe_si_o_h_reference.rst": "95ded8a89fbe8c247b49842509cb8597e745d0fce9c27e28fe7ee5465a1f0513",
+    "documents/fe_si_o_reference.rst": "61c39d636ae8a49284175bb4dec06d2607afd76d975c133b5f1599192b5d1e52",
+    "documents/m2_material_contract.rst": "2fbf912201b1c18bcc412152a7195cb70db812f755a70d205aa43409b1ae2686",
+    "documents/native_carbonate_liquid.rst": "62835cbbf1b63c328f3e7046f3f3f9c69a8a43a1cf5a595b591a375366360f47",
+    "documents/native_hydrous_liquid.rst": "9ba5048730e1a8baca59924dded3c26ee6582ed628927ce60589bb77e5bcd099",
+    "documents/native_magma.rst": "828e1dd19c080c130ec687927b6d3717217691cb78527a7ba4f89c7f95073ddb",
+    "documents/native_magma_fluid.rst": "30e4aad8930170eca25b9dafa84efd218a91252469409fab1f075087a988df56",
+    "examples/fe_si_o_h_control.py": "7acf3b6acb8f0c746cf7abfc048e8634f7e8d6e0cf3d841b07b4fe2a9afd403d",
+    "pyproject.toml": "e98593ed10b694c708c13e63d76aa47700c4237d1d957838f8d82237821b5883",
+    "src/exoeos/__init__.py": "b53b3a90a57cbec34b794fd084379aed6e45526e38ee574ec6483e7e79d78592",
+    "src/exoeos/_arrays.py": "020679ce40515c27ce0bf31f5b71b1f737737d4a5ebc0301198a9e2bcbedf507",
+    "src/exoeos/_conditional_data.py": "cfbd50ec42685cbb61f547f6d3778c41ff1afae4459347b62b008cfe53da231e",
+    "src/exoeos/_magma_carbon.py": "7030f9c70da6d51fc680cf1b5810078ef22e31fdf501b8d34a6bd5af99cd1b99",
+    "src/exoeos/_magma_water.py": "8c93e90181741952f56da7ae15007043db438ff15452cc07b968d3e80f921934",
+    "src/exoeos/_water_isotherm.py": "432f52b3ecae370b35b6775d1199f38f17dc2bb601e5617f5e158af03141c5fa",
+    "src/exoeos/constants.py": "69e57fe70ad4ea775f2d97722548276c87d3a91c76eb6be8f1be43ac30f83fa4",
+    "src/exoeos/contracts.py": "ba1052326b066d7d3e5a57b5e63ac3dba5cc388e7d0bb9d2bf38431fe996d580",
+    "src/exoeos/data/conditional_materials.json": "4c3b4417e5378f377df08a0e50e2f1971449b9bc4b407f4d767dcf3fa182b4a4",
+    "src/exoeos/gibbs_excess.py": "c3354acd4f79940cee2723ec3d2c5500751c767666d295f8c04c3c97b8cfc7b3",
+    "src/exoeos/helmholtz.py": "75d7ab3a68781c73e8d8197c05151f0a8adb076595bcfad296a544f00860318e",
+    "src/exoeos/ideal.py": "556d07bb0ffe4d2b3d00a0ea451be128185e1f789382c5ac54f0ad7363c90b6b",
+    "src/exoeos/ideal_solution.py": "b581faffae27988866fa88e0d2031413a81a0f1da33ceee9f524d663a758e4d0",
+    "src/exoeos/ma_fe_si_o.py": "32b526dc260d39a5071e25b198cc06fd331b1ceae89483d509702629ab5c7cde",
+    "src/exoeos/ma_fe_si_o_h.py": "131931749adf57a63642a156d93827c3429941b4c442256bc098c9d0cb86765d",
+    "src/exoeos/magma.py": "4f085ac25f3781cc4120ac7b56c67446668d1911d8cdaeeef077ff9e529807ed",
+    "src/exoeos/magma_carbonate.py": "1ccdaa2c7a9ebeff2d084365bf14f9fe69ca8e944690655e3b47e4b38f19b2c2",
+    "src/exoeos/magma_fluid.py": "a1c84490d83f6dab4b1fa15e775c53dd011f6120a21aa1b99df2bd187f5bb5da",
+    "src/exoeos/magma_volatiles.py": "eeda6b0c67dd2186221c6ba5426823903b82a0fadee2ba5a4b617c9bd2591494",
+    "src/exoeos/mass_fraction_solute.py": "d49c698a2814c62b73f128ef8e87a869e940f180334e7ae7b95b994df919830b",
+    "src/exoeos/peng_robinson.py": "d41306a6ae5c8ea8360e79d9ef28b75ddd1a73ba31446b55984f6dcbc56316f3",
+    "src/exoeos/solution_gibbs.py": "6894b0821ab2955add1c85aa9087766d430b8bb2585b73aa1fe5c97ad463b693",
+    "src/exoeos/state.py": "76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54",
+    "src/exoeos/zhang_duan.py": "bacbb5d7d1295258fa3d888067bb8060450a01a4bbfa8a40eb499483a3bee986",
+    "tests/conftest.py": "87d47ae57e35ed7a10960ae12407c8a274188271ea86d5e0016d3d70501e2096",
+    "tests/reference/carbonate_melts_v1.json": "5a05454144c4b0f98d463b94c78fd07c9f181b20283a9cd2db0fb0a6814a931b",
+    "tests/reference/carbonate_source_v1.json": "0359915dc41b410eddf149eca197786827b8d31bff8cba9cb5a3a7f621d1474f",
+    "tests/reference/dry11_melts_v1.json": "189923e80ebdd7771abd7e92972a4bcda35759631e5c644920bde3f93e2c3c1d",
+    "tests/reference/dry11_source_v1.json": "effafa911e4382bac2c0cb7d339e25d0dede55ca078d39282b2a2d4a5295dd5b",
+    "tests/reference/fe_si_o_ma2001.json": "cf59178a3cf6622b924cd8d8ac1d03e7e5feb65c6f2e687dcb3b66820b601e0f",
+    "tests/reference/generate_fe_si_o_ma2001.py": "164940e336c9c4ab98be886efe9cfd0cd7023325c0bf54f3e51a349650469034",
+    "tests/reference/hydrous_melts_v1.json": "6290bafd3c2be569e1f73b25ecb1c16d3ea3ef68165602ff417576a48dff0db5",
+    "tests/reference/hydrous_source_v1.json": "ddca061f5e0046ef03488fa4b90c442123507cf8e50303ad226b5b0ae5554f7d",
+    "tests/reference/magma_fluid_v1.json": "cb017b559868a372be9b6cce70614cd6d87400950bd344aa3942da63d6a612d4",
+    "tests/unittests/conditional_water_test.py": "fcb08a1c45b04de93bba5bf204b890dd58bb96c36b4b3d34796ab76df96592ae",
+    "tests/unittests/ma_fe_si_o_h_test.py": "0ccd73ceed1b3e825cee12334de5e06b92cfd2e06e2b85c33d31c2695c199c98",
+    "tests/unittests/ma_fe_si_o_test.py": "e9a2190e07c54376929bd63cd844f1cbefc5de64d0588ca41fe5dab89d3209ca",
+    "tests/unittests/magma_carbonate_test.py": "a71bc94e2b7343c9010d4c636d82445a46b9ade385e2db6f4909de274356786f",
+    "tests/unittests/magma_dry11_test.py": "c70ddc6a0dda20e86113263af2ff88e731ba8354915493d5688de157d9ccf0a4",
+    "tests/unittests/magma_fluid_test.py": "be3146c68af2c11f603789ca769b711bb2f6bb099749940f96746be20667f5af",
+    "tests/unittests/magma_hydrous_test.py": "64b9ed01c16f93fe8acc87bbc4075e4354174a9227495b920483e4095f1fbff3",
+    "tests/unittests/magma_mixed_fluid_test.py": "7f0dcbc47ad07b73d9f9cf82eb5f93c44fcbcd4c8d470b9740c4ea6119b835fa",
+    "tests/unittests/mass_fraction_solute_test.py": "d8d13f954e61c49bd0ee19dc83024a16923e181a6258f8c2eca11beb925e5298",
+    "tests/unittests/two_power_water_test.py": "afe5b8ee2807567c5ff7945b21326bf8d49b50d7d4a25d752a829c4ac5183971"
+  },
+  "selected_files_match_git": true,
+  "environment": {
+    "PYTHONPATH": "/home/kawahara/exoeos/src",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "JAX_PLATFORMS": "cpu",
+    "JAX_ENABLE_X64": "1"
+  },
+  "scope": "Selected source, test and fixture hashes only; not a complete dependency manifest. Numerical verification, not physical validation.",
+  "runs": [
+    {
+      "selection": "tests/unittests/conditional_water_test.py",
+      "command": [
+        "/home/kawahara/miniconda3/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/unittests/conditional_water_test.py",
+        "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_0.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 46.285,
+      "counts": {
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "selection": "tests/unittests/ma_fe_si_o_h_test.py",
+      "command": [
+        "/home/kawahara/miniconda3/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/unittests/ma_fe_si_o_h_test.py",
+        "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_1.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 8.906,
+      "counts": {
+        "tests": 20,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "selection": "tests/unittests/ma_fe_si_o_test.py",
+      "command": [
+        "/home/kawahara/miniconda3/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/unittests/ma_fe_si_o_test.py",
+        "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_2.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 8.89,
+      "counts": {
+        "tests": 39,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "selection": "tests/unittests/magma_carbonate_test.py",
+      "command": [
+        "/home/kawahara/miniconda3/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/unittests/magma_carbonate_test.py",
+        "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_3.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 86.198,
+      "counts": {
+        "tests": 124,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "selection": "tests/unittests/magma_dry11_test.py",
+      "command": [
+        "/home/kawahara/miniconda3/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/unittests/magma_dry11_test.py",
+        "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_4.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 18.389,
+      "counts": {
+        "tests": 375,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "selection": "tests/unittests/magma_fluid_test.py",
+      "command": [
+        "/home/kawahara/miniconda3/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/unittests/magma_fluid_test.py",
+        "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_5.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 45.017,
+      "counts": {
+        "tests": 48,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "selection": "tests/unittests/magma_hydrous_test.py",
+      "command": [
+        "/home/kawahara/miniconda3/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/unittests/magma_hydrous_test.py",
+        "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_6.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 25.89,
+      "counts": {
+        "tests": 180,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "selection": "tests/unittests/magma_mixed_fluid_test.py",
+      "command": [
+        "/home/kawahara/miniconda3/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/unittests/magma_mixed_fluid_test.py",
+        "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_7.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 35.846,
+      "counts": {
+        "tests": 49,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "selection": "tests/unittests/mass_fraction_solute_test.py",
+      "command": [
+        "/home/kawahara/miniconda3/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/unittests/mass_fraction_solute_test.py",
+        "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_8.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 4.614,
+      "counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "selection": "tests/unittests/two_power_water_test.py",
+      "command": [
+        "/home/kawahara/miniconda3/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/unittests/two_power_water_test.py",
+        "--junitxml=/tmp/mceg-model-survey-20261020/exoeos/results/mceg/20261020_model_survey/run_9.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 16.963,
+      "counts": {
+        "tests": 20,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "completed_utc": "2026-10-19T23:02:59.980376+00:00",
+  "files_unchanged_during_run": true,
+  "artifacts": {
+    "results/mceg/20261020_model_survey/tests.xml": "8bb6517ac0069238e42cb0381b56a2039a5e2498c2f7ad088eeadc710d58b78d",
+    "results/mceg/20261020_model_survey/tests.log": "5b516c56e9e47d73013fe839c8329d18784540b7020e7be1b3adc15823020889"
+  }
+}

@@ -1,0 +1,244 @@
+schema_version: '0.2'
+model:
+  id: exoeos.magma_fluid.v1
+  name: Magma-reference H2O and H2O-CO2 fluid Gibbs energy
+  description: Native ideal gas standards combined with an explicitly selected residual EOS for pure
+    water or an ordered binary H2O/CO2 fluid.
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 37b9173f37866495949fd7c90340a02b7ceaa78d
+    entry_points:
+    - exoeos.magma_fluid.water_fluid_gibbs
+    - exoeos.magma_fluid.mixed_fluid_gibbs
+    - exoeos.magma_fluid.water_gas_standard_gibbs
+    - exoeos.magma_fluid.co2_gas_standard_gibbs
+assumptions:
+- statement: 'An explicitly supplied EOS must match the species count and order: pure H2O or (H2O,CO2).
+    The vapor-root policy and its mechanical-stability restrictions belong to that EOS.'
+  evidence:
+  - implementation
+- statement: The standards are the zero-density one-bar references. The full energy includes standards,
+    ideal pressure/mixing and the selected residual term exactly once.
+  evidence:
+  - implementation
+- statement: This hybrid is distinct from the native MELTS fluid EOS. K/Pa/mol inputs give extensive
+    J.
+  evidence:
+  - implementation
+domains:
+- kind: numerical_evaluation
+  status: documented
+  description: Inspected numerical API and caller obligations; not a physical validation domain.
+  conditions:
+  - Finite scalar T >= 700 K, P > 0 and nonnegative amounts, plus the selected EOS domain. Enable
+    x64; value validation and species identity are caller obligations.
+  - Binary composition derivatives require both components positive; pure endpoints have fixed-face
+    derivatives. G=0 for an absent phase does not define insertion potentials.
+  evidence:
+  - implementation
+- kind: scientific_applicability
+  status: unknown
+  description: Composition-specific physical accuracy and joint applicability remain unestablished
+    by this survey.
+  conditions: []
+  evidence:
+  - upstream_model
+  - implementation
+claims:
+- id: numerical_verification
+  revision: '1'
+  kind: numerical_verification
+  statement: Saved ideal-standard and independent pressure-integral controls, fugacities, extensive
+    derivatives and liquid/fluid transfer identities in the two selected modules.
+  scope: Only the selected tests, their asserted tolerances and the recorded CPU/x64 environment.
+- id: physical_accuracy
+  revision: '1'
+  kind: physical_validation
+  statement: The model has quantitatively established physical accuracy for the intended melt/fluid
+    composition and conditions.
+  scope: Requires independent empirical data and explicit composition, reference-state and driving-quantity
+    conventions; not established by this survey.
+evidence:
+- id: upstream_model
+  kind: literature
+  summary: Cited model origin and retained source-review boundary.
+  sources:
+  - https://github.com/magmasource/MAGMA/tree/705a0fb315e5054d18275a580562f6121c8e458c
+  - https://doi.org/10.1016/j.gca.2009.01.021
+  scope: Provider standards, formula definitions and saved references were inspected. Original pure-fluid
+    source generation and the cited EOS paper were not re-inspected.
+  provenance:
+    role: secondary
+    location: Citations and source descriptions in the selected provider code/guide.
+    inspection: not_inspected
+    note: Provider standards, formula definitions and saved references were inspected. Original pure-fluid
+      source generation and the cited EOS paper were not re-inspected.
+- id: implementation
+  kind: implementation
+  summary: Native ideal gas standards combined with an explicitly selected residual EOS for pure water
+    or an ordered binary H2O/CO2 fluid.
+  sources:
+  - documents/native_magma_fluid.rst
+  - src/exoeos/__init__.py
+  - src/exoeos/_arrays.py
+  - src/exoeos/_magma_carbon.py
+  - src/exoeos/_magma_water.py
+  - src/exoeos/constants.py
+  - src/exoeos/contracts.py
+  - src/exoeos/helmholtz.py
+  - src/exoeos/ideal.py
+  - src/exoeos/magma.py
+  - src/exoeos/magma_carbonate.py
+  - src/exoeos/magma_fluid.py
+  - src/exoeos/peng_robinson.py
+  - src/exoeos/state.py
+  - src/exoeos/zhang_duan.py
+  scope: Inspected selected implementation, conventions and caller domains at revision 37b9173f37866495949fd7c90340a02b7ceaa78d.
+  subject: survey_20261020
+  provenance:
+    role: implementation
+    location: Selected provider source files and guide.
+    inspection: inspected
+    note: Code and declarations were read; an empirical calibration or external source replay is not
+      inferred.
+    derived_from:
+    - evidence: upstream_model
+      comparison: not_checked
+      note: Original-source scientific equivalence is not established by this implementation survey.
+- id: test_run
+  kind: numerical_test
+  summary: 97 selected tests passed.
+  sources:
+  - tests/unittests/magma_fluid_test.py
+  - tests/unittests/magma_mixed_fluid_test.py
+  - results/mceg/20261020_model_survey/receipt.json
+  - results/mceg/20261020_model_survey/tests.xml
+  - results/mceg/20261020_model_survey/tests.log
+  scope: Saved ideal-standard and independent pressure-integral controls, fugacities, extensive derivatives
+    and liquid/fluid transfer identities in the two selected modules.
+  result: passed
+  subject: survey_20261020
+  context: test_environment
+  artifacts:
+  - source: results/mceg/20261020_model_survey/receipt.json
+    sha256: 290a0e172f914bd74b24be1792e8d1c36f9a6d44f011a39b3d550573cb0874a3
+  - source: results/mceg/20261020_model_survey/tests.xml
+    sha256: 8bb6517ac0069238e42cb0381b56a2039a5e2498c2f7ad088eeadc710d58b78d
+  - source: results/mceg/20261020_model_survey/tests.log
+    sha256: 5b516c56e9e47d73013fe839c8329d18784540b7020e7be1b3adc15823020889
+  provenance:
+    role: primary
+    location: results/mceg/20261020_model_survey/receipt.json and tests.xml
+    inspection: inspected
+    note: Fresh local pytest execution; tests consume stored references where applicable. No external
+      reference program or experiment was rerun.
+limitations:
+- statement: Saved pressure-integral and derivative comparisons are implementation evidence, not physical
+    validation of solubility, saturation or the selected fluid mixture.
+  evidence:
+  - implementation
+- statement: No phase-equilibrium solver is included; reference alignment does not remove empirical
+    EOS limitations.
+  evidence:
+  - implementation
+subjects:
+- id: survey_20261020
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 37b9173f37866495949fd7c90340a02b7ceaa78d
+    entry_points:
+    - exoeos.magma_fluid.water_fluid_gibbs
+    - exoeos.magma_fluid.mixed_fluid_gibbs
+    - exoeos.magma_fluid.water_gas_standard_gibbs
+    - exoeos.magma_fluid.co2_gas_standard_gibbs
+  selected_files:
+    documents/native_magma_fluid.rst: 30e4aad8930170eca25b9dafa84efd218a91252469409fab1f075087a988df56
+    pyproject.toml: e98593ed10b694c708c13e63d76aa47700c4237d1d957838f8d82237821b5883
+    src/exoeos/__init__.py: b53b3a90a57cbec34b794fd084379aed6e45526e38ee574ec6483e7e79d78592
+    src/exoeos/_arrays.py: 020679ce40515c27ce0bf31f5b71b1f737737d4a5ebc0301198a9e2bcbedf507
+    src/exoeos/_magma_carbon.py: 7030f9c70da6d51fc680cf1b5810078ef22e31fdf501b8d34a6bd5af99cd1b99
+    src/exoeos/_magma_water.py: 8c93e90181741952f56da7ae15007043db438ff15452cc07b968d3e80f921934
+    src/exoeos/constants.py: 69e57fe70ad4ea775f2d97722548276c87d3a91c76eb6be8f1be43ac30f83fa4
+    src/exoeos/contracts.py: ba1052326b066d7d3e5a57b5e63ac3dba5cc388e7d0bb9d2bf38431fe996d580
+    src/exoeos/helmholtz.py: 75d7ab3a68781c73e8d8197c05151f0a8adb076595bcfad296a544f00860318e
+    src/exoeos/ideal.py: 556d07bb0ffe4d2b3d00a0ea451be128185e1f789382c5ac54f0ad7363c90b6b
+    src/exoeos/magma.py: 4f085ac25f3781cc4120ac7b56c67446668d1911d8cdaeeef077ff9e529807ed
+    src/exoeos/magma_carbonate.py: 1ccdaa2c7a9ebeff2d084365bf14f9fe69ca8e944690655e3b47e4b38f19b2c2
+    src/exoeos/magma_fluid.py: a1c84490d83f6dab4b1fa15e775c53dd011f6120a21aa1b99df2bd187f5bb5da
+    src/exoeos/peng_robinson.py: d41306a6ae5c8ea8360e79d9ef28b75ddd1a73ba31446b55984f6dcbc56316f3
+    src/exoeos/state.py: 76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54
+    src/exoeos/zhang_duan.py: bacbb5d7d1295258fa3d888067bb8060450a01a4bbfa8a40eb499483a3bee986
+    tests/conftest.py: 87d47ae57e35ed7a10960ae12407c8a274188271ea86d5e0016d3d70501e2096
+    tests/reference/carbonate_source_v1.json: 0359915dc41b410eddf149eca197786827b8d31bff8cba9cb5a3a7f621d1474f
+    tests/reference/magma_fluid_v1.json: cb017b559868a372be9b6cce70614cd6d87400950bd344aa3942da63d6a612d4
+    tests/unittests/magma_fluid_test.py: be3146c68af2c11f603789ca769b711bb2f6bb099749940f96746be20667f5af
+    tests/unittests/magma_mixed_fluid_test.py: 7f0dcbc47ad07b73d9f9cf82eb5f93c44fcbcd4c8d470b9740c4ea6119b835fa
+contexts:
+- id: test_environment
+  scope: Actual local test environment; test files and fixtures define individual calculation inputs.
+  settings:
+    python: 3.12.7
+    jax: 0.6.2
+    jaxlib: 0.6.2
+    numpy: 2.1.0
+    scipy: 1.14.1
+    pytest: 8.3.3
+    backend: cpu
+    x64: true
+    test_selection: tests/unittests/magma_fluid_test.py; tests/unittests/magma_mixed_fluid_test.py
+conditions: []
+assessments:
+- id: numerical_review
+  kind: evidence_support
+  claim: numerical_verification
+  claim_revision: '1'
+  subject: survey_20261020
+  context: test_environment
+  method:
+    id: review_selected_pytest
+    revision: '1'
+    description: Read actual test outcomes and selected file pins; limit support to those numerical
+      assertions.
+  evidence:
+  - test_run
+  reasons:
+  - 97 tests in the selected modules; see the shared receipt for per-module counts.
+  - Selected files matched Git at execution and were unchanged afterward. Other revisions, environments
+    and empirical accuracy need separate review.
+  status: supported
+  origin: reviewed
+- id: physical_review
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: test_environment
+  method:
+    id: review_empirical_support
+    revision: '1'
+    description: Separate numerical verification from experimental or observational support.
+  evidence:
+  - upstream_model
+  - implementation
+  reasons:
+  - Provider standards, formula definitions and saved references were inspected. Original pure-fluid
+    source generation and the cited EOS paper were not re-inspected.
+  - Numerical agreement and membership in metadata intervals do not establish physical accuracy.
+  status: unknown
+  origin: reviewed
+follow_ups:
+- id: empirical_scope
+  target_kind: claim
+  target: physical_accuracy
+  revision: '1'
+  action: Inspect the original model equations and relevant material-specific data; record a separate
+    empirical assessment for a declared application.
+  requires:
+  - Original source passages, equations and coefficient tables with inspection locations.
+  - Explicit T/P, composition basis, gas driving quantity, standard states and uncertainty criteria.
+  - Reproducible comparison against independent observations or experiments, when available.
+  completion: A new scoped assessment cites inspected evidence and states its remaining gaps; a numerical
+    pass alone does not complete this task.
+  sources:
+  - https://github.com/magmasource/MAGMA/tree/705a0fb315e5054d18275a580562f6121c8e458c
+  - https://doi.org/10.1016/j.gca.2009.01.021
