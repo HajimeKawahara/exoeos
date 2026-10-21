@@ -1,0 +1,358 @@
+{
+  "scope": "Source equations and published model outputs, not new experimental accuracy",
+  "source": {
+    "doi": "10.1016/j.gca.2009.01.021",
+    "url": "https://efs.idsse.ac.cn/module1/citation/2009-04-01/article.pdf",
+    "sha256": "6d72a0eed45e9a83887a73f01ae08d10f77fa251720662195dfb66a1f159d9d6",
+    "locations": "PDF pp. 2-6: Eqs. 1-2, 7-16 and Tables 3-7; source bytes verified during review, not downloaded by this replay"
+  },
+  "table3_coefficients_matched": 15,
+  "table4_species": [
+    "H2O",
+    "CO2"
+  ],
+  "table7_binary_parameters": {
+    "k1": 0.85,
+    "k2": 1.02
+  },
+  "eq8_scaling_factor": 1.0003304193597116,
+  "table6_comparisons": [
+    {
+      "T_K": 1203.15,
+      "P_MPa": 950.0,
+      "paper_model_cm3_mol": 22.2,
+      "provider_cm3_mol": 22.203434334080256,
+      "scaled_lhs_cm3_mol": 22.201052651269446,
+      "difference_cm3_mol": 0.003434334080257173
+    },
+    {
+      "T_K": 1293.15,
+      "P_MPa": 1750.0,
+      "paper_model_cm3_mol": 19.0,
+      "provider_cm3_mol": 19.001867912762386,
+      "scaled_lhs_cm3_mol": 19.00006223406418,
+      "difference_cm3_mol": 0.0018679127623855152
+    },
+    {
+      "T_K": 1393.15,
+      "P_MPa": 1750.0,
+      "paper_model_cm3_mol": 19.52,
+      "provider_cm3_mol": 19.52236236047689,
+      "scaled_lhs_cm3_mol": 19.52040672016762,
+      "difference_cm3_mol": 0.002362360476890757
+    },
+    {
+      "T_K": 1491.15,
+      "P_MPa": 950.0,
+      "paper_model_cm3_mol": 24.88,
+      "provider_cm3_mol": 24.884649865261107,
+      "scaled_lhs_cm3_mol": 24.881351024474025,
+      "difference_cm3_mol": 0.004649865261107777
+    },
+    {
+      "T_K": 1493.15,
+      "P_MPa": 1750.0,
+      "paper_model_cm3_mol": 20.04,
+      "provider_cm3_mol": 20.039535959194865,
+      "scaled_lhs_cm3_mol": 20.037426562703047,
+      "difference_cm3_mol": -0.0004640408051344025
+    },
+    {
+      "T_K": 1593.15,
+      "P_MPa": 1750.0,
+      "paper_model_cm3_mol": 20.56,
+      "provider_cm3_mol": 20.555816053745012,
+      "scaled_lhs_cm3_mol": 20.553549763254978,
+      "difference_cm3_mol": -0.004183946254986637
+    },
+    {
+      "T_K": 1693.15,
+      "P_MPa": 1750.0,
+      "paper_model_cm3_mol": 21.07,
+      "provider_cm3_mol": 21.072368522865165,
+      "scaled_lhs_cm3_mol": 21.06994281968699,
+      "difference_cm3_mol": 0.0023685228651650903
+    },
+    {
+      "T_K": 1723.15,
+      "P_MPa": 2200.0,
+      "paper_model_cm3_mol": 19.64,
+      "provider_cm3_mol": 19.64002108982651,
+      "scaled_lhs_cm3_mol": 19.637896782202677,
+      "difference_cm3_mol": 2.108982651094493e-05
+    },
+    {
+      "T_K": 1873.15,
+      "P_MPa": 2500.0,
+      "paper_model_cm3_mol": 19.41,
+      "provider_cm3_mol": 19.41089977577485,
+      "scaled_lhs_cm3_mol": 19.40877321768377,
+      "difference_cm3_mol": 0.0008997757748510082
+    },
+    {
+      "T_K": 1273.15,
+      "P_MPa": 1450.0,
+      "paper_model_cm3_mol": 19.96,
+      "provider_cm3_mol": 19.96151196830125,
+      "scaled_lhs_cm3_mol": 19.95954196801137,
+      "difference_cm3_mol": 0.0015119683012478902
+    },
+    {
+      "T_K": 1373.15,
+      "P_MPa": 1450.0,
+      "paper_model_cm3_mol": 20.58,
+      "provider_cm3_mol": 20.57786192482334,
+      "scaled_lhs_cm3_mol": 20.575706641742286,
+      "difference_cm3_mol": -0.0021380751766599815
+    },
+    {
+      "T_K": 1473.15,
+      "P_MPa": 1450.0,
+      "paper_model_cm3_mol": 21.19,
+      "provider_cm3_mol": 21.192907829034255,
+      "scaled_lhs_cm3_mol": 21.19056150901393,
+      "difference_cm3_mol": 0.00290782903425324
+    },
+    {
+      "T_K": 1573.15,
+      "P_MPa": 1450.0,
+      "paper_model_cm3_mol": 21.81,
+      "provider_cm3_mol": 21.808942280781103,
+      "scaled_lhs_cm3_mol": 21.806400257636636,
+      "difference_cm3_mol": -0.0010577192188954143
+    },
+    {
+      "T_K": 1673.15,
+      "P_MPa": 1450.0,
+      "paper_model_cm3_mol": 22.43,
+      "provider_cm3_mol": 22.42686782604865,
+      "scaled_lhs_cm3_mol": 22.424126458362615,
+      "difference_cm3_mol": -0.0031321739513501257
+    },
+    {
+      "T_K": 983.15,
+      "P_MPa": 1850.0,
+      "paper_model_cm3_mol": 17.06,
+      "provider_cm3_mol": 17.05922620658166,
+      "scaled_lhs_cm3_mol": 17.057882584964318,
+      "difference_cm3_mol": -0.0007737934183396078
+    },
+    {
+      "T_K": 983.15,
+      "P_MPa": 1400.0,
+      "paper_model_cm3_mol": 18.25,
+      "provider_cm3_mol": 18.254795474503386,
+      "scaled_lhs_cm3_mol": 18.253299665143892,
+      "difference_cm3_mol": 0.004795474503385577
+    },
+    {
+      "T_K": 983.15,
+      "P_MPa": 2500.0,
+      "paper_model_cm3_mol": 15.9,
+      "provider_cm3_mol": 15.897636004832563,
+      "scaled_lhs_cm3_mol": 15.896426423952482,
+      "difference_cm3_mol": -0.0023639951674372384
+    },
+    {
+      "T_K": 1173.15,
+      "P_MPa": 3000.0,
+      "paper_model_cm3_mol": 16.0,
+      "provider_cm3_mol": 15.99720479509519,
+      "scaled_lhs_cm3_mol": 15.995908150480204,
+      "difference_cm3_mol": -0.0027952049048103333
+    },
+    {
+      "T_K": 1173.15,
+      "P_MPa": 3500.0,
+      "paper_model_cm3_mol": 15.41,
+      "provider_cm3_mol": 15.40943106346636,
+      "scaled_lhs_cm3_mol": 15.408207196525431,
+      "difference_cm3_mol": -0.0005689365336394303
+    },
+    {
+      "T_K": 1273.15,
+      "P_MPa": 3000.0,
+      "paper_model_cm3_mol": 16.35,
+      "provider_cm3_mol": 16.34746097506176,
+      "scaled_lhs_cm3_mol": 16.34608036552083,
+      "difference_cm3_mol": -0.0025390249382404306
+    },
+    {
+      "T_K": 1273.15,
+      "P_MPa": 2950.0,
+      "paper_model_cm3_mol": 16.42,
+      "provider_cm3_mol": 16.417951321507438,
+      "scaled_lhs_cm3_mol": 16.416560950573835,
+      "difference_cm3_mol": -0.002048678492563738
+    },
+    {
+      "T_K": 1273.15,
+      "P_MPa": 2450.0,
+      "paper_model_cm3_mol": 17.23,
+      "provider_cm3_mol": 17.231737922127206,
+      "scaled_lhs_cm3_mol": 17.230230262239225,
+      "difference_cm3_mol": 0.0017379221272051382
+    },
+    {
+      "T_K": 1373.15,
+      "P_MPa": 3000.0,
+      "paper_model_cm3_mol": 16.68,
+      "provider_cm3_mol": 16.684145575386403,
+      "scaled_lhs_cm3_mol": 16.682679863478597,
+      "difference_cm3_mol": 0.004145575386402811
+    },
+    {
+      "T_K": 1373.15,
+      "P_MPa": 4000.0,
+      "paper_model_cm3_mol": 15.48,
+      "provider_cm3_mol": 15.48411111882241,
+      "scaled_lhs_cm3_mol": 15.482814380551453,
+      "difference_cm3_mol": 0.004111118822409665
+    },
+    {
+      "T_K": 1373.15,
+      "P_MPa": 2500.0,
+      "paper_model_cm3_mol": 17.53,
+      "provider_cm3_mol": 17.52807530480708,
+      "scaled_lhs_cm3_mol": 17.526479385112854,
+      "difference_cm3_mol": -0.0019246951929225986
+    },
+    {
+      "T_K": 1373.15,
+      "P_MPa": 3500.0,
+      "paper_model_cm3_mol": 16.02,
+      "provider_cm3_mol": 16.022902454036924,
+      "scaled_lhs_cm3_mol": 16.02153209862914,
+      "difference_cm3_mol": 0.00290245403692424
+    },
+    {
+      "T_K": 1073.15,
+      "P_MPa": 850.0,
+      "paper_model_cm3_mol": 21.71,
+      "provider_cm3_mol": 21.707132689052898,
+      "scaled_lhs_cm3_mol": 21.704984704974216,
+      "difference_cm3_mol": -0.002867310947102908
+    },
+    {
+      "T_K": 1073.15,
+      "P_MPa": 1500.0,
+      "paper_model_cm3_mol": 18.54,
+      "provider_cm3_mol": 18.53560273372745,
+      "scaled_lhs_cm3_mol": 18.53400656900673,
+      "difference_cm3_mol": -0.004397266272547995
+    },
+    {
+      "T_K": 1073.15,
+      "P_MPa": 2000.0,
+      "paper_model_cm3_mol": 17.23,
+      "provider_cm3_mol": 17.22876846457798,
+      "scaled_lhs_cm3_mol": 17.227356022784708,
+      "difference_cm3_mol": -0.0012315354220220343
+    },
+    {
+      "T_K": 1173.15,
+      "P_MPa": 850.0,
+      "paper_model_cm3_mol": 22.73,
+      "provider_cm3_mol": 22.729554605383434,
+      "scaled_lhs_cm3_mol": 22.72708073369926,
+      "difference_cm3_mol": -0.00044539461656611934
+    },
+    {
+      "T_K": 1173.15,
+      "P_MPa": 2000.0,
+      "paper_model_cm3_mol": 17.73,
+      "provider_cm3_mol": 17.726587856019165,
+      "scaled_lhs_cm3_mol": 17.72505380111883,
+      "difference_cm3_mol": -0.003412143980835225
+    }
+  ],
+  "summary": {
+    "table6_rows": 31,
+    "physical_within_half_printed_unit": 31,
+    "scaled_within_half_printed_unit": 27,
+    "physical_max_absolute_difference_cm3_mol": 0.004795474503385577
+  },
+  "eq14_comparisons": [
+    {
+      "x_H2O": 0.5,
+      "provider_lnphi": [
+        1.0845910204498568,
+        3.4029455099743835
+      ],
+      "printed_eq14_lnphi": [
+        0.3198294106573538,
+        1.8007039409080376
+      ],
+      "derived_lnphi": [
+        1.0845910204498566,
+        3.402945509974384
+      ],
+      "max_derived_difference": 4.440892098500626e-16
+    },
+    {
+      "x_H2O": 0.7,
+      "provider_lnphi": [
+        1.056226048882297,
+        3.4448488685936356
+      ],
+      "printed_eq14_lnphi": [
+        0.7761423089359103,
+        1.136311474934433
+      ],
+      "derived_lnphi": [
+        1.056226048882297,
+        3.444848868593638
+      ],
+      "max_derived_difference": 2.220446049250313e-15
+    },
+    {
+      "x_H2O": 0.9,
+      "provider_lnphi": [
+        1.0461312065162929,
+        3.482753422517222
+      ],
+      "printed_eq14_lnphi": [
+        1.0218697834268258,
+        0.4044693526442792
+      ],
+      "derived_lnphi": [
+        1.0461312065162902,
+        3.482753422517221
+      ],
+      "max_derived_difference": 2.6645352591003757e-15
+    }
+  ],
+  "eq8_units": {
+    "physical": "P in Pa, V in m3/mol, R=8.31446261815324 J/(mol K)",
+    "scaled_lhs_reading": "P and Pm in MPa, V in cm3/mol, Vm in L/mol, R=0.00831446261815324 MPa L/(mol K)",
+    "relation": "Pm*Vm/(R*Tm) = (3.0636*3.691**3/154)*Z_physical under Eqs. 9-11",
+    "status": "Explicit reviewer interpretation of the printed scaling, not an author-confirmed correction"
+  },
+  "eq14_conditions": {
+    "T_K": 1573.15,
+    "P_MPa": 1450.0,
+    "component_order": [
+      "H2O",
+      "CO2"
+    ],
+    "composition_basis": "mole fraction",
+    "derived_expression": "Z-1-ln(Z)+S1-2*S2*(1-E_i/epsilon_mix)+6*(1-Z)*(1-D_i/sigma_mix)",
+    "definitions": "E_i=sum_j(k1_ij*x_j*sqrt(epsilon_i*epsilon_j)); D_i=sum_j(k2_ij*x_j*(sigma_i+sigma_j)/2)",
+    "status": "Derivative of N*S1 at fixed T,V; printed Eq. 14 has +2*S2 and uses k1 in D_i instead"
+  },
+  "environment": {
+    "python": "3.12.7",
+    "jax": "0.6.2",
+    "numpy": "2.1.0",
+    "scipy": "1.14.1",
+    "backend": "cpu",
+    "x64": true
+  },
+  "file_sha256": {
+    "src/exoeos/zhang_duan.py": "bacbb5d7d1295258fa3d888067bb8060450a01a4bbfa8a40eb499483a3bee986",
+    "src/exoeos/helmholtz.py": "75d7ab3a68781c73e8d8197c05151f0a8adb076595bcfad296a544f00860318e",
+    "src/exoeos/constants.py": "69e57fe70ad4ea775f2d97722548276c87d3a91c76eb6be8f1be43ac30f83fa4",
+    "src/exoeos/state.py": "76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54",
+    "results/mceg/20261021_zd2009_fluid_review/reproduce.py": "daa1a1e44627fd95de34d15192bab8d92622ebff177203cd88e12453f742b4fe"
+  }
+}
