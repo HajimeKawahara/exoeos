@@ -1,9 +1,9 @@
 # Experimental MCEG contracts
 
 [MCEG](https://github.com/HajimeKawahara/mceg) records model assumptions,
-applicability, claims and scoped evidence. This checkout pilots its frozen
-`schema_version: "0.1"` with
-[pure-H2 Zhang-Duan](contracts/zhang_duan_h2.yaml). MCEG is not an ExoEOS
+applicability, claims and scoped evidence. The
+[pure-H2 Zhang-Duan](contracts/zhang_duan_h2.yaml) contract now uses v0.2,
+with a lossless import of its original v0.1 declarations. MCEG is not an ExoEOS
 runtime or test dependency; the model implementation is unchanged.
 
 The [2026-10-20 model inventory](model_inventory.md) adds v0.2 contracts for the
@@ -34,16 +34,42 @@ calculation or assign it a physical error bound.
 Local `sources` paths are relative to the **ExoEOS repository root**, not this
 directory, the YAML's directory or the caller's working directory. Current
 implementation and tutorial references are local. Historical tests and the
-original MCEG audit retain immutable commit URLs. External papers and unresolved
-physical questions keep their previous scope and inspection status.
+original MCEG audit retain immutable commit URLs. Historical source-review
+statuses are preserved; later inspections have separate dated records.
 
 The implementation revision is
 `d7681db4393fd85904846b083013230d81d45d4e`, the source snapshot audited before
 this metadata-only addition. It is not the commit publishing this contract.
-[The new execution receipt](../results/mceg/h2_tests_d7681db.json) and
+[The preserved execution receipt](../results/mceg/h2_tests_d7681db.json) and
 [JUnit report](../results/mceg/h2_tests_d7681db.xml) record the actual one-test
 run, environment and selected source hashes. The older run remains historical
-evidence; the numerical claim now links to `provider_test_run`.
+evidence; the imported numerical declaration retains `provider_test_run`.
+
+## H2 source review, 2026-10-21
+
+The retrieved Zhang-Duan (2009) PDF now supplies inspected Eq. 8 and Tables
+3-6, with its URL and SHA-256 recorded in `zd2009_20261021`. The H2 parameters
+match Table 4. Table 5 reports 111 points at 250-423 K and 2-700 MPa; its
+1.43% average deviation concerns volume, not fugacity. The two new range
+conditions are marginal bounds, not a joint coverage rectangle.
+
+`physical_review_20261021` remains `unknown`: individual H2 observations were
+not recovered, and the documented physical-Z interpretation differs from
+the printed reduced-variable left side of Eq. 8. Water volume controls do
+not resolve pure-H2 physical accuracy. Separate follow-ups retain these gaps.
+
+```bash
+mceg explain mceg/contracts/zhang_duan_h2.yaml \
+  --assessment physical_review_20261021 --root .
+mceg explain mceg/contracts/zhang_duan_h2.yaml \
+  --assessment numerical_review_20261021 --root .
+```
+
+The numerical review verifies the preserved receipt and selected-file hashes;
+it does not relabel that run as new. MCEG does not fetch URI artifacts. The
+consumer's frozen `provider_h2` example requires a separate manual review
+before adopting this changed scientific record; its earlier applicability
+decision is not automatically transferred.
 
 ## Validation and review
 
