@@ -346,6 +346,91 @@ evidence:
     inspection: not_inspected
     note: On 2026-10-21 the publisher-linked endpoint returned HTTP 200 with HTML rather
       than PDF. The response was rejected; no supplementary PDF hash or inspection is claimed.
+- id: ghiorso_gualda2015_supplement_20261021
+  kind: literature
+  summary: Locally supplied Ghiorso-Gualda (2015) electronic supplement inspected.
+  sources:
+  - https://doi.org/10.1007/s00410-015-1141-8
+  - urn:sha256:d7319ac8dd2f523a9ea16924195a3e61dd74d92757cae5c0ee0fb5b46d8a89b2
+  context: supplement_review_20261021
+  scope: Eqs. 20-22 define the associated liquid, water entropy and carbonate stationarity;
+    Eqs. 26-29 give species potentials. Eqs. 30-37 describe weighted melt/fluid potential
+    residuals and iterative singular-value fitting. Table A1 lists the full component basis.
+    ESM Figures 1-2 show parameter combinations; Figure 3 provides calibration comparison
+    plots, not a recovered table of individual observations with compositions and uncertainties.
+    The legend flags Cl-bearing and reducing, CO-bearing experiments that need separate scope.
+  artifacts:
+  - source: urn:sha256:d7319ac8dd2f523a9ea16924195a3e61dd74d92757cae5c0ee0fb5b46d8a89b2
+    sha256: d7319ac8dd2f523a9ea16924195a3e61dd74d92757cae5c0ee0fb5b46d8a89b2
+  provenance:
+    role: primary
+    location: PDF pp. 2-10 (Appendix pp. 1/10-9/10, Eqs. 1-37), p. 12 (Table A1),
+      p. 13 (figure legends), pp. 14-15 (ESM Figures 1-2) and pp. 16-49 (Figure 3 panels).
+    inspection: inspected
+    note: User-supplied Ghiorso_Gualda_sup.pdf, 49 pages, inspected on 2026-10-21.
+      PDF bytes, extracted text and images remain outside Git. The URN identifies the
+      locally hashed file; offline MCEG does not verify URI artifacts. The earlier failed
+      publisher-access record is historical. No calibration refit or plot digitization was performed.
+- id: gg2015_supplement_comparison_20261021
+  kind: implementation
+  summary: Liquid mixing, carbonate relaxation and final species potentials compared with the ESM.
+  sources:
+  - src/exoeos/magma_carbonate.py
+  - src/exoeos/_magma_carbon.py
+  - documents/native_carbonate_liquid.rst
+  subject: survey_20261020
+  context: supplement_review_20261021
+  scope: The symmetric interaction term and extra water entropy match Eq. 20 in form.
+    The species map and _extent residual implement CaSiO3 + CO2 = SiO2 + CaCO3 and Eq. 21;
+    _reaction_gibbs has the Eq. 22 form with zero reaction entropy in the pinned parameters.
+    Differentiating the relaxed energy gives the structures in Eqs. 26-29, including
+    twice log(X_H2O) for water and log(1-X_H2O) for other species. This comparison uses
+    the provider basis and parameters; it excludes literal chromium-basis equivalence,
+    intermediate printed expressions and the previously recorded coefficient differences.
+  provenance:
+    role: implementation
+    location: magma_carbonate.py _species, _mixing_gibbs, _extent, _reaction_gibbs and
+      liquid_gibbs; pinned liquid_CO2_H2O.c rANDsTOx and mixing terms.
+    inspection: inspected
+    note: The provider evaluates a fixed model; it does not implement the ESM regression.
+      The fitting description supplies neither a replayed calibration nor an uncertainty bound.
+    derived_from:
+    - evidence: ghiorso_gualda2015_supplement_20261021
+      comparison: consistent
+      note: Limited to the functional structures in Eqs. 20-22 and 26-29 and the carbonate
+        reaction coordinates in Table A1; discrepancies are recorded separately.
+    - evidence: magma_source_20261021
+      comparison: consistent
+      note: The existing mode-4 reaction map and fixed parameter choices are retained.
+- id: gg2015_supplement_discrepancies_20261021
+  kind: implementation
+  summary: Printed chromium basis and an intermediate derivative sign prevent literal ESM equivalence.
+  sources:
+  - src/exoeos/magma.py
+  - src/exoeos/magma_carbonate.py
+  subject: survey_20261020
+  context: supplement_review_20261021
+  scope: Table A1 row 4 prints Cr2O3, while the pinned MAGMA liquid basis/header and
+    provider use MgCr2O4. Mn-, Ni- and Co-bearing components are absent from the provider;
+    a chromium basis transformation is not established by dropping those components.
+    Eq. 23's independent-species line adds the composition-derivative sum, whereas the
+    corresponding Eq. 24 line subtracts it. The provider differentiates Eq. 20's energy
+    structure and does not copy that intermediate line. No author correction is inferred.
+  provenance:
+    role: implementation
+    location: Rendered ESM PDF pp. 7 and 12; magma.py component definitions and pinned
+      liq_struct_data.h/param_struct_data_CO2_H2O.h MgCr2O4 entries.
+    inspection: inspected
+    note: Eqs. 32-34 leave the reference functions unspecified; the supplement does not
+      settle the main-paper SiO2-H2O coefficient or H2O/CO2 temperature-origin differences.
+    derived_from:
+    - evidence: ghiorso_gualda2015_supplement_20261021
+      comparison: discrepancy
+      note: Literal basis labels and the intermediate derivative expression differ from
+        the inspected implementation; equivalence requires further source clarification.
+    - evidence: magma_source_20261021
+      comparison: consistent
+      note: The provider retains the pinned chromium species and energy formulation.
 limitations:
 - statement: The saved trace-carbon runtime discrepancy is retained; passing the selected tests does
     not claim agreement of every trace-component potential.
@@ -410,6 +495,13 @@ contexts:
     review_date: '2026-10-21'
     source_access: User-supplied restricted PDF; document bytes, extracted text and page images excluded from Git.
     model_choice: Pinned mode-4 liquid; paper/code discrepancies remain unresolved.
+- id: supplement_review_20261021
+  scope: Inspection of the private electronic supplement and comparison with the unchanged
+    mode-4 implementation; no calibration replay or physical accuracy claim.
+  settings:
+    review_date: '2026-10-21'
+    source_access: Private PDF, extracted text and images excluded from Git; local byte hash recorded.
+    comparison_scope: Selected liquid equations, species conventions and regression description.
 conditions: []
 assessments:
 - id: numerical_review
@@ -501,6 +593,31 @@ assessments:
     restricted composition face or the provider's separately selected hybrid fluid.
   status: unknown
   origin: reviewed
+- id: physical_supplement_review_20261021
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: supplement_review_20261021
+  method:
+    id: inspect_supplement_and_compare_source
+    revision: '1'
+    description: Compare liquid equations and species conventions, retaining publication
+      discrepancies and unrecovered empirical observations as explicit gaps.
+  evidence:
+  - gg2015_supplement_comparison_20261021
+  - gg2015_supplement_discrepancies_20261021
+  - gg2015_publication_code_discrepancies_20261021
+  reasons:
+  - Supplement access and the scoped liquid/regression inspection are complete. The
+    earlier access failure and main-paper assessment remain historical.
+  - The main-paper coefficient/temperature differences, ESM chromium/sign issues and
+    saved trace-carbon runtime difference remain unresolved.
+  - Comparison plots and iterative fitting instructions do not supply an empirical
+    replay for this provider. Individual calibration observations and uncertainty criteria
+    are still needed; the separately selected hybrid fluid is not validated by this review.
+  status: unknown
+  origin: reviewed
 follow_ups:
 - id: empirical_scope
   target_kind: claim
@@ -581,6 +698,18 @@ follow_ups:
   sources:
   - https://doi.org/10.1007/s00410-015-1141-8
   - https://lepr.ofm-research.org/
+- id: resolve_gg2015_supplement_melt_conventions
+  target_kind: evidence
+  target: gg2015_supplement_discrepancies_20261021
+  action: Resolve the printed chromium basis and intermediate derivative sign using an
+    authoritative correction or a documented derivation with the original calibration basis.
+  requires:
+  - An explicit Cr2O3/MgCr2O4 basis comparison and any required transformation of standards,
+    mixing terms and parameters, plus a check of Eqs. 23-29 against Eq. 20.
+  completion: A new scoped comparison justifies equivalence or a correction; existing
+    code agreement and physical accuracy remain separate questions.
+  sources:
+  - https://doi.org/10.1007/s00410-015-1141-8
 follow_up_resolutions:
 - follow_up: inspect_accessible_sources
   evidence:
@@ -601,3 +730,12 @@ follow_up_resolutions:
     inspect_gg2015_supplement and recover_gg2015_calibration_data; discrepancies are carried
     by resolve_gg2015_publication_code. This resolves the main-text access gap only, not
     the ESM derivation, calibration replay or physical validation.
+- follow_up: inspect_gg2015_supplement
+  evidence:
+  - ghiorso_gualda2015_supplement_20261021
+  - gg2015_supplement_comparison_20261021
+  - gg2015_supplement_discrepancies_20261021
+  note: The private supplement and scoped comparison are now recorded. The associated
+    fluid inspection and Eq. 8 inconsistency are recorded in magma_fluid.yaml under
+    gg2015_supplement_fluid_comparison_20261021. Publication conventions, calibration
+    observations and empirical accuracy remain separate open follow-ups.

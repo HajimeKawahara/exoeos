@@ -221,6 +221,56 @@ evidence:
       comparison: consistent
       note: The provider documents its explicit 2009 EOS choice separately from the native 1.2.x
         Duan-Zhang (2006) fluid model.
+- id: ghiorso_gualda2015_supplement_20261021
+  kind: literature
+  summary: Ghiorso-Gualda (2015) ESM fluid specification inspected from a privately supplied PDF.
+  sources:
+  - https://doi.org/10.1007/s00410-015-1141-8
+  - urn:sha256:d7319ac8dd2f523a9ea16924195a3e61dd74d92757cae5c0ee0fb5b46d8a89b2
+  context: supplement_review_20261021
+  scope: The ESM selects Duan-Zhang (2006), referring to its Tables 4-6 for parameters
+    and mixing rules. Eq. 8 describes fluid potentials relative to an ideal-gas standard;
+    Eqs. 9-19 derive fugacity coefficients. The provider's Zhang-Duan (2009) example uses
+    a different residual EOS; equivalence of the suggested caloric reference to its pinned
+    Haar/idealGasCO2 standards is not established.
+  artifacts:
+  - source: urn:sha256:d7319ac8dd2f523a9ea16924195a3e61dd74d92757cae5c0ee0fb5b46d8a89b2
+    sha256: d7319ac8dd2f523a9ea16924195a3e61dd74d92757cae5c0ee0fb5b46d8a89b2
+  provenance:
+    role: primary
+    location: PDF pp. 2-5 (Appendix pp. 1/10-4/10, Eqs. 1-19), including rendered Eq. 8 on p. 3.
+    inspection: inspected
+    note: User-supplied Ghiorso_Gualda_sup.pdf, 49 pages, inspected on 2026-10-21.
+      The document, extracted text and images remain outside Git. Its hash was verified
+      locally; offline MCEG does not verify URI artifacts. Full EOS equivalence was not established.
+- id: gg2015_supplement_fluid_comparison_20261021
+  kind: implementation
+  summary: The ESM fluid Eq. 8 has inconsistent printed equalities; the explicit hybrid convention is retained.
+  sources:
+  - src/exoeos/magma_fluid.py
+  - documents/native_magma_fluid.rst
+  subject: survey_20261020
+  context: supplement_review_20261021
+  scope: The middle expression in ESM Eq. 8 adds RT*log(phi_pure*P) and
+    RT*log(X_i*phi_i*P); its final expression instead contains RT*log(X_i*phi_i/phi_pure).
+    These are not algebraically equal. The provider uses its ideal one-bar gas standards
+    plus ideal mixing, log(P/1e5) and the selected EOS residual exactly once. It does not
+    adopt the ESM's final ratio as its absolute potential or claim native MELTS-fluid equivalence.
+  provenance:
+    role: implementation
+    location: Rendered ESM PDF p. 3, Eq. 8; magma_fluid.py mixed_fluid_gibbs and water_fluid_gibbs.
+    inspection: inspected
+    note: This is a reviewer-observed algebraic inconsistency, not an established author
+      correction. It is separate from the Zhang-Duan (2009) Eq. 8 Z convention recorded earlier.
+    derived_from:
+    - evidence: ghiorso_gualda2015_supplement_20261021
+      comparison: discrepancy
+      note: The printed equality chain cannot be used as an unambiguous implementation
+        specification; fluid EOS selection and caloric standards also require explicit choices.
+    - evidence: magma_source_20261021
+      comparison: consistent
+      note: The existing comparison of the provider's Haar and idealGasCO2 standards is
+        retained; this does not assert equivalence to the complete upstream fluid EOS.
 limitations:
 - statement: Saved pressure-integral and derivative comparisons are implementation evidence, not physical
     validation of solubility, saturation or the selected fluid mixture.
@@ -283,6 +333,12 @@ contexts:
     model_choice: MELTS-reference ideal standards plus an explicitly selected residual EOS; example
       uses Zhang-Duan (2009).
     source_hash_policy: Hashes identify retrieved bytes; MCEG does not download or verify URI artifacts.
+- id: supplement_review_20261021
+  scope: Private ESM fluid-source review against the explicitly selected hybrid model;
+    no EOS substitution, calibration replay or empirical error bound.
+  settings:
+    review_date: '2026-10-21'
+    source_access: Private PDF, extracted text and images excluded from Git; local byte hash recorded.
 conditions: []
 assessments:
 - id: numerical_review
@@ -348,6 +404,27 @@ assessments:
     and test receipt remain historical.
   status: unknown
   origin: reviewed
+- id: physical_supplement_review_20261021
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: supplement_review_20261021
+  method:
+    id: inspect_supplement_fluid_conventions
+    revision: '1'
+    description: Compare fluid reference conventions and distinguish printed algebra,
+      selected EOS choices and empirical support.
+  evidence:
+  - gg2015_supplement_fluid_comparison_20261021
+  - implementation_source_review_20261021
+  reasons:
+  - The supplied ESM establishes the upstream 2006 fluid choice and exposes an Eq. 8
+    equality inconsistency; it does not justify changing the provider's explicit hybrid.
+  - Original Haar calibration observations, the separate 2009 Z convention and
+    independent solubility observations for the selected hybrid remain unresolved.
+  status: unknown
+  origin: reviewed
 follow_ups:
 - id: empirical_scope
   target_kind: claim
@@ -376,6 +453,18 @@ follow_ups:
   sources:
   - https://doi.org/10.1016/j.gca.2009.01.021
   - https://melts.ofm-research.org/Support/Understanding-rhyolite-MELTS-versions.html
+- id: resolve_gg2015_fluid_potential_convention
+  target_kind: evidence
+  target: gg2015_supplement_fluid_comparison_20261021
+  action: Clarify the intended Eq. 8 standard state and pure-fluid fugacity factors before
+    asserting any native MELTS-fluid equivalence.
+  requires:
+  - An authoritative correction or derivation with explicit ideal/real standards and
+    pressure units, checked against the appropriate Duan-Zhang (2006) fluid implementation.
+  completion: A new comparison resolves the equality chain and documents the remaining
+    differences from the provider's selected residual EOS and caloric references.
+  sources:
+  - https://doi.org/10.1007/s00410-015-1141-8
 follow_up_resolutions:
 - follow_up: inspect_accessible_sources
   evidence:
