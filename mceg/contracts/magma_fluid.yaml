@@ -271,6 +271,112 @@ evidence:
       comparison: consistent
       note: The existing comparison of the provider's Haar and idealGasCO2 standards is
         retained; this does not assert equivalence to the complete upstream fluid EOS.
+- id: zd2009_extended_review_20261021
+  kind: literature
+  summary: Public Zhang-Duan (2009) PDF inspected for residual equations, mixture rules and published model volumes.
+  sources:
+  - https://doi.org/10.1016/j.gca.2009.01.021
+  - https://efs.idsse.ac.cn/module1/citation/2009-04-01/article.pdf
+  context: zd2009_comparison_review_20261021
+  scope: Eqs. 1-2 define chemical potential and fugacity with a 0.1 MPa ideal-gas standard.
+    Eqs. 8-16 and Tables 3-4 specify the residual EOS, scaling and mixture rules. Table 6
+    distinguishes experimental water volumes from the model's This study column; only
+    the latter is replayed here. Table 7 gives H2O-CO2 k1=0.85 and k2=1.02 and reports
+    a calibration range of 673-2573 K and 1-10000 MPa. That range and its reported
+    errors are not transferred to the provider's hybrid Gibbs model.
+  artifacts:
+  - source: https://efs.idsse.ac.cn/module1/citation/2009-04-01/article.pdf
+    sha256: 6d72a0eed45e9a83887a73f01ae08d10f77fa251720662195dfb66a1f159d9d6
+  provenance:
+    role: primary
+    location: 'Printed pp. 2090-2094 (PDF pp. 2-6): Eqs. 1-2 and 7-16; Tables 3, 4, 6 and 7.'
+    inspection: inspected
+    note: Fresh public download matched the earlier zd2009_20261021 hash. Equations and
+      tables were visually checked on rendered pages. The PDF and extracted pages stay
+      outside Git; URI hashes were verified locally, not by offline MCEG.
+- id: zd2009_residual_comparison_20261021
+  kind: implementation
+  summary: Residual coefficients, H2O/CO2 parameters and mixture rules match the inspected paper.
+  sources:
+  - src/exoeos/zhang_duan.py
+  - src/exoeos/helmholtz.py
+  subject: survey_20261020
+  context: zd2009_comparison_review_20261021
+  scope: All 15 Table 3 coefficients, H2O/CO2 Table 4 constants and Table 7 binary
+    parameters agree. The Eq. 8 right side, Eq. 10 temperature scaling, Eq. 11 volume
+    conversion, Eqs. 12-13 mixture rules and Eq. 15 residual Helmholtz expression agree.
+    The Eq. 8 left side and Eq. 14 are assessed separately below; full paper-to-hybrid
+    equivalence, including the caloric standards, is not claimed.
+  provenance:
+    role: implementation
+    location: zhang_duan.py _mixture_parameters, _compressibility_factor, _density_scale and alphar.
+    inspection: inspected
+    note: The existing implementation and all survey file pins are unchanged.
+    derived_from:
+    - evidence: zd2009_extended_review_20261021
+      comparison: consistent
+      note: Consistency is limited to the explicitly listed residual equations and parameters.
+- id: zd2009_equation_discrepancies_20261021
+  kind: implementation
+  summary: The printed Eq. 8 scaling and Eq. 14 fugacity expression differ from the retained implementation.
+  sources:
+  - src/exoeos/zhang_duan.py
+  - src/exoeos/helmholtz.py
+  - results/mceg/20261021_zd2009_fluid_review/reproduce.py
+  subject: survey_20261020
+  context: zd2009_comparison_review_20261021
+  scope: With P/Pm in MPa, V in cm3/mol, Vm in L/mol and R=0.00831446261815324
+    MPa L/(mol K), Eqs. 9-11 give Pm*Vm/(R*Tm)=C*Z_physical, where
+    C=3.0636*3.691^3/154=1.0003304193597116. Physical Z reproduces all 31 Table 6
+    model volumes within 0.005 cm3/mol; this scaled reading reproduces 27 of 31.
+    Differentiating N*S1 at fixed T,V gives a -2*S2 energy term and k2 in the size
+    sum, whereas printed Eq. 14 has +2*S2 and k1 there. The derived expression
+    agrees with provider lnphi at three H2O-CO2 compositions. Neither result
+    establishes the authors' intended correction or empirical hybrid accuracy.
+  provenance:
+    role: implementation
+    location: 'PDF pp. 3-4, Eqs. 8-16; zhang_duan.py alphar/molar_density and helmholtz.py state_trho.'
+    inspection: inspected
+    note: Reviewer derivation from the printed scaling and mixture rules, not an
+      author-confirmed erratum. The separate Ghiorso-Gualda (2015) ESM Eq. 8 issue
+      and the hybrid's Haar/idealGasCO2 caloric-standard differences remain open.
+    derived_from:
+    - evidence: zd2009_extended_review_20261021
+      comparison: discrepancy
+      note: Eq. 8 retains an extra scaling factor under the stated unit convention;
+        Eq. 14's printed energy sign and size interaction coefficient differ from
+        the derivative of the paper's residual Helmholtz expression and mixture rules.
+- id: zd2009_comparison_run_20261021
+  kind: numerical_test
+  summary: All 31 published water model volumes and three derived binary fugacity comparisons passed.
+  sources:
+  - results/mceg/20261021_zd2009_fluid_review/reproduce.py
+  - results/mceg/20261021_zd2009_fluid_review/comparison.json
+  subject: survey_20261020
+  context: zd2009_comparison_review_20261021
+  result: passed
+  scope: Table 6 model volumes agree within half the printed 0.01 cm3/mol step;
+    maximum absolute difference is 0.004795474503385577 cm3/mol. Independent NumPy/SciPy
+    inversion agrees with provider volumes within 1e-9 cm3/mol. At 1573.15 K,
+    1450 MPa and x_H2O=0.5, 0.7, 0.9, the derived lnphi agrees within 1e-11 for both
+    components; the printed Eq. 14 values are saved alongside it. These are source
+    and thermodynamic-consistency checks, not new experimental comparisons.
+  artifacts:
+  - source: results/mceg/20261021_zd2009_fluid_review/reproduce.py
+    sha256: daa1a1e44627fd95de34d15192bab8d92622ebff177203cd88e12453f742b4fe
+  - source: results/mceg/20261021_zd2009_fluid_review/comparison.json
+    sha256: 3d24500c476db5b48d57b9dc6fe52edf7a1c9bb2a55c5b99c8104d7304c0c752
+  provenance:
+    role: primary
+    location: Archived comparison.json; replay with the command in reproduce.py's module docstring.
+    inspection: inspected
+    note: Fresh CPU/x64 execution with source values transcribed from rendered tables.
+      The report records conditions, units, conventions, dependency versions and source-file hashes.
+    derived_from:
+    - evidence: zd2009_extended_review_20261021
+      comparison: consistent
+      note: Numerical agreement applies to Table 6's This study model-output column only;
+        neither the experimental columns nor the full calibration dataset were replayed.
 limitations:
 - statement: Saved pressure-integral and derivative comparisons are implementation evidence, not physical
     validation of solubility, saturation or the selected fluid mixture.
@@ -339,6 +445,20 @@ contexts:
   settings:
     review_date: '2026-10-21'
     source_access: Private PDF, extracted text and images excluded from Git; local byte hash recorded.
+- id: zd2009_comparison_review_20261021
+  scope: Public-source inspection and numerical reproduction of specified residual-model
+    quantities; no empirical error bound or joint physical applicability domain.
+  settings:
+    review_date: '2026-10-21'
+    python: 3.12.7
+    jax: 0.6.2
+    numpy: 2.1.0
+    scipy: 1.14.1
+    backend: cpu
+    x64: true
+    water_selection: All 31 Table 6 This study model volumes, using listed paired T/P values.
+    binary_selection: '1573.15 K; 1450 MPa; ordered (H2O, CO2) mole fractions with x_H2O=0.5, 0.7, 0.9.'
+    source_hash_policy: Public PDF hash verified locally; offline MCEG checks the two local review artifacts.
 conditions: []
 assessments:
 - id: numerical_review
@@ -425,6 +545,31 @@ assessments:
     independent solubility observations for the selected hybrid remain unresolved.
   status: unknown
   origin: reviewed
+- id: physical_zd2009_review_20261021
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: zd2009_comparison_review_20261021
+  method:
+    id: compare_zd2009_residual_sources
+    revision: '1'
+    description: Compare printed residual equations, parameters and model-output tables;
+      distinguish implementation consistency from empirical support for the hybrid.
+  evidence:
+  - zd2009_residual_comparison_20261021
+  - zd2009_equation_discrepancies_20261021
+  - zd2009_comparison_run_20261021
+  - gg2015_supplement_fluid_comparison_20261021
+  reasons:
+  - The formerly unchecked residual-source comparison now records matching coefficients,
+    all 31 Table 6 model volumes, and specific Eq. 8/14 differences with reproducible calculations.
+  - The physical-Z and differentiated-Helmholtz conventions are supported for the checked
+    quantities; this is not an authoritative correction of the paper or an experimental error bound.
+  - Independent hybrid observations, original Haar calibration and caloric-reference alignment
+    remain outside this review. The distinct 2015 ESM potential convention remains unresolved.
+  status: unknown
+  origin: reviewed
 follow_ups:
 - id: empirical_scope
   target_kind: claim
@@ -465,6 +610,31 @@ follow_ups:
     differences from the provider's selected residual EOS and caloric references.
   sources:
   - https://doi.org/10.1007/s00410-015-1141-8
+- id: compare_zd2009_residual
+  target_kind: evidence
+  target: implementation_source_review_20261021
+  action: Compare the accessible Zhang-Duan (2009) residual source against the provider,
+    including coefficients, units, definitions and published model-output controls.
+  requires:
+  - Inspected source pages and a verified download hash.
+  - Reproducible residual calculations and explicit matching or differing equations.
+  completion: New scoped comparisons record the checked quantities and discrepancies;
+    authoritative equation clarification and empirical validation remain separate work.
+  sources:
+  - https://doi.org/10.1016/j.gca.2009.01.021
+  - https://efs.idsse.ac.cn/module1/citation/2009-04-01/article.pdf
+- id: resolve_zd2009_printed_equations
+  target_kind: evidence
+  target: zd2009_equation_discrepancies_20261021
+  action: Seek an authoritative clarification or original author implementation of
+    Zhang-Duan (2009) Eqs. 8 and 14, and compare it with the recorded reviewer derivation.
+  requires:
+  - Explicit pressure, volume and gas-constant units for the Eq. 8 normalization.
+  - The intended energy sign and size-interaction coefficient in Eq. 14.
+  completion: A new inspected comparison identifies any authoritative resolution;
+    numerical agreement alone does not establish author intent or physical accuracy.
+  sources:
+  - https://doi.org/10.1016/j.gca.2009.01.021
 follow_up_resolutions:
 - follow_up: inspect_accessible_sources
   evidence:
@@ -474,3 +644,12 @@ follow_up_resolutions:
   - implementation_source_review_20261021
   note: Completed the accessible-source inspection on 2026-10-21. The existing empirical_scope task
     remains open; no physical validation or full runtime replay is inferred.
+- follow_up: compare_zd2009_residual
+  evidence:
+  - zd2009_extended_review_20261021
+  - zd2009_residual_comparison_20261021
+  - zd2009_equation_discrepancies_20261021
+  - zd2009_comparison_run_20261021
+  note: Completed the scoped residual-source comparison on 2026-10-21. The earlier
+    not_checked link remains historical; use physical_zd2009_review_20261021 for the
+    new assessment. resolve_zd2009_printed_equations and empirical_scope remain open.
