@@ -11,6 +11,19 @@ solubility/magma survey, with separate numerical and physical Assessments and
 fresh receipts. The new records use the companion MCEG volatile-quantity
 extension. Existing H2 and source-study histories retain their original scope.
 
+The [Ma Fe-Si-O contract](contracts/ma_fe_si_o.yaml) adds a 2026-10-21 source
+review of Young's printed equations, the Vogel/Buchan reproductions and pinned
+author/GCE code. The printed/code oxygen coefficient difference is recorded;
+original Ma and Badro supplementary calibration data remain pending. Inspect
+the new assessment separately from the retained survey history:
+
+```bash
+mceg explain mceg/contracts/ma_fe_si_o.yaml --assessment physical_review_20261021 --root .
+```
+
+Source inspection does not establish physical accuracy. Remote artifact hashes
+identify downloaded bytes; offline MCEG checks do not verify those URLs.
+
 ## Ownership and references
 
 This provider owns the model contract. The fixed 1700 K, 7500 bar H2 connection,
