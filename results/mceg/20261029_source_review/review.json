@@ -1,0 +1,339 @@
+{
+  "review_date": "2026-10-29",
+  "implementation_revision": "11887e0e8f963619d6dc6b95009c76a0b69dd65f",
+  "scope": "Manual source inspection and selected code/data comparison; no refit or new empirical validation.",
+  "source_storage": "PDFs, extracted text, rendered pages and rejected HTTP bodies remain outside Git. URI hashes identify bytes and are not checked by offline MCEG.",
+  "selected_files": {
+    "src/exoeos/magma.py": "4f085ac25f3781cc4120ac7b56c67446668d1911d8cdaeeef077ff9e529807ed",
+    "src/exoeos/magma_volatiles.py": "eeda6b0c67dd2186221c6ba5426823903b82a0fadee2ba5a4b617c9bd2591494",
+    "src/exoeos/_conditional_data.py": "cfbd50ec42685cbb61f547f6d3778c41ff1afae4459347b62b008cfe53da231e",
+    "src/exoeos/data/conditional_materials.json": "4c3b4417e5378f377df08a0e50e2f1971449b9bc4b407f4d767dcf3fa182b4a4",
+    "documents/conditional_materials.rst": "4b42c1903f2cd619916d58de39bb1f4cbcc1bfffd1e5ab617784f6350ff4265f",
+    "examples/m2_material/water_data/provenance.json": "93475d9846d5575c87a9b2a0bf0674b7e038c79b94373bc801825df6f405c374",
+    "examples/m2_material/water_data/water_basis_pressure_sources.json": "e114a959b266cdb2893bfe52b40185f53f353a766d49b42e67bfc9e25e116d50",
+    "examples/m2_material/water_data/CombinedDataset_withS23N17.csv": "635fd0c93ef90643d4909329463e958442fb562d10a84b8a61b39ce81b50eab5",
+    "examples/m2_material/water_data/Sossi23_Data.csv": "8d77d029791a0f96e62bb6818d684e68ac713b273f40fe494f3e17711b87fc92",
+    "examples/m2_material/na_helium_transfer_sources.json": "3faca86ae8d1c1595e40cfdc4fa8a39967849723dfdbc05c3e02ea3ac7af0a75"
+  },
+  "hirschmann2012": {
+    "doi": "10.1016/j.epsl.2012.06.031",
+    "source": "urn:sha256:f9e52005a851477934a2b00b3cc65d3ef015ab0aefa2c20f110f6cbd00ad1853",
+    "supplied_filename": "hirschmann_2012.pdf",
+    "sha256": "f9e52005a851477934a2b00b3cc65d3ef015ab0aefa2c20f110f6cbd00ad1853",
+    "pages": 11,
+    "inspected_locations": "PDF pp. 2-3 (Tables 1-2 and Sections 2.1-2.4), p. 5 (Sections 3.1-3.2 and Eq. 6), p. 6 (Fig. 4 and Sections 5.1-5.2); printed pp. 39-43.",
+    "basalt_fit": {
+      "ln_K_intercept": -11.403,
+      "slope_per_GPa": -0.76,
+      "fugacity_unit": "bar",
+      "source": "Fig. 4 plotted regression"
+    },
+    "andesite_fit": {
+      "ln_K_intercept": -10.591,
+      "slope_per_GPa": -0.81,
+      "source": "Fig. 4 plotted regression; not used by the provider"
+    },
+    "basalt_table_1": {
+      "runs": 13,
+      "pressure_GPa": [
+        0.7,
+        3.0
+      ],
+      "temperature_K": [
+        1673.15,
+        1723.15
+      ],
+      "higher_temperature_runs": [
+        "A697",
+        "A711"
+      ],
+      "coverage": "Marginal bounds, not a validated joint rectangle."
+    },
+    "andesite_table_1": {
+      "runs": 17,
+      "temperature_K": [
+        1673.15,
+        1773.15
+      ],
+      "higher_temperature_runs": [
+        "A950",
+        "A949"
+      ],
+      "calibration_exclusions": "Section 3.1 excludes carbon-contaminated A882 and A950 from thermodynamic calibration."
+    },
+    "concentration_basis": "Table 2 footnote c and Fig. 4 use oxide-component mole fractions including H2O. Table 2 H2O includes molecular water plus OH expressed as H2O; the H2 column is molecular H2 mass percent.",
+    "temperature_policy": "Eq. 6 uses T0=1400 degC and P0=100 kPa; the experiments do not calibrate the reaction enthalpy. The provider adopts the Fig. 4 pressure regression without a fitted temperature response.",
+    "basis_comparison": {
+      "provider_host": "sum(dry MELTS endmember amounts) + n_H2O",
+      "paper_host": "Oxide-component amounts including H2O",
+      "example": "One mole Mg2SiO4 maps to one mole SiO2 plus two moles MgO: one provider dry component versus three dry oxide components.",
+      "conclusion": "Matching regression constants do not establish concentration-basis equivalence."
+    },
+    "remaining": "Supplementary starting/run compositions were not recovered. No Table 2 refit, calibration correction or coupled melt validation was performed. The original FTIR calibration limitations remain relevant."
+  },
+  "thompson2025": {
+    "doi": "10.1016/j.chemgeo.2025.123048",
+    "source": "https://arxiv.org/pdf/2510.05281v1",
+    "sha256": "481d6a752c1fa54d6d1466982cc08b81cbce889101e47943a432f5bba9575bb3",
+    "inspected_locations": "PDF pp. 3, 7-8: Section 2.3, Eq. 1, Eqs. 16-18 and Tables 3-4.",
+    "coefficient_comparison": "The packaged A=7.19e-4 and five B_K values in CaO, SiO2, MgO, Al2O3, FeO order match Table 4, second row.",
+    "response_basis": "Eq. 1 multiplies the absorption-derived concentration by M(OH)=0.017008 kg/mol while calling X(OH) a mole fraction. The provider uses a mass response and multiplies its capacity by 0.0180153/0.017008 for H2O-equivalent mass.",
+    "normalization_crosscheck": "Sossi (2023), PDF pp. 2-3, Section 2.2 and Eq. 1, uses M(H2O)=0.018015 kg/mol for total water mass ppm. Replacing the OH molar-mass factor is a dimensional interpretation; it is not literal counting of two OH groups or author approval of the full provider scalar.",
+    "notebook_status": "The previously inspected cell-3 assignment and notebook hash are retained in water_data/provenance.json. Current direct download and API attempts returned HTTP 403; no fresh notebook inspection is claimed.",
+    "remaining": "The finite binary water mass fraction, Fe-total predictor projection, H2 dilution and dry11 host continuation are provider choices. Source coefficient agreement supplies no wet-BSE or high-pressure accuracy bound."
+  },
+  "guillot_sator2012": {
+    "doi": "10.1016/j.gca.2011.11.040",
+    "source": "https://arxiv.org/pdf/1112.2055v1",
+    "sha256": "041291e1236f22664ec94a58988d05cfb5a8fe4ea44ec84f681e5e864733a0c5",
+    "inspected_locations": "PDF p. 35, Appendix C, header and all nine He entries.",
+    "table_units": "1e-5 cm3 STP / g dry melt / bar; simulated melts at P approximately zero.",
+    "He_entries_in_table_units": {
+      "olivine": [
+        [
+          1673,
+          18.8
+        ],
+        [
+          1873,
+          30.5
+        ],
+        [
+          2273,
+          64.8
+        ]
+      ],
+      "MORB": [
+        [
+          1673,
+          59.6
+        ],
+        [
+          2273,
+          114.1
+        ]
+      ],
+      "rhyolite": [
+        [
+          1673,
+          186.0
+        ],
+        [
+          2273,
+          269.0
+        ]
+      ],
+      "enstatite": [
+        [
+          1673,
+          19.9
+        ],
+        [
+          1873,
+          31.5
+        ]
+      ]
+    },
+    "comparison": "All nine packaged S values match after multiplying table entries by 1e-5. The provider converts with its declared 273.15 K, 101325 Pa STP convention and interpolates log capacity in reciprocal temperature.",
+    "remaining": "Interpolation, use with fugacity away from the low-pressure limit and wet-host transfer are provider continuations, not additional observations in Appendix C."
+  },
+  "secondary_h2_crosscheck": {
+    "source": "https://arxiv.org/pdf/2408.17056v1",
+    "sha256": "fdb7708dd63e965a654abe9039064a4787f7dfd2be8a597cbb536774630dceb1",
+    "location": "PDF p. 7, Section 2.3, Eq. 6 and preceding paragraph.",
+    "result": "Seo repeats the basalt Fig. 4 constants and fugacity/bar, pressure/GPa units; its rounded 1673-1723 K interval matches the basalt subset of Table 1, not all andesite runs."
+  },
+  "not_retrieved": [
+    {
+      "source": "Ma (2001) full text",
+      "doi": "10.1007/s11663-001-0011-0",
+      "needed": "Original Eqs. 23-24 with composition, interaction-parameter and standard-state definitions.",
+      "outcome": "Publisher landing page requires subscription access; PDF endpoint returned HTML. Searches found citations and reproductions, but no original full text."
+    },
+    {
+      "source": "Badro (2015) SI Appendix",
+      "doi": "10.1073/pnas.1505672112",
+      "needed": "pnas.1505672112.sapp.pdf, particularly Fe-Si-O interaction parameters and calibration conventions.",
+      "outcome": "PNAS returned 403; PMC returned HTML; Europe PMC reported no open-access supplement. HAL metadata listed the main paper only. The downloaded seven-page OSTI file contains two cover pages and the five-page article, not the SI."
+    },
+    {
+      "source": "Hirschmann (2012) supplementary compositions",
+      "doi": "10.1016/j.epsl.2012.06.031",
+      "needed": "Starting and run-specific glass oxide compositions referred to in Sections 2.1 and 5.1 and Fig. 4.",
+      "outcome": "Not included in the supplied main PDF; the guessed publisher mmc1.xls candidate returned 404 and does not identify the actual supplement filename."
+    },
+    {
+      "source": "Thompson (2025) fitting notebook, fresh copy",
+      "doi": "10.5281/zenodo.16418810",
+      "needed": "solubilitylaw_revision_combodataset_bayesianmultivariate.ipynb",
+      "outcome": "Direct and API downloads returned 403. The previous inspection remains historical; the paper was freshly retrieved and inspected."
+    }
+  ],
+  "retrieval_attempts": [
+    {
+      "id": "ma2001",
+      "url": "https://link.springer.com/content/pdf/10.1007/s11663-001-0011-0.pdf",
+      "status": 200,
+      "final_url": "https://link.springer.com/content/pdf/10.1007/s11663-001-0011-0.pdf",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 3038,
+      "sha256": "32ed63159c77e21ee19ca1b9aa3213ccf0218eb59539560b132a8e68ef0e18ea",
+      "is_pdf": false,
+      "accepted": false
+    },
+    {
+      "id": "badro2015_pmc",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/instance/4603515/bin/pnas.1505672112.sapp.pdf",
+      "status": 200,
+      "final_url": "https://pmc.ncbi.nlm.nih.gov/articles/instance/4603515/bin/pnas.1505672112.sapp.pdf",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 1817,
+      "sha256": "551420f114194e822ff6d6e63660ba0a883015d8d399939ff0a07c6e44af0a68",
+      "is_pdf": false,
+      "accepted": false
+    },
+    {
+      "id": "badro2015_pnas",
+      "url": "https://www.pnas.org/doi/suppl/10.1073/pnas.1505672112/suppl_file/pnas.1505672112.sapp.pdf",
+      "status": 403,
+      "final_url": "https://www.pnas.org/doi/suppl/10.1073/pnas.1505672112/suppl_file/pnas.1505672112.sapp.pdf",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 5663,
+      "sha256": "26f29581864a2075a197a431ddace8a520056b9dbb1c0dbf579f4ffb3366891e",
+      "is_pdf": false,
+      "accepted": false
+    },
+    {
+      "id": "guillot_sator2012",
+      "url": "https://arxiv.org/pdf/1112.2055v1",
+      "status": 200,
+      "final_url": "https://arxiv.org/pdf/1112.2055v1",
+      "content_type": "application/pdf",
+      "bytes": 919624,
+      "sha256": "041291e1236f22664ec94a58988d05cfb5a8fe4ea44ec84f681e5e864733a0c5",
+      "is_pdf": true,
+      "accepted": true
+    },
+    {
+      "id": "thompson2025",
+      "url": "https://arxiv.org/pdf/2510.05281v1",
+      "status": 200,
+      "final_url": "https://arxiv.org/pdf/2510.05281v1",
+      "content_type": "application/pdf",
+      "bytes": 2542464,
+      "sha256": "481d6a752c1fa54d6d1466982cc08b81cbce889101e47943a432f5bba9575bb3",
+      "is_pdf": true,
+      "accepted": true
+    },
+    {
+      "id": "sossi2023",
+      "url": "https://arxiv.org/pdf/2211.13344v1",
+      "status": 200,
+      "final_url": "https://arxiv.org/pdf/2211.13344v1",
+      "content_type": "application/pdf",
+      "bytes": 1083828,
+      "sha256": "e31925f013ff211e5f415ee370208dd940d6f147a0dee3c256093a5a93a503f4",
+      "is_pdf": true,
+      "accepted": true
+    },
+    {
+      "id": "seo2024",
+      "url": "https://arxiv.org/pdf/2408.17056v1",
+      "status": 200,
+      "final_url": "https://arxiv.org/pdf/2408.17056v1",
+      "content_type": "application/pdf",
+      "bytes": 7868131,
+      "sha256": "fdb7708dd63e965a654abe9039064a4787f7dfd2be8a597cbb536774630dceb1",
+      "is_pdf": true,
+      "accepted": true
+    },
+    {
+      "id": "thompson2025_notebook",
+      "url": "https://zenodo.org/records/16418810/files/solubilitylaw_revision_combodataset_bayesianmultivariate.ipynb?download=1",
+      "status": 403,
+      "final_url": "https://zenodo.org/records/16418810/files/solubilitylaw_revision_combodataset_bayesianmultivariate.ipynb?download=1",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 763,
+      "sha256": "b206c9e05787e1af07118ab5f07172592fc73fcf1ead93a369cd58359c289695",
+      "is_pdf": false,
+      "accepted": false
+    },
+    {
+      "id": "badro2015_osti",
+      "url": "https://www.osti.gov/servlets/purl/1343007",
+      "status": 200,
+      "final_url": "https://www.osti.gov/servlets/purl/1343007",
+      "content_type": "application/pdf",
+      "bytes": 1266165,
+      "sha256": "123aa8cb3032f0b7bd554ada4b477625fbaa37f9c5eba6281d4e4897a425df55",
+      "is_pdf": true,
+      "accepted": true
+    },
+    {
+      "id": "badro2015_hal_metadata",
+      "url": "https://api.archives-ouvertes.fr/search/?q=halId_s:insu-02136916&fl=title_s,fileMain_s,files_s,uri_s&wt=json",
+      "status": 200,
+      "final_url": "https://api.archives-ouvertes.fr/search/?q=halId_s:insu-02136916&fl=title_s,fileMain_s,files_s,uri_s&wt=json",
+      "content_type": "application/json; charset=utf-8",
+      "bytes": 444,
+      "sha256": "9c668da8b471c14eb956e1a9cb2c14fc3e4d29f0a6fafaf827d129469f1351c8",
+      "is_pdf": false,
+      "accepted": false
+    },
+    {
+      "id": "badro2015_europepmc",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4603515/supplementaryFiles",
+      "status": 200,
+      "final_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4603515/supplementaryFiles",
+      "content_type": "application/xml",
+      "bytes": 296,
+      "sha256": "59d0efc33062d12d30e40170bf04f2cc6e0aed3c8f1b538ab32578185e6171aa",
+      "is_pdf": false,
+      "accepted": false
+    },
+    {
+      "id": "thompson2025_direct_notebook",
+      "url": "https://zenodo.org/records/16418810/files/solubilitylaw_revision_combodataset_bayesianmultivariate.ipynb",
+      "status": 403,
+      "final_url": "https://zenodo.org/records/16418810/files/solubilitylaw_revision_combodataset_bayesianmultivariate.ipynb",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 763,
+      "sha256": "569836a17c5d773492b2157cede97c6185ea888838ce9fbbceb1446a9deed980",
+      "is_pdf": false,
+      "accepted": false
+    },
+    {
+      "id": "thompson2025_api_notebook",
+      "url": "https://zenodo.org/api/records/16418810/files/solubilitylaw_revision_combodataset_bayesianmultivariate.ipynb/content",
+      "status": 403,
+      "final_url": "https://zenodo.org/api/records/16418810/files/solubilitylaw_revision_combodataset_bayesianmultivariate.ipynb/content",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 763,
+      "sha256": "e4e90453a4d780d3f39cd63c557dbe22c9b41cf782ca554022b265080546f9e1",
+      "is_pdf": false,
+      "accepted": false
+    },
+    {
+      "id": "thompson2025_record",
+      "url": "https://zenodo.org/api/records/16418810",
+      "status": 403,
+      "final_url": "https://zenodo.org/api/records/16418810",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 763,
+      "sha256": "a08e292b19bbfdb34ba4d6221d45b5ea33af3817fc2888eab565a438ddf5ece7",
+      "is_pdf": false,
+      "accepted": false
+    },
+    {
+      "id": "hirschmann2012_supplement_candidate",
+      "url": "https://ars.els-cdn.com/content/image/1-s2.0-S0012821X12003159-mmc1.xls",
+      "status": 404,
+      "final_url": "https://ars.els-cdn.com/content/image/1-s2.0-S0012821X12003159-mmc1.xls",
+      "content_type": "text/xml",
+      "bytes": 189,
+      "sha256": "83cf0fd7cf2740129f2ddedb484cf2f65c2f831820454bbd6fa35dad094a4d8d",
+      "is_pdf": false,
+      "accepted": false
+    }
+  ]
+}

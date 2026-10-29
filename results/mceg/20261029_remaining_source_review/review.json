@@ -1,0 +1,811 @@
+{
+  "review_date": "2026-10-29",
+  "implementation_revision": "11887e0e8f963619d6dc6b95009c76a0b69dd65f",
+  "scope": "Follow-up inspection of eleven named source gaps. Four inspection/retrieval gaps progressed; seven requested full texts or datasets remain unavailable. This is not an exhaustive audit of every ExoEOS model family.",
+  "source_storage": "Primary PDFs, DOCX, notebook, source CSVs and bibliographic responses are stored under local refs/. The checkout-only .git/info/exclude contains /refs/. No primary files are tracked. Contracts cite URI hashes and the versionable review artifact rather than requiring private refs/ files.",
+  "withdrawn_submission": "The user withdrew hirschmann_2012_supp.pdf, which was a Ghiorso-Gualda (2015) supplement. It supplies no Hirschmann evidence. The replacement DOCX below was inspected separately.",
+  "hirschmann2012_supplement": {
+    "bibliography": {
+      "authors": [
+        "M.M. Hirschmann",
+        "A.C. Withers",
+        "P. Ardia",
+        "N.T. Foley"
+      ],
+      "title": "Solubility of molecular hydrogen in silicate melts and consequences for volatile evolution of terrestrial planets",
+      "year": 2012,
+      "journal": "Earth and Planetary Science Letters",
+      "volume": "345-348",
+      "issue": null,
+      "pages": "38-48",
+      "article_number": null,
+      "doi": "10.1016/j.epsl.2012.06.031",
+      "metadata": {
+        "local_path": "refs/bibliographic_metadata/hirschmann_crossref.json",
+        "bytes": 27977,
+        "sha256": "6575e2aece9e04af7a6172ccf118983837e862e682f651741f06fb3e9cf7f27d",
+        "url": "https://api.crossref.org/works/10.1016/j.epsl.2012.06.031"
+      }
+    },
+    "artifact": {
+      "local_path": "refs/hirschmann_2012_supp.docx",
+      "bytes": 114052,
+      "sha256": "98c44a094e9857d073a50d5bd47157ea30918755bbd1e0f93bb9874b81d10945"
+    },
+    "inspection": "Entire word/document.xml: Data Supplement; Compositions of starting materials and EMPA analyses of selected quenched glasses; Series 1 and Series 2 tables and footnotes. Cross-checked against main-paper Tables 1-2 and Fig. 4.",
+    "identity": "Starting-material types and five exact experimental identifiers match the main paper. The supplied file contains no separate bibliographic cover.",
+    "content": "Two starting compositions and six selected quenched-glass analyses. It is not a run-by-run composition table for all 30 experiments.",
+    "series_1_run_labels": [
+      "B343",
+      "B808",
+      "B341"
+    ],
+    "series_2_run_labels": [
+      "A937",
+      "B446",
+      "B448"
+    ],
+    "label_discrepancy": "The supplement labels B808, whereas main-paper Tables 1-2 list A808. No equivalence or correction is assumed; that column is excluded from the matched-run calculation.",
+    "starting_material_note": "Starting major elements are volatile-free. Basalt added volatiles differ among experiment groups: 1.4 wt% CH4; 4.8 wt% CH4 plus 0.2 wt% H2; or 2.95 wt% CH4 plus 0.12 wt% H2 plus 1.93 wt% H2O. These are preparation inputs, not measured dissolved amounts.",
+    "reconstruction_method": {
+      "basis": "A declared direct reconstruction using unrenormalized central EMPA oxide wt% and main-paper FTIR H2/H2O wt% on a common 100 g basis. This assumption does not establish the authors exact unpublished calculation.",
+      "formula": "n_i=w_i/M_i; X_H2=n_H2/(sum(n_dry_oxides)+n_H2O+n_H2); ln_K=ln(X_H2/fH2_bar).",
+      "oxide_molar_masses_g_mol": {
+        "SiO2": 60.0843,
+        "Al2O3": 101.961276,
+        "FeO*": 71.8444,
+        "MgO": 40.3044,
+        "CaO": 56.0774,
+        "Na2O": 61.97894,
+        "K2O": 94.196
+      },
+      "H2_molar_mass_g_mol": 2.01588,
+      "H2O_molar_mass_g_mol": 18.01528,
+      "uncertainty": "Rounded central values only; no propagation of EMPA, FTIR, fugacity or absorption-calibration uncertainties. Missing compositions are not filled from the starting mix."
+    },
+    "matched_runs": [
+      {
+        "run": "B343",
+        "H2_wt_percent": 0.12,
+        "H2O_equivalent_wt_percent": 0.66,
+        "fH2_bar": 5319,
+        "dry_oxide_moles_per_100g": 1.5885142932083256,
+        "total_component_moles_per_100g": 1.6846772131677286,
+        "X_H2_reconstructed": 0.03533457469083339,
+        "ln_K_reconstructed": -11.921933936138203,
+        "ln_K_printed": -11.94,
+        "ln_K_difference": 0.018066063861796877
+      },
+      {
+        "run": "B341",
+        "H2_wt_percent": 0.09,
+        "H2O_equivalent_wt_percent": 1.71,
+        "fH2_bar": 3492,
+        "dry_oxide_moles_per_100g": 1.5534765802743256,
+        "total_component_moles_per_100g": 1.693041518843955,
+        "X_H2_reconstructed": 0.02637000576598383,
+        "ln_K_reconstructed": -11.793757976919506,
+        "ln_K_printed": -11.78,
+        "ln_K_difference": -0.013757976919507087
+      },
+      {
+        "run": "A937",
+        "H2_wt_percent": 0.64,
+        "H2O_equivalent_wt_percent": 3.35,
+        "fH2_bar": 19562,
+        "dry_oxide_moles_per_100g": 1.4767260075807376,
+        "total_component_moles_per_100g": 1.9801584800703815,
+        "X_H2_reconstructed": 0.1603302049951863,
+        "ln_K_reconstructed": -11.711863997049809,
+        "ln_K_printed": -11.62,
+        "ln_K_difference": -0.09186399704980985
+      },
+      {
+        "run": "B446",
+        "H2_wt_percent": 0.66,
+        "H2O_equivalent_wt_percent": 3.84,
+        "fH2_bar": 34867,
+        "dry_oxide_moles_per_100g": 1.4823786078749928,
+        "total_component_moles_per_100g": 2.022931439014685,
+        "X_H2_reconstructed": 0.16184455596867817,
+        "ln_K_reconstructed": -12.280415037580509,
+        "ln_K_printed": -12.24,
+        "ln_K_difference": -0.040415037580508795
+      },
+      {
+        "run": "B448",
+        "H2_wt_percent": 0.67,
+        "H2O_equivalent_wt_percent": 6.35,
+        "fH2_bar": 56987,
+        "dry_oxide_moles_per_100g": 1.4304240869075804,
+        "total_component_moles_per_100g": 2.1152637027872556,
+        "X_H2_reconstructed": 0.1571251153221927,
+        "ln_K_reconstructed": -12.801291328749384,
+        "ln_K_printed": -12.71,
+        "ln_K_difference": -0.09129132874938328
+      }
+    ],
+    "outcome": "The oxide-plus-water denominator can now be constructed for five matched runs. Differences from printed ln K range from -0.091864 to +0.018066; exact reproduction is not established. The provider still counts dry MELTS endmembers rather than oxide components. No constants or runtime formulas were changed.",
+    "remaining": [
+      "B808/A808 identity",
+      "Unreported per-run composition/normalization details and exact Fig. 4 reconstruction",
+      "Original H2 FTIR absorption-calibration uncertainty",
+      "Provider concentration-basis choice and empirical application error"
+    ]
+  },
+  "thompson2025_notebook": {
+    "doi": "10.1016/j.chemgeo.2025.123048",
+    "dataset_doi": "10.5281/zenodo.16418810",
+    "artifact": {
+      "local_path": "refs/thompson_2025/solubilitylaw_revision_combodataset_bayesianmultivariate.ipynb",
+      "bytes": 31939440,
+      "sha256": "bf01c18c57e28ec8cf1ca780319073d83bf73f7402429a1ac7fa4e0077cc51a3",
+      "url": "https://zenodo.org/api/records/16418810/files/solubilitylaw_revision_combodataset_bayesianmultivariate.ipynb/content"
+    },
+    "combined_data": {
+      "local_path": "refs/thompson_2025/CombinedDataset_withS23N17.csv",
+      "bytes": 10183,
+      "sha256": "635fd0c93ef90643d4909329463e958442fb562d10a84b8a61b39ce81b50eab5",
+      "url": "https://zenodo.org/api/records/16418810/files/CombinedDataset_withS23N17.csv/content"
+    },
+    "sossi_data": {
+      "local_path": "refs/thompson_2025/Sossi23_Data.csv",
+      "bytes": 3450,
+      "sha256": "8d77d029791a0f96e62bb6818d684e68ac713b273f40fe494f3e17711b87fc92",
+      "url": "https://zenodo.org/records/16418810/files/Sossi23_Data.csv?download=1"
+    },
+    "historical_hashes_match": true,
+    "execution": "Notebook parsed and selected source cells and saved outputs inspected; author fitting code was not executed and no posterior was refitted.",
+    "cell_locations_zero_based": {
+      "3": "Reads pooled CSV; XOH=OH_Conc_ppm/1e6; selects fH2O>0.",
+      "8-9": "Divides responses and oxide predictors by their means; input *_MF columns are used as supplied.",
+      "51,55": "Five-oxide model and all-five fit in CaO,SiO2,MgO,Al2O3,FeO order.",
+      "104-105": "Descaling formulas. Cell 105 saved output matches paper Table 4 after rounding; cell 104 is a separately sampled subset-model result.",
+      "110-111": "Final expression evaluates supplied dry oxide fractions without renormalizing the five fitted terms."
+    },
+    "total_rows": 81,
+    "fitted_rows": 74,
+    "excluded_rows": 7,
+    "prefactor_recomputed_bar_minus_half": 0.0007192381633247654,
+    "saved_cell_105_B_K": [
+      -1511.0869981249082,
+      886.4820198636962,
+      -1015.1960941874376,
+      890.6056057437534,
+      -1755.8656360451462
+    ],
+    "pooled_sossi_comparison": {
+      "matched_rows": 12,
+      "maximum_absolute_oxide_fraction_difference": 0.0,
+      "combined_OH_over_raw_water_times_single_molar_mass_ratio": [
+        0.9999999996210318,
+        1.0000000002866167
+      ],
+      "method": "Compare the fresh combined CSV with the byte-pinned archived Sossi23_Data.csv. A fresh raw Sossi download is not asserted.",
+      "interpretation": "All six retained oxide mole-fraction columns are identical across the 12 matching rows. The OH column uses one OH/H2O molar-mass factor. Literal two-OH-group counting would double this value; no author convention correction is inferred."
+    },
+    "remaining": "Response scaling and source parameters are confirmed; finite-water Gibbs continuation, atomic species mapping and high-pressure/wet-host empirical support remain separate questions."
+  },
+  "jiang2025": {
+    "bibliography": {
+      "authors": [
+        "ZePing Jiang",
+        "YuYang He",
+        "ZhiGang Zhang"
+      ],
+      "year": 2025,
+      "title": "Primordial hydrogen partitioning at Earth’s core–mantle boundary: Multicomponent effects revealed by machine learning-augmented first-principles simulations",
+      "journal": "Earth and Planetary Physics",
+      "volume": "9",
+      "issue": "5",
+      "pages": "1001-1009",
+      "doi": "10.26464/epp2025055"
+    },
+    "artifact": {
+      "local_path": "refs/jiang_2025.pdf",
+      "bytes": 689093,
+      "sha256": "be2afb2d07fb21e7a6ca08a813e3592b210a83b6671cf66ec58eb79ca9baa439",
+      "url": "https://www.eppcgs.org/en/article/pdf/preview/10.26464/epp2025055.pdf"
+    },
+    "inspection": "Full nine-page paper; Sections 2.1-2.4, Eqs. 4-8 (printed p.1004), Section 3.2, Table S1 and Data Availability (p.1008). Equations and Table S1 were visually inspected.",
+    "temperature_K": 5000,
+    "pressure_Pa": 135000000000,
+    "evidence_kind": "DFT/ML thermodynamic-integration calculations; not new experimental measurements.",
+    "systems": {
+      "alloy": "Fe74O15Si8H_n",
+      "reference": "Fe64H_n",
+      "silicate": "Mg40Si40O120H_n"
+    },
+    "table_S1": {
+      "rows": 22,
+      "columns": [
+        "System",
+        "V (cm3/mol)",
+        "F (kJ/mol)",
+        "G (kJ/mol)",
+        "mu_H (eV/atom)"
+      ],
+      "hydrogen_atom_counts": {
+        "Fe74O15Si8": [
+          0,
+          2,
+          4,
+          6,
+          9,
+          12,
+          18
+        ],
+        "Fe64": [
+          0,
+          2,
+          4,
+          8,
+          12,
+          16
+        ],
+        "Mg40Si40O120": [
+          1,
+          2,
+          4,
+          6,
+          8,
+          12,
+          16,
+          20,
+          24
+        ]
+      }
+    },
+    "partition_convention": "D_H=c_H_alloy/c_H_silicate, with c_H the H atomic concentration; not a mass-concentration ratio.",
+    "reported_D_H": {
+      "Fe_H": 18.2,
+      "Fe_O_Si_H": 11.8
+    },
+    "notation_gap": "Section 2.4 writes x_H=x/(97-96x) for the grouped alloy formula, but later writes x_H=1/[1+(1/c_H)] while calling c_H an atomic percentage. These printed mappings are not adopted as interchangeable; a quantitative refit needs a consistent composition map.",
+    "raw_data": "Table S1 is recovered. Data Availability states that raw datasets are available from the authors on request; those raw trajectories/training data were not obtained and no author was contacted.",
+    "provider_implication": "This fixed-P/T composition path supplies a comparison target, not fitted H excess terms or an absolute H standard for MaFeSiOHLiquid. It does not validate the 2173.15 K, 1 bar M2 candidate."
+  },
+  "nozaki1966": {
+    "bibliography": {
+      "authors": [
+        "Hirohiko NOZAKI",
+        "Shiro BAN-YA",
+        "Tasuku FUWA",
+        "Sachio MATOBA",
+        "Kenji ONO"
+      ],
+      "title": "Effect of Carbon, Silicon, Phosphorus and Nickel on the Solubility of Hydrogen in Liquid Iron",
+      "year": 1966,
+      "journal": "Tetsu-to-Hagane",
+      "volume": "52",
+      "issue": "13",
+      "pages": "1823-1833",
+      "article_number": null,
+      "doi": "10.2355/tetsutohagane1955.52.13_1823",
+      "metadata": {
+        "local_path": "refs/bibliographic_metadata/nozaki1966_crossref.json",
+        "bytes": 4099,
+        "sha256": "f1c5d9783d0ab9499e8d87b142d69f93ae3b9a85f5ca226e209d71d8f90002d3",
+        "url": "https://api.crossref.org/works/10.2355/tetsutohagane1955.52.13_1823"
+      }
+    },
+    "artifact": {
+      "local_path": "refs/nozaki_1966.pdf",
+      "bytes": 855381,
+      "sha256": "f4c57e4000159b50ea51a95810e7358b4a60541078362c06b6a1a986a67266f3",
+      "url": "https://tetsutohagane.net/articles/search/files/52/13/KJ00002649745.pdf"
+    },
+    "inspection": "Image-only original PDF; visually inspected printed pp.1823,1829-1831: English synopsis, Section 4.4, Eqs.7/7a/7b, Table 6 and Figs.10-11.",
+    "coefficient": {
+      "e_H_P_mass_percent": 0.015,
+      "P_wt_percent_less_than": 6,
+      "d_log10_fH_d_atomic_P": 0.813,
+      "epsilon_H_P_reported": 2.3
+    },
+    "table_6": {
+      "rows": 18,
+      "temperature_C": [
+        1427,
+        1488,
+        1548,
+        1610
+      ],
+      "temperature_K": [
+        1700.15,
+        1761.15,
+        1821.15,
+        1883.15
+      ],
+      "P_wt_percent_range": [
+        0.97,
+        11.5
+      ],
+      "hydrogen_solubility_unit": "cc/100 g",
+      "hydrogen_pressure": "One atmosphere"
+    },
+    "scope_correction": "The historical ledger quoted the whole-paper English synopsis range 1450-1670 degC. Section 4.4 explicitly gives 1427-1610 degC for the Fe-P interaction coefficient. Table 6 includes higher-P points, but they do not extend the stated P<6 wt% linear approximation.",
+    "provider_comparison": "examples/m2_material/phosphorus_reference.py retains e_H_P=0.015, matching Eq.7a. The old ledger and pinned artifacts are preserved; this dated review adds the narrower source-specific scope without changing a runtime domain or fitting finite-P interactions."
+  },
+  "not_retrieved": [
+    {
+      "id": "badro2015",
+      "bibliography": {
+        "authors": [
+          "James Badro",
+          "John P. Brodholt",
+          "Hélène Piet",
+          "Julien Siebert",
+          "Frederick J. Ryerson"
+        ],
+        "title": "Core formation and core composition from coupled geochemical and geophysical constraints",
+        "year": 2015,
+        "journal": "Proceedings of the National Academy of Sciences",
+        "volume": "112",
+        "issue": "40",
+        "pages": "12310-12314",
+        "article_number": null,
+        "doi": "10.1073/pnas.1505672112",
+        "metadata": {
+          "local_path": "refs/bibliographic_metadata/badro2015_crossref.json",
+          "bytes": 9802,
+          "sha256": "b6cab6430e8cc3ffaae6d7dfd92a3839c0da6f1a8cb5f48c457b38f03c5d482b",
+          "url": "https://api.crossref.org/works/10.1073/pnas.1505672112"
+        }
+      },
+      "needed": "SI Appendix, especially Table S1 with partition/interaction parameters and conventions.",
+      "outcome": "PNAS returned HTTP 403; PMC returned an HTML challenge rather than a PDF. The five-page main paper is already inspected.",
+      "retrieval_keys": [
+        "badro_supp_pnas",
+        "badro_supp_pmc"
+      ]
+    },
+    {
+      "id": "gg2015",
+      "bibliography": {
+        "authors": [
+          "Mark S. Ghiorso",
+          "Guilherme A. R. Gualda"
+        ],
+        "title": "An H2O–CO2 mixed fluid saturation model compatible with rhyolite-MELTS",
+        "year": 2015,
+        "journal": "Contributions to Mineralogy and Petrology",
+        "volume": "169",
+        "issue": "6",
+        "pages": null,
+        "article_number": "53",
+        "doi": "10.1007/s00410-015-1141-8",
+        "metadata": {
+          "local_path": "refs/bibliographic_metadata/gg2015_crossref.json",
+          "bytes": 60169,
+          "sha256": "e2116ce28f5ddd66508655bd52f487960a43ba1740314e8cccd7fbb63c4a6fb4",
+          "url": "https://api.crossref.org/works/10.1007/s00410-015-1141-8"
+        }
+      },
+      "needed": "Original calibration observations and the complete LEPR/DCO-EPC compilation used for fitting.",
+      "outcome": "Main paper and 49-page supplement were already inspected. The former LEPR endpoint failed TLS verification. The official successor ExPetDB describes GitHub login for access; no authenticated export or complete calibration dataset was obtained.",
+      "retrieval_keys": [
+        "lepr_home",
+        "expetdb_home"
+      ]
+    },
+    {
+      "id": "zd2009",
+      "bibliography": {
+        "authors": [
+          "Chi Zhang",
+          "Zhenhao Duan"
+        ],
+        "title": "A model for C–O–H fluid in the Earth’s mantle",
+        "year": 2009,
+        "journal": "Geochimica et Cosmochimica Acta",
+        "volume": "73",
+        "issue": "7",
+        "pages": "2089-2102",
+        "article_number": null,
+        "doi": "10.1016/j.gca.2009.01.021",
+        "metadata": {
+          "local_path": "refs/bibliographic_metadata/zd2009_crossref.json",
+          "bytes": 27885,
+          "sha256": "949ad6a16f8bd6ce9e7da54c4affb27d5dbe890f7dfe8cdeb09e7fa8fda076fd",
+          "url": "https://api.crossref.org/works/10.1016/j.gca.2009.01.021"
+        }
+      },
+      "needed": "The 111 individual H2 P-V-T observations behind Table 5, including their original source mapping.",
+      "outcome": "The complete paper is available and already inspected. Table 5 summarizes 250-423 K, 2-700 MPa and 1.43 percent mean volume deviation but does not list the 111 observations. Publisher and author-institution searches recovered the paper, not this underlying dataset.",
+      "retrieval_keys": []
+    },
+    {
+      "id": "schenck",
+      "bibliography": {
+        "authors": [
+          "Hermann Schenck",
+          "Horst Wünsch"
+        ],
+        "title": "Über die Gleichgewichtslöslichkeit des Wasserstoffs im flüssigen reinen Nickel und Eisen und die Beeinflussung im Eisen durch Sauerstoff",
+        "year": 1961,
+        "journal": "Archiv für das Eisenhüttenwesen",
+        "volume": "32",
+        "issue": "11",
+        "pages": "779-790",
+        "article_number": null,
+        "doi": "10.1002/srin.196103272",
+        "metadata": {
+          "local_path": "refs/bibliographic_metadata/schenck_crossref.json",
+          "bytes": 2780,
+          "sha256": "84136496d416b0d8ae6d988286c7749ebf56fe653bdabc2df9fe8bacdfc26af5",
+          "url": "https://api.crossref.org/works/10.1002/srin.196103272"
+        }
+      },
+      "needed": "Original full text, H-O concentration tables, concentration interval and pressure convention.",
+      "outcome": "Publisher landing page and PDF returned HTTP 403. No public full text was found. The previously inspected contemporary Japanese abstract remains secondary evidence.",
+      "retrieval_keys": [
+        "schenck_publisher",
+        "schenck_pdf"
+      ]
+    },
+    {
+      "id": "distin",
+      "bibliography": {
+        "authors": [
+          "P.A. Distin",
+          "S.G. Whiteway",
+          "C.R. Masson"
+        ],
+        "title": "Solubility of oxygen in liquid iron from 1785° to 1960°C. A new technique for the study of slag-metal equilibria",
+        "year": 1971,
+        "journal": "Canadian Metallurgical Quarterly",
+        "volume": "10",
+        "issue": "1",
+        "pages": "13-18",
+        "article_number": null,
+        "doi": "10.1179/cmq.1971.10.1.13",
+        "metadata": {
+          "local_path": "refs/bibliographic_metadata/distin_crossref.json",
+          "bytes": 4151,
+          "sha256": "707e7f42ab0fbed4c63c0b16323521fd33993e3917481a044a07cc2d65fd6deb",
+          "url": "https://api.crossref.org/works/10.1179/cmq.1971.10.1.13"
+        }
+      },
+      "needed": "Original full text and individual oxygen-solubility observations with methods and uncertainty.",
+      "outcome": "Publisher landing page and PDF returned HTTP 403. The indexed publisher abstract is accessible, but no original tables were obtained.",
+      "retrieval_keys": [
+        "distin_publisher",
+        "distin_pdf"
+      ]
+    },
+    {
+      "id": "jambon",
+      "bibliography": {
+        "authors": [
+          "Albert Jambon",
+          "Hartwig Weber",
+          "Otto Braun"
+        ],
+        "title": "Solubility of He, Ne, Ar, Kr and Xe in a basalt melt in the range 1250–1600°C. Geochemical implications",
+        "year": 1986,
+        "journal": "Geochimica et Cosmochimica Acta",
+        "volume": "50",
+        "issue": "3",
+        "pages": "401-408",
+        "article_number": null,
+        "doi": "10.1016/0016-7037(86)90193-6",
+        "metadata": {
+          "local_path": "refs/bibliographic_metadata/jambon_crossref.json",
+          "bytes": 15818,
+          "sha256": "0e0bfcb2b6f3bfeb287c3f543c8bba62e4d2606389b37b75ebfce5c5135ba6fe",
+          "url": "https://api.crossref.org/works/10.1016/0016-7037(86)90193-6"
+        }
+      },
+      "needed": "Original full text and individual noble-gas solubility measurements, especially He.",
+      "outcome": "Publisher landing page and PDF returned HTTP 403. The abstract does not replace the uninspected measurement tables.",
+      "retrieval_keys": [
+        "jambon_publisher",
+        "jambon_pdf"
+      ]
+    },
+    {
+      "id": "garberoglio",
+      "bibliography": {
+        "authors": [
+          "Giovanni Garberoglio",
+          "Konrad Patkowski",
+          "Allan H. Harvey"
+        ],
+        "title": "Fully Quantum Cross Second Virial Coefficients for the Three-Dimensional He-H2 Pair",
+        "year": 2014,
+        "journal": "International Journal of Thermophysics",
+        "volume": "35",
+        "issue": "8",
+        "pages": "1435-1449",
+        "article_number": null,
+        "doi": "10.1007/s10765-014-1729-7",
+        "metadata": {
+          "local_path": "refs/bibliographic_metadata/garberoglio_crossref.json",
+          "bytes": 12832,
+          "sha256": "ecc01f0a7810db09e1a5404d06fb78ab5124675f68652556d44a6848a222dfc7",
+          "url": "https://api.crossref.org/works/10.1007/s10765-014-1729-7"
+        }
+      },
+      "needed": "Full text and numerical He-H2 cross-second-virial table with uncertainties.",
+      "outcome": "The NIST abstract is accessible. Springer returned HTML instead of PDF. NIST publication 915991, identified in its 2014 institutional newsletter, returned No Content at the public PDF endpoint. The author-institution repository lists no attached file.",
+      "retrieval_keys": [
+        "nist_heh2_page",
+        "garberoglio_pdf",
+        "garberoglio_nist_pdf"
+      ]
+    }
+  ],
+  "additional_discovery_sources": [
+    {
+      "url": "https://pandia.gps.caltech.edu/",
+      "finding": "Official ExPetDB successor describes DCO-EPC calibration data and login-dependent access."
+    },
+    {
+      "url": "https://enki-portal.gitlab.io/ENKIwebsite/UserProjects.html",
+      "finding": "Migration notes warn that only part of the Ghiorso-Gualda calibration compilation was viewable in the earlier interface; no complete export was inferred."
+    },
+    {
+      "url": "https://cris.fbk.eu/handle/11582/243019",
+      "finding": "Author-institution Garberoglio record; no downloadable full text listed."
+    },
+    {
+      "url": "https://www.nist.gov/system/files/documents/mml/Fall-2014-Material-Matters.pdf",
+      "finding": "Printed p.15 identifies Garberoglio et al. as NIST publication 915991."
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S0016703709000507",
+      "finding": "Zhang-Duan publisher record; no individual H2 observation table obtained."
+    },
+    {
+      "url": "https://www.igg.cas.cn/xwzx/yjcg/200911/W020091130407730951542.pdf",
+      "finding": "Author-institution Zhang-Duan full paper, already inspected; not the missing individual data."
+    }
+  ],
+  "retrieval_attempts": [
+    {
+      "key": "jiang_page",
+      "url": "https://www.eppcgs.org/en/article/doi/10.26464/epp2025055",
+      "status": 200,
+      "final_url": "https://www.eppcgs.org/en/article/doi/10.26464/epp2025055",
+      "content_type": "text/html;charset=UTF-8",
+      "bytes": 311607,
+      "sha256": "acb2f7c2f0f83ff8b48bf484fa154fbdcf869ab82a401b99eda8cdcceb09ab8d",
+      "pdf": false
+    },
+    {
+      "key": "nist_heh2_page",
+      "url": "https://www.nist.gov/publications/fully-quantum-cross-second-virial-coefficients-three-dimensional-he-h2-pair",
+      "status": 200,
+      "final_url": "https://www.nist.gov/publications/fully-quantum-cross-second-virial-coefficients-three-dimensional-he-h2-pair",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 81914,
+      "sha256": "208f3b7296f195b996b789de9ec1c49c4da20e3aafc2f27fe86354fde26d195c",
+      "pdf": false
+    },
+    {
+      "key": "schenck_publisher",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/srin.196103272",
+      "status": 403,
+      "final_url": "https://onlinelibrary.wiley.com/doi/10.1002/srin.196103272",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 5566,
+      "sha256": "a6241c88d73c7467806bae9767186b44c16a8b1c90e0e036f973172e7a644aa2",
+      "pdf": false
+    },
+    {
+      "key": "distin_publisher",
+      "url": "https://www.tandfonline.com/doi/abs/10.1179/cmq.1971.10.1.13",
+      "status": 403,
+      "final_url": "https://www.tandfonline.com/doi/abs/10.1179/cmq.1971.10.1.13",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 5580,
+      "sha256": "bd08f4ebb5d46b2b18903805c50e8c8f5243a57504ca017b830fc09f33621761",
+      "pdf": false
+    },
+    {
+      "key": "jambon_publisher",
+      "url": "https://www.sciencedirect.com/science/article/pii/0016703786901936",
+      "status": 403,
+      "final_url": "https://www.sciencedirect.com/science/article/pii/0016703786901936",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 832802,
+      "sha256": "f12083fce02127b30364b96311c0720c57115d77a8087dc431c16a5640a52dd9",
+      "pdf": false
+    },
+    {
+      "key": "lepr_home",
+      "url": "https://lepr.ofm-research.org/",
+      "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'lepr.ofm-research.org'. (_ssl.c:1000)>"
+    },
+    {
+      "key": "thompson_api",
+      "url": "https://zenodo.org/api/records/16418810",
+      "status": 200,
+      "final_url": "https://zenodo.org/api/records/16418810",
+      "content_type": "application/json",
+      "bytes": 9572,
+      "sha256": "b52e9c0108689c09c376a7ef763a47a8703a74ceb7a02b767f61f9f9dd64f856",
+      "pdf": false
+    },
+    {
+      "key": "nozaki_pdf",
+      "url": "https://tetsutohagane.net/articles/search/files/52/13/KJ00002649745.pdf",
+      "status": 200,
+      "final_url": "https://tetsutohagane.net/articles/search/files/52/13/KJ00002649745.pdf",
+      "content_type": "application/pdf",
+      "bytes": 855381,
+      "sha256": "f4c57e4000159b50ea51a95810e7358b4a60541078362c06b6a1a986a67266f3",
+      "pdf": true
+    },
+    {
+      "key": "jiang_pdf",
+      "url": "https://www.eppcgs.org/en/article/pdf/preview/10.26464/epp2025055.pdf",
+      "status": 200,
+      "final_url": "https://www.eppcgs.org/en/article/pdf/preview/10.26464/epp2025055.pdf",
+      "content_type": "application/pdf",
+      "bytes": 689093,
+      "sha256": "be2afb2d07fb21e7a6ca08a813e3592b210a83b6671cf66ec58eb79ca9baa439",
+      "pdf": true
+    },
+    {
+      "key": "thompson_combo_notebook",
+      "url": "https://zenodo.org/api/records/16418810/files/solubilitylaw_revision_combodataset_bayesianmultivariate.ipynb/content",
+      "status": 200,
+      "final_url": "https://zenodo.org/api/records/16418810/files/solubilitylaw_revision_combodataset_bayesianmultivariate.ipynb/content",
+      "content_type": "application/octet-stream",
+      "bytes": 31939440,
+      "response_truncated": false,
+      "sha256": "bf01c18c57e28ec8cf1ca780319073d83bf73f7402429a1ac7fa4e0077cc51a3",
+      "pdf": false
+    },
+    {
+      "key": "thompson_combo_data",
+      "url": "https://zenodo.org/api/records/16418810/files/CombinedDataset_withS23N17.csv/content",
+      "status": 200,
+      "final_url": "https://zenodo.org/api/records/16418810/files/CombinedDataset_withS23N17.csv/content",
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 10183,
+      "response_truncated": false,
+      "sha256": "635fd0c93ef90643d4909329463e958442fb562d10a84b8a61b39ce81b50eab5",
+      "pdf": false
+    },
+    {
+      "key": "garberoglio_pdf",
+      "url": "https://link.springer.com/content/pdf/10.1007/s10765-014-1729-7.pdf",
+      "status": 200,
+      "final_url": "https://link.springer.com/content/pdf/10.1007/s10765-014-1729-7.pdf",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 3038,
+      "response_truncated": false,
+      "sha256": "32ed63159c77e21ee19ca1b9aa3213ccf0218eb59539560b132a8e68ef0e18ea",
+      "pdf": false
+    },
+    {
+      "key": "hirschmann_supp_pdf_candidate",
+      "url": "https://ars.els-cdn.com/content/image/1-s2.0-S0012821X12003159-mmc1.pdf",
+      "status": 404,
+      "final_url": "https://ars.els-cdn.com/content/image/1-s2.0-S0012821X12003159-mmc1.pdf",
+      "content_type": "text/xml",
+      "bytes": 189,
+      "response_truncated": false,
+      "sha256": "83cf0fd7cf2740129f2ddedb484cf2f65c2f831820454bbd6fa35dad094a4d8d",
+      "pdf": false
+    },
+    {
+      "key": "hirschmann_supp_doc_candidate",
+      "url": "https://ars.els-cdn.com/content/image/1-s2.0-S0012821X12003159-mmc1.doc",
+      "status": 404,
+      "final_url": "https://ars.els-cdn.com/content/image/1-s2.0-S0012821X12003159-mmc1.doc",
+      "content_type": "text/xml",
+      "bytes": 189,
+      "response_truncated": false,
+      "sha256": "83cf0fd7cf2740129f2ddedb484cf2f65c2f831820454bbd6fa35dad094a4d8d",
+      "pdf": false
+    },
+    {
+      "key": "hirschmann_supp_xlsx_candidate",
+      "url": "https://ars.els-cdn.com/content/image/1-s2.0-S0012821X12003159-mmc1.xlsx",
+      "status": 404,
+      "final_url": "https://ars.els-cdn.com/content/image/1-s2.0-S0012821X12003159-mmc1.xlsx",
+      "content_type": "text/xml",
+      "bytes": 189,
+      "response_truncated": false,
+      "sha256": "83cf0fd7cf2740129f2ddedb484cf2f65c2f831820454bbd6fa35dad094a4d8d",
+      "pdf": false
+    },
+    {
+      "key": "hirschmann_elsevier_metadata",
+      "url": "https://api.elsevier.com/content/article/PII:S0012821X12003159?httpAccept=text/xml",
+      "status": 200,
+      "final_url": "https://api.elsevier.com/content/article/PII:S0012821X12003159?httpAccept=text/xml",
+      "content_type": "text/xml;charset=UTF-8",
+      "bytes": 1874,
+      "response_truncated": false,
+      "sha256": "db737c5536e8c491584a6392d8b5e07ae1e474ba4505176aba781b96046d7608",
+      "pdf": false
+    },
+    {
+      "key": "expetdb_home",
+      "url": "https://pandia.gps.caltech.edu/",
+      "error": "<urlopen error [Errno 111] Connection refused>"
+    },
+    {
+      "key": "badro_supp_pnas",
+      "url": "https://www.pnas.org/doi/suppl/10.1073/pnas.1505672112/suppl_file/pnas.1505672112.sapp.pdf",
+      "status": 403,
+      "final_url": "https://www.pnas.org/doi/suppl/10.1073/pnas.1505672112/suppl_file/pnas.1505672112.sapp.pdf",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 5705,
+      "response_truncated": false,
+      "sha256": "7f086c07b1511a793579685fc51e245db160c951a3b62a7befdb2dd7a0997144",
+      "pdf": false
+    },
+    {
+      "key": "badro_supp_pmc",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/instance/4603515/bin/pnas.1505672112.sapp.pdf",
+      "status": 200,
+      "final_url": "https://pmc.ncbi.nlm.nih.gov/articles/instance/4603515/bin/pnas.1505672112.sapp.pdf",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 1817,
+      "response_truncated": false,
+      "sha256": "06dd54689cb1f8fcf0fc0665ef94ea57d6a189d0b8382119783ba99a77fb9dd3",
+      "pdf": false
+    },
+    {
+      "key": "schenck_pdf",
+      "url": "https://onlinelibrary.wiley.com/doi/pdf/10.1002/srin.196103272",
+      "status": 403,
+      "final_url": "https://onlinelibrary.wiley.com/doi/pdf/10.1002/srin.196103272",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 5578,
+      "response_truncated": false,
+      "sha256": "dddaad2f418b2d0af91a0022ee0c3af2a7849de01898d34e225f29dd03938c0d",
+      "pdf": false
+    },
+    {
+      "key": "distin_pdf",
+      "url": "https://www.tandfonline.com/doi/pdf/10.1179/cmq.1971.10.1.13",
+      "status": 403,
+      "final_url": "https://www.tandfonline.com/doi/pdf/10.1179/cmq.1971.10.1.13",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 5580,
+      "response_truncated": false,
+      "sha256": "e6a68dd4a4726814e6c95f56fe4dd543094a255599f481bee5c94f080a9f62a8",
+      "pdf": false
+    },
+    {
+      "key": "jambon_pdf",
+      "url": "https://www.sciencedirect.com/science/article/pii/0016703786901936/pdf",
+      "status": 403,
+      "final_url": "https://www.sciencedirect.com/science/article/pii/0016703786901936/pdf",
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 832802,
+      "response_truncated": false,
+      "sha256": "bb915c0997a9a4e6f9df3f630a89c120640b1c9925ec98121fa209b756fccaa0",
+      "pdf": false
+    },
+    {
+      "key": "garberoglio_nist_pdf",
+      "url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=915991",
+      "status": 200,
+      "final_url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=915991",
+      "content_type": "text/html;charset=UTF-8",
+      "bytes": 18,
+      "response_truncated": false,
+      "sha256": "25b0818d3b58eba39848e5f96e5a34ac4f75e8b476e5bd88e1e93b4749d68eb7",
+      "pdf": false
+    },
+    {
+      "key": "nist_fall2014",
+      "url": "https://www.nist.gov/system/files/documents/mml/Fall-2014-Material-Matters.pdf",
+      "status": 200,
+      "final_url": "https://www.nist.gov/system/files/documents/mml/Fall-2014-Material-Matters.pdf",
+      "content_type": "application/pdf",
+      "bytes": 1681919,
+      "response_truncated": false,
+      "sha256": "14b3c9abff72754f01307766029817439927939da77502c6219b1f20ce41c719",
+      "pdf": true
+    }
+  ],
+  "validation": "See verification.json for actual structure, pin-preservation and metadata-test results. This review adds no new runtime-test receipt or empirical-validation claim."
+}

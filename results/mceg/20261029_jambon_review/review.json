@@ -1,0 +1,259 @@
+{
+  "review_date": "2026-10-29",
+  "implementation_revision": "11887e0e8f963619d6dc6b95009c76a0b69dd65f",
+  "scope": "Inspection of the supplied Jambon scan and the adopted He comparison. No runtime law, coefficient, historical ledger or receipt is changed.",
+  "source_storage": "Original scans and complete table transcriptions are local-only under refs/, excluded through .git/info/exclude. Repository evidence contains hashes, scoped findings and derived comparisons.",
+  "previous_review": {
+    "source": "results/mceg/20261029_badro_garberoglio_review/review.json",
+    "sha256": "822fee9c4c874d7046472180315031321b830f638058d402f32a3118bdc7abbb"
+  },
+  "jambon1986": {
+    "bibliography": {
+      "authors": [
+        "Albert Jambon",
+        "Hartwig Weber",
+        "Otto Braun"
+      ],
+      "title": "Solubility of He, Ne, Ar, Kr and Xe in a basalt melt in the range 1250–1600°C. Geochemical implications",
+      "year": 1986,
+      "journal": "Geochimica et Cosmochimica Acta",
+      "volume": "50",
+      "issue": "3",
+      "pages": "401-408",
+      "article_number": null,
+      "doi": "10.1016/0016-7037(86)90193-6",
+      "metadata": {
+        "local_path": "refs/bibliographic_metadata/jambon_crossref.json",
+        "bytes": 15818,
+        "sha256": "0e0bfcb2b6f3bfeb287c3f543c8bba62e4d2606389b37b75ebfce5c5135ba6fe",
+        "url": "https://api.crossref.org/works/10.1016/0016-7037(86)90193-6"
+      }
+    },
+    "source_file": {
+      "local_path": "refs/JAMBON1986.pdf",
+      "sha256": "0622029fc3e18f8663c6c621ef19164d6facbad50e502eef10005c0c8367693c",
+      "bytes": 4081918
+    },
+    "status": "supplied_original_inspected",
+    "scan": {
+      "pdf_pages": 5,
+      "article_printed_pages": "401-408",
+      "page_mapping": [
+        "1 right: 401",
+        "2: 402-403",
+        "3: 404-405",
+        "4: 406-407",
+        "5 left: 408"
+      ],
+      "method": "Visually read rendered pages. pdftotext returned page separators only. Adjacent articles on pp.400 and 409 are outside the review."
+    },
+    "inspection_locations": [
+      "p.401: title, authors and abstract.",
+      "p.402: Tables 1-2; Sections 2.1 and 2.2; Eq.1 C_i=S_i P_i.",
+      "p.403: Table 3, Section 2.2.6 and analytical methods.",
+      "pp.404-405: Tables 4-5, Eq.2, Figs.1-3 and uncertainty discussion.",
+      "pp.406-407: pressure/host limitations, vesicle model and Table 6.",
+      "p.408: concluding discussion and references."
+    ],
+    "local_transcriptions": [
+      {
+        "local_path": "refs/Jambon1986_Table5.csv",
+        "sha256": "76f87ee02a159b1a92718328cc923cec37b2ae5de37dad28cc6dbc2976f827b5",
+        "bytes": 513
+      },
+      {
+        "local_path": "refs/Jambon1986_table_notes.json",
+        "sha256": "0e969bff1c1e1ef4eef1f2890ecaad8df228fd7295087866af097d4a43a3ce89",
+        "bytes": 2314
+      }
+    ],
+    "host_and_conditions": {
+      "host": "MAPCO CH98-DR11 normal MORB tholeiitic basalt; Table 1 gives the starting glass composition and all Fe as FeO.",
+      "driving_quantity": "Gas partial pressure, not a high-pressure fugacity law; C_i=S_i*P_i in Eq.1.",
+      "reported_S_unit": "cm3 STP/(g melt bar)",
+      "pressure_convention": "Section 2.2.6 says total pressure one atmosphere; the abstract says 1 bar and Eq.4 discussion uses atmospheric P0=1 bar. Table 2 gas pressures are in 1e-6 bar. These printed conventions are retained without a silent 1.01325 rescaling.",
+      "He_table_5_temperature_C": [
+        1300,
+        1500
+      ],
+      "He_table_5_temperature_K": [
+        1573.15,
+        1773.15
+      ],
+      "He_table_5_gas_partial_pressure_bar": [
+        0.000958,
+        0.0953
+      ],
+      "interval_note": "Marginal bounds for the seven nonblank He summaries, not a joint coverage rectangle. The 1250-1600 degC paper range includes other gases and is not the He Table 5 interval.",
+      "temperature_accuracy_C": 5
+    },
+    "table_5_and_uncertainty": {
+      "temperature_gas_rows": 12,
+      "nonblank_He_rows": 7,
+      "reported_He_analysis_count": 16,
+      "mean_temperature_C": 1400,
+      "table_mean_S": 0.000565,
+      "abstract_and_body_S": 0.00056,
+      "one_sigma_S": 0.00011,
+      "unit": "cm3 STP/(g melt bar)",
+      "interpretation": "p.404 describes a smoothed regression value at 1400 degC with one-sigma scatter about the regression. Table 5 prints 56.5 while the abstract/body print 56, all in 1e-5 units. This is not a standard error, a confidence interval for hot BSE, or a single measurement at 1400 degC.",
+      "temperature_fit": "Eq.2 assumes Arrhenius behavior and suggests E about 30 kJ/mol for He; the authors call the temperature dependence weak and the heat of solution an order-of-magnitude estimate. No new Arrhenius extrapolation is fitted.",
+      "reconstruction_limit": "Table 5 groups measurements by gas and temperature. Its seven He entries do not expose all 16 individual analyses or their row weights; no exact weighted-regression replay is claimed."
+    },
+    "experimental_controls": "Sections 2.2-3 check grain size, duration, gas mixing and quench/anneal loss. Air-equilibrated He results in Table 3 are not substituted for the preferred gas-mixture values in Table 5. Table 4 reports strong He loss on annealing at 600 degC; a full measurement error model is not reconstructed."
+  },
+  "comparison": {
+    "historical_ledger": {
+      "source": "examples/m2_material/na_helium_transfer_sources.json",
+      "sha256": "3faca86ae8d1c1595e40cfdc4fa8a39967849723dfdbc05c3e02ea3ac7af0a75",
+      "result": "The retained 0.00056 +/- 0.00011 at 1673.15 K matches the abstract/body. The full paper now adds the Table 5 precision 0.000565, actual He measurement interval, scatter meaning and controls. The ledger remains an immutable earlier abstract-only record."
+    },
+    "guillot_sator": {
+      "source_file": {
+        "local_path": "refs/guillot_sator_2012.pdf",
+        "sha256": "041291e1236f22664ec94a58988d05cfb5a8fe4ea44ec84f681e5e864733a0c5",
+        "bytes": 919624
+      },
+      "locations": "PDF pp.12 (Section 3.1), 34 (Appendix B calibration) and 35 (Appendix C He/MORB row).",
+      "simulated_MORB_T_K": 1673,
+      "simulated_MORB_S": 0.000596,
+      "jambon_reference_T_K": 1673.15,
+      "jambon_table_S": 0.000565,
+      "relative_difference_formula": "(0.000596 / 0.000565 - 1) * 100",
+      "relative_difference_percent": 5.486725663716818,
+      "difference_over_reported_scatter_formula": "(0.000596 - 0.000565) / 0.00011",
+      "difference_over_reported_scatter": 0.28181818181818175,
+      "scope": "A scale comparison of reported coefficients in their printed STP/bar units at nominally 1400 degC; the 0.15 K labeling difference is retained. No unit rescaling, interpolation or significance test is applied.",
+      "dependence": "Guillot-Sator explicitly used Jambon (1986) and Lux (1987) MORB solubilities to tune the noble-gas/silicate interaction parameter to x=0.25. Agreement with Jambon is therefore not independent validation. Appendix B quotes Jambon He as 56.5 and rounds its own calculated He to 59; the provider uses the Appendix C value 59.6."
+    },
+    "provider": {
+      "entry_point": "exoeos.magma_volatiles.helium_capacity",
+      "result": "The provider continues to interpolate the Guillot-Sator dry-host simulations and uses the explicit 273.15 K, 101325 Pa STP conversion. Jambon measurements are not adopted as runtime coefficients.",
+      "remaining_gaps": [
+        "The Jambon MORB experiment does not calibrate olivine or wet BSE composition, 2173.15 K conditions or high-total-pressure corrections.",
+        "The provider gas-fugacity driving quantity and original low-pressure partial-pressure measurements need an application-specific comparison.",
+        "The source uses approximate atmospheric-pressure/STP language; no precise source-to-provider STP correction is inferred from the vesicle model reference T0=273 K and P0=1 bar.",
+        "Regression scatter, the approximate temperature slope and calibration-dependent MORB agreement do not establish a physical error bound."
+      ],
+      "physical_accuracy": "unknown"
+    }
+  },
+  "not_retrieved": [
+    {
+      "id": "gg2015",
+      "bibliography": {
+        "authors": [
+          "Mark S. Ghiorso",
+          "Guilherme A. R. Gualda"
+        ],
+        "title": "An H2O–CO2 mixed fluid saturation model compatible with rhyolite-MELTS",
+        "year": 2015,
+        "journal": "Contributions to Mineralogy and Petrology",
+        "volume": "169",
+        "issue": "6",
+        "pages": null,
+        "article_number": "53",
+        "doi": "10.1007/s00410-015-1141-8",
+        "metadata": {
+          "local_path": "refs/bibliographic_metadata/gg2015_crossref.json",
+          "bytes": 60169,
+          "sha256": "e2116ce28f5ddd66508655bd52f487960a43ba1740314e8cccd7fbb63c4a6fb4",
+          "url": "https://api.crossref.org/works/10.1007/s00410-015-1141-8"
+        }
+      },
+      "needed": "Original calibration observations and the complete LEPR/DCO-EPC compilation used for fitting.",
+      "outcome": "Main paper and 49-page supplement were already inspected. The former LEPR endpoint failed TLS verification. The official successor ExPetDB describes GitHub login for access; no authenticated export or complete calibration dataset was obtained.",
+      "retrieval_keys": [
+        "lepr_home",
+        "expetdb_home"
+      ]
+    },
+    {
+      "id": "zd2009",
+      "bibliography": {
+        "authors": [
+          "Chi Zhang",
+          "Zhenhao Duan"
+        ],
+        "title": "A model for C–O–H fluid in the Earth’s mantle",
+        "year": 2009,
+        "journal": "Geochimica et Cosmochimica Acta",
+        "volume": "73",
+        "issue": "7",
+        "pages": "2089-2102",
+        "article_number": null,
+        "doi": "10.1016/j.gca.2009.01.021",
+        "metadata": {
+          "local_path": "refs/bibliographic_metadata/zd2009_crossref.json",
+          "bytes": 27885,
+          "sha256": "949ad6a16f8bd6ce9e7da54c4affb27d5dbe890f7dfe8cdeb09e7fa8fda076fd",
+          "url": "https://api.crossref.org/works/10.1016/j.gca.2009.01.021"
+        }
+      },
+      "needed": "The 111 individual H2 P-V-T observations behind Table 5, including their original source mapping.",
+      "outcome": "The complete paper is available and already inspected. Table 5 summarizes 250-423 K, 2-700 MPa and 1.43 percent mean volume deviation but does not list the 111 observations. Publisher and author-institution searches recovered the paper, not this underlying dataset.",
+      "retrieval_keys": []
+    },
+    {
+      "id": "schenck",
+      "bibliography": {
+        "authors": [
+          "Hermann Schenck",
+          "Horst Wünsch"
+        ],
+        "title": "Über die Gleichgewichtslöslichkeit des Wasserstoffs im flüssigen reinen Nickel und Eisen und die Beeinflussung im Eisen durch Sauerstoff",
+        "year": 1961,
+        "journal": "Archiv für das Eisenhüttenwesen",
+        "volume": "32",
+        "issue": "11",
+        "pages": "779-790",
+        "article_number": null,
+        "doi": "10.1002/srin.196103272",
+        "metadata": {
+          "local_path": "refs/bibliographic_metadata/schenck_crossref.json",
+          "bytes": 2780,
+          "sha256": "84136496d416b0d8ae6d988286c7749ebf56fe653bdabc2df9fe8bacdfc26af5",
+          "url": "https://api.crossref.org/works/10.1002/srin.196103272"
+        }
+      },
+      "needed": "Original full text, H-O concentration tables, concentration interval and pressure convention.",
+      "outcome": "Publisher landing page and PDF returned HTTP 403. No public full text was found. The previously inspected contemporary Japanese abstract remains secondary evidence.",
+      "retrieval_keys": [
+        "schenck_publisher",
+        "schenck_pdf"
+      ]
+    },
+    {
+      "id": "distin",
+      "bibliography": {
+        "authors": [
+          "P.A. Distin",
+          "S.G. Whiteway",
+          "C.R. Masson"
+        ],
+        "title": "Solubility of oxygen in liquid iron from 1785° to 1960°C. A new technique for the study of slag-metal equilibria",
+        "year": 1971,
+        "journal": "Canadian Metallurgical Quarterly",
+        "volume": "10",
+        "issue": "1",
+        "pages": "13-18",
+        "article_number": null,
+        "doi": "10.1179/cmq.1971.10.1.13",
+        "metadata": {
+          "local_path": "refs/bibliographic_metadata/distin_crossref.json",
+          "bytes": 4151,
+          "sha256": "707e7f42ab0fbed4c63c0b16323521fd33993e3917481a044a07cc2d65fd6deb",
+          "url": "https://api.crossref.org/works/10.1179/cmq.1971.10.1.13"
+        }
+      },
+      "needed": "Original full text and individual oxygen-solubility observations with methods and uncertainty.",
+      "outcome": "Publisher landing page and PDF returned HTTP 403. The indexed publisher abstract is accessible, but no original tables were obtained.",
+      "retrieval_keys": [
+        "distin_publisher",
+        "distin_pdf"
+      ]
+    }
+  ],
+  "additional_raw_data_gap": "Jiang (2025) published Table S1 was recovered earlier; raw simulation data still require an author request. Newly identified Badro calibration ancestry is not relabelled as inspected original experimental data.",
+  "pending_list_scope": "Four items remain in the previously identified retrieval list. Jambon full-text inspection is complete; unavailable individual-analysis weights are recorded as a reconstruction limit, not a continuing full-text access gap."
+}

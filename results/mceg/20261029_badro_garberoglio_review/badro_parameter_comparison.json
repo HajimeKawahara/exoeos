@@ -1,0 +1,186 @@
+{
+  "scope": "Badro SI Eqs.3-4 and Table S1 parameter option; numerical fixture states are not calibration observations.",
+  "components": [
+    "Fe",
+    "Si",
+    "O"
+  ],
+  "parameters": {
+    "reference_temperature_K": "1873",
+    "epsilon_SiSi_at_reference_temperature": "12.41",
+    "epsilon_SiO_at_reference_temperature": "-5",
+    "epsilon_OO_times_temperature_K": "-1873",
+    "ln_gamma0_Si_at_reference_temperature": "-6.65",
+    "ln_gamma0_O_constant": "4.29",
+    "ln_gamma0_O_inverse_temperature_K": "-16500"
+  },
+  "default_changed": false,
+  "absolute_tolerance": 5e-12,
+  "state_count": 7,
+  "maximum_absolute_ln_gamma_error": 1.7763568394002505e-15,
+  "maximum_absolute_gex_RT_error": 2.220446049250313e-16,
+  "maximum_default_difference_formula_error": 1.7271012911822617e-15,
+  "states": [
+    {
+      "id": "pure_fe_1873",
+      "T_K": 1873.0,
+      "P_Pa": 100000.0,
+      "x": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "badro_ln_gamma_source": [
+        0.0,
+        -6.65,
+        -4.519396689802456
+      ],
+      "custom_provider_max_abs_ln_gamma_error": 8.881784197001252e-16,
+      "custom_provider_abs_gex_RT_error": 0.0,
+      "default_minus_badro_ln_gamma_source": [
+        0.0,
+        0.0,
+        -8.881784197001252e-16
+      ],
+      "default_difference_formula_max_abs_error": 8.881784197001252e-16
+    },
+    {
+      "id": "dilute_1873",
+      "T_K": 1873.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.99999998,
+        1e-08,
+        1e-08
+      ],
+      "badro_ln_gamma_source": [
+        -7.049999380333319e-17,
+        -6.6499999259,
+        -4.519396749802457
+      ],
+      "custom_provider_max_abs_ln_gamma_error": 8.881784197001252e-16,
+      "custom_provider_abs_gex_RT_error": 1.3234889800848443e-23,
+      "default_minus_badro_ln_gamma_source": [
+        3.9046982729715846e-16,
+        0.0,
+        -7.809396862512585e-08
+      ],
+      "default_difference_formula_max_abs_error": 1.7271012911822617e-15
+    },
+    {
+      "id": "ternary_1873",
+      "T_K": 1873.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.9,
+        0.07,
+        0.03
+      ],
+      "badro_ln_gamma_source": [
+        -0.019790194467816054,
+        -5.933135455475554,
+        -4.944149070241124
+      ],
+      "custom_provider_max_abs_ln_gamma_error": 6.938893903907228e-18,
+      "custom_provider_abs_gex_RT_error": 1.1102230246251565e-16,
+      "default_minus_badro_ln_gamma_source": [
+        0.0035861334110153242,
+        0.0035861334110158793,
+        -0.23428190069407506
+      ],
+      "default_difference_formula_max_abs_error": 1.4155343563970746e-15
+    },
+    {
+      "id": "ternary_2350",
+      "T_K": 2350.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.85,
+        0.1,
+        0.05
+      ],
+      "badro_ln_gamma_source": [
+        -0.028619246536606635,
+        -4.514455911719929,
+        -3.2439988114281424
+      ],
+      "custom_provider_max_abs_ln_gamma_error": 1.7763568394002505e-15,
+      "custom_provider_abs_gex_RT_error": 1.1102230246251565e-16,
+      "default_minus_badro_ln_gamma_source": [
+        0.008049794470936789,
+        0.008049794470936789,
+        -0.31121276595744707
+      ],
+      "default_difference_formula_max_abs_error": 2.220446049250313e-16
+    },
+    {
+      "id": "ternary_3000",
+      "T_K": 3000.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.8,
+        0.15,
+        0.05
+      ],
+      "badro_ln_gamma_source": [
+        -0.0670657465495659,
+        -3.1489145604265714,
+        -1.8454782567991828
+      ],
+      "custom_provider_max_abs_ln_gamma_error": 4.440892098500626e-16,
+      "custom_provider_abs_gex_RT_error": 2.220446049250313e-16,
+      "default_minus_badro_ln_gamma_source": [
+        0.006305672335567447,
+        0.006305672335567891,
+        -0.24378333333333257
+      ],
+      "default_difference_formula_max_abs_error": 7.771561172376096e-16
+    },
+    {
+      "id": "fe_si_3000",
+      "T_K": 3000.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.9,
+        0.1,
+        0.0
+      ],
+      "badro_ln_gamma_source": [
+        -0.0415331502381395,
+        -3.377019,
+        -1.5804335599499872
+      ],
+      "custom_provider_max_abs_ln_gamma_error": 4.440892098500626e-16,
+      "custom_provider_abs_gex_RT_error": 1.1102230246251565e-16,
+      "default_minus_badro_ln_gamma_source": [
+        0.0,
+        0.0,
+        4.440892098500626e-16
+      ],
+      "default_difference_formula_max_abs_error": 4.440892098500626e-16
+    },
+    {
+      "id": "fe_o_3000",
+      "T_K": 3000.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.95,
+        0.0,
+        0.05
+      ],
+      "badro_ln_gamma_source": [
+        0.0008074467959607164,
+        -4.311129787183843,
+        -1.2412166666666666
+      ],
+      "custom_provider_max_abs_ln_gamma_error": 2.220446049250313e-16,
+      "custom_provider_abs_gex_RT_error": 0.0,
+      "default_minus_badro_ln_gamma_source": [
+        0.006305672335567187,
+        0.006305672335567003,
+        -0.24378333333333257
+      ],
+      "default_difference_formula_max_abs_error": 7.771561172376096e-16
+    }
+  ]
+}

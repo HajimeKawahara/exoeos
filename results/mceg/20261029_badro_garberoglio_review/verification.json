@@ -1,0 +1,50 @@
+{
+  "verified_at": "2026-10-29T08:25:47.321950+00:00",
+  "scope": "Supplied-source inspection, seven-state source-algebra comparison, contract structure and metadata preservation; no empirical validation.",
+  "structure_check": {
+    "command": "PYTHONPATH=/home/kawahara/mceg/src python -m mceg mceg/contracts/*.yaml",
+    "exit_code": 0,
+    "valid_contracts": 9
+  },
+  "metadata_tests": {
+    "command": "PYTHONPATH=src JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 python -m pytest -q tests/unittests/mceg_contract_test.py tests/unittests/mceg_model_survey_test.py --junitxml=results/mceg/20261029_badro_garberoglio_review/metadata_tests.xml",
+    "exit_code": 0,
+    "counts": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "junit_sha256": "57ed8ffc85bc02d0ae77ffef0046316c74bb1c6dca7e8b973378ab3e2ed00bf7"
+  },
+  "source_algebra": {
+    "command": "PYTHONPATH=src JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 python results/mceg/20261029_badro_garberoglio_review/compare_badro.py",
+    "exit_code": 0,
+    "state_count": 7,
+    "maximum_absolute_ln_gamma_error": 1.7763568394002505e-15,
+    "maximum_absolute_gex_RT_error": 2.220446049250313e-16,
+    "absolute_tolerance": 5e-12,
+    "default_changed": false
+  },
+  "preservation": {
+    "historical_ma_records_preserved": true,
+    "selected_file_pins": 146,
+    "local_artifact_pins": 47,
+    "unique_local_artifacts": 13,
+    "local_source_files_verified": 39,
+    "tracked_refs_files": 0
+  },
+  "source_manifest": {
+    "local_path": "refs/source_manifest_20261029_badro_garberoglio.json",
+    "sha256": "c050f6884926be37db0e36f0f58c2bb3f5ee888941114a3c83bf213fdd52f1b3"
+  },
+  "artifact_hashes": {
+    "review.json": "822fee9c4c874d7046472180315031321b830f638058d402f32a3118bdc7abbb",
+    "compare_badro.py": "c0febba0c514ae10bf86a7b9c766941a5ad3bb28543da69f80b1c69c416df99e",
+    "badro_parameter_comparison.json": "91c5432d702dcf2eb05aa78bd4c360c4be322445dd2ed22888e7f778711ff257",
+    "missing_sources.bib": "7ab8b38e4c52e464d55a16201d9767097547046ae332eca6cfc0a434b538a63d"
+  },
+  "updated_contract_sha256": "5a03146512da896f9df05036f16dbc4d367236b363956f627da8923b01c3c002",
+  "scoped_explanation": "physical_badro_review_20261029: physical UNKNOWN; selected files 13/13 match; original Badro coefficient attribution established while the printed/default discrepancy remains explicit.",
+  "diff_check": "git diff --check passed."
+}

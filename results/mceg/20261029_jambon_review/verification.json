@@ -1,0 +1,50 @@
+{
+  "verified_at": "2026-10-29T09:07:30.629745+00:00",
+  "scope": "Jambon source inspection, reported-unit scale comparison, contract structure, documentation and preservation checks; no new physical validation.",
+  "mceg_revision": "471e2516d644031b561e7bef4f4d4093b52fe07e",
+  "structure_check": {
+    "command": "PYTHONPATH=/tmp/exoeos-jambon-review-20261029/mceg-ci/src python -m mceg mceg/contracts/*.yaml",
+    "exit_code": 0,
+    "valid_contracts": 9
+  },
+  "metadata_tests": {
+    "command": "PYTHONPATH=src JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 python -m pytest -q tests/unittests/mceg_contract_test.py tests/unittests/mceg_model_survey_test.py --junitxml=results/mceg/20261029_jambon_review/metadata_tests.xml",
+    "exit_code": 0,
+    "counts": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "junit_sha256": "642daee6fb79d1fbd299a9ce1659c9348bcafe20e34343a9a40e159cf32e4377"
+  },
+  "documentation": {
+    "command": "PYTHONPATH=/tmp/exoeos-jambon-review-20261029/mceg-ci/src:src JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 OPENBLAS_NUM_THREADS=1 ./update_doc.sh -W --keep-going",
+    "exit_code": 0,
+    "log_local_path": "/tmp/exoeos-jambon-review-20261029/docs-build.log",
+    "log_sha256": "5c6ecc220c8905e4e39d81031f9f20c3dea3b3a1785760e5a8b4185a1cd9b651",
+    "output": "documents/_build/html/",
+    "note": "Used the same MCEG revision pinned by CI; generated files remain ignored."
+  },
+  "preservation": {
+    "historical_records_preserved": 251,
+    "pre_jambon_records_preserved": true,
+    "selected_file_pins": 146,
+    "local_artifact_pins": 49,
+    "unique_local_artifacts": 14,
+    "local_source_files_verified": 42,
+    "tracked_refs_files": 0,
+    "jambon_table_rows_checked": 12,
+    "jambon_He_rows_checked": 7
+  },
+  "source_manifest": {
+    "local_path": "refs/source_manifest_20261029_jambon.json",
+    "sha256": "f69582efff7f99b63e3feb7dce2e5a6f9f5576c216c6036415acc4334239c107"
+  },
+  "artifact_hashes": {
+    "review.json": "2665e850a947379ddef7c6cfbc0c54d34edbbf5f45ffe286a0880daaf9e9569a",
+    "missing_sources.bib": "e81a0ec819694a782e8413a1a5665f5f486dec022ad0ce5fb6d1c8d8f06f79cc"
+  },
+  "updated_contract_sha256": "4293fb6aa2b2c760603eb205b88bacd9c60cb927700791a51fbe022549c779ee",
+  "scoped_explanation": "physical_jambon_review_20261029 remains physical UNKNOWN; all 10 selected file pins match. Offline URI hashes remain unchecked by MCEG; the supplied local files were separately checked against the local manifest."
+}
