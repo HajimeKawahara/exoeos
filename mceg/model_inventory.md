@@ -6,6 +6,12 @@ This inventory distinguishes registered model families from families located
 for later source-specific review. It is not a claim of complete scientific
 coverage of the package.
 
+The 2026-10-29 [provisional Badro default](contracts/ma_fe_si_o_badro.yaml)
+adds a separate identity and fresh numerical evidence for the dry Ma model and
+its ideal-H wrapper. The survey contracts below preserve the former printed-Young
+parameterization. The current default uses `epsilon_OO=-1873/T`; its separate
+infinite-dilution term still uses `4.29-16500/T`. Author clarification remains open.
+
 ## Contracts added in this survey
 
 | Contract | Identity and main boundary | Numerical checks selected |

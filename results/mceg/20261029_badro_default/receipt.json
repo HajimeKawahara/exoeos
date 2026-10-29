@@ -1,0 +1,33 @@
+{
+  "base_revision": "c375601415683c714a1536723a5971e59f6441c7",
+  "scope": "81 tests of the dry model, ideal-H wrapper and unchanged historical reference; no empirical calibration or coupled planetary rerun.",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 PYTHONPATH=src python -m pytest -q tests/unittests/ma_fe_si_o_test.py tests/unittests/ma_fe_si_o_h_test.py tests/unittests/fe_si_o_reference_test.py --junitxml=/tmp/exoeos-badro-targeted.xml",
+  "environment": {
+    "python": "3.12.7",
+    "jax": "0.6.2",
+    "numpy": "2.1.0",
+    "pytest": "8.3.3",
+    "backend": "cpu",
+    "x64": true
+  },
+  "tests_passed": 81,
+  "failed": 0,
+  "selected_file_sha256": {
+    "src/exoeos/ma_fe_si_o.py": "6cabe350d31b7abfdc8a49df1fed019f6f580443b553c7c9faf9a0ffd7d16887",
+    "src/exoeos/ma_fe_si_o_h.py": "8fdb6c2f20eb195dc0ab96014387ddc6ceb7b80e71c53be64eb9cebf5393ea33",
+    "src/exoeos/gibbs_excess.py": "c3354acd4f79940cee2723ec3d2c5500751c767666d295f8c04c3c97b8cfc7b3",
+    "src/exoeos/state.py": "76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54",
+    "src/exoeos/contracts.py": "ba1052326b066d7d3e5a57b5e63ac3dba5cc388e7d0bb9d2bf38431fe996d580",
+    "src/exoeos/_arrays.py": "020679ce40515c27ce0bf31f5b71b1f737737d4a5ebc0301198a9e2bcbedf507",
+    "tests/conftest.py": "87d47ae57e35ed7a10960ae12407c8a274188271ea86d5e0016d3d70501e2096",
+    "tests/unittests/ma_fe_si_o_test.py": "6d5a3cea93c458f9a05ca04246c0585be9390765abda72888024901ddd0ed6c6",
+    "tests/unittests/ma_fe_si_o_h_test.py": "1c51ab27e8b8eb03572bfab8ab6bc6a45e6f939ed3a29a1decffee7838bb4795",
+    "tests/unittests/fe_si_o_reference_test.py": "38a4ae13f26b6e73902bb5730afebe189fea258b28ad731ce2a6486364908c53",
+    "tests/reference/generate_fe_si_o_ma2001.py": "164940e336c9c4ab98be886efe9cfd0cd7023325c0bf54f3e51a349650469034",
+    "tests/reference/fe_si_o_ma2001.json": "cf59178a3cf6622b924cd8d8ac1d03e7e5feb65c6f2e687dcb3b66820b601e0f",
+    "tests/reference/fe_si_o_badro2015.json": "88c248145db8e3ad0c70aad9b1a17ab739a3d9a5b3f4a75e7cb17a995fe34f9a"
+  },
+  "junit_xml": "results/mceg/20261029_badro_default/tests.xml",
+  "junit_sha256": "a265b510358d2075c29fb95b603ee8377ea37878a881b0fac22868fc65af63f4",
+  "historical_fixture_preserved": true
+}

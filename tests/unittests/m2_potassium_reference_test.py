@@ -48,7 +48,7 @@ def test_perspective_host_limit_and_full_scalar_derivatives():
 def test_perspective_interval_bound_matches_independent_full_hessian():
     model,_=M.make_associated_model(T)
     lower=M.associated_curvature_lower_bound(model,T,LO,HI)
-    assert .344 < lower < .345
+    assert 1.367 < lower < 1.368  # Provisional Badro dry-host interaction.
     h=model.host
     for fraction in (.1,.7,.99):
         n=HI*fraction;n[0]=1-n[1:].sum()
@@ -56,7 +56,8 @@ def test_perspective_interval_bound_matches_independent_full_hessian():
         assert value.lo<=float(model.gex_RT(T,2.7e7,n))<=value.hi
         energy=lambda y:total_solution_gibbs_RT(model,T,2.7e7,jnp.r_[1-jnp.sum(y),y],jnp.zeros(19))
         assert np.linalg.eigvalsh(np.asarray(jax.hessian(energy)(n[1:])))[0]>=lower
-    bad=HI.copy();bad[-1]=.04
+    # A wider K box still fails to certify positive curvature with the new host.
+    bad=HI.copy();bad[-1]=.12
     assert M.associated_curvature_lower_bound(model,T,LO,bad) < 0
 
 

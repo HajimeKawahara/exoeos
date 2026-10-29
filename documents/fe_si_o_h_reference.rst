@@ -5,8 +5,11 @@ Fe-Si-O-H alloy control
 through a scalar extensive excess energy. It supplies a consistent control
 with no excess interactions involving H. It is neither a calibrated H-bearing
 alloy nor a reproduction of the four-component author-code solvent treatment.
-The default record is ``ma2001_fe_si_o_h_no_h_interaction_v1``; the dry model
-and its existing reference record remain unchanged.
+The default record is ``ma2001_fe_si_o_h_badro2015_provisional_v1``; it inherits
+the provisional Badro oxygen self interaction from the dry model. To reproduce
+the former printed-Young control, pass
+``MaFeSiOLiquid((12.41*1873, -16500, -5*1873))`` as ``dry_model``.
+The historical reference records retain their original parameterization.
 
 .. code-block:: python
 

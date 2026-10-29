@@ -14,13 +14,14 @@ from exoeos import MaFeSiOLiquid, solution_state, total_gex_RT
 
 
 REFERENCE_DIRECTORY = Path(__file__).resolve().parents[1] / "reference"
-REFERENCE = json.loads((REFERENCE_DIRECTORY / "fe_si_o_ma2001.json").read_text())
+REFERENCE = json.loads((REFERENCE_DIRECTORY / "fe_si_o_badro2015.json").read_text())
+PRINTED_REFERENCE = json.loads((REFERENCE_DIRECTORY / "fe_si_o_ma2001.json").read_text())
 STATES = REFERENCE["states"]
 INTERIORS = [state for state in STATES if state["id"].startswith("ternary_")]
 REFERENCE_ACTIVITIES = runpy.run_path(
     str(REFERENCE_DIRECTORY / "generate_fe_si_o_ma2001.py")
 )["activities"]
-DEFAULT_INTERACTION_K = (12.41 * 1873, -16500.0, -5 * 1873)
+DEFAULT_INTERACTION_K = (12.41 * 1873, -1873.0, -5 * 1873)
 
 
 def _five_point_derivative(function, value, step):
@@ -48,6 +49,30 @@ def test_native_state_matches_independent_reference(reference):
     np.testing.assert_allclose(state.lngamma, reference["ln_gamma_formal"], rtol=5e-12, atol=5e-12)
     np.testing.assert_allclose(shift, reference["mu0_formal_minus_source_over_RT"], rtol=5e-12, atol=5e-12)
     np.testing.assert_allclose(state.lngamma + shift, reference["ln_gamma_source"], rtol=5e-12, atol=5e-12)
+
+
+@pytest.mark.parametrize("reference", PRINTED_REFERENCE["states"], ids=lambda state: state["id"])
+def test_explicit_printed_parameters_preserve_historical_reference(reference):
+    model = MaFeSiOLiquid((12.41 * 1873, -16500.0, -5 * 1873))
+    state = solution_state(model, reference["T_K"], reference["P_Pa"], reference["x"])
+    np.testing.assert_allclose(state.gex_RT, reference["gex_formal_RT"], rtol=5e-12, atol=5e-12)
+    np.testing.assert_allclose(state.lngamma, reference["ln_gamma_formal"], rtol=5e-12, atol=5e-12)
+    np.testing.assert_allclose(
+        state.lngamma + model.standard_state_shift_RT(reference["T_K"]),
+        reference["ln_gamma_source"], rtol=5e-12, atol=5e-12,
+    )
+
+
+def test_provisional_default_keeps_the_distinct_infinite_dilution_term():
+    model = MaFeSiOLiquid()
+    temperature = 2350.0
+    state = solution_state(model, temperature, 1e5, [1.0, 0.0, 0.0])
+    source = state.lngamma + model.standard_state_shift_RT(temperature)
+    np.testing.assert_allclose(source[2], 4.29 - 16500 / temperature, rtol=0, atol=5e-12)
+    np.testing.assert_allclose(
+        model.standard_state_shift_RT(temperature)[2], 4.29 - (16500 + 1873) / temperature,
+        rtol=0, atol=5e-12,
+    )
 
 
 @pytest.mark.parametrize("reference", INTERIORS, ids=lambda state: state["id"])

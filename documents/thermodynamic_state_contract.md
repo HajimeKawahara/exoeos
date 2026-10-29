@@ -403,13 +403,13 @@ floating numerical model PyTree leaves participate in dtype promotion.
 contract for atomic mole fractions in fixed order `(Fe, Si, O)`. It is an
 immutable JAX PyTree with one numerical leaf, `interaction_K`, a shape `(3,)`
 array of temperature numerators in K, ordered `(Si-Si, O-O, Si-O)`.
-The constructor defaults are `(12.41*1873, -16500, -5*1873)`; dividing these
+The provisional constructor defaults are `(12.41*1873, -1873, -5*1873)`; dividing these
 by `T` gives the three dimensionless interactions. Altered parameters describe
 an unvalidated mathematical variant of the reference model.
 
 The metadata `components`, `activity_basis="mole_fraction"`,
 `standard_state_convention="symmetric"`,
-`reference_model_id="ma2001_fe_si_o_young2023_printed_v1"`, and
+`reference_model_id="ma2001_fe_si_o_badro2015_provisional_v1"`, and
 `reference_pressure_Pa=1e5` record the component order and source convention.
 The reference identifier describes the default parameter set. Its endmembers
 are formal continuations of a Fe-rich liquid expression, not calibrated pure
@@ -441,7 +441,10 @@ specified, and the model does not establish liquid or high-pressure stability.
 interactions, using the fixed source infinite-dilution expressions. Consumers
 convert both quantities as `ln_gamma_formal = ln_gamma_source - h` and
 `mu0_formal = mu0_source + R*T*h`. With defaults,
-`h = [0, 5.76*1873/T, 4.29-33000/T]`. The helper is differentiable in T and
+`h = [0, 5.76*1873/T, 4.29-18373/T]`. The separate source infinite-dilution
+term remains `4.29-16500/T`. Use explicit interactions
+`(12.41*1873, -16500, -5*1873)` to reproduce the former printed-Young version.
+The helper is differentiable in T and
 the interaction parameters; it supplies no absolute standard potentials.
 The source-to-formal conversion preserves chemical potentials within the
 completed Ma model; including the Fe solvent term itself changes Young's

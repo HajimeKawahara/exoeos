@@ -3,9 +3,17 @@ Fe-Si-O liquid activities and reference
 
 ``MaFeSiOLiquid`` implements a native JAX ``GibbsExcessModel`` for ordered
 atomic mole fractions ``(Fe, Si, O)`` in one Fe-rich liquid phase. Its defaults
-use the pinned record ``ma2001_fe_si_o_young2023_printed_v1``, including the
-Fe solvent and formal endmember standards. This is a metal-only model;
+use ``ma2001_fe_si_o_badro2015_provisional_v1``, including the Fe solvent
+and formal endmember standards. This is a metal-only model;
 silicate activities and metal-silicate equilibrium remain separate work.
+
+The oxygen self interaction provisionally follows Badro's original supplement
+and Young's published code: ``epsilon_OO = -1873/T``. The separate
+infinite-dilution term remains ``ln_gamma0_O = 4.29 - 16500/T``. The difference
+from Young's printed equation [Young2023]_ is treated as a suspected typographical error;
+no author clarification has been received. The
+:download:`MCEG decision <../mceg/contracts/ma_fe_si_o_badro.yaml>` records the
+evidence, numerical checks and follow-up for a future reply or correction.
 
 Native model API
 ----------------
@@ -32,7 +40,7 @@ it must also apply ``mu0_formal_RT = mu0_source_RT + shift_RT``.
 This preserves chemical potentials within the completed model.
 
 The constructor is
-``MaFeSiOLiquid(interaction_K=(12.41*1873, -16500, -5*1873))``.
+``MaFeSiOLiquid(interaction_K=(12.41*1873, -1873, -5*1873))``.
 ``interaction_K`` is a differentiable array of shape ``(3,)``, ordered
 ``(Si-Si, O-O, Si-O)`` and expressed in K. Dividing it by temperature gives
 :math:`(a,b,c)`. It is the immutable model's only numerical PyTree leaf;
@@ -40,6 +48,12 @@ the source infinite-dilution expressions :math:`l_i(T)` remain fixed.
 ``standard_state_shift_RT(T)`` uses the current interactions, including
 overrides. Custom parameters are mathematical variants without established
 physical calibration.
+
+To reproduce the former printed-Young parameterization, explicitly use
+``MaFeSiOLiquid((12.41*1873, -16500, -5*1873))``. Both activity coefficients
+and standard-state shifts depend on this selection; consumers must obtain
+their shifts from the same model instance. Frozen consumer source pins and
+historical execution receipts require a separate review before reuse.
 
 The model records ``components``, ``activity_basis``,
 ``standard_state_convention``, ``reference_model_id``, and
@@ -63,8 +77,8 @@ experimental calibration range.
 Source selection
 ----------------
 
-Use the Ma epsilon formalism [Ma2001]_ with the **printed** coefficients
-in Young et al., Methods equations (20)-(21) [Young2023]_. Restore the Fe
+Use the Ma epsilon formalism [Ma2001]_ with the coefficients in Badro et al.,
+Supporting Information Table S1 and Eqs. (3)-(4) [Badro2015]_. Restore the Fe
 solvent term using the full Ma equations reproduced in Vogel et al.,
 Appendix A1 [Vogel2018]_, and Buchan et al., equation (6) [Buchan2022]_.
 Young assumes the Fe activity coefficient is one; this completion is a
@@ -75,7 +89,7 @@ Let :math:`s=x_{\rm Si}`, :math:`o=x_{\rm O}`, and
 
 .. math::
 
-   a(T)&=12.41\frac{1873}{T}, & b(T)&=-\frac{16500}{T}, & c(T)&=-5\frac{1873}{T},\\
+   a(T)&=12.41\frac{1873}{T}, & b(T)&=-\frac{1873}{T}, & c(T)&=-5\frac{1873}{T},\\
    l_{\rm Si}(T)&=-6.65\frac{1873}{T}, & l_{\rm O}(T)&=4.29-\frac{16500}{T}.
 
 Here :math:`a=\epsilon_{\rm Si}^{\rm Si}`,
@@ -85,7 +99,8 @@ Here :math:`a=\epsilon_{\rm Si}^{\rm Si}`,
 Values are retained at their printed precision, without refitting or
 treating estimated inputs as new measurements.
 
-The oxygen comparison is resolved **as a version choice**:
+The source comparison concerns the oxygen self term, not the separate
+infinite-dilution constant:
 
 .. list-table:: Coefficient multiplying ln(1-o) in the O correction
    :header-rows: 1
@@ -100,13 +115,17 @@ The oxygen comparison is resolved **as a version choice**:
      - :math:`+1873/T`
    * - Pinned GCE Young_2023_Version/Equations.py [GCE]_
      - :math:`+1873/T`
+   * - Badro (2015), SI Table S1 and Eqs. (3)-(4)
+     - :math:`+1873/T`
+   * - Current provisional ExoEOS default
+     - :math:`+1873/T`
 
-The publication/code difference already exists within Young's sources.
-Selecting the printed expression does not establish an upstream bug or the
-authors' intended correction. Badro (2015),
-`DOI <https://doi.org/10.1073/pnas.1505672112>`_, is Young's cited upstream
-source, but its supplementary coefficients were not independently retrieved.
-This is not a verified Badro coefficient set. The GCE comparison commit is
+Badro (2015) precedes Young (2023), which cites Badro as reference 33.
+The original September 2026 implementation selected the printed Young version
+while the Badro supplement was unavailable. Inspection on 2026-10-29 confirmed
+that Badro's oxygen self coefficient agrees with Young's code. The provisional
+default now uses that source-supported coefficient. This is not an author-issued
+erratum or empirical validation of the complete model. The GCE comparison commit is
 ``31558873d8da460c3cd11986b574cb347621b43d``; its Si correction agrees, while
 
 .. math::
@@ -130,7 +149,7 @@ a fitted result or a quoted scalar equation from Ma.
    f_{\rm src}={}&l_{\rm Si}s+l_{\rm O}o+a[s+(1-s)\ln(1-s)]\\
        &+b[o+(1-o)\ln(1-o)]+cQ(s,o).
 
-The printed Young corrections are :math:`d_{\rm Si}=\partial_s f_{\rm src}`
+The selected solute corrections are :math:`d_{\rm Si}=\partial_s f_{\rm src}`
 and :math:`d_{\rm O}=\partial_o f_{\rm src}`. The **completed** model uses
 
 .. math::
@@ -182,7 +201,7 @@ Then :math:`\mu_i=\mu_i^\circ+RT[\ln x_i+\ln\gamma_i]` and reaction free
 energies are unchanged **within the completed model**. Restoring Fe itself
 changes Young's approximation. Absolute standard thermochemical data are
 not supplied. Specifically, :math:`h_{\rm Si}=5.76(1873/T)` and
-:math:`h_{\rm O}=4.29-33000/T`.
+:math:`h_{\rm O}=4.29-18373/T` for the provisional default.
 
 For Henry mole-fraction standards, use
 :math:`\mu_i^{\circ,H}=\mu_i^{\circ,\rm src}+RT l_i` and
@@ -220,7 +239,12 @@ absorbed into the standards.
 Reproduction and verification
 -----------------------------
 
-``tests/reference/fe_si_o_ma2001.json`` contains seven states, all three
+``tests/reference/fe_si_o_badro2015.json`` supplies seven numerical reference
+states for the provisional default, evaluated with the independent Decimal
+equations and the inspected Badro coefficients. Dry and ideal-H wrapper tests
+use this record. Explicit legacy-parameter tests retain the old predictions.
+
+The unchanged ``tests/reference/fe_si_o_ma2001.json`` contains seven historical states, all three
 components, conversion shifts, source hashes, and both printed/code solute
 corrections. ``ln_gamma_source`` means the completed model in the source
 reference convention, not Young's printed activity vector. The offline
@@ -270,9 +294,13 @@ References
 .. [Ma2001] Ma (2001), *Thermodynamic description for concentrated metallic
    solutions using interaction parameters*. https://doi.org/10.1007/s11663-001-0011-0
 .. [Young2023] Young, Shahar, and Schlichting (2023), *Earth shaped by
-   primordial H2 atmospheres*, Methods (20)-(21).
+   primordial H2 atmospheres*, Nature 616, 306-311, Methods (20)-(21).
    https://doi.org/10.1038/s41586-023-05823-0
    Author PDF: https://faculty.epss.ucla.edu/~eyoung/reprints/Young_etal_2023_Nature.pdf
+.. [Badro2015] Badro, J., Brodholt, J. P., Piet, H., Siebert, J., and
+   Ryerson, F. J. (2015), *Core formation and core composition from coupled
+   geochemical and geophysical constraints*, PNAS 112(40), 12310-12314.
+   https://doi.org/10.1073/pnas.1505672112
 .. [Vogel2018] Vogel et al. (2018), *The dependence of metal-silicate
    partitioning of moderately volatile elements on oxygen fugacity and
    Si contents of Fe metal*, Appendix A1. https://doi.org/10.1016/j.gca.2018.06.022

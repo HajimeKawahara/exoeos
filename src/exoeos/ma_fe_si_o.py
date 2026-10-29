@@ -1,4 +1,4 @@
-"""Ma Fe-Si-O liquid with Young (2023)'s printed interaction parameters."""
+"""Ma Fe-Si-O liquid with provisional Badro (2015) interaction parameters."""
 
 from dataclasses import dataclass
 from typing import ClassVar
@@ -20,7 +20,8 @@ class MaFeSiOLiquid:
 
     ``interaction_K`` contains ``(Si-Si, O-O, Si-O)`` coefficients in K;
     the dimensionless interactions are ``interaction_K / T``. Defaults use
-    Young's printed equations, completed with the Ma solvent Fe term.
+    Badro's oxygen self interaction, pending clarification of Young's printed
+    equation, with the Ma solvent Fe term and explicit standard conversion.
     Custom coefficients are uncalibrated parameter experiments.
 
     Call ``validate_state`` at the eager input boundary. Traced evaluation
@@ -35,12 +36,12 @@ class MaFeSiOLiquid:
     components: ClassVar[tuple[str, ...]] = ("Fe", "Si", "O")
     activity_basis: ClassVar[str] = "mole_fraction"
     standard_state_convention: ClassVar[str] = "symmetric"
-    reference_model_id: ClassVar[str] = "ma2001_fe_si_o_young2023_printed_v1"
+    reference_model_id: ClassVar[str] = "ma2001_fe_si_o_badro2015_provisional_v1"
     reference_pressure_Pa: ClassVar[float] = 1.0e5
 
     def __init__(
         self,
-        interaction_K: ArrayLike = (12.41 * 1873.0, -16500.0, -5.0 * 1873.0),
+        interaction_K: ArrayLike = (12.41 * 1873.0, -1873.0, -5.0 * 1873.0),
     ) -> None:
         coefficients = as_inexact_array(interaction_K)
         if coefficients.shape != (3,):

@@ -70,7 +70,7 @@ def test_host_limit_and_independent_scalar_extensivity():
 def test_pure_arithmetic_hessian_bound_matches_the_exact_selected_scalar():
     model, _ = M.make_associated_model(T)
     lower = M.associated_curvature_lower_bound(model, T, LOWER, UPPER)
-    assert 1.45 < lower < 1.46
+    assert 3.31 < lower < 3.32  # Provisional Badro dry-host interaction.
     x = UPPER*.1
     x[0] = 1-x[1:].sum()
     interval = M.associated_excess(T, np.asarray(model.host.host.dry_model.interaction_K),

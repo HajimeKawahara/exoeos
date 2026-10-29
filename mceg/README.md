@@ -4,7 +4,7 @@
 applicability, claims and scoped evidence. The
 [pure-H2 Zhang-Duan](contracts/zhang_duan_h2.yaml) contract now uses v0.2,
 with a lossless import of its original v0.1 declarations. MCEG is not an ExoEOS
-runtime or test dependency; the model implementation is unchanged.
+runtime or test dependency.
 
 The [2026-10-20 model inventory](model_inventory.md) adds v0.2 contracts for the
 solubility/magma survey, with separate numerical and physical Assessments and
@@ -25,6 +25,21 @@ Source inspection does not establish physical accuracy. Remote artifact hashes
 identify downloaded bytes; offline MCEG checks do not verify those URLs.
 
 ## Source review, 2026-10-29
+
+The subsequent [provisional oxygen-default contract](contracts/ma_fe_si_o_badro.yaml)
+records the decision to use `epsilon_OO=-1873/T`, matching Badro's SI and the
+pinned Young code. The separate `ln_gamma0_O=4.29-16500/T` term remains fixed.
+This is a suspected correction of the printed expression, not an author-confirmed
+erratum. No author reply has been received or is required to use this provisional
+choice; `record_author_clarification` keeps the follow-up open for a future reply
+or published correction. Old contracts, fixtures and receipts retain their original
+parameterization. The new contract covers both the dry default and its ideal-H
+wrapper; numerical consistency and physical accuracy remain separate judgments.
+
+```bash
+mceg check mceg/contracts/ma_fe_si_o_badro.yaml --assessment numerical_review --root .
+mceg explain mceg/contracts/ma_fe_si_o_badro.yaml --claim author_intent
+```
 
 The [volatile-liquid contract](contracts/magma_volatiles.yaml) now records
 inspection of the supplied Hirschmann (2012) PDF and freshly retrieved Thompson
@@ -115,9 +130,10 @@ The [supplied-source review](../results/mceg/20261029_badro_garberoglio_review/r
 records Badro's 12-page SI and Garberoglio's 15-page paper. Badro Table S1 (p.3)
 and its temperature scaling give epsilon_OO=-1873/T. The separate
 ln(gamma_O^0)=4.29-16500/T term is unchanged. This supports the oxygen self term
-in the pinned author/GCE code, whereas the current default follows Young's
-printed -16500/T interaction. The original-source question is closed; a separate
-follow-up retains the implementation-version decision. The existing explicit
+in the pinned author/GCE code, whereas the default at that review followed Young's
+printed -16500/T interaction. The original-source question was closed; the
+subsequent provisional-default decision above resolves the implementation follow-up.
+The existing explicit
 Badro parameter option agrees with SI Eqs.3-4 at seven numerical fixture states
 after standard conversion. These states are not calibration observations.
 
