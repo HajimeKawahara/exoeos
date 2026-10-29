@@ -111,6 +111,7 @@ evidence:
     and legacy explicit option.
   sources:
   - results/mceg/20261029_badro_default/decision.json
+  - results/mceg/20261029_badro_default/evidence_transition.json
   - src/exoeos/ma_fe_si_o.py
   - src/exoeos/ma_fe_si_o_h.py
   scope: Default dry model and inherited ideal-H wrapper only. Suspected print typo, not an author-confirmed
@@ -119,6 +120,8 @@ evidence:
   artifacts:
   - source: results/mceg/20261029_badro_default/decision.json
     sha256: 6110f6e0d805d49d54e3064dac6e2fbf5f678598b1e9bbb227328df11af82146
+  - source: results/mceg/20261029_badro_default/evidence_transition.json
+    sha256: cf8b085a719cf61ae44c9c6cc413274a600709e6f7fa010683ac58bb87bb774b
   provenance:
     role: implementation
     location: decision.json and default constructors.

@@ -35,6 +35,9 @@ choice; `record_author_clarification` keeps the follow-up open for a future repl
 or published correction. Old contracts, fixtures and receipts retain their original
 parameterization. The new contract covers both the dry default and its ideal-H
 wrapper; numerical consistency and physical accuracy remain separate judgments.
+The [evidence transition](../results/mceg/20261029_badro_default/evidence_transition.json)
+records exact reviewed file changes. Repository checks require the new numerical
+receipt for the changed Ma model and retain the old survey and H2 receipts.
 
 ```bash
 mceg check mceg/contracts/ma_fe_si_o_badro.yaml --assessment numerical_review --root .
