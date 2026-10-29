@@ -1,0 +1,90 @@
+{
+  "review_date": "2026-10-29",
+  "implementation_revision": "11887e0e8f963619d6dc6b95009c76a0b69dd65f",
+  "scope": "Inspect the supplied Ma original and Badro main paper; compare the selected Ma formulation without changing runtime code or empirical claims.",
+  "source_storage": "User-supplied PDFs are in refs. Hash URNs identify the inspected bytes; offline MCEG does not verify URI artifacts. No source PDF was modified.",
+  "selected_files": {
+    "src/exoeos/ma_fe_si_o.py": "32b526dc260d39a5071e25b198cc06fd331b1ceae89483d509702629ab5c7cde",
+    "documents/fe_si_o_reference.rst": "61c39d636ae8a49284175bb4dec06d2607afd76d975c133b5f1599192b5d1e52",
+    "tests/reference/generate_fe_si_o_ma2001.py": "164940e336c9c4ab98be886efe9cfd0cd7023325c0bf54f3e51a349650469034",
+    "tests/reference/fe_si_o_ma2001.json": "cf59178a3cf6622b924cd8d8ac1d03e7e5feb65c6f2e687dcb3b66820b601e0f"
+  },
+  "ma2001": {
+    "title": "Thermodynamic description for concentrated metallic solutions using interaction parameters",
+    "doi": "10.1007/s11663-001-0011-0",
+    "source": "urn:sha256:bddeb6273ecdcce27f938659370e53755e52f4142447acff03d1c96c428c9248",
+    "supplied_filename": "s11663-001-0011-0.pdf",
+    "sha256": "bddeb6273ecdcce27f938659370e53755e52f4142447acff03d1c96c428c9248",
+    "pages": 17,
+    "inspection": "inspected",
+    "inspected_locations": "PDF pp. 2-5, printed pp. 88-91: Sections II-III, Eqs. 10-12, 16-26 and Tables I-II. PDF pp. 15-16, printed pp. 101-102: nomenclature. Eqs. 21-26 and Tables I-II were also checked on rendered pages.",
+    "basis": "x_i is the mole fraction of element i, with component 1 the solvent. gamma_i is Raoultian on the pure-substance standard; gamma_i^0 is its infinite-dilution value. epsilon parameters use mole fractions, unlike the separate mass-percent e parameters.",
+    "approximation": "Section III considers a nonreacting solution at fixed T and P. Table II neglects second- and higher-order interaction parameters, derivatives involving three or more distinct solutes, and mixed derivatives with both powers at least three. This review concerns Eqs. 21-26, not the later higher-order extensions.",
+    "ternary_mapping": {
+      "components": "1=Fe, 2=Si, 3=O",
+      "variables": "s=x_Si; o=x_O; a=epsilon_SiSi; b=epsilon_OO; c=epsilon_SiO=epsilon_OSi; ls=ln(gamma_Si^0); lo=ln(gamma_O^0)",
+      "A": "1/(1-s)",
+      "B": "1/(1-o)",
+      "eq21_source_gex_RT": "s*ls+a*(s+(1-s)*ln(1-s))+o*lo+b*(o+(1-o)*ln(1-o))-c*(s*o+o*ln(1-s)+s*ln(1-o))+c*s^2*o^2*(A+B-1)/2",
+      "eq23_eq25_ln_gamma_Fe": "a*(s+ln(1-s))+b*(o+ln(1-o))+c*s*o*(1-A-B)-c*s^2*o^2*(3*(A+B-1)+s*A^2+o*B^2)/2",
+      "eq24_eq26_solute_correction": "ln_gamma_i-ln_gamma_Fe=li-self_i*ln(1-i)-c*(j+ln(1-j)-j/(1-i))+c*j^2*i*(1/(1-i)+1/(1-j)+i/(2*(1-i)^2)-1), with (i,j)=(s,o) or (o,s)",
+      "formal_gex_RT": "eq21_source_gex_RT-s*(ls+a)-o*(lo+b)",
+      "standard_shift_RT": "(mu0_formal-mu0_source)/(RT)=(0,ls+a,lo+b); add this vector to formal ln_gamma to recover the source convention.",
+      "comparison": "After canceling removable zero-fraction factors, Eq. 21 minus the linear standard-state terms equals MaFeSiOLiquid.gex_RT. Eq. 22 differentiates that scalar into Eqs. 23-24; their ternary forms, Eqs. 25-26, match the inspected reference generator. Pure Si/O endpoints remain formal continuations, not calibrated physical pure-substance standards."
+    },
+    "reproduction_comparison": {
+      "Vogel_A1": "The five terms agree with original Eq. 23, including the ordered-pair sums.",
+      "Buchan_Eq6": "The selected solute expression agrees with original Eq. 24.",
+      "Vogel_A2": "The negative cross term prints +1/(1-x_i) inside its parentheses. Original Eqs. 24 and 26 print -1/(1-x_i), as do the selected Buchan/Young expressions. The original supports the implementation's minus sign.",
+      "Vogel_A2_minus_original_ternary": "-2*c*x_j/(1-x_i) in ln_gamma_i; not a constant standard-state shift.",
+      "source_hashes": {
+        "https://discovery.ucl.ac.uk/id/eprint/10120068/17/Jennings_1Authors_accepted_version.pdf": "d7b7855106b52393586f176f7ec5a0070c337a6b28a193842224756265760520",
+        "https://arxiv.org/pdf/2111.08779v1": "c89b037c95435b7219d19b094974d696173e19fc90e5c4534c77e1e7e6fbb1c7"
+      },
+      "locations": "Vogel accepted manuscript PDF pp. 42-43, A1-A2; Buchan arXiv v1 PDF p. 5, Eq. 6. The previously inspected source versions were retained for this comparison."
+    },
+    "parameter_boundary": "The original establishes the equation form and conventions. It does not resolve the specific Young printed/code oxygen coefficient difference or verify Badro's supplementary calibration. No new physical applicability domain is inferred."
+  },
+  "badro2015": {
+    "title": "Core formation and core composition from coupled geochemical and geophysical constraints",
+    "doi": "10.1073/pnas.1505672112",
+    "source": "urn:sha256:c74f58d607fdbd31f5280b88f4e2be0dc17b904e77a1a08245e6e35184731115",
+    "supplied_filename": "badro-et-al-2015-core-formation-and-core-composition-from-coupled-geochemical-and-geophysical-constraints.pdf",
+    "sha256": "c74f58d607fdbd31f5280b88f4e2be0dc17b904e77a1a08245e6e35184731115",
+    "pages": 5,
+    "embedded_files": 0,
+    "inspection": "Main-paper Methods and relevant Results inspected; SI Appendix not supplied.",
+    "inspected_locations": "PDF p. 2, printed p. 12311, Methods and Results and Discussion. The five-page PDF contains the main article, printed pp. 12310-12314, without a supplementary appendix or embedded files.",
+    "finding": "Methods describes 1,000 accretion/equilibration steps and sends the thermodynamic uncertainty information to SI Appendix Table S1. Results states that metal activity coefficients depend on Si and O and refers to supplementary equations and figures. This is not the requested parameter table or an original Fe-Si-O calibration replay.",
+    "remaining": "Obtain and inspect pnas.1505672112.sapp.pdf. The supplied main paper does not establish which of +16500/T and +1873/T is intended in the Young oxygen self-interaction term."
+  },
+  "verification": {
+    "eq21_vs_reference": {
+      "method": "Evaluate the displayed ternary Eq. 21 with Python Decimal precision 60 and the seven fixture input states/parameters; compare against gex_source_RT returned by the unchanged reference generator's activities function (sum of x_i*ln_gamma_i from Eqs. 23-24). Subtract s*(ls+a)+o*(lo+b) and compare gex_formal_RT separately. This checks source algebra, not independent experimental data.",
+      "absolute_tolerance": "1e-50",
+      "states": 7,
+      "max_absolute_difference": "5e-60",
+      "result": "passed"
+    },
+    "reference_regeneration": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python tests/reference/generate_fe_si_o_ma2001.py --check",
+      "exit_code": 0,
+      "output": "Fe-Si-O reference is reproducible."
+    },
+    "provider_tests": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 python -m pytest -q -p no:cacheprovider tests/unittests/ma_fe_si_o_test.py",
+      "exit_code": 0,
+      "output": "39 passed in 11.02s",
+      "scope": "Fresh corroborating run for the inspected unchanged provider; historical MCEG numerical receipts and their assessment remain unchanged."
+    }
+  },
+  "outcome": {
+    "completed_follow_up": "inspect_ma_original",
+    "open_follow_ups": [
+      "inspect_badro_supplement",
+      "resolve_oxygen_coefficient",
+      "empirical_scope"
+    ],
+    "physical_accuracy": "unknown"
+  }
+}

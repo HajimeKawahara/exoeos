@@ -2,8 +2,8 @@ schema_version: '0.2'
 model:
   id: exoeos.magma_volatiles.v1
   name: Conditional dry11 liquid with H2O, H2 and trace He
-  description: A full extensive scalar combining native dry liquid with one selected water model,
-    molecular-H2 dilution and a selected dry-host He capacity.
+  description: A full extensive scalar combining native dry liquid with one selected water model, molecular-H2
+    dilution and a selected dry-host He capacity.
   implementation:
     repository: https://github.com/HajimeKawahara/exoeos
     revision: 37b9173f37866495949fd7c90340a02b7ceaa78d
@@ -12,8 +12,8 @@ model:
     - exoeos.magma_volatiles.helium_capacity
     - exoeos.magma_volatiles.water_parameters
 assumptions:
-- statement: Amounts follow DRY11_COMPONENTS + (H2O,H2,He). Supply H2O/H2/He standards on a common
-    R*T and one-bar convention; He masses follow the dry11 order.
+- statement: Amounts follow DRY11_COMPONENTS + (H2O,H2,He). Supply H2O/H2/He standards on a common R*T
+    and one-bar convention; He masses follow the dry11 order.
   evidence:
   - implementation
 - statement: 'water_model is part of model identity: thompson2025, power_law, two_power_law, melts_mode1
@@ -33,18 +33,18 @@ domains:
   status: documented
   description: Inspected numerical API and caller obligations; not a physical validation domain.
   conditions:
-  - Finite positive scalar K/Pa, nonnegative shape-(14,) amounts, positive dry host and water amount
-    no greater than dry-host oxygen; use supported positive interiors for derivatives.
-  - Two-power capacities are positive, exponents lie in [0.25,1], and binary water mass fraction is
-    at most 0.5. These are numerical limits, not empirical bounds.
+  - Finite positive scalar K/Pa, nonnegative shape-(14,) amounts, positive dry host and water amount no
+    greater than dry-host oxygen; use supported positive interiors for derivatives.
+  - Two-power capacities are positive, exponents lie in [0.25,1], and binary water mass fraction is at
+    most 0.5. These are numerical limits, not empirical bounds.
   - He capacity requires a declared simulated host and a temperature within its tabulated range; other
     temperatures give NaN for the capacity.
   evidence:
   - implementation
 - kind: scientific_applicability
   status: unknown
-  description: Composition-specific physical accuracy and joint applicability remain unestablished
-    by this survey.
+  description: Composition-specific physical accuracy and joint applicability remain unestablished by
+    this survey.
   conditions: []
   evidence:
   - upstream_model
@@ -53,14 +53,14 @@ claims:
 - id: numerical_verification
   revision: '1'
   kind: numerical_verification
-  statement: Water pressure recovery, host response, gas-reference shifts, curvature, native mode
-    restrictions and independent two-power quadrature/inversion in the selected modules.
+  statement: Water pressure recovery, host response, gas-reference shifts, curvature, native mode restrictions
+    and independent two-power quadrature/inversion in the selected modules.
   scope: Only the selected tests, their asserted tolerances and the recorded CPU/x64 environment.
 - id: physical_accuracy
   revision: '1'
   kind: physical_validation
-  statement: The model has quantitatively established physical accuracy for the intended melt/fluid
-    composition and conditions.
+  statement: The model has quantitatively established physical accuracy for the intended melt/fluid composition
+    and conditions.
   scope: Requires independent empirical data and explicit composition, reference-state and driving-quantity
     conventions; not established by this survey.
 evidence:
@@ -107,8 +107,7 @@ evidence:
     role: implementation
     location: Selected provider source files and guide.
     inspection: inspected
-    note: Code and declarations were read; an empirical calibration or external source replay is not
-      inferred.
+    note: Code and declarations were read; an empirical calibration or external source replay is not inferred.
     derived_from:
     - evidence: upstream_model
       comparison: not_checked
@@ -140,6 +139,323 @@ evidence:
     inspection: inspected
     note: Fresh local pytest execution; tests consume stored references where applicable. No external
       reference program or experiment was rerun.
+- id: hirschmann2012_20261029
+  kind: literature
+  summary: Original basalt H2 regression, experimental subsets and oxide concentration basis inspected.
+  sources:
+  - https://doi.org/10.1016/j.epsl.2012.06.031
+  - urn:sha256:f9e52005a851477934a2b00b3cc65d3ef015ab0aefa2c20f110f6cbd00ad1853
+  scope: Fig. 4 gives ln(X_H2/f_H2_bar)=-11.403-0.76*P_GPa for basalt. Table 1 has 13 basalt runs at 1400-1450
+    degC and 0.7-3 GPa; these are marginal bounds. Table 2 footnote c and Fig. 4 use oxide components
+    including H2O. Eq. 6 has an uncalibrated enthalpy term; the fitted pressure line is not a general
+    temperature law.
+  context: source_review_20261029
+  provenance:
+    role: primary
+    location: 'Printed pp. 39-40 and 42-43 (PDF pp. 2-3 and 5-6): Tables 1-2, Sections 2.1-2.4 and 3.1-3.2,
+      Eq. 6 and Fig. 4.'
+    inspection: inspected
+    note: User-supplied hirschmann_2012.pdf, 11 pages. Rendered tables and equations were inspected. Supplementary
+      glass compositions and an empirical replay remain outstanding; source calibration uncertainty is
+      not removed.
+  artifacts:
+  - source: urn:sha256:f9e52005a851477934a2b00b3cc65d3ef015ab0aefa2c20f110f6cbd00ad1853
+    sha256: f9e52005a851477934a2b00b3cc65d3ef015ab0aefa2c20f110f6cbd00ad1853
+- id: thompson2025_20261029
+  kind: literature
+  summary: Original water-law coefficients and printed response convention inspected.
+  sources:
+  - https://doi.org/10.1016/j.chemgeo.2025.123048
+  - https://arxiv.org/pdf/2510.05281v1
+  scope: Eq. 18 and Table 4 second row give A=7.19e-4 and B=(-1511.1,886.5,-1015.2,890.6,-1755.9) K in
+    CaO,SiO2,MgO,Al2O3,FeO order. Eq. 1 multiplies by M(OH)=0.017008 kg/mol while describing X(OH) as
+    a mole fraction. Table 3 fitting experiments are at one bar total pressure.
+  context: source_review_20261029
+  provenance:
+    role: primary
+    location: PDF p. 3, Section 2.3 and Eq. 1; pp. 7-8, Eqs. 16-18 and Tables 3-4.
+    inspection: inspected
+    note: Fresh PDF retrieval matches the historical PDF hash. The listed coefficients and response definition
+      were visually checked; no posterior refit or fresh author-notebook inspection was performed.
+  artifacts:
+  - source: https://arxiv.org/pdf/2510.05281v1
+    sha256: 481d6a752c1fa54d6d1466982cc08b81cbce889101e47943a432f5bba9575bb3
+- id: sossi2023_normalization_20261029
+  kind: literature
+  summary: Original total-water mass normalization inspected.
+  sources:
+  - https://doi.org/10.1016/j.epsl.2022.117894
+  - https://arxiv.org/pdf/2211.13344v1
+  scope: The 3550 cm^-1 absorption is converted to total water mass ppm using M(H2O)=0.018015 kg/mol.
+    This supports the dimensional comparison of molar-mass factors, not a joint calibration or literal
+    two-OH-group conversion.
+  context: source_review_20261029
+  provenance:
+    role: primary
+    location: PDF pp. 2-3, Section 2.2 and Eq. 1 with its definitions.
+    inspection: inspected
+    note: Read extracted text and visually checked the equation. This review does not adopt a new absorption
+      coefficient.
+  artifacts:
+  - source: https://arxiv.org/pdf/2211.13344v1
+    sha256: e31925f013ff211e5f415ee370208dd940d6f147a0dee3c256093a5a93a503f4
+- id: guillot_sator2012_20261029
+  kind: literature
+  summary: All nine adopted He solubility entries inspected in the original simulation table.
+  sources:
+  - https://doi.org/10.1016/j.gca.2011.11.040
+  - https://arxiv.org/pdf/1112.2055v1
+  scope: Appendix C reports simulated dry-melt solubilities at approximately zero pressure in 1e-5 cm3
+    STP/(g bar). The nine adopted He rows cover olivine, MORB, rhyolite and enstatite; they are simulated
+    values, not new experimental observations.
+  context: source_review_20261029
+  provenance:
+    role: primary
+    location: PDF p. 35, Appendix C, table header and He column.
+    inspection: inspected
+    note: Fresh PDF retrieval matches the previously recorded hash; all adopted entries and units were
+      visually checked.
+  artifacts:
+  - source: https://arxiv.org/pdf/1112.2055v1
+    sha256: 041291e1236f22664ec94a58988d05cfb5a8fe4ea44ec84f681e5e864733a0c5
+- id: coefficient_comparison_20261029
+  kind: implementation
+  summary: Selected H2, water and He coefficients match the inspected primary sources.
+  sources:
+  - src/exoeos/magma_volatiles.py
+  - src/exoeos/data/conditional_materials.json
+  - results/mceg/20261029_source_review/review.json
+  scope: Only the two H2 regression constants and their pressure/fugacity units, water A/five B values
+    and oxide order, and nine He S entries after the 1e-5 table-unit factor. Full concentration conventions,
+    Gibbs continuations and empirical accuracy are excluded.
+  subject: source_snapshot_20261029
+  context: source_review_20261029
+  artifacts:
+  - source: results/mceg/20261029_source_review/review.json
+    sha256: b2ec6a6d6a3ba9a8ed3e44fd38fa573de425ae422b5429d86ba258bf5c6904ba
+  provenance:
+    role: implementation
+    location: Selected source snapshot; review.json records the inspected locations and comparisons.
+    inspection: inspected
+    note: Manual equation, unit and coefficient comparison; no empirical replay or external reference
+      execution.
+    derived_from:
+    - evidence: hirschmann2012_20261029
+      comparison: consistent
+      note: The code uses +11.403+0.76*P_Pa/1e9 in the H2 standard offset, recovering the negative Fig.
+        4 regression in equilibrium. Concentration-basis differences are recorded separately.
+    - evidence: thompson2025_20261029
+      comparison: consistent
+      note: The packaged raw A and B_K values and oxide order match Eq. 18 and Table 4; the mass-normalization
+        interpretation is a separate comparison.
+    - evidence: guillot_sator2012_20261029
+      comparison: consistent
+      note: All nine packaged He S values equal the Appendix C entries times 1e-5 in the stated dry-mass
+        units. Interpolation and finite-pressure transfer are not covered.
+- id: h2_basis_comparison_20261029
+  kind: implementation
+  summary: The adopted H2 scalar uses a different host count from the original oxide basis.
+  sources:
+  - src/exoeos/magma_volatiles.py
+  - src/exoeos/data/conditional_materials.json
+  - results/mceg/20261029_source_review/review.json
+  scope: The code uses host=sum(dry MELTS amounts)+n_H2O and X_H2=n_H2/(host+n_H2). Original Table 2 and
+    Fig. 4 use oxide components including H2O. One mole Mg2SiO4 maps to three dry oxide moles but counts
+    as one dry MELTS component. No basis correction or new fit is inferred.
+  subject: source_snapshot_20261029
+  context: source_review_20261029
+  artifacts:
+  - source: results/mceg/20261029_source_review/review.json
+    sha256: b2ec6a6d6a3ba9a8ed3e44fd38fa573de425ae422b5429d86ba258bf5c6904ba
+  provenance:
+    role: implementation
+    location: Selected source snapshot; review.json records the inspected locations and comparisons.
+    inspection: inspected
+    note: Manual equation, unit and coefficient comparison; no empirical replay or external reference
+      execution.
+    derived_from:
+    - evidence: hirschmann2012_20261029
+      comparison: discrepancy
+      note: Matching fitted numbers do not preserve the original concentration basis. The full host response
+        and gas-to-liquid alignment require a separately reviewed choice.
+- id: water_basis_comparison_20261029
+  kind: implementation
+  summary: The water scalar adopts an explicit mass interpretation of the printed OH response.
+  sources:
+  - src/exoeos/magma_volatiles.py
+  - src/exoeos/data/conditional_materials.json
+  - results/mceg/20261029_source_review/review.json
+  scope: The provider multiplies A by 0.0180153/0.017008 and uses n_H2O*M_H2O/(dry_mass+n_H2O*M_H2O).
+    This replaces the OH molar-mass factor with H2O mass, without a factor of two. It is a dimensional
+    reconstruction and finite-concentration continuation, not author confirmation of the full scalar.
+  subject: source_snapshot_20261029
+  context: source_review_20261029
+  artifacts:
+  - source: results/mceg/20261029_source_review/review.json
+    sha256: b2ec6a6d6a3ba9a8ed3e44fd38fa573de425ae422b5429d86ba258bf5c6904ba
+  provenance:
+    role: implementation
+    location: Selected source snapshot; review.json records the inspected locations and comparisons.
+    inspection: inspected
+    note: Manual equation, unit and coefficient comparison; no empirical replay or external reference
+      execution.
+    derived_from:
+    - evidence: thompson2025_20261029
+      comparison: discrepancy
+      note: The printed text calls X(OH) a mole fraction; Eq. 1 and the adopted provider mass response
+        use a molar-mass factor. The historical notebook assignment has not been freshly re-inspected.
+    - evidence: sossi2023_normalization_20261029
+      comparison: consistent
+      note: Both inspected Beer-Lambert expressions share the absorption/length/density structure. Sossi
+        multiplies by M(H2O), supporting replacement of the molar-mass factor only; calibration equivalence
+        is not asserted.
+- id: thompson_notebook_access_20261029
+  kind: literature
+  summary: The historical author-notebook inspection could not be renewed.
+  sources:
+  - examples/m2_material/water_data/provenance.json
+  - https://zenodo.org/records/16418810/files/solubilitylaw_revision_combodataset_bayesianmultivariate.ipynb?download=1
+  - results/mceg/20261029_source_review/review.json
+  scope: The historical record identifies cell 3, XOH=OH_Conc_ppm/1e6, and its notebook hash. Current
+    direct and API requests returned HTTP 403. The local historical record was read, but the original
+    notebook was not obtained in this review.
+  context: source_review_20261029
+  provenance:
+    role: primary
+    location: Historical provenance.json concentration_basis_evidence and inspected_notebook; requested
+      original cell 3 remains unavailable.
+    inspection: not_inspected
+    note: A previous inspection is not relabelled as a fresh inspection. The primary PDF coefficients
+      were independently checked.
+  artifacts:
+  - source: results/mceg/20261029_source_review/review.json
+    sha256: b2ec6a6d6a3ba9a8ed3e44fd38fa573de425ae422b5429d86ba258bf5c6904ba
+- id: hirschmann_supplement_20261029
+  kind: literature
+  summary: Supplied starting and selected run compositions inspected; five exact run matches reconstructed.
+  sources:
+  - urn:sha256:98c44a094e9857d073a50d5bd47157ea30918755bbd1e0f93bb9874b81d10945
+  - results/mceg/20261029_remaining_source_review/review.json
+  scope: Both supplementary series and footnotes. The five matched runs use an explicitly declared oxide-plus-H2O-plus-H2
+    denominator; printed ln K is not exactly reproduced. B808 is not silently identified with main-paper
+    A808.
+  context: remaining_source_review_20261029
+  artifacts:
+  - source: urn:sha256:98c44a094e9857d073a50d5bd47157ea30918755bbd1e0f93bb9874b81d10945
+    sha256: 98c44a094e9857d073a50d5bd47157ea30918755bbd1e0f93bb9874b81d10945
+  - &id001
+    source: results/mceg/20261029_remaining_source_review/review.json
+    sha256: 545d6c4f1f955c3fb7b8315b9360eb198d6bd0567dce7fd8f0965c27d3a74f2c
+  provenance:
+    role: primary
+    location: DOCX word/document.xml, Series 1 and 2 tables; main-paper Table 2 and Fig. 4.
+    inspection: inspected
+    note: Original bytes retained locally under refs/; review.json records the scope and remaining gaps.
+      No empirical validation is inferred.
+- id: thompson_notebook_20261029
+  kind: literature
+  summary: Fresh author notebook and combined CSV match the previously recorded hashes; scaling and saved
+    parameters confirmed.
+  sources:
+  - https://zenodo.org/api/records/16418810/files/solubilitylaw_revision_combodataset_bayesianmultivariate.ipynb/content
+  - results/mceg/20261029_remaining_source_review/review.json
+  scope: Cells 3,8-9,51,55,104-105,110-111 (zero-based). Recomputed 74-of-81 fit selection and A=0.0007192381633247654.
+    Twelve Sossi rows preserve supplied oxide fractions and one OH/H2O mass conversion. No notebook execution
+    or posterior refit.
+  context: remaining_source_review_20261029
+  artifacts:
+  - source: https://zenodo.org/api/records/16418810/files/solubilitylaw_revision_combodataset_bayesianmultivariate.ipynb/content
+    sha256: bf01c18c57e28ec8cf1ca780319073d83bf73f7402429a1ac7fa4e0077cc51a3
+  - *id001
+  provenance:
+    role: primary
+    location: Author notebook source cells and saved cell-105 output; fresh CombinedDataset_withS23N17.csv
+      and archived Sossi23_Data.csv.
+    inspection: inspected
+    note: Original bytes retained locally under refs/; review.json records the scope and remaining gaps.
+      No empirical validation is inferred.
+- id: remaining_source_comparison_20261029
+  kind: implementation
+  summary: Supplementary and notebook access gaps are narrowed; source and provider basis differences
+    remain.
+  sources:
+  - results/mceg/20261029_remaining_source_review/review.json
+  - src/exoeos/magma_volatiles.py
+  - examples/m2_material/water_data/provenance.json
+  scope: Hirschmann matched-run ln K residuals are -0.091864 to +0.018066 under the declared reconstruction.
+    The provider retains endmember counting. Thompson response scaling, rounded B coefficients and unrenormalized
+    supplied oxide predictors are confirmed; empirical continuation is not assessed.
+  subject: source_snapshot_20261029
+  context: remaining_source_review_20261029
+  artifacts:
+  - *id001
+  provenance:
+    role: implementation
+    location: review.json hirschmann2012_supplement and thompson2025_notebook.
+    inspection: inspected
+    note: No runtime change. Source-data arithmetic and manual comparison are distinct from empirical
+      validation.
+    derived_from:
+    - evidence: hirschmann_supplement_20261029
+      comparison: discrepancy
+      note: The simple published-value reconstruction does not exactly reproduce Table 2; run naming and
+        normalization remain unresolved.
+    - evidence: thompson_notebook_20261029
+      comparison: consistent
+      note: Historical source scaling and paper-rounded coefficients confirmed; no claim of full physical
+        equivalence.
+- id: jambon1986_scan_20261029
+  kind: literature
+  summary: Supplied Jambon full-text scan inspected, including the He measurement table and uncertainty
+    definition.
+  sources:
+  - https://doi.org/10.1016/0016-7037(86)90193-6
+  - urn:sha256:0622029fc3e18f8663c6c621ef19164d6facbad50e502eef10005c0c8367693c
+  - results/mceg/20261029_jambon_review/review.json
+  scope: Printed pp.401-408. Table 5 has seven He summaries at 1300-1500 degC and 16 analyses; its 1400
+    degC mean is 56.5 +/- 11 in 1e-5 cm3 STP/(g bar). The body rounds this to 56. The scatter is one sigma
+    about the regression.
+  context: jambon_source_review_20261029
+  artifacts:
+  - source: urn:sha256:0622029fc3e18f8663c6c621ef19164d6facbad50e502eef10005c0c8367693c
+    sha256: 0622029fc3e18f8663c6c621ef19164d6facbad50e502eef10005c0c8367693c
+  - source: results/mceg/20261029_jambon_review/review.json
+    sha256: 2665e850a947379ddef7c6cfbc0c54d34edbbf5f45ffe286a0880daaf9e9569a
+  provenance:
+    role: primary
+    location: Scan pp.1-5, especially printed pp.402-405, Tables 1-5 and Sections 2-3.
+    inspection: inspected
+    note: Image-only scan read visually. Original PDF and full table transcription remain local in refs/.
+      Atmospheric/bar wording and absent individual-analysis weights are retained explicitly.
+- id: jambon_helium_comparison_20261029
+  kind: implementation
+  summary: Earlier abstract value confirmed; the MORB simulation shares calibration data and does not
+    independently validate hot wet BSE.
+  sources:
+  - results/mceg/20261029_jambon_review/review.json
+  - examples/m2_material/na_helium_transfer_sources.json
+  - src/exoeos/magma_volatiles.py
+  scope: The ledger value matches the rounded body value. The Appendix C MORB value is 5.49 percent above
+    the Table 5 mean at nominally 1400 degC. Guillot-Sator used Jambon to tune its potential, so this
+    is a calibration-dependent scale comparison without a new physical acceptance criterion.
+  subject: source_snapshot_20261029
+  context: jambon_source_review_20261029
+  artifacts:
+  - source: results/mceg/20261029_jambon_review/review.json
+    sha256: 2665e850a947379ddef7c6cfbc0c54d34edbbf5f45ffe286a0880daaf9e9569a
+  provenance:
+    role: implementation
+    location: review.json comparison; Guillot-Sator PDF pp.12, 34-35.
+    inspection: inspected
+    note: No source coefficient, interpolation or historical ledger is changed.
+    derived_from:
+    - evidence: jambon1986_scan_20261029
+      comparison: consistent
+      note: Retained 56 +/- 11 matches the body; Table 5 provides 56.5 +/- 11 and more precise scope.
+    - evidence: guillot_sator2012_20261029
+      comparison: consistent
+      note: Reported-unit MORB scale agreement shares source calibration; dry-host simulations do not
+        bound wet-BSE uncertainty.
 limitations:
 - statement: No common wet-BSE calibration follows from combining the water, H2 and dry-host He sources.
     The inherited H2 calibration caveat is not corrected here.
@@ -149,10 +465,16 @@ limitations:
     consumers must retain those settings and all offsets.
   evidence:
   - implementation
-- statement: Current tests use synthetic capacities for the generic water continuation; they do not
-    establish empirical accuracy of a coupled Sun-Yao model.
+- statement: Current tests use synthetic capacities for the generic water continuation; they do not establish
+    empirical accuracy of a coupled Sun-Yao model.
   evidence:
   - implementation
+- statement: Original H2 oxide-component normalization differs from the provider MELTS endmember count.
+    Water mass normalization is an explicit dimensional interpretation; neither issue is resolved by matching
+    raw coefficients.
+  evidence:
+  - h2_basis_comparison_20261029
+  - water_basis_comparison_20261029
 subjects:
 - id: survey_20261020
   implementation:
@@ -183,6 +505,25 @@ subjects:
     tests/conftest.py: 87d47ae57e35ed7a10960ae12407c8a274188271ea86d5e0016d3d70501e2096
     tests/unittests/conditional_water_test.py: fcb08a1c45b04de93bba5bf204b890dd58bb96c36b4b3d34796ab76df96592ae
     tests/unittests/two_power_water_test.py: afe5b8ee2807567c5ff7945b21326bf8d49b50d7d4a25d752a829c4ac5183971
+- id: source_snapshot_20261029
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 11887e0e8f963619d6dc6b95009c76a0b69dd65f
+    entry_points:
+    - exoeos.magma_volatiles.gibbs_j
+    - exoeos.magma_volatiles.helium_capacity
+    - exoeos.magma_volatiles.water_parameters
+  selected_files:
+    src/exoeos/magma.py: 4f085ac25f3781cc4120ac7b56c67446668d1911d8cdaeeef077ff9e529807ed
+    src/exoeos/magma_volatiles.py: eeda6b0c67dd2186221c6ba5426823903b82a0fadee2ba5a4b617c9bd2591494
+    src/exoeos/_conditional_data.py: cfbd50ec42685cbb61f547f6d3778c41ff1afae4459347b62b008cfe53da231e
+    src/exoeos/data/conditional_materials.json: 4c3b4417e5378f377df08a0e50e2f1971449b9bc4b407f4d767dcf3fa182b4a4
+    documents/conditional_materials.rst: 4b42c1903f2cd619916d58de39bb1f4cbcc1bfffd1e5ab617784f6350ff4265f
+    examples/m2_material/water_data/provenance.json: 93475d9846d5575c87a9b2a0bf0674b7e038c79b94373bc801825df6f405c374
+    examples/m2_material/water_data/water_basis_pressure_sources.json: e114a959b266cdb2893bfe52b40185f53f353a766d49b42e67bfc9e25e116d50
+    examples/m2_material/water_data/CombinedDataset_withS23N17.csv: 635fd0c93ef90643d4909329463e958442fb562d10a84b8a61b39ce81b50eab5
+    examples/m2_material/water_data/Sossi23_Data.csv: 8d77d029791a0f96e62bb6818d684e68ac713b273f40fe494f3e17711b87fc92
+    examples/m2_material/na_helium_transfer_sources.json: 3faca86ae8d1c1595e40cfdc4fa8a39967849723dfdbc05c3e02ea3ac7af0a75
 contexts:
 - id: test_environment
   scope: Actual local test environment; test files and fixtures define individual calculation inputs.
@@ -196,6 +537,27 @@ contexts:
     backend: cpu
     x64: true
     test_selection: tests/unittests/conditional_water_test.py; tests/unittests/two_power_water_test.py
+- id: source_review_20261029
+  scope: Primary-source inspection and scoped coefficient/basis comparisons; no application-specific empirical
+    error criterion.
+  settings:
+    review_date: '2026-10-29'
+    source_hash_policy: URI hashes identify retrieved or user-supplied bytes; offline MCEG verifies the
+      local review artifact only.
+- id: remaining_source_review_20261029
+  scope: Dated follow-up source inspection and declared arithmetic comparisons; no physical error criterion
+    or new runtime execution.
+  settings:
+    review_date: '2026-10-29'
+    source_storage: Local refs/ is excluded from Git; source URI hashes identify bytes, while the local
+      review artifact is verifiable offline.
+- id: jambon_source_review_20261029
+  scope: Dated Jambon scan inspection and reported-unit He comparison; no regression replay or empirical
+    acceptance test.
+  settings:
+    review_date: '2026-10-29'
+    source_storage: Original scan and table transcriptions are excluded local refs/ files; the review
+      artifact is verifiable offline.
 conditions: []
 assessments:
 - id: numerical_review
@@ -207,8 +569,7 @@ assessments:
   method:
     id: review_selected_pytest
     revision: '1'
-    description: Read actual test outcomes and selected file pins; limit support to those numerical
-      assertions.
+    description: Read actual test outcomes and selected file pins; limit support to those numerical assertions.
   evidence:
   - test_run
   reasons:
@@ -236,6 +597,78 @@ assessments:
   - Numerical agreement and membership in metadata intervals do not establish physical accuracy.
   status: unknown
   origin: reviewed
+- id: physical_review_20261029
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: source_snapshot_20261029
+  context: source_review_20261029
+  method:
+    id: inspect_primary_sources
+    revision: '1'
+    description: Read original equations and tables, compare selected coefficients and conventions, and
+      preserve unresolved source or empirical gaps.
+  evidence:
+  - coefficient_comparison_20261029
+  - h2_basis_comparison_20261029
+  - water_basis_comparison_20261029
+  - thompson_notebook_access_20261029
+  reasons:
+  - The original H2 coefficients, basalt temperature subset, water coefficients and nine He table entries
+    are now inspected.
+  - The H2 host-count discrepancy, finite water-mass continuation and dry-host He transfer do not acquire
+    empirical support from those inspections.
+  - Original H2 supplementary compositions and fresh author-notebook access remain missing. No coupled
+    data replay, absorption recalibration or physical error bound was added.
+  status: unknown
+  origin: reviewed
+- id: physical_remaining_review_20261029
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: source_snapshot_20261029
+  context: remaining_source_review_20261029
+  method:
+    id: inspect_remaining_sources
+    revision: '1'
+    description: Inspect newly available source material and compare declared conventions without promoting
+      access or arithmetic agreement to empirical validation.
+  evidence:
+  - remaining_source_comparison_20261029
+  - h2_basis_comparison_20261029
+  - water_basis_comparison_20261029
+  reasons:
+  - Hirschmann supplementary compositions and the fresh Thompson notebook are now inspected; historical
+    access-failure records retain their original date and scope.
+  - Only five supplementary run labels match exactly; exact ln K reproduction and B808/A808 identification
+    remain unresolved.
+  - The H2 endmember/oxide difference, finite-water continuation and empirical uncertainty remain open.
+    No application-specific physical error bound was established.
+  status: unknown
+  origin: reviewed
+- id: physical_jambon_review_20261029
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: source_snapshot_20261029
+  context: jambon_source_review_20261029
+  method:
+    id: inspect_jambon_source_and_scope
+    revision: '1'
+    description: Compare the original measurement table, reported units and uncertainty with the retained
+      ledger, then check the simulation calibration ancestry.
+  evidence:
+  - jambon1986_scan_20261029
+  - jambon_helium_comparison_20261029
+  reasons:
+  - The original Jambon full text and published He measurement summaries are now inspected; the earlier
+    abstract-only value is confirmed at its reported precision.
+  - MORB agreement is calibration-dependent. The He-specific experimental interval, partial-pressure driving
+    quantity and regression scatter do not validate the wet-BSE continuation at 2173.15 K.
+  - Individual-analysis weights, exact atmospheric/STP conventions and application-specific physical uncertainty
+    remain unresolved. No runtime change or new empirical error bound is introduced.
+  status: unknown
+  origin: reviewed
 follow_ups:
 - id: empirical_scope
   target_kind: claim
@@ -254,3 +687,82 @@ follow_ups:
   - src/exoeos/data/conditional_materials.json
   - https://doi.org/10.1016/j.epsl.2012.06.031
   - https://arxiv.org/abs/1112.2055
+- id: inspect_selected_volatile_sources
+  target_kind: evidence
+  target: upstream_model
+  action: Inspect the original H2 regression and main-paper tables, water-law equations/coefficients and
+    adopted He table entries.
+  requires:
+  - Original passages and rendered equations/tables, byte hashes and scoped implementation comparisons.
+  completion: Dated source records identify checked constants and explicit convention differences; this
+    task excludes empirical validation and supplementary composition recovery.
+- id: resolve_h2_component_basis
+  target_kind: evidence
+  target: h2_basis_comparison_20261029
+  action: Review whether to retain the conditional endmember-count construction or adopt an oxide-basis
+    H2 scalar with consistent host derivatives and standards.
+  requires:
+  - An explicit concentration map and review of affected host and H2 chemical potentials.
+  completion: A separate assessment justifies the chosen basis; any changed scalar has fresh targeted
+    numerical evidence.
+  sources:
+  - https://doi.org/10.1016/j.epsl.2012.06.031
+- id: recover_hirschmann_compositions
+  target_kind: evidence
+  target: hirschmann2012_20261029
+  action: Obtain the original supplementary starting/run compositions and reconstruct the oxide-component
+    mole fractions used for Table 2 and Fig. 4.
+  requires:
+  - Original supplementary data with units, run identities and a valid artifact hash.
+  completion: A scoped comparison identifies the reconstructed denominator and any remaining calibration
+    uncertainty.
+  sources:
+  - https://doi.org/10.1016/j.epsl.2012.06.031
+- id: reinspect_thompson_notebook
+  target_kind: evidence
+  target: thompson_notebook_access_20261029
+  action: Retrieve the author fitting notebook and directly verify the historical response scaling and
+    pooled-data transformations.
+  requires:
+  - The notebook bytes and cell-level locations for response and oxide normalization.
+  completion: A fresh inspection preserves or corrects the historical interpretation without inferring
+    coupled physical validation.
+  sources:
+  - https://zenodo.org/records/16418810/files/solubilitylaw_revision_combodataset_bayesianmultivariate.ipynb?download=1
+- id: resolve_hirschmann_run_reconstruction
+  target_kind: evidence
+  target: hirschmann_supplement_20261029
+  action: Resolve the B808/A808 identifier and the composition/normalization needed to reproduce the original
+    ln K values and Fig. 4 fit.
+  requires:
+  - Author-level run identity and unrounded compositions or calculation details.
+  - Consistent oxide, H2O and H2 mass/mole normalization and absorption uncertainty.
+  completion: A scoped source replay accounts for the reported values and explicitly retains remaining
+    measurement uncertainty.
+  sources:
+  - https://doi.org/10.1016/j.epsl.2012.06.031
+follow_up_resolutions:
+- follow_up: inspect_selected_volatile_sources
+  evidence:
+  - hirschmann2012_20261029
+  - thompson2025_20261029
+  - sossi2023_normalization_20261029
+  - guillot_sator2012_20261029
+  - coefficient_comparison_20261029
+  - h2_basis_comparison_20261029
+  - water_basis_comparison_20261029
+  note: Completed the scoped main-source inspection on 2026-10-29. Supplementary compositions, renewed
+    notebook access, model-basis choices and empirical validation remain separate tasks.
+- follow_up: recover_hirschmann_compositions
+  evidence:
+  - hirschmann_supplement_20261029
+  - remaining_source_comparison_20261029
+  note: Completed the stated recovery and scoped denominator comparison for the supplied selected-run
+    table. This does not close exact all-run reconstruction, B808/A808 identity or absorption calibration;
+    those remain explicit follow-ups.
+- follow_up: reinspect_thompson_notebook
+  evidence:
+  - thompson_notebook_20261029
+  - remaining_source_comparison_20261029
+  note: Fresh bytes and cell-level checks confirm response scaling, selection, descaling and pooled CSV
+    values. Physical species conversion and Gibbs continuation remain unresolved.

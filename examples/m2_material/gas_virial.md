@@ -19,7 +19,17 @@ source PDF hashes, domains, and uncertainty qualifications are recorded in
 | H2O-H2O | [Harvey and Lemmon 2004](https://doi.org/10.1063/1.1587731), Eq. 6/Table 4 | 8.410740 | Potential-guided extension beyond 1170 K measurements |
 | H2-H2O | Hodges et al. 2004, Table VI | 15.101916 | Extrapolated beyond the recommended 2000 K maximum |
 | He-H2O | [Hodges et al. 2002](https://doi.org/10.1063/1.1421065), Eq. 15/Table VII | 14.912020 | Extrapolated beyond the recommended 2000 K maximum |
-| H2-He | [Garberoglio et al. 2014](https://doi.org/10.1007/s10765-014-1729-7) | Missing | Abstract located; numerical table not transcribed |
+| H2-He | [Garberoglio et al. 2014](https://doi.org/10.1007/s10765-014-1729-7) | Outside table range | Table 1 inspected; 8-2000 K only |
+
+The [2026-10-29 source review](../../results/mceg/20261029_badro_garberoglio_review/review.json)
+records the supplied Garberoglio full text and a local transcription of all 67
+Table 1 rows. The fully flexible He-H2 values at 1000, 1500 and 2000 K are
+13.90, 12.62 and 11.69 cm3/mol, with expanded uncertainties (k=2) of 0.02,
+0.01 and 0.01 cm3/mol. These are cross density virials, not excess virials or
+rigid-rotor values. The original PDF and full CSV remain local under `refs/`.
+The earlier source ledger and saved diagnostic retain their historical scope;
+the diagnostic still requires an explicit H2-He input. No value or error bound
+at 2173.15 K, interpolation rule or dense-gas validation is inferred.
 
 The H2-H2O coefficient `c3` is **+285.42**, as verified from the printed
 Table VI. PDF text extraction alone can corrupt this entry. Tests replay

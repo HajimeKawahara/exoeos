@@ -64,8 +64,8 @@ def test_finite_scalar_extensivity_reciprocity_host_limit_and_independent_deriva
     model.validate_state(t, p, n)
     mu = jax.grad(energy)(n)
     hessian = jax.hessian(energy)(n)
-    assert energy(7 * n) == pytest.approx(7 * energy(n), abs=5e-13)
-    assert n @ mu == pytest.approx(energy(n), abs=5e-13)
+    assert float(energy(7 * n)) == pytest.approx(float(7 * energy(n)), abs=5e-13)
+    assert float(n @ mu) == pytest.approx(float(energy(n)), abs=5e-13)
     np.testing.assert_allclose(hessian, hessian.T, atol=1e-11, rtol=0)
     np.testing.assert_allclose(n @ hessian, 0, atol=1e-11, rtol=0)
     step = 1e-5
@@ -78,7 +78,7 @@ def test_finite_scalar_extensivity_reciprocity_host_limit_and_independent_deriva
     expected = total_solution_state(MaFeSiOHLiquid(), t, p, old, standards[:4])
     actual = total_solution_state(model, t, p, jnp.r_[old, 0.], standards)
     np.testing.assert_allclose(actual.mu_RT[:4], expected.mu_RT, atol=1e-13, rtol=0)
-    assert actual.gibbs_RT == pytest.approx(expected.gibbs_RT, abs=1e-13)
+    assert float(actual.gibbs_RT) == pytest.approx(float(expected.gibbs_RT), abs=1e-13)
     np.testing.assert_array_equal(model.standard_state_shift_RT(t)[:4], MaFeSiOHLiquid().standard_state_shift_RT(t))
     assert model.standard_state_shift_RT(t)[4] == 0
 

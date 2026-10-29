@@ -1,0 +1,53 @@
+{
+  "verified_at": "2026-10-29T07:10:18.323223+00:00",
+  "scope": "Metadata validation and evidence preservation only; no new runtime or empirical-validation claim.",
+  "structure_check": {
+    "command": "PYTHONPATH=/home/kawahara/mceg/src python -m mceg mceg/contracts/*.yaml",
+    "exit_code": 0,
+    "valid_contracts": 9
+  },
+  "metadata_tests": {
+    "command": "PYTHONPATH=src JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 python -m pytest -q tests/unittests/mceg_contract_test.py tests/unittests/mceg_model_survey_test.py --junitxml=results/mceg/20261029_remaining_source_review/metadata_tests.xml",
+    "exit_code": 0,
+    "counts": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "junit_sha256": "0001738447764a20eec74a4016b5319030d3731a6b5a481e3c1b5d51f4448dd2"
+  },
+  "preservation": {
+    "historical_records_unchanged_in": [
+      "ma_fe_si_o",
+      "ma_fe_si_o_h",
+      "magma_volatiles",
+      "magma_carbonate_liquid",
+      "zhang_duan_h2"
+    ],
+    "verified_selected_file_pins": 146,
+    "verified_local_artifact_pins": 43,
+    "unique_local_artifacts": 10,
+    "note": "Compared parsed baseline records for the five named contracts and rehashed all declared local artifacts and selected files across all nine contracts. Remote URI pins are not verified by offline MCEG."
+  },
+  "source_storage": {
+    "source_manifest": "refs/source_manifest_20261029.json",
+    "source_manifest_sha256": "bc53dbd8623bcd063683a81db2704fb1dc860e055d72b6b8984346fd501eae83",
+    "verified_local_files": 35,
+    "tracked_refs_files": 0,
+    "local_git_exclude": "/refs/"
+  },
+  "review_artifacts": {
+    "review.json": "545d6c4f1f955c3fb7b8315b9360eb198d6bd0567dce7fd8f0965c27d3a74f2c",
+    "missing_sources.bib": "7fc538df9301cdcb94349017c361832fb7c2afe67a7dc10a201a88f151ddc228"
+  },
+  "contract_hashes": {
+    "mceg/contracts/magma_volatiles.yaml": "5ca25e4515a0a5bf2fdcf5e21f7cd38b90c069bbfe8aa12d5d59a62cf2f5f15e",
+    "mceg/contracts/ma_fe_si_o_h.yaml": "6a2101a7b245e1db3805d6bcddafac20eedd230533d0061995c4928e93c0af5a"
+  },
+  "scoped_explanations": {
+    "magma_volatiles": "physical_remaining_review_20261029: physical UNKNOWN; selected files 10/10 match; source discrepancies retained.",
+    "ma_fe_si_o_h": "physical_source_review_20261029: physical UNKNOWN; selected files 3/3 match; quantitative Jiang/provider comparison remains unperformed."
+  },
+  "diff_check": "git diff --check passed."
+}

@@ -11,6 +11,22 @@ equilibrium result changes in this evidence update.
 [The source record](na_helium_transfer_sources.json) retains primary locations,
 PDF hashes, actual observation bases and unresolved quantities.
 
+The [2026-10-29 Jambon scan review](../../results/mceg/20261029_jambon_review/review.json)
+now verifies the original Tables 1-5 and experimental methods. Table 5 contains
+seven He summaries at 1300-1500 degC, representing 16 analyses. Its smoothed
+1400 degC value is `(56.5 +/- 11) * 1e-5 cm3 STP/(g bar)`; the abstract and body
+round the central value to 56, as retained in the earlier source record.
+The uncertainty is one-sigma scatter about the regression, not an error bound
+for wet BSE. Table 5 does not expose every individual analysis or its weight.
+
+Guillot-Sator Appendix B used Jambon and Lux MORB data to tune the interaction
+potential. Its Appendix C He/MORB value at 1673 K is 5.49% above Jambon's
+1673.15 K table mean in the printed units; this comparison is not independent
+validation. Jambon uses low-pressure gas partial pressures and approximate
+atmosphere/bar terminology. The review records these conventions without
+changing the provider's explicit STP conversion or dry-host coefficients.
+The supplied scan and complete table transcription remain local in `refs/`.
+
 | Path | Retained primary evidence | Limit at 2173.15 K and about 270 bar |
 | --- | --- | --- |
 | Na to metal | [Gessmann and Wood (2002)](https://doi.org/10.1016/S0012-821X(02)00593-9), S-free Na-bearing runs at 1873–1973 K and 2.5 GPa are below detection | No numerical Na detection limit was identified in the retained paper. The 2173 K/24 GPa run is Na-free. Neither gives a quantitative low-pressure omission bound. |

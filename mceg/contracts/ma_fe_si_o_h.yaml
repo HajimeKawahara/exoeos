@@ -116,6 +116,53 @@ evidence:
     inspection: inspected
     note: Fresh local pytest execution; tests consume stored references where applicable. No external
       reference program or experiment was rerun.
+- id: jiang2025_full_text_20261029
+  kind: literature
+  summary: Full Jiang paper and Table S1 inspected at the fixed core-mantle-boundary state.
+  sources:
+  - https://www.eppcgs.org/en/article/pdf/preview/10.26464/epp2025055.pdf
+  - results/mceg/20261029_remaining_source_review/review.json
+  scope: DFT/ML free energies and H chemical potentials at 135 GPa and 5000 K for Fe74O15Si8H_n, Fe64H_n
+    and Mg40Si40O120H_n. Table S1 has 22 states; D_H is an atomic-concentration ratio. No low-pressure
+    Ma H calibration or author raw dataset was obtained.
+  context: remaining_source_review_20261029
+  artifacts:
+  - source: https://www.eppcgs.org/en/article/pdf/preview/10.26464/epp2025055.pdf
+    sha256: be2afb2d07fb21e7a6ca08a813e3592b210a83b6671cf66ec58eb79ca9baa439
+  - &id001
+    source: results/mceg/20261029_remaining_source_review/review.json
+    sha256: 545d6c4f1f955c3fb7b8315b9360eb198d6bd0567dce7fd8f0965c27d3a74f2c
+  provenance:
+    role: primary
+    location: Printed pp.1002-1005, Sections 2.1-2.4, Eqs.4-8 and Section 3.2; p.1008 Table S1 and Data
+      Availability.
+    inspection: inspected
+    note: Original bytes retained locally under refs/; review.json records the scope and remaining gaps.
+      No empirical validation is inferred.
+- id: jiang_provider_comparison_20261029
+  kind: implementation
+  summary: Jiang supplies a distinct fixed-state theoretical comparison, not fitted Ma H interactions.
+  sources:
+  - results/mceg/20261029_remaining_source_review/review.json
+  - src/exoeos/ma_fe_si_o_h.py
+  - examples/m2_material/domain_evidence.json
+  scope: The provider retains ideal H dilution without H excess parameters or a fitted pressure response.
+    Reported D_H values 18.2 and 11.8 do not determine those missing functions or the absolute H standard.
+  subject: source_snapshot_20261029
+  context: remaining_source_review_20261029
+  artifacts:
+  - *id001
+  provenance:
+    role: implementation
+    location: review.json jiang2025 and selected provider files.
+    inspection: inspected
+    note: The earlier abstract-only ledger is historical. The full source adds composition and unit
+      details; a quantitative reconstruction must resolve its printed concentration notation.
+    derived_from:
+    - evidence: jiang2025_full_text_20261029
+      comparison: not_checked
+      note: No quantitative mapping or calibration of the Ma provider to the published DFT/ML free energies
+        was performed.
 limitations:
 - statement: Pure H is unsupported. Pressure response, H excess interactions and experimental H partition
     calibration are absent.
@@ -147,6 +194,16 @@ subjects:
     tests/conftest.py: 87d47ae57e35ed7a10960ae12407c8a274188271ea86d5e0016d3d70501e2096
     tests/reference/fe_si_o_ma2001.json: cf59178a3cf6622b924cd8d8ac1d03e7e5feb65c6f2e687dcb3b66820b601e0f
     tests/unittests/ma_fe_si_o_h_test.py: 0ccd73ceed1b3e825cee12334de5e06b92cfd2e06e2b85c33d31c2695c199c98
+- id: source_snapshot_20261029
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 11887e0e8f963619d6dc6b95009c76a0b69dd65f
+    entry_points:
+    - exoeos.MaFeSiOHLiquid
+  selected_files:
+    src/exoeos/ma_fe_si_o_h.py: 131931749adf57a63642a156d93827c3429941b4c442256bc098c9d0cb86765d
+    src/exoeos/ma_fe_si_o.py: 32b526dc260d39a5071e25b198cc06fd331b1ceae89483d509702629ab5c7cde
+    examples/m2_material/domain_evidence.json: 4c471c7e36ce4fa05b66e919892c4dd780add2ce5ee869b448990dc71bb029a8
 contexts:
 - id: test_environment
   scope: Actual local test environment; test files and fixtures define individual calculation inputs.
@@ -160,6 +217,13 @@ contexts:
     backend: cpu
     x64: true
     test_selection: tests/unittests/ma_fe_si_o_h_test.py
+- id: remaining_source_review_20261029
+  scope: Dated follow-up source inspection and declared arithmetic comparisons; no physical error criterion
+    or new runtime execution.
+  settings:
+    review_date: '2026-10-29'
+    source_storage: Local refs/ is excluded from Git; source URI hashes identify bytes, while the local
+      review artifact is verifiable offline.
 conditions: []
 assessments:
 - id: numerical_review
@@ -198,6 +262,28 @@ assessments:
   - The dry-model derivation is retained by the provider. No original source supporting fitted H interactions
     is asserted.
   - Numerical agreement and membership in metadata intervals do not establish physical accuracy.
+  status: unknown
+  origin: reviewed
+- id: physical_source_review_20261029
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: source_snapshot_20261029
+  context: remaining_source_review_20261029
+  method:
+    id: inspect_jiang_primary
+    revision: '1'
+    description: Read full source equations, composition paths and Table S1; distinguish fixed-state
+      theoretical data from provider calibration.
+  evidence:
+  - jiang2025_full_text_20261029
+  - jiang_provider_comparison_20261029
+  reasons:
+  - Jiang full text and its embedded Table S1 are inspected, superseding the scope of the historical
+    abstract-only record for this source.
+  - The source is limited to 135 GPa, 5000 K and selected composition paths. Its printed composition
+    mapping needs clarification before quantitative reuse.
+  - No fitted Ma H excess interactions, absolute H standard or low-pressure empirical bound was added.
   status: unknown
   origin: reviewed
 follow_ups:
