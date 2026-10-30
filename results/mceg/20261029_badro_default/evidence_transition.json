@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-29",
+  "status": "reviewed",
+  "scope": "Exact reviewed file transitions only. Historical receipts and their numerical claims are not rewritten or promoted to the changed model.",
+  "decision": "results/mceg/20261029_badro_default/decision.json",
+  "replacement_receipt": "results/mceg/20261029_badro_default/receipt.json",
+  "replacement_receipt_sha256": "dcd25458941b18f295f667df4bfbb0e465902aa821cabd97beb473758122b3c2",
+  "historical_receipts": {
+    "results/mceg/h2_tests_d7681db.json": {
+      "sha256": "88cdfa19344c854fb5a36dc0ca032c8e5e63845ba63dbd481506bc020562ebe5",
+      "file_updates": {
+        "documents/thermodynamic_state_contract.md": {
+          "previous_sha256": "6cde3050a8b2b1242e879d9bd4ea3e2bee1d607ceaaa2d203d4f83f5e6d15d67",
+          "reviewed_sha256": "1d2537368d25d8a9008befb8e34c636d932a9d63669f995ab9e8889bff503e1c",
+          "reason": "Only the Ma default identifier, oxygen interaction and formal-shift documentation changed; the H2 contract sections and runtime remain unchanged."
+        }
+      }
+    },
+    "results/mceg/20261020_model_survey/receipt.json": {
+      "sha256": "290a0e172f914bd74b24be1792e8d1c36f9a6d44f011a39b3d550573cb0874a3",
+      "file_updates": {
+        "documents/fe_si_o_h_reference.rst": {
+          "previous_sha256": "95ded8a89fbe8c247b49842509cb8597e745d0fce9c27e28fe7ee5465a1f0513",
+          "reviewed_sha256": "6e1c0bbf2109ea98cdb6291049bf4f5b0b9768383adf73c03bac516a1598f518",
+          "reason": "Document inheritance of the provisional dry default and explicit legacy wrapper parameters."
+        },
+        "documents/fe_si_o_reference.rst": {
+          "previous_sha256": "61c39d636ae8a49284175bb4dec06d2607afd76d975c133b5f1599192b5d1e52",
+          "reviewed_sha256": "8ba2e62052679213bbb205e85a501ede9b2f726bfa1a6aa4d193f63661bac106",
+          "reason": "Document the provisional coefficient, source comparison and explicit legacy parameters; the previous survey remains historical."
+        },
+        "src/exoeos/ma_fe_si_o.py": {
+          "previous_sha256": "32b526dc260d39a5071e25b198cc06fd331b1ceae89483d509702629ab5c7cde",
+          "reviewed_sha256": "6cabe350d31b7abfdc8a49df1fed019f6f580443b553c7c9faf9a0ffd7d16887",
+          "reason": "The default O self interaction changes to -1873/T; fresh numerical evidence is in the replacement receipt."
+        },
+        "src/exoeos/ma_fe_si_o_h.py": {
+          "previous_sha256": "131931749adf57a63642a156d93827c3429941b4c442256bc098c9d0cb86765d",
+          "reviewed_sha256": "8fdb6c2f20eb195dc0ab96014387ddc6ceb7b80e71c53be64eb9cebf5393ea33",
+          "reason": "The default identifier changes and the wrapper inherits the changed dry default; fresh wrapper tests are in the replacement receipt."
+        },
+        "tests/unittests/ma_fe_si_o_h_test.py": {
+          "previous_sha256": "0ccd73ceed1b3e825cee12334de5e06b92cfd2e06e2b85c33d31c2695c199c98",
+          "reviewed_sha256": "1c51ab27e8b8eb03572bfab8ab6bc6a45e6f939ed3a29a1decffee7838bb4795",
+          "reason": "Use the new dry reference fixture for the inherited provisional default."
+        },
+        "tests/unittests/ma_fe_si_o_test.py": {
+          "previous_sha256": "e9a2190e07c54376929bd63cd844f1cbefc5de64d0588ca41fe5dab89d3209ca",
+          "reviewed_sha256": "6d5a3cea93c458f9a05ca04246c0585be9390765abda72888024901ddd0ed6c6",
+          "reason": "Use the new independent fixture, preserve explicit legacy replay and check the separate infinite-dilution coefficient."
+        }
+      }
+    }
+  }
+}

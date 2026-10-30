@@ -1,0 +1,282 @@
+schema_version: '0.2'
+model:
+  id: exoeos.ma_fe_si_o_badro2015.provisional.v1
+  name: Provisional Badro Fe-Si-O default and ideal-H wrapper
+  description: Ma solvent completion and formal standards with epsilon_OO=-1873/T; author clarification
+    remains open.
+  implementation: &id001
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: sha256:dcd25458941b18f295f667df4bfbb0e465902aa821cabd97beb473758122b3c2
+    entry_points:
+    - exoeos.MaFeSiOLiquid
+    - exoeos.MaFeSiOHLiquid
+assumptions:
+- statement: Default interaction_K=(12.41*1873,-1873,-5*1873) K; ln_gamma0_O=4.29-16500/T is a distinct
+    unchanged term.
+  evidence:
+  - provisional_choice
+- statement: The Fe solvent completion and formal symmetric conversion are retained. The ideal-H wrapper
+    inherits the dry default without fitted H interactions.
+  evidence:
+  - provisional_choice
+domains:
+- kind: numerical_evaluation
+  status: documented
+  description: Inherited mathematical domain; source temperature is not an empirical validity bound.
+  conditions:
+  - Positive finite T/P and normalized atomic mole fractions with positive Fe; pure-solute activity endpoints
+    are excluded.
+  evidence:
+  - provisional_choice
+  - test_run
+- kind: scientific_applicability
+  status: unknown
+  description: No new calibration, phase stability or coupled planetary validation.
+  conditions: []
+  evidence:
+  - badro_source
+  - provisional_choice
+claims:
+- id: numerical_verification
+  revision: '1'
+  kind: numerical_verification
+  statement: The provisional defaults reproduce the selected source-equation references and preserve standard
+    conversion and ideal-H dilution.
+  scope: The 81 selected numerical tests and their recorded environment.
+- id: author_intent
+  revision: '1'
+  kind: theoretical
+  statement: The paper authors confirm the intended Eq.21 coefficient and the value used in their published
+    calculations.
+  scope: Requires an attributable author response or published correction; not established by coefficient
+    agreement.
+- id: physical_accuracy
+  revision: '1'
+  kind: physical_validation
+  statement: The provisional model has quantified empirical accuracy for a declared application.
+  scope: Requires independent observations, T/P/composition scope and uncertainty criteria.
+evidence:
+- id: badro_source
+  kind: literature
+  summary: Badro et al. (2015), Core formation and core composition from coupled geochemical and geophysical
+    constraints.
+  sources:
+  - https://doi.org/10.1073/pnas.1505672112
+  - results/mceg/20261029_badro_garberoglio_review/review.json
+  scope: Previously inspected SI Eqs.3-4 and Table S1 give epsilon_OO=-1873/T and, separately, ln_gamma0_O=4.29-16500/T.
+    Original calibration observations remain outside this review.
+  artifacts:
+  - source: results/mceg/20261029_badro_garberoglio_review/review.json
+    sha256: 822fee9c4c874d7046472180315031321b830f638058d402f32a3118bdc7abbb
+  provenance:
+    role: primary
+    location: Supplied SI pp.2-3; inspection retained in the dated source review.
+    inspection: inspected
+    note: Reuse the recorded original-source inspection; no new PDF acquisition or empirical validation.
+- id: young_printed
+  kind: literature
+  summary: Young, Shahar and Schlichting (2023), Earth shaped by primordial H2 atmospheres.
+  sources:
+  - https://doi.org/10.1038/s41586-023-05823-0
+  - results/mceg/20261029_badro_garberoglio_review/review.json
+  scope: Methods Eq.21 prints +16500/T multiplying ln(1-x_O); reference 33 cites Badro (2015).
+  provenance:
+    role: primary
+    location: Methods Eq.21 and reference 33; retained printed/source comparison.
+    inspection: inspected
+    note: The publication/code mismatch is established; author intent is not.
+- id: young_code
+  kind: implementation
+  summary: Pinned Young code uses separate 16500 and 1873 temperature numerators.
+  sources:
+  - https://github.com/eyoungucla/chems/blob/0a8e03361db27aa72782cde22cb2d204b513224c/Exoplanet_atmosphere_model_vMCMC_coreT_3000K_dist.py#L1578-L1583
+  scope: Line 1581 uses (4.29-16500/T)-(-1873/T)*ln(1-x_O). Only the O self coefficient is compared; the
+    full author solver and gamma_Fe=1 approximation are not reproduced.
+  provenance:
+    role: implementation
+    location: Commit 0a8e03361db27aa72782cde22cb2d204b513224c, file Exoplanet_atmosphere_model_vMCMC_coreT_3000K_dist.py,
+      lines 1578-1583; O assignment line 1581.
+    inspection: inspected
+    note: The exact pinned source lines were read for this decision.
+    derived_from:
+    - evidence: badro_source
+      comparison: consistent
+      note: The oxygen self coefficient agrees.
+    - evidence: young_printed
+      comparison: discrepancy
+      note: The printed O self term uses 16500 instead of 1873.
+- id: provisional_choice
+  kind: implementation
+  summary: Provisionally adopt the source-supported O self coefficient; keep the infinite-dilution term
+    and legacy explicit option.
+  sources:
+  - results/mceg/20261029_badro_default/decision.json
+  - results/mceg/20261029_badro_default/evidence_transition.json
+  - src/exoeos/ma_fe_si_o.py
+  - src/exoeos/ma_fe_si_o_h.py
+  scope: Default dry model and inherited ideal-H wrapper only. Suspected print typo, not an author-confirmed
+    erratum. Frozen downstream adoption is separate.
+  subject: provisional_default
+  artifacts:
+  - source: results/mceg/20261029_badro_default/decision.json
+    sha256: 6110f6e0d805d49d54e3064dac6e2fbf5f678598b1e9bbb227328df11af82146
+  - source: results/mceg/20261029_badro_default/evidence_transition.json
+    sha256: cf8b085a719cf61ae44c9c6cc413274a600709e6f7fa010683ac58bb87bb774b
+  provenance:
+    role: implementation
+    location: decision.json and default constructors.
+    inspection: inspected
+    note: Record the user-authorized provisional choice and the response-update path.
+    derived_from:
+    - evidence: badro_source
+      comparison: consistent
+      note: Use epsilon_OO=-1873/T.
+    - evidence: young_code
+      comparison: consistent
+      note: Retain both independent coefficients in their respective terms.
+- id: test_run
+  kind: numerical_test
+  summary: 81 scoped regression tests passed.
+  sources:
+  - results/mceg/20261029_badro_default/receipt.json
+  - results/mceg/20261029_badro_default/tests.xml
+  scope: Seven new reference states, legacy explicit-parameter replay, distinct infinite-dilution term,
+    standard conversion, derivatives and ideal-H dilution.
+  result: passed
+  subject: provisional_default
+  context: numerical_review_20261029
+  artifacts:
+  - source: results/mceg/20261029_badro_default/receipt.json
+    sha256: dcd25458941b18f295f667df4bfbb0e465902aa821cabd97beb473758122b3c2
+  - source: results/mceg/20261029_badro_default/tests.xml
+    sha256: a265b510358d2075c29fb95b603ee8377ea37878a881b0fac22868fc65af63f4
+  provenance:
+    role: primary
+    location: Fresh pytest run recorded in receipt.json and tests.xml.
+    inspection: inspected
+    note: The new fixture uses the existing independent Decimal activity equations with the inspected
+      Badro coefficient; these states are not observations.
+    derived_from:
+    - evidence: provisional_choice
+      comparison: consistent
+      note: Test the selected new defaults and explicit old variant.
+- id: author_response
+  kind: literature
+  summary: No author clarification has been received for the printed/code discrepancy.
+  sources:
+  - https://doi.org/10.1038/s41586-023-05823-0
+  - results/mceg/20261029_badro_default/decision.json
+  scope: Whether Eq.21 contains a typo and which coefficient generated the published calculations. The
+    user owns any correspondence; sending status is not recorded.
+  provenance:
+    role: unknown
+    location: Future author response or published correction.
+    inspection: not_inspected
+    note: Optional follow-up; it does not block provisional adoption and is not evidence of author approval.
+limitations:
+- statement: Badro/source-code agreement motivates provisional adoption but does not prove author intent
+    or physical accuracy.
+  evidence:
+  - badro_source
+  - young_code
+  - author_response
+- statement: Old contracts, selected file pins and receipts describe the earlier printed version. A frozen
+    consumer must review changes before reusing evidence.
+  evidence:
+  - provisional_choice
+subjects:
+- id: provisional_default
+  implementation: *id001
+  selected_files:
+    src/exoeos/ma_fe_si_o.py: 6cabe350d31b7abfdc8a49df1fed019f6f580443b553c7c9faf9a0ffd7d16887
+    src/exoeos/ma_fe_si_o_h.py: 8fdb6c2f20eb195dc0ab96014387ddc6ceb7b80e71c53be64eb9cebf5393ea33
+    src/exoeos/gibbs_excess.py: c3354acd4f79940cee2723ec3d2c5500751c767666d295f8c04c3c97b8cfc7b3
+    src/exoeos/state.py: 76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54
+    src/exoeos/contracts.py: ba1052326b066d7d3e5a57b5e63ac3dba5cc388e7d0bb9d2bf38431fe996d580
+    src/exoeos/_arrays.py: 020679ce40515c27ce0bf31f5b71b1f737737d4a5ebc0301198a9e2bcbedf507
+    tests/conftest.py: 87d47ae57e35ed7a10960ae12407c8a274188271ea86d5e0016d3d70501e2096
+    tests/unittests/ma_fe_si_o_test.py: 6d5a3cea93c458f9a05ca04246c0585be9390765abda72888024901ddd0ed6c6
+    tests/unittests/ma_fe_si_o_h_test.py: 1c51ab27e8b8eb03572bfab8ab6bc6a45e6f939ed3a29a1decffee7838bb4795
+    tests/unittests/fe_si_o_reference_test.py: 38a4ae13f26b6e73902bb5730afebe189fea258b28ad731ce2a6486364908c53
+    tests/reference/generate_fe_si_o_ma2001.py: 164940e336c9c4ab98be886efe9cfd0cd7023325c0bf54f3e51a349650469034
+    tests/reference/fe_si_o_ma2001.json: cf59178a3cf6622b924cd8d8ac1d03e7e5feb65c6f2e687dcb3b66820b601e0f
+    tests/reference/fe_si_o_badro2015.json: 88c248145db8e3ad0c70aad9b1a17ab739a3d9a5b3f4a75e7cb17a995fe34f9a
+contexts:
+- id: numerical_review_20261029
+  scope: Recorded CPU/x64 tests and provisional implementation decision, not a new empirical application.
+  settings:
+    python: 3.12.7
+    jax: 0.6.2
+    numpy: 2.1.0
+    pytest: 8.3.3
+    backend: cpu
+    x64: true
+conditions: []
+assessments:
+- id: numerical_review
+  kind: evidence_support
+  claim: numerical_verification
+  claim_revision: '1'
+  subject: provisional_default
+  context: numerical_review_20261029
+  method:
+    id: review_provisional_oxygen_choice
+    revision: '1'
+    description: Separate measured test outcomes, source attribution and unverified author/empirical claims.
+  evidence:
+  - test_run
+  reasons:
+  - 81 tests pass; source-equation agreement and legacy reproducibility are numerical evidence only.
+  status: supported
+  origin: reviewed
+- id: author_intent_review
+  kind: evidence_support
+  claim: author_intent
+  claim_revision: '1'
+  subject: provisional_default
+  context: numerical_review_20261029
+  method:
+    id: review_provisional_oxygen_choice
+    revision: '1'
+    description: Separate measured test outcomes, source attribution and unverified author/empirical claims.
+  evidence:
+  - author_response
+  - young_printed
+  - young_code
+  reasons:
+  - The print typo is inferred, not confirmed by an author reply.
+  status: unknown
+  origin: reviewed
+- id: physical_review
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: provisional_default
+  context: numerical_review_20261029
+  method:
+    id: review_provisional_oxygen_choice
+    revision: '1'
+    description: Separate measured test outcomes, source attribution and unverified author/empirical claims.
+  evidence:
+  - badro_source
+  - provisional_choice
+  reasons:
+  - No new experimental error bound is supplied for the selected model or its H extension.
+  status: unknown
+  origin: reviewed
+follow_ups:
+- id: record_author_clarification
+  target_kind: claim
+  target: author_intent
+  revision: '1'
+  action: If an author response or published correction becomes available, append dated evidence and reassess
+    this provisional coefficient choice.
+  requires:
+  - Attributable reply or correction identifying Eq.21 and the coefficient used in the published calculations.
+  - Record the response date and permitted sharing scope; do not publish private correspondence without
+    permission.
+  completion: A new evidence record and scoped assessment explain whether the provisional choice is confirmed
+    or revised. Preserve this history.
+  sources:
+  - https://doi.org/10.1038/s41586-023-05823-0
+  - https://github.com/eyoungucla/chems/blob/0a8e03361db27aa72782cde22cb2d204b513224c/Exoplanet_atmosphere_model_vMCMC_coreT_3000K_dist.py#L1578-L1583

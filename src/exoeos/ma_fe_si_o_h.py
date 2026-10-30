@@ -34,7 +34,7 @@ class MaFeSiOHLiquid:
     components: ClassVar[tuple[str, ...]] = ("Fe", "Si", "O", "H")
     activity_basis: ClassVar[str] = "mole_fraction"
     standard_state_convention: ClassVar[str] = "symmetric"
-    reference_model_id: ClassVar[str] = "ma2001_fe_si_o_h_no_h_interaction_v1"
+    reference_model_id: ClassVar[str] = "ma2001_fe_si_o_h_badro2015_provisional_v1"
     reference_pressure_Pa: ClassVar[float] = MaFeSiOLiquid.reference_pressure_Pa
 
     def _inputs(self, T: ArrayLike, P: ArrayLike, x: ArrayLike):

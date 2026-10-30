@@ -120,7 +120,8 @@ def _inherited_standards(temperature_K):
         enthalpy = dh+a*t+b*t*t/2+c*t**3/3+d*t**4/4-e/t+f-h
         entropy = a*np.log(t)+b*t+c*t*t/2+d*t**3/3-e/(2*t*t)+g
         mu[name] = (1000.*enthalpy-temperature_K*entropy)/rt
-    model = MaFeSiOLiquid()
+    # This replay retains the printed-Young model used by the archived study.
+    model = MaFeSiOLiquid((12.41 * 1873, -16500., -5 * 1873))
     source_o = (-meta["source"]["log10_to_ln"]*(2.736-11439./temperature_K)
                 +mu["FeO_silicate"]-mu["Fe_metal"])
     return {"oxygen_standard_rt": float(source_o+model.standard_state_shift_RT(temperature_K)[2]),
@@ -155,7 +156,8 @@ def calibration_report(*, standards_provider=None, standard_provenance=None):
     with DATA_PATH.open(newline="") as stream:
         observations = [{k: float(v) for k, v in row.items()} for row in csv.DictReader(stream)]
     rows = []
-    model = MaFeSiOLiquid()
+    # Match the historical replay, including callbacks in its formal standards.
+    model = MaFeSiOLiquid((12.41 * 1873, -16500., -5 * 1873))
     for observation in observations:
         t = observation["temperature_C"]+273.15
         w = observation["O_mass_percent"]

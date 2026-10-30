@@ -95,14 +95,14 @@ files:
     note: Located model definitions/data and mapped the stated families on 2026-10-20; this is a boundary
       inventory, not physical validation or exhaustive variant review.
   src/exoeos/ma_fe_si_o.py:
-    sha256: 32b526dc260d39a5071e25b198cc06fd331b1ceae89483d509702629ab5c7cde
+    sha256: 6cabe350d31b7abfdc8a49df1fed019f6f580443b553c7c9faf9a0ffd7d16887
     role: model
-    note: Located model definitions/data and mapped the stated families on 2026-10-20; this is a boundary
+    note: Reviewed the provisional Badro default on 2026-10-29; this is a boundary
       inventory, not physical validation or exhaustive variant review.
   src/exoeos/ma_fe_si_o_h.py:
-    sha256: 131931749adf57a63642a156d93827c3429941b4c442256bc098c9d0cb86765d
+    sha256: 8fdb6c2f20eb195dc0ab96014387ddc6ceb7b80e71c53be64eb9cebf5393ea33
     role: model
-    note: Located model definitions/data and mapped the stated families on 2026-10-20; this is a boundary
+    note: Reviewed inheritance of the provisional dry default on 2026-10-29; this is a boundary
       inventory, not physical validation or exhaustive variant review.
   src/exoeos/magma.py:
     sha256: 4f085ac25f3781cc4120ac7b56c67446668d1911d8cdaeeef077ff9e529807ed
@@ -220,7 +220,7 @@ files:
       inventory, not physical validation or exhaustive variant review.
 models:
 - id: exoeos.ma_fe_si_o
-  description: Printed Ma Fe-Si-O coefficients with completed Fe activity.
+  description: Provisional Badro default with completed Fe activity; printed-version history retained.
   bindings:
   - path: src/exoeos/ma_fe_si_o.py
     symbol: MaFeSiOLiquid
@@ -229,6 +229,8 @@ models:
   contracts:
   - path: mceg/contracts/ma_fe_si_o.yaml
     model_id: exoeos.ma_fe_si_o.v1
+  - path: mceg/contracts/ma_fe_si_o_badro.yaml
+    model_id: exoeos.ma_fe_si_o_badro2015.provisional.v1
 - id: exoeos.ma_fe_si_o_h
   description: Formal Fe-Si-O-H extension with ideal atomic H dilution.
   bindings:
@@ -239,6 +241,8 @@ models:
   contracts:
   - path: mceg/contracts/ma_fe_si_o_h.yaml
     model_id: exoeos.ma_fe_si_o_h.v1
+  - path: mceg/contracts/ma_fe_si_o_badro.yaml
+    model_id: exoeos.ma_fe_si_o_badro2015.provisional.v1
 - id: exoeos.mass_fraction_solute
   description: Extensive total-liquid mass-fraction solute construction.
   bindings:

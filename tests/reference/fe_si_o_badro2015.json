@@ -1,0 +1,209 @@
+{
+  "model_id": "ma2001_fe_si_o_badro2015_provisional_v1",
+  "scope": "Badro SI Eqs. 3-4 and Table S1, with formal standard conversion. Numerical states are not calibration observations. Author clarification of Young Eq. 21 is pending.",
+  "reference_pressure_Pa": 100000.0,
+  "sources": [
+    "https://doi.org/10.1073/pnas.1505672112",
+    "results/mceg/20261029_badro_garberoglio_review/review.json"
+  ],
+  "parameters": {
+    "reference_temperature_K": "1873",
+    "epsilon_SiSi_at_reference_temperature": "12.41",
+    "epsilon_SiO_at_reference_temperature": "-5",
+    "epsilon_OO_times_temperature_K": "-1873",
+    "ln_gamma0_Si_at_reference_temperature": "-6.65",
+    "ln_gamma0_O_constant": "4.29",
+    "ln_gamma0_O_inverse_temperature_K": "-16500"
+  },
+  "states": [
+    {
+      "id": "pure_fe_1873",
+      "T_K": 1873.0,
+      "P_Pa": 100000.0,
+      "x": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "ln_gamma_source": [
+        0.0,
+        -6.65,
+        -4.519396689802456
+      ],
+      "ln_gamma_formal": [
+        0.0,
+        -12.41,
+        1.0
+      ],
+      "mu0_formal_minus_source_over_RT": [
+        0.0,
+        5.76,
+        -5.519396689802456
+      ],
+      "gex_source_RT": 0.0,
+      "gex_formal_RT": 0.0
+    },
+    {
+      "id": "dilute_1873",
+      "T_K": 1873.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.99999998,
+        1e-08,
+        1e-08
+      ],
+      "ln_gamma_source": [
+        -7.049999380333319e-17,
+        -6.6499999259,
+        -4.519396749802457
+      ],
+      "ln_gamma_formal": [
+        -7.049999380333319e-17,
+        -12.4099999259,
+        0.9999999399999991
+      ],
+      "mu0_formal_minus_source_over_RT": [
+        0.0,
+        5.76,
+        -5.519396689802456
+      ],
+      "gex_source_RT": -1.1169396682752456e-07,
+      "gex_formal_RT": -1.140999999295e-07
+    },
+    {
+      "id": "ternary_1873",
+      "T_K": 1873.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.9,
+        0.07,
+        0.03
+      ],
+      "ln_gamma_source": [
+        -0.019790194467816054,
+        -5.933135455475554,
+        -4.944149070241124
+      ],
+      "ln_gamma_formal": [
+        -0.019790194467816054,
+        -11.693135455475554,
+        0.575247619561332
+      ],
+      "mu0_formal_minus_source_over_RT": [
+        0.0,
+        5.76,
+        -5.519396689802456
+      ],
+      "gex_source_RT": -0.5814551290115569,
+      "gex_formal_RT": -0.8190732283174833
+    },
+    {
+      "id": "ternary_2350",
+      "T_K": 2350.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.85,
+        0.1,
+        0.05
+      ],
+      "ln_gamma_source": [
+        -0.028619246536606635,
+        -4.514455911719929,
+        -3.2439988114281424
+      ],
+      "ln_gamma_formal": [
+        -0.028619246536606635,
+        -9.105298464911419,
+        0.28429906091228313
+      ],
+      "mu0_formal_minus_source_over_RT": [
+        0.0,
+        4.590842553191489,
+        -3.5282978723404255
+      ],
+      "gex_source_RT": -0.6379718912995157,
+      "gex_formal_RT": -0.9206412530016433
+    },
+    {
+      "id": "ternary_3000",
+      "T_K": 3000.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.8,
+        0.15,
+        0.05
+      ],
+      "ln_gamma_source": [
+        -0.0670657465495659,
+        -3.1489145604265714,
+        -1.8454782567991828
+      ],
+      "ln_gamma_formal": [
+        -0.0670657465495659,
+        -6.745074560426572,
+        -0.011144923465849527
+      ],
+      "mu0_formal_minus_source_over_RT": [
+        0.0,
+        3.59616,
+        -1.8343333333333334
+      ],
+      "gex_source_RT": -0.6182636941435976,
+      "gex_formal_RT": -1.065971027476931
+    },
+    {
+      "id": "fe_si_3000",
+      "T_K": 3000.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.9,
+        0.1,
+        0.0
+      ],
+      "ln_gamma_source": [
+        -0.0415331502381395,
+        -3.377019,
+        -1.5804335599499872
+      ],
+      "ln_gamma_formal": [
+        -0.0415331502381395,
+        -6.973179,
+        0.2538997733833461
+      ],
+      "mu0_formal_minus_source_over_RT": [
+        0.0,
+        3.59616,
+        -1.8343333333333334
+      ],
+      "gex_source_RT": -0.37508173521432553,
+      "gex_formal_RT": -0.7346977352143256
+    },
+    {
+      "id": "fe_o_3000",
+      "T_K": 3000.0,
+      "P_Pa": 100000.0,
+      "x": [
+        0.95,
+        0.0,
+        0.05
+      ],
+      "ln_gamma_source": [
+        0.0008074467959607164,
+        -4.311129787183843,
+        -1.2412166666666666
+      ],
+      "ln_gamma_formal": [
+        0.0008074467959607164,
+        -7.907289787183843,
+        0.5931166666666666
+      ],
+      "mu0_formal_minus_source_over_RT": [
+        0.0,
+        3.59616,
+        -1.8343333333333334
+      ],
+      "gex_source_RT": -0.06129375887717065,
+      "gex_formal_RT": 0.030422907789496013
+    }
+  ]
+}

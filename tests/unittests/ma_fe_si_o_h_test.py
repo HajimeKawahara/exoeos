@@ -13,7 +13,7 @@ from exoeos import MaFeSiOLiquid, MaFeSiOHLiquid, solution_state, total_gex_RT
 
 
 ROOT = Path(__file__).resolve().parents[2]
-DRY_REFERENCE = json.loads((ROOT / "tests/reference/fe_si_o_ma2001.json").read_text())
+DRY_REFERENCE = json.loads((ROOT / "tests/reference/fe_si_o_badro2015.json").read_text())
 
 
 @pytest.mark.parametrize("hydrogen_fraction", [0.0, 0.2, 0.8, 1 - 1e-8])

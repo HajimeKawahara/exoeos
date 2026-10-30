@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-29",
+  "status": "provisional",
+  "base_revision": "c375601415683c714a1536723a5971e59f6441c7",
+  "decision": "Use the Badro SI oxygen self interaction in the default dry Ma model and its ideal-H wrapper.",
+  "old_interaction_K": [
+    23243.93,
+    -16500,
+    -9365
+  ],
+  "new_interaction_K": [
+    23243.93,
+    -1873,
+    -9365
+  ],
+  "unchanged_infinite_dilution": "ln_gamma0_O = 4.29 - 16500/T",
+  "reason": "The inspected original Badro SI and pinned Young code agree on epsilon_OO=-1873/T. The printed Young Eq.21 uses a different self term, treated as a suspected typographical error. The user requested provisional adoption before an author response.",
+  "young_code": {
+    "url": "https://github.com/eyoungucla/chems/blob/0a8e03361db27aa72782cde22cb2d204b513224c/Exoplanet_atmosphere_model_vMCMC_coreT_3000K_dist.py#L1578-L1583",
+    "oxygen_assignment_line": 1581
+  },
+  "ancestry": "Badro (2015) precedes Young (2023) and is cited there as reference 33.",
+  "author_clarification": {
+    "status": "not_received",
+    "contact_owner": "user",
+    "sent_status": "not_recorded",
+    "required_before_provisional_adoption": false,
+    "questions": [
+      "Is the +16500/T coefficient of ln(1-x_O) in Eq.21 a typographical error for +1873/T?",
+      "Which coefficient was used for the published calculations?"
+    ]
+  },
+  "future_update": "Append dated response evidence, its source and sharing scope, then reassess the coefficient choice. Preserve this decision and previous assessments. No author confirmation or physical-validation claim is inferred.",
+  "legacy_reproduction": "MaFeSiOLiquid((12.41*1873, -16500, -5*1873)); pass this dry model explicitly to MaFeSiOHLiquid for the old wrapper.",
+  "consumer_scope": "Unpinned default callers inherit this change. Frozen ExoInventory/provider hash bindings must be reviewed separately; no downstream adoption or archived scientific result is updated.",
+  "physical_accuracy": "unknown",
+  "sources": {
+    "badro": {
+      "authors": [
+        "James Badro",
+        "John P. Brodholt",
+        "H\u00e9l\u00e8ne Piet",
+        "Julien Siebert",
+        "Frederick J. Ryerson"
+      ],
+      "year": 2015,
+      "title": "Core formation and core composition from coupled geochemical and geophysical constraints",
+      "journal": "Proceedings of the National Academy of Sciences",
+      "volume": "112",
+      "issue": "40",
+      "pages": "12310-12314",
+      "doi": "10.1073/pnas.1505672112",
+      "location": "SI pp.2-3, Eqs.3-4 and Table S1"
+    },
+    "young": {
+      "authors": [
+        "Edward D. Young",
+        "Anat Shahar",
+        "Hilke E. Schlichting"
+      ],
+      "year": 2023,
+      "title": "Earth shaped by primordial H2 atmospheres",
+      "journal": "Nature",
+      "volume": "616",
+      "pages": "306-311",
+      "doi": "10.1038/s41586-023-05823-0",
+      "location": "Methods Eq.21 and reference 33"
+    }
+  },
+  "prior_source_review": {
+    "path": "results/mceg/20261029_badro_garberoglio_review/review.json",
+    "sha256": "822fee9c4c874d7046472180315031321b830f638058d402f32a3118bdc7abbb"
+  }
+}

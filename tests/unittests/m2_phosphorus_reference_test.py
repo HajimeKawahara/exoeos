@@ -112,7 +112,7 @@ def test_interval_curvature_and_independent_scalar_match():
     model = MaPhosphorusLiquid(epsilon)
     lo, hi = np.array([.86, 0, 0, 0, 0]), np.array([1, .08, .02, .04, .02])
     bound = phosphorus_curvature_lower_bound(model, 2173.15, lo, hi)
-    assert 3. < bound < 3.1
+    assert 4.48 < bound < 4.50  # Provisional Badro dry-host interaction.
     coefficients = np.asarray(model.host.dry_model.interaction_K)
     for point in ([.001, .003, .027, .006], [.04, .01, .025, .01], [.07, .018, .033, .019]):
         y = jnp.array(point)
