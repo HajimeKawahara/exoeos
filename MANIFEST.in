@@ -1,0 +1,1 @@
+recursive-include src/exoeos/data/mceg *.json *.yaml

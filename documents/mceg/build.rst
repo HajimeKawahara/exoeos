@@ -28,6 +28,29 @@ in ``documents/mceg/_generated/`` and are ignored by Git. The generator's manife
 tracks its files, preserves neighboring authored files, and removes obsolete
 owned pages. Edit the configuration or original records instead of generated RST.
 
+Installed evidence catalog
+--------------------------
+
+The wheel includes ``exoeos/data/mceg/index.json`` and copies of the nine
+registered contracts. MCEG versions with catalog support can inspect an installed
+distribution without importing ExoEOS:
+
+.. code-block:: bash
+
+   mceg explain --package exoeos
+   mceg graph --package exoeos
+
+For a checkout or editable installation, replace ``--package exoeos`` with
+``--catalog src/exoeos/data/mceg/index.json``. The catalog provides model-level
+records and their explicit historical assessments, not species-specific coverage
+or a check of a user's calculation. Repository evidence paths remain unchanged;
+only bundled contract hashes are checked by package lookup.
+
+After reviewing changes to the canonical contracts and catalog selections, run
+``python mceg/build_catalog.py`` and commit the generated copies with the new
+record version. This builder uses only the standard library. Original source
+documents in local ``refs/`` are not included.
+
 Inputs and interpretation
 -------------------------
 

@@ -1,0 +1,448 @@
+schema_version: '0.2'
+model:
+  id: exoeos.zhang_duan_h2
+  name: Zhang-Duan 2009 EOS for pure molecular hydrogen
+  description: The published H2 parameterization of the homogeneous-fluid residual EOS, constructed
+    with ZhangDuanEOS.from_species(('H2',)) and composition [1].
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: d7681db4393fd85904846b083013230d81d45d4e
+    entry_points:
+    - exoeos.ZhangDuanEOS.from_species
+    - exoeos.state_tp
+assumptions:
+- statement: The fluid is homogeneous pure molecular H2; epsilon/k = 31.2 K and sigma = 2.93e-10
+    m are fitted corresponding-states parameters.
+  evidence:
+  - implementation
+  - equations
+- statement: The physical compressibility is Z = P/(rho R T). The implementation derives residual
+    chemical potentials and fugacity from its integrated residual Helmholtz energy.
+  evidence:
+  - implementation
+  - equations
+domains:
+- kind: scientific_applicability
+  status: documented
+  description: Reported pure-H2 experimental-data envelope, as transcribed in the upstream tutorial
+    from Zhang and Duan (2009), Table 5. These separate bounds do not guarantee accuracy everywhere
+    inside their rectangle.
+  conditions:
+  - Pure molecular H2; reported temperatures span 250 to 423 K.
+  - Reported pressures span 2 to 700 MPa.
+  evidence:
+  - reported_domain
+- kind: scientific_applicability
+  status: unknown
+  description: Joint temperature-pressure coverage, state-specific fugacity errors, and a quantitative
+    validity domain for this implementation are unknown in this audit; the broad fitted-mixture
+    domains cannot be assigned to H2.
+  conditions: []
+  evidence:
+  - reported_domain
+- kind: numerical_evaluation
+  status: documented
+  description: Caller preconditions and branch selection; these do not guarantee numerical convergence
+    or physical validity throughout this set.
+  conditions:
+  - T > 0 in K and P > 0 in Pa; scalar state inputs and composition [1].
+  - phase is vapor, selecting the first mechanically stable low-density-branch root.
+  evidence:
+  - implementation
+claims:
+- id: ideal_density_limit
+  revision: sha256:719edf0917d0216edfeab23c35fb36a7957270e27e50c669ee4b5930fbc74903
+  statement: Z approaches 1 as molar density approaches zero at fixed positive T.
+  kind: theoretical
+  scope: Algebraic limit of the specified correlation, not an empirical accuracy claim.
+- id: published_parameter_loading
+  revision: sha256:719edf0917d0216edfeab23c35fb36a7957270e27e50c669ee4b5930fbc74903
+  statement: The upstream species-factory comparison with the published parameter table passed.
+  kind: numerical_verification
+  scope: Includes H2 parameters; it does not test pure-H2 fugacity against physical data.
+- id: physical_accuracy
+  revision: sha256:719edf0917d0216edfeab23c35fb36a7957270e27e50c669ee4b5930fbc74903
+  statement: State-specific physical accuracy of this implementation is unknown in this audit.
+  kind: physical_validation
+  scope: No direct experimental comparison of the implemented pure-H2 fugacity was reproduced here.
+    This does not deny the original paper's data comparisons.
+evidence:
+- id: implementation
+  kind: implementation
+  summary: Published H2 parameters, factory, scalar-state interface and density-root policy.
+  sources:
+  - src/exoeos/zhang_duan.py
+  - documents/thermodynamic_state_contract.md
+  scope: Pure H2 with the published parameters; phase stability is not established.
+  artifacts: []
+- id: equations
+  kind: theory
+  summary: The upstream tutorial states Z, the integrated residual energy, and the ideal density
+    limit.
+  sources:
+  - documents/tutorials/zhang_duan_eos.rst
+  scope: Mathematical properties of this empirical correlation, not validation against nature.
+  artifacts: []
+- id: reported_domain
+  kind: literature
+  summary: The tutorial reports the H2 experimental-data bounds from Zhang and Duan (2009), Table
+    5.
+  sources:
+  - documents/tutorials/zhang_duan_eos.rst#L365-L395
+  - https://doi.org/10.1016/j.gca.2009.01.021
+  scope: A reported data envelope, not a reproduced experiment, a joint coverage map, or a fugacity
+    error bound; no H2 molecular-dynamics range is listed.
+  artifacts: []
+- id: numerical_tests
+  kind: numerical_test
+  summary: test_published_species_factory_inserts_table_parameters passed in the recorded audit
+    run.
+  sources:
+  - https://github.com/HajimeKawahara/exoeos/blob/d7681db4393fd85904846b083013230d81d45d4e/tests/unittests/zhang_duan_test.py#L268-L294
+  - https://github.com/HajimeKawahara/mceg/blob/ffcfb23cc7f135a3d8c505b4c1f5af8a5327986e/docs/en/h2_solubility.md#verification
+  scope: Factory constants and interaction matrices only; 1 passed using Python 3.12.7, JAX 0.6.2,
+    NumPy 2.1.0, pytest 8.3.3, CPU and x64. Historical execution at upstream revision d7681db4393fd85904846b083013230d81d45d4e;
+    not the new pilot run.
+  result: passed
+  artifacts: []
+- id: provider_test_run
+  kind: numerical_test
+  summary: The selected provider tests passed in the adoption run (1 tests).
+  sources:
+  - results/mceg/h2_tests_d7681db.json
+  - results/mceg/h2_tests_d7681db.xml
+  scope: Only the recorded test selectors at implementation revision d7681db4393fd85904846b083013230d81d45d4e.
+    Source hashes and execution environment are preserved in the receipt; these checks do not establish
+    physical accuracy.
+  result: passed
+  artifacts: []
+- id: zd2009_20261021
+  kind: literature
+  summary: Original Zhang-Duan (2009) H2 coefficients and reported volume-data envelope.
+  sources:
+  - https://doi.org/10.1016/j.gca.2009.01.021
+  - https://efs.idsse.ac.cn/module1/citation/2009-04-01/article.pdf
+  scope: Table 4 gives H2 epsilon/kB = 31.2 K and sigma = 2.93 Angstrom. Table 5 reports 111 experimental
+    points at 250-423 K and 2-700 MPa with 1.43% average volume deviation; no H2 MD range is listed.
+    This is an author-reported volume comparison, not a reproduced H2 fugacity error bound or joint
+    coverage map.
+  provenance:
+    role: primary
+    location: 'Printed pp. 2091-2093 (PDF pp. 3-5): Section 2.2, Eqs. 7-11 and Tables 3-6.'
+    inspection: inspected
+    note: Retrieved and inspected on 2026-10-21; the scope names the passages reviewed.
+  artifacts:
+  - source: https://efs.idsse.ac.cn/module1/citation/2009-04-01/article.pdf
+    sha256: 6d72a0eed45e9a83887a73f01ae08d10f77fa251720662195dfb66a1f159d9d6
+- id: implementation_source_review_20261021
+  kind: implementation
+  summary: The universal coefficients and pure-H2 species constants match the inspected tables.
+  sources:
+  - src/exoeos/zhang_duan.py
+  - documents/tutorials/zhang_duan_eos.rst
+  scope: _EOS_COEFFICIENTS (all 15 values), _PUBLISHED_COMPONENT_PARAMETERS[H2], and the temperature/volume
+    transformations. Equation 8 interpretation is reviewed separately.
+  subject: source_snapshot_d7681db
+  context: source_review_20261021
+  provenance:
+    role: implementation
+    location: Named provider functions and the source locations linked below.
+    inspection: inspected
+    note: Scoped source comparison; no empirical accuracy claim or external runtime execution.
+    derived_from:
+    - evidence: zd2009_20261021
+      comparison: consistent
+      note: Tables 3-4 and Eqs. 10-11 agree with the selected coefficient and unit transcription.
+- id: equation_convention_20261021
+  kind: implementation
+  summary: The provider explicitly interprets the right side of Eq. 8 as physical Z = PV/(RT).
+  sources:
+  - src/exoeos/zhang_duan.py
+  - documents/tutorials/zhang_duan_eos.rst
+  - tests/unittests/zhang_duan_test.py
+  scope: The printed left side uses reduced Pm, Vm and Tm. The provider omits that additional scaling,
+    integrates the density expression, and obtains fugacity by Helmholtz differentiation. Existing
+    water controls agree with Table 6 volumes; they are not H2 validation. No author correction
+    or direct H2 fugacity comparison was obtained.
+  subject: source_snapshot_d7681db
+  context: source_review_20261021
+  provenance:
+    role: implementation
+    location: Named provider functions and the source locations linked below.
+    inspection: inspected
+    note: Scoped source comparison; no empirical accuracy claim or external runtime execution.
+    derived_from:
+    - evidence: zd2009_20261021
+      comparison: discrepancy
+      note: The printed reduced-variable left side and the documented physical-Z interpretation
+        differ. This records an existing convention choice, not a newly established paper erratum
+        or implementation bug.
+- id: archived_receipt_review_20261021
+  kind: numerical_test
+  summary: Retrospective inspection of the preserved successful parameter-loading test.
+  sources:
+  - results/mceg/h2_tests_d7681db.json
+  - results/mceg/h2_tests_d7681db.xml
+  scope: The single archived test and its nine selected files only. This review does not relabel
+    the 2026-10-15 execution as a fresh run or establish physical accuracy.
+  result: passed
+  subject: source_snapshot_d7681db
+  context: archived_test_environment
+  artifacts:
+  - source: results/mceg/h2_tests_d7681db.json
+    sha256: 88cdfa19344c854fb5a36dc0ca032c8e5e63845ba63dbd481506bc020562ebe5
+  - source: results/mceg/h2_tests_d7681db.xml
+    sha256: f131d57bae5289bd961ac74a97a6b859eccfbd57cfece54723ad47673dab2d0a
+  provenance:
+    role: primary
+    location: Receipt command, selected_file_sha256, environment and outcome; matching JUnit testcase.
+    inspection: inspected
+    note: Receipt/JUnit results and selected-file hashes were checked against this checkout.
+limitations:
+- statement: The vapor selector does not prove vapor stability. Phase separation, reaction speciation
+    and dissociation are outside this homogeneous EOS.
+  evidence:
+  - implementation
+  - reported_domain
+- statement: Successful root finding outside the reported H2 data envelope is extrapolation; it
+    supplies no physical accuracy bound.
+  evidence:
+  - reported_domain
+- statement: The implementation uses physical Z instead of the additional scaling printed on the
+    left of the paper's Equation 8, as documented upstream. This interpretation is part of implementation
+    provenance.
+  evidence:
+  - implementation
+  - equations
+subjects:
+- id: imported
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: d7681db4393fd85904846b083013230d81d45d4e
+    entry_points:
+    - exoeos.ZhangDuanEOS.from_species
+    - exoeos.state_tp
+  selected_files: {}
+- id: source_snapshot_d7681db
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: d7681db4393fd85904846b083013230d81d45d4e
+    entry_points:
+    - exoeos.ZhangDuanEOS.from_species
+    - exoeos.state_tp
+  selected_files:
+    src/exoeos/__init__.py: b53b3a90a57cbec34b794fd084379aed6e45526e38ee574ec6483e7e79d78592
+    src/exoeos/zhang_duan.py: bacbb5d7d1295258fa3d888067bb8060450a01a4bbfa8a40eb499483a3bee986
+    src/exoeos/helmholtz.py: 75d7ab3a68781c73e8d8197c05151f0a8adb076595bcfad296a544f00860318e
+    src/exoeos/constants.py: 69e57fe70ad4ea775f2d97722548276c87d3a91c76eb6be8f1be43ac30f83fa4
+    src/exoeos/_arrays.py: 020679ce40515c27ce0bf31f5b71b1f737737d4a5ebc0301198a9e2bcbedf507
+    src/exoeos/state.py: 76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54
+    tests/unittests/zhang_duan_test.py: 40153705cf2f2bc4ad258fc1eef9c70eac02e8c20354ec6c310dbf716de84844
+    documents/thermodynamic_state_contract.md: 6cde3050a8b2b1242e879d9bd4ea3e2bee1d607ceaaa2d203d4f83f5e6d15d67
+    documents/tutorials/zhang_duan_eos.rst: d3f8f7f615e8b0e371916d7dde32c3f21e3fe5252cbdf54ca8c6c94b907e615c
+contexts:
+- id: imported:ideal_density_limit
+  scope: Algebraic limit of the specified correlation, not an empirical accuracy claim.
+  quantities: {}
+  settings: {}
+- id: imported:published_parameter_loading
+  scope: Includes H2 parameters; it does not test pure-H2 fugacity against physical data.
+  quantities: {}
+  settings: {}
+- id: imported:physical_accuracy
+  scope: No direct experimental comparison of the implemented pure-H2 fugacity was reproduced here.
+    This does not deny the original paper's data comparisons.
+  quantities: {}
+  settings: {}
+- id: source_review_20261021
+  scope: Source inspection and formulation comparison; no empirical application or uncertainty target
+    is assigned.
+  settings:
+    review_date: '2026-10-21'
+    model_choice: Pure H2; physical compressibility and integrated residual Helmholtz energy.
+    source_hash_policy: Hashes identify retrieved bytes; MCEG does not download or verify URI artifacts.
+- id: archived_test_environment
+  scope: The preserved 2026-10-15 one-test execution, retrospectively inspected on 2026-10-21.
+  settings:
+    python: 3.12.7
+    jax: 0.6.2
+    numpy: 2.1.0
+    pytest: 8.3.3
+    backend: cpu
+    x64: true
+    test_selection: tests/unittests/zhang_duan_test.py::test_published_species_factory_inserts_table_parameters
+conditions:
+- id: h2_reported_temperature
+  revision: '1'
+  kind: range
+  quantity: temperature
+  interval:
+    lower: 250.0
+    upper: 423.0
+    unit: K
+  coverage: marginal
+  scope: Pure-H2 experimental-data extent in Zhang-Duan (2009), Table 5; separate bounds do not
+    imply rectangular coverage or fugacity accuracy.
+  evidence:
+  - zd2009_20261021
+- id: h2_reported_pressure
+  revision: '1'
+  kind: range
+  quantity: pressure
+  interval:
+    lower: 2.0
+    upper: 700.0
+    unit: MPa
+  coverage: marginal
+  scope: Pure-H2 experimental-data extent in Zhang-Duan (2009), Table 5; separate bounds do not
+    imply rectangular coverage or fugacity accuracy.
+  evidence:
+  - zd2009_20261021
+assessments:
+- id: imported:ideal_density_limit
+  subject: imported
+  context: imported:ideal_density_limit
+  method:
+    id: import_v0.1_declaration
+    revision: '1'
+    description: Preserve the original declaration; no new assessment.
+  evidence:
+  - equations
+  reasons:
+  - Imported declaration for the original implementation and prose scope; structured calculation
+    conditions were not supplied.
+  kind: evidence_support
+  claim: ideal_density_limit
+  claim_revision: sha256:719edf0917d0216edfeab23c35fb36a7957270e27e50c669ee4b5930fbc74903
+  status: supported
+  origin: imported_v0.1_declaration
+- id: imported:published_parameter_loading
+  subject: imported
+  context: imported:published_parameter_loading
+  method:
+    id: import_v0.1_declaration
+    revision: '1'
+    description: Preserve the original declaration; no new assessment.
+  evidence:
+  - provider_test_run
+  reasons:
+  - Imported declaration for the original implementation and prose scope; structured calculation
+    conditions were not supplied.
+  kind: evidence_support
+  claim: published_parameter_loading
+  claim_revision: sha256:719edf0917d0216edfeab23c35fb36a7957270e27e50c669ee4b5930fbc74903
+  status: supported
+  origin: imported_v0.1_declaration
+- id: imported:physical_accuracy
+  subject: imported
+  context: imported:physical_accuracy
+  method:
+    id: import_v0.1_declaration
+    revision: '1'
+    description: Preserve the original declaration; no new assessment.
+  evidence:
+  - reported_domain
+  reasons:
+  - Imported declaration for the original implementation and prose scope; structured calculation
+    conditions were not supplied.
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: sha256:719edf0917d0216edfeab23c35fb36a7957270e27e50c669ee4b5930fbc74903
+  status: unknown
+  origin: imported_v0.1_declaration
+- id: numerical_review_20261021
+  kind: evidence_support
+  claim: published_parameter_loading
+  claim_revision: sha256:719edf0917d0216edfeab23c35fb36a7957270e27e50c669ee4b5930fbc74903
+  subject: source_snapshot_d7681db
+  context: archived_test_environment
+  method:
+    id: review_archived_pytest
+    revision: '1'
+    description: Inspect preserved test results and verify receipt and selected-file hashes.
+  evidence:
+  - archived_receipt_review_20261021
+  reasons:
+  - The preserved one-test result supports parameter loading only; no new physical validation is
+    inferred.
+  status: supported
+  origin: reviewed
+- id: physical_review_20261021
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: sha256:719edf0917d0216edfeab23c35fb36a7957270e27e50c669ee4b5930fbc74903
+  subject: source_snapshot_d7681db
+  context: source_review_20261021
+  method:
+    id: inspect_published_formulation
+    revision: '1'
+    description: Compare inspected source passages and pinned code; separate implementation provenance
+      from empirical support.
+  evidence:
+  - implementation_source_review_20261021
+  - equation_convention_20261021
+  reasons:
+  - The original H2 table entries and marginal data bounds are now inspected.
+  - The 111 experimental observations and their individual provenance were not recovered; no H2
+    volume or fugacity data replay was performed.
+  - The Eq. 8 convention remains explicit. Table 6 water controls and the archived parameter test
+    do not quantify pure-H2 accuracy.
+  status: unknown
+  origin: reviewed
+follow_ups:
+- id: inspect_zd2009
+  target_kind: evidence
+  target: reported_domain
+  action: Retrieve and inspect the original H2 coefficients, reported data envelope and implementation
+    conventions.
+  requires:
+  - Downloaded-byte hash and printed equation/table locations.
+  - A comparison that preserves the Eq. 8 convention difference.
+  completion: Inspected primary-source and scoped implementation records are added without upgrading
+    physical support.
+  sources:
+  - https://efs.idsse.ac.cn/module1/citation/2009-04-01/article.pdf
+- id: recover_h2_observations
+  target_kind: claim
+  target: physical_accuracy
+  action: Identify and retrieve the 111 H2 observations summarized in Table 5, then evaluate a declared
+    H2 application.
+  requires:
+  - Individual experimental sources, joint T/P/volume observations and uncertainties; Table 5 alone
+    does not identify them.
+  - Explicit fugacity convention and independent evidence or uncertainty propagation for any fugacity
+    accuracy claim.
+  completion: A new empirical assessment states the actual comparison, uncertainty and remaining
+    extrapolation limits.
+  sources:
+  - https://efs.idsse.ac.cn/module1/citation/2009-04-01/article.pdf
+  revision: sha256:719edf0917d0216edfeab23c35fb36a7957270e27e50c669ee4b5930fbc74903
+- id: resolve_eq8_convention
+  target_kind: evidence
+  target: equation_convention_20261021
+  action: Seek an authoritative clarification of the printed reduced-variable left side and the
+    physical-Z interpretation.
+  requires:
+  - Original derivation, author explanation or correction beyond the observed notation difference.
+  completion: A new comparison justifies the convention or explicitly retains the discrepancy; no
+    silent coefficient or EOS change.
+  sources:
+  - https://efs.idsse.ac.cn/module1/citation/2009-04-01/article.pdf
+follow_up_resolutions:
+- follow_up: inspect_zd2009
+  evidence:
+  - zd2009_20261021
+  - implementation_source_review_20261021
+  - equation_convention_20261021
+  note: Completed the scoped full-text inspection on 2026-10-21. Individual H2 data, fugacity accuracy
+    and author intent for Eq. 8 remain open.
+migration:
+  from_schema: '0.1'
+  source_sha256: 719edf0917d0216edfeab23c35fb36a7957270e27e50c669ee4b5930fbc74903
+  content_sha256: 4cc5e99b040188e52f42cf7f955b9502f7fa1f340a28d5cc5d0bd608380c7a63
+  evidence_ids:
+  - implementation
+  - equations
+  - reported_domain
+  - numerical_tests
+  - provider_test_run

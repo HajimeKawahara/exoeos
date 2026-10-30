@@ -1,0 +1,197 @@
+{
+  "schema_version": "1",
+  "provider": "exoeos",
+  "record_version": "2026-10-30",
+  "models": [
+    {
+      "id": "exoeos.ma_fe_si_o.v1",
+      "label": "Ma Fe-Si-O liquid with printed Young coefficients",
+      "species": [],
+      "records": [
+        {
+          "id": "ma_fe_si_o",
+          "path": "contracts/ma_fe_si_o.yaml",
+          "sha256": "5a03146512da896f9df05036f16dbc4d367236b363956f627da8923b01c3c002",
+          "species": [
+            "*"
+          ],
+          "assessments": [
+            "numerical_review",
+            "physical_review",
+            "physical_review_20261021",
+            "physical_review_20261029",
+            "physical_primary_review_20261029",
+            "physical_badro_review_20261029"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exoeos.ma_fe_si_o_h.v1",
+      "label": "Formal Fe-Si-O-H liquid with ideal H dilution",
+      "species": [],
+      "records": [
+        {
+          "id": "ma_fe_si_o_h",
+          "path": "contracts/ma_fe_si_o_h.yaml",
+          "sha256": "6a2101a7b245e1db3805d6bcddafac20eedd230533d0061995c4928e93c0af5a",
+          "species": [
+            "*"
+          ],
+          "assessments": [
+            "numerical_review",
+            "physical_review",
+            "physical_source_review_20261029"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_carbonate_liquid.v1",
+      "label": "Native rhyolite-MELTS mode-4 carbon-bearing liquid",
+      "species": [],
+      "records": [
+        {
+          "id": "magma_carbonate_liquid",
+          "path": "contracts/magma_carbonate_liquid.yaml",
+          "sha256": "7f1cfe2da90239729262f6b5d9e4be2819230b056825a21a9fbaa49026d48684",
+          "species": [
+            "*"
+          ],
+          "assessments": [
+            "numerical_review",
+            "physical_review",
+            "physical_review_20261021",
+            "physical_full_text_review_20261021",
+            "physical_supplement_review_20261021"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_dry_liquid.v1",
+      "label": "Native MELTS dry silicate liquid",
+      "species": [],
+      "records": [
+        {
+          "id": "magma_dry_liquid",
+          "path": "contracts/magma_dry_liquid.yaml",
+          "sha256": "60808b7c23ce7e08dec0ea79f7370ff65c50a97444f905a9c75505a484259c16",
+          "species": [
+            "*"
+          ],
+          "assessments": [
+            "numerical_review",
+            "physical_review",
+            "physical_review_20261021"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_fluid.v1",
+      "label": "Magma-reference H2O and H2O-CO2 fluid Gibbs energy",
+      "species": [],
+      "records": [
+        {
+          "id": "magma_fluid",
+          "path": "contracts/magma_fluid.yaml",
+          "sha256": "8558c0480a68075783e474aed96ca3e7cb21cf5a22bb41ce5c065b16be88c768",
+          "species": [
+            "*"
+          ],
+          "assessments": [
+            "numerical_review",
+            "physical_review",
+            "physical_review_20261021",
+            "physical_supplement_review_20261021",
+            "physical_zd2009_review_20261021"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_hydrous_liquid.v1",
+      "label": "Native MELTS mode-1 hydrous silicate liquid",
+      "species": [],
+      "records": [
+        {
+          "id": "magma_hydrous_liquid",
+          "path": "contracts/magma_hydrous_liquid.yaml",
+          "sha256": "76714eb330651c29621a93f28d2211865953bd72457f11474d5ae99456b63d31",
+          "species": [
+            "*"
+          ],
+          "assessments": [
+            "numerical_review",
+            "physical_review",
+            "physical_review_20261021"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exoeos.magma_volatiles.v1",
+      "label": "Conditional dry11 liquid with H2O, H2 and trace He",
+      "species": [],
+      "records": [
+        {
+          "id": "magma_volatiles",
+          "path": "contracts/magma_volatiles.yaml",
+          "sha256": "4293fb6aa2b2c760603eb205b88bacd9c60cb927700791a51fbe022549c779ee",
+          "species": [
+            "*"
+          ],
+          "assessments": [
+            "numerical_review",
+            "physical_review",
+            "physical_review_20261029",
+            "physical_remaining_review_20261029",
+            "physical_jambon_review_20261029"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exoeos.mass_fraction_solute.v1",
+      "label": "Extensive solute on a total-liquid mass-fraction basis",
+      "species": [],
+      "records": [
+        {
+          "id": "mass_fraction_solute",
+          "path": "contracts/mass_fraction_solute.yaml",
+          "sha256": "aa152f9aafae4624b30e92ba094eb24a195e68a34a6ab2417ab299e9ee3b0bb7",
+          "species": [
+            "*"
+          ],
+          "assessments": [
+            "numerical_review",
+            "physical_review"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exoeos.zhang_duan_h2",
+      "label": "Zhang-Duan 2009 EOS for pure molecular hydrogen",
+      "species": [],
+      "records": [
+        {
+          "id": "zhang_duan_h2",
+          "path": "contracts/zhang_duan_h2.yaml",
+          "sha256": "3214eb2ecf7bdd235c63e0baec81906dec6cc6a2ade23d72d2ccbbe7efdd5047",
+          "species": [
+            "*"
+          ],
+          "assessments": [
+            "imported:ideal_density_limit",
+            "imported:published_parameter_loading",
+            "imported:physical_accuracy",
+            "numerical_review_20261021",
+            "physical_review_20261021"
+          ]
+        }
+      ]
+    }
+  ]
+}

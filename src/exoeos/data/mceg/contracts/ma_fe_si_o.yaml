@@ -1,0 +1,802 @@
+schema_version: '0.2'
+model:
+  id: exoeos.ma_fe_si_o.v1
+  name: Ma Fe-Si-O liquid with printed Young coefficients
+  description: Excess Gibbs energy on an atomic Fe, Si, O mole-fraction basis with a completed solvent
+    activity and formal symmetric standards.
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 37b9173f37866495949fd7c90340a02b7ceaa78d
+    entry_points:
+    - exoeos.MaFeSiOLiquid
+    - exoeos.solution_state
+assumptions:
+- statement: The default interaction_K is (12.41*1873, -16500, -5*1873) K, divided by T. Custom coefficients
+    define separate uncalibrated parameter choices.
+  evidence:
+  - implementation
+- statement: The returned excess energy excludes ideal mixing and absolute standard potentials. A
+    consumer must supply compatible standards and apply standard_state_shift_RT when converting the
+    source convention.
+  evidence:
+  - implementation
+domains:
+- kind: numerical_evaluation
+  status: documented
+  description: Inspected numerical API and caller obligations; not a physical validation domain.
+  conditions:
+  - Finite positive scalar T [K] and P [Pa]; normalized nonnegative (Fe, Si, O) fractions with Fe
+    > 0 and solutes below one.
+  - Call validate_state before tracing; the traced evaluator checks static shapes only. Pressure is
+    an accepted input but has no modeled response.
+  evidence:
+  - implementation
+- kind: scientific_applicability
+  status: unknown
+  description: Composition-specific physical accuracy and joint applicability remain unestablished
+    by this survey.
+  conditions: []
+  evidence:
+  - upstream_model
+  - implementation
+claims:
+- id: numerical_verification
+  revision: '1'
+  kind: numerical_verification
+  statement: Agreement with the saved independent Decimal reference, solvent completion, amount derivatives,
+    Euler/Gibbs-Duhem identities and standard conversion in the selected test module.
+  scope: Only the selected tests, their asserted tolerances and the recorded CPU/x64 environment.
+- id: physical_accuracy
+  revision: '1'
+  kind: physical_validation
+  statement: The model has quantitatively established physical accuracy for the intended melt/fluid
+    composition and conditions.
+  scope: Requires independent empirical data and explicit composition, reference-state and driving-quantity
+    conventions; not established by this survey.
+evidence:
+- id: upstream_model
+  kind: literature
+  summary: Cited model origin and retained source-review boundary.
+  sources:
+  - https://doi.org/10.1007/s11663-001-0011-0
+  - https://doi.org/10.1038/s41586-023-05823-0
+  scope: Source identities and distinctions were read in the provider guide; original papers were
+    not re-inspected. The provider implements the printed Young coefficients with the Ma solvent term,
+    not every cited parameterization.
+  provenance:
+    role: secondary
+    location: Citations and source descriptions in the selected provider code/guide.
+    inspection: not_inspected
+    note: Source identities and distinctions were read in the provider guide; original papers were
+      not re-inspected. The provider implements the printed Young coefficients with the Ma solvent
+      term, not every cited parameterization.
+- id: implementation
+  kind: implementation
+  summary: Excess Gibbs energy on an atomic Fe, Si, O mole-fraction basis with a completed solvent
+    activity and formal symmetric standards.
+  sources:
+  - documents/fe_si_o_reference.rst
+  - src/exoeos/__init__.py
+  - src/exoeos/_arrays.py
+  - src/exoeos/constants.py
+  - src/exoeos/contracts.py
+  - src/exoeos/gibbs_excess.py
+  - src/exoeos/ma_fe_si_o.py
+  - src/exoeos/state.py
+  scope: Inspected selected implementation, conventions and caller domains at revision 37b9173f37866495949fd7c90340a02b7ceaa78d.
+  subject: survey_20261020
+  provenance:
+    role: implementation
+    location: Selected provider source files and guide.
+    inspection: inspected
+    note: Code and declarations were read; an empirical calibration or external source replay is not
+      inferred.
+    derived_from:
+    - evidence: upstream_model
+      comparison: not_checked
+      note: Original-source scientific equivalence is not established by this implementation survey.
+- id: test_run
+  kind: numerical_test
+  summary: 39 selected tests passed.
+  sources:
+  - tests/unittests/ma_fe_si_o_test.py
+  - results/mceg/20261020_model_survey/receipt.json
+  - results/mceg/20261020_model_survey/tests.xml
+  - results/mceg/20261020_model_survey/tests.log
+  scope: Agreement with the saved independent Decimal reference, solvent completion, amount derivatives,
+    Euler/Gibbs-Duhem identities and standard conversion in the selected test module.
+  result: passed
+  subject: survey_20261020
+  context: test_environment
+  artifacts:
+  - source: results/mceg/20261020_model_survey/receipt.json
+    sha256: 290a0e172f914bd74b24be1792e8d1c36f9a6d44f011a39b3d550573cb0874a3
+  - source: results/mceg/20261020_model_survey/tests.xml
+    sha256: 8bb6517ac0069238e42cb0381b56a2039a5e2498c2f7ad088eeadc710d58b78d
+  - source: results/mceg/20261020_model_survey/tests.log
+    sha256: 5b516c56e9e47d73013fe839c8329d18784540b7020e7be1b3adc15823020889
+  provenance:
+    role: primary
+    location: results/mceg/20261020_model_survey/receipt.json and tests.xml
+    inspection: inspected
+    note: Fresh local pytest execution; tests consume stored references where applicable. No external
+      reference program or experiment was rerun.
+- id: ma_original_20261021
+  kind: literature
+  summary: Ma (2001) original solvent and solute equations remain uninspected.
+  sources:
+  - https://doi.org/10.1007/s11663-001-0011-0
+  scope: Original Eqs. 23-24 and their derivation; later reproductions do not substitute for inspection
+    of the original paper.
+  context: source_review_20261021
+  provenance:
+    role: primary
+    location: Publisher abstract identifies Eqs. 23-24; full text was not retrieved.
+    inspection: not_inspected
+    note: The publisher landing page was accessible, but it did not supply the original equations.
+- id: badro_supplement_20261021
+  kind: literature
+  summary: Badro et al. (2015) parameter ancestry remains unverified.
+  sources:
+  - https://doi.org/10.1073/pnas.1505672112
+  - https://pmc.ncbi.nlm.nih.gov/articles/PMC4603515/
+  - https://www.pnas.org/doi/suppl/10.1073/pnas.1505672112/suppl_file/pnas.1505672112.sapp.pdf
+  scope: Supplementary interaction parameters, conventions and calibration data cited through Young
+    et al. (2023), reference 33. No choice between the two oxygen coefficients is inferred.
+  context: source_review_20261021
+  provenance:
+    role: primary
+    location: Supporting Information, pnas.1505672112.sapp.pdf; no valid PDF retrieved.
+    inspection: not_inspected
+    note: On 2026-10-21 the publisher returned HTTP 403, the PMC attachment returned HTML rather
+      than PDF, and the Europe PMC supplementaryFiles endpoint reported the article was not open
+      access. These retrieval outcomes do not establish that the supplement is unavailable elsewhere.
+- id: young_printed_20261021
+  kind: literature
+  summary: Inspected printed Young et al. (2023) Fe-Si-O coefficients and solvent convention.
+  sources:
+  - https://doi.org/10.1038/s41586-023-05823-0
+  - https://faculty.epss.ucla.edu/~eyoung/reprints/Young_etal_2023_Nature.pdf
+  scope: Printed Eqs. 20-21 give a=12.41*1873/T, b=-16500/T and c=-5*1873/T, with
+    ln_gamma0_Si=-6.65*1873/T and ln_gamma0_O=4.29-16500/T. The coefficient multiplying
+    ln(1-x_O) in Eq. 21 is +16500/T. The following paragraph assumes gamma_Fe=1.
+    This establishes the printed parameterization, not its empirical calibration or Badro ancestry.
+  context: source_review_20261021
+  artifacts:
+  - source: https://faculty.epss.ucla.edu/~eyoung/reprints/Young_etal_2023_Nature.pdf
+    sha256: 1aedd03a814890c9f8ba2c02485b3b9437627cfd6309814573907af2de9b5d0b
+  provenance:
+    role: primary
+    location: Author-hosted PDF, page 7, Methods, Eqs. 20-21 and the following paragraph; reference
+      33 on page 6.
+    inspection: inspected
+    note: Downloaded and inspected the relevant rendered page and extracted text on 2026-10-21.
+      Primary here means the authors' own printed formulation. The PDF hash matches the historical
+      reference fixture; no original calibration data were inspected.
+- id: ma_reproductions_20261021
+  kind: literature
+  summary: Inspected the reproduced Fe solvent equation and the selected solute cross-term sign.
+  sources:
+  - https://doi.org/10.1016/j.gca.2018.06.022
+  - https://discovery.ucl.ac.uk/id/eprint/10120068/17/Jennings_1Authors_accepted_version.pdf
+  - https://doi.org/10.1093/mnras/stab3624
+  - https://arxiv.org/pdf/2111.08779v1
+  scope: Vogel et al. (2018) Appendix A1 supplies the Fe solvent expression used by the provider.
+    Buchan et al. (2022), inspected in the 2021 arXiv v1 manuscript, Eqs. 6-9 supply the solute
+    expression and temperature scaling. Buchan Eq. 6 contains -1/(1-x_i) inside the negative
+    cross term, consistent with printed Young. Vogel A2 instead prints +1/(1-x_i); that A2
+    sign is not adopted. These are secondary reproductions of Ma, not original-source verification.
+  context: source_review_20261021
+  artifacts:
+  - source: https://discovery.ucl.ac.uk/id/eprint/10120068/17/Jennings_1Authors_accepted_version.pdf
+    sha256: d7b7855106b52393586f176f7ec5a0070c337a6b28a193842224756265760520
+  - source: https://arxiv.org/pdf/2111.08779v1
+    sha256: c89b037c95435b7219d19b094974d696173e19fc90e5c4534c77e1e7e6fbb1c7
+  provenance:
+    role: secondary
+    location: Vogel accepted manuscript PDF pages 42-43, Appendix A1-A4; Buchan arXiv v1 PDF page
+      5, section 2.2.2, Eqs. 6-9.
+    inspection: inspected
+    note: Downloaded both PDFs and visually checked the relevant equations on 2026-10-21, including
+      the reciprocal-term sign. The Vogel PDF hash matches the historical reference fixture.
+    derived_from:
+    - evidence: ma_original_20261021
+      comparison: not_checked
+      note: Both inspected papers attribute the formulation to Ma; the original Eqs. 23-24 remain
+        unavailable for comparison. Buchan also cites Corgne et al. (2008) as an intermediary.
+- id: young_code_discrepancy_20261021
+  kind: implementation
+  summary: Pinned author and GCE code use a different oxygen self-interaction coefficient.
+  sources:
+  - https://github.com/eyoungucla/chems/blob/0a8e03361db27aa72782cde22cb2d204b513224c/Exoplanet_atmosphere_model_vMCMC_coreT_3000K_dist.py#L1578-L1583
+  - https://github.com/ExoInteriors/GlobalChemicalEquilibrium_Release/blob/31558873d8da460c3cd11986b574cb347621b43d/Young_2023_Version/Equations.py#L111-L117
+  scope: The inspected lngO assignments use +1873/T multiplying ln(1-x_O), whereas printed Eq. 21
+    uses +16500/T. Before Fe completion and standard-state shifts, the printed-minus-code oxygen
+    correction is (16500-1873)/T*ln(1-x_O). This comparison does not establish author intent or a
+    preferred empirical coefficient, and it does not execute either complete equilibrium solver.
+  context: source_review_20261021
+  artifacts:
+  - source: https://raw.githubusercontent.com/eyoungucla/chems/0a8e03361db27aa72782cde22cb2d204b513224c/Exoplanet_atmosphere_model_vMCMC_coreT_3000K_dist.py
+    sha256: 5e1accdf20f7cdf9439226aa616ad0cb27b9178b5912f28bb8c86a10493a843a
+  - source: https://raw.githubusercontent.com/ExoInteriors/GlobalChemicalEquilibrium_Release/31558873d8da460c3cd11986b574cb347621b43d/Young_2023_Version/Equations.py
+    sha256: 9ee5b8c5da458325df9a4dccbf121b972d59821421b96a1fdc500a7f0dbef191
+  provenance:
+    role: implementation
+    location: Young author code lines 1578-1583 and GCE Equations.py lines 111-117 at the pinned commits.
+    inspection: inspected
+    note: Retrieved both complete source files and inspected the selected assignments on 2026-10-21.
+      Both SHA-256 values match the historical reference fixture.
+    derived_from:
+    - evidence: young_printed_20261021
+      comparison: discrepancy
+      note: Oxygen self-interaction differs between the printed equation and both code versions;
+        the documented ExoEOS choice remains the printed coefficient.
+- id: implementation_source_review_20261021
+  kind: implementation
+  summary: Default coefficients and the declared solvent completion agree with the selected inspected
+    equations within the stated convention differences.
+  sources:
+  - src/exoeos/ma_fe_si_o.py
+  - documents/fe_si_o_reference.rst
+  - tests/reference/generate_fe_si_o_ma2001.py
+  - tests/reference/fe_si_o_ma2001.json
+  scope: The default interaction_K and source infinite-dilution constants reproduce the printed Young coefficients.
+    The provider completes ln_gamma_Fe and adds it to each source-convention solute correction,
+    then removes linear standard-state terms to expose formal symmetric standards. The scalar
+    potential is a provider derivation; it is not quoted from Ma. Young's gamma_Fe=1 approximation
+    and full equilibrium calculation are not reproduced. No empirical accuracy or pressure response
+    is established by this comparison.
+  subject: survey_20261020
+  context: source_review_20261021
+  provenance:
+    role: implementation
+    location: MaFeSiOLiquid defaults, gex_RT and standard_state_shift_RT; provider guide
+      source and solvent-completion sections; Decimal reference generator.
+    inspection: inspected
+    note: Inspected the unchanged selected files against the retrieved equations. Historical numerical
+      evidence and file pins remain separate and unchanged.
+    derived_from:
+    - evidence: young_printed_20261021
+      comparison: consistent
+      note: Agreement is limited to the printed coefficients and solute corrections before adding
+        the Fe term and converting standards; the full activity model differs explicitly.
+    - evidence: ma_reproductions_20261021
+      comparison: consistent
+      note: The selected Fe completion follows Vogel A1 and the solute expression follows Buchan
+        Eq. 6. The discrepant Vogel A2 sign is excluded from the implemented formulation.
+- id: ma_original_access_20261029
+  kind: literature
+  summary: Ma (2001) full text remains uninspected after renewed retrieval attempts.
+  sources:
+  - https://doi.org/10.1007/s11663-001-0011-0
+  - https://link.springer.com/content/pdf/10.1007/s11663-001-0011-0.pdf
+  - results/mceg/20261029_source_review/review.json
+  scope: Original Eqs. 23-24 and their definitions remain required. The publisher page offers subscription
+    access; the requested PDF returned HTML. Located reproductions do not replace the original.
+  context: source_review_20261029
+  provenance:
+    role: primary
+    location: 'Original Eqs. 23-24: no full-text location inspected; see review.json for the retrieval
+      outcome.'
+    inspection: not_inspected
+    note: This is a new access record, not a revision of the 2026-10-21 scientific evidence.
+  artifacts:
+  - source: results/mceg/20261029_source_review/review.json
+    sha256: b2ec6a6d6a3ba9a8ed3e44fd38fa573de425ae422b5429d86ba258bf5c6904ba
+- id: badro_supplement_access_20261029
+  kind: literature
+  summary: Badro (2015) supplementary parameters remain uninspected.
+  sources:
+  - https://doi.org/10.1073/pnas.1505672112
+  - https://www.pnas.org/doi/suppl/10.1073/pnas.1505672112/suppl_file/pnas.1505672112.sapp.pdf
+  - https://pmc.ncbi.nlm.nih.gov/articles/instance/4603515/bin/pnas.1505672112.sapp.pdf
+  - https://www.osti.gov/servlets/purl/1343007
+  - results/mceg/20261029_source_review/review.json
+  scope: PNAS returned 403, PMC returned HTML, and Europe PMC reported no open-access supplement.
+    HAL metadata listed only the main paper. The retrieved OSTI PDF contains two cover pages plus
+    the five-page article, not the SI Appendix; it cannot resolve the oxygen-coefficient choice.
+  context: source_review_20261029
+  provenance:
+    role: primary
+    location: Requested pnas.1505672112.sapp.pdf was not retrieved; OSTI file composition was checked.
+    inspection: not_inspected
+    note: The valid main-paper PDF is not substituted for the missing supplement. Access outcomes
+      do not establish global unavailability.
+  artifacts:
+  - source: results/mceg/20261029_source_review/review.json
+    sha256: b2ec6a6d6a3ba9a8ed3e44fd38fa573de425ae422b5429d86ba258bf5c6904ba
+  - source: https://www.osti.gov/servlets/purl/1343007
+    sha256: 123aa8cb3032f0b7bd554ada4b477625fbaa37f9c5eba6281d4e4897a425df55
+- id: ma_original_supplied_20261029
+  kind: literature
+  summary: Inspected the supplied Ma (2001) original equations, composition basis and standard states.
+  sources:
+  - https://doi.org/10.1007/s11663-001-0011-0
+  - urn:sha256:bddeb6273ecdcce27f938659370e53755e52f4142447acff03d1c96c428c9248
+  - results/mceg/20261029_ma_primary_review/review.json
+  scope: Eqs. 21-24 give the scalar excess energy and solvent/solute activities; Eqs. 25-26 give
+    their ternary forms. Fractions count elemental moles, gamma uses pure-substance Raoultian
+    standards, and gamma0 denotes infinite dilution. Table II states the higher-order terms
+    omitted in this first-order formulation. This inspection does not calibrate the Young coefficients.
+  context: primary_review_20261029
+  artifacts:
+  - source: urn:sha256:bddeb6273ecdcce27f938659370e53755e52f4142447acff03d1c96c428c9248
+    sha256: bddeb6273ecdcce27f938659370e53755e52f4142447acff03d1c96c428c9248
+  - source: results/mceg/20261029_ma_primary_review/review.json
+    sha256: 3842236c28d016f189aef96ac4b2864d9a57f7b6f001ef8b215330d379a62132
+  provenance:
+    role: primary
+    location: Supplied refs/s11663-001-0011-0.pdf, PDF pp. 2-5 (printed pp. 88-91), Sections
+      II-III, Eqs. 10-12 and 16-26, Tables I-II; PDF pp. 15-16 (printed pp. 101-102), nomenclature.
+    inspection: inspected
+    note: Read the supplied original and visually checked Eqs. 21-26 and Tables I-II. Earlier
+      unsuccessful retrieval records remain historical; this new record completes their source gap.
+- id: implementation_ma_primary_20261029
+  kind: implementation
+  summary: The provider scalar and completed activities agree with the original Ma equations after
+    the declared standard-state conversion.
+  sources:
+  - src/exoeos/ma_fe_si_o.py
+  - tests/reference/generate_fe_si_o_ma2001.py
+  - tests/reference/fe_si_o_ma2001.json
+  - results/mceg/20261029_ma_primary_review/review.json
+  scope: With Fe as solvent, s=x_Si, o=x_O, a=epsilon_SiSi, b=epsilon_OO, ls=ln_gamma0_Si and
+    lo=ln_gamma0_O, subtracting the sum s*(ls+a)+o*(lo+b) from Eq. 21 gives gex_RT. Add (0,ls+a,lo+b) to
+    formal ln_gamma to recover original Eqs. 23-24. The selected reference generator matches
+    those equations, including the solvent term and the minus reciprocal sign in Eq. 24.
+    Eq. 21 and the reference agree at all seven saved states; 39 provider tests passed again.
+    Numerical equality and source inspection do not establish empirical accuracy or pressure response.
+  subject: survey_20261020
+  context: primary_review_20261029
+  artifacts:
+  - source: results/mceg/20261029_ma_primary_review/review.json
+    sha256: 3842236c28d016f189aef96ac4b2864d9a57f7b6f001ef8b215330d379a62132
+  provenance:
+    role: implementation
+    location: MaFeSiOLiquid.gex_RT and standard_state_shift_RT; the independent Decimal generator;
+      original Ma Eqs. 21-26 and Table I.
+    inspection: inspected
+    note: Selected implementation files still match survey_20261020. The linear shift is an explicit
+      provider convention; formal pure-Si/O limits are not calibrated physical standards. The
+      parameter values retain the inspected printed Young choice, whose code discrepancy remains open.
+    derived_from:
+    - evidence: ma_original_supplied_20261029
+      comparison: consistent
+      note: Original Eq. 21 reduces to the provider scalar after the stated shift. Eqs. 23-24
+        match the selected Vogel A1/Buchan Eq. 6 expressions and the reference generator.
+    - evidence: young_printed_20261021
+      comparison: consistent
+      note: Default parameters match printed Eqs. 20-21; Fe completion and standard conversion
+        are explicit differences from Young's gamma_Fe=1 approximation.
+- id: vogel_a2_primary_comparison_20261029
+  kind: literature
+  summary: The Ma original confirms the selected minus sign and retains the Vogel A2 discrepancy.
+  sources:
+  - https://discovery.ucl.ac.uk/id/eprint/10120068/17/Jennings_1Authors_accepted_version.pdf
+  - https://arxiv.org/pdf/2111.08779v1
+  - results/mceg/20261029_ma_primary_review/review.json
+  scope: Vogel A1 agrees with original Eq. 23. Vogel A2 prints +1/(1-x_i) inside the negative
+    cross term, whereas original Eqs. 24 and 26 and the selected Buchan Eq. 6 use a minus sign.
+    For a ternary the Vogel-minus-original difference is -2*epsilon_ij*x_j/(1-x_i), not a
+    constant standard-state shift. This resolves the original-source sign question, not parameter ancestry.
+  context: primary_review_20261029
+  artifacts:
+  - source: https://discovery.ucl.ac.uk/id/eprint/10120068/17/Jennings_1Authors_accepted_version.pdf
+    sha256: d7b7855106b52393586f176f7ec5a0070c337a6b28a193842224756265760520
+  - source: results/mceg/20261029_ma_primary_review/review.json
+    sha256: 3842236c28d016f189aef96ac4b2864d9a57f7b6f001ef8b215330d379a62132
+  provenance:
+    role: secondary
+    location: Vogel accepted manuscript PDF pp. 42-43, A1-A2; Buchan arXiv v1 PDF p. 5, Eq. 6;
+      Ma original PDF pp. 4-5, Eqs. 23-26.
+    inspection: inspected
+    note: Compared the retained inspected reproductions with the newly supplied original. The
+      implementation already uses the original sign, so no runtime change follows from this finding.
+    derived_from:
+    - evidence: ma_original_supplied_20261029
+      comparison: discrepancy
+      note: This edge concerns the printed Vogel A2 reciprocal sign; original Eq. 24 supports
+        the implemented Buchan/Young sign instead.
+- id: badro_main_supplied_20261029
+  kind: literature
+  summary: Inspected the supplied Badro main paper; the required SI Appendix remains missing.
+  sources:
+  - https://doi.org/10.1073/pnas.1505672112
+  - urn:sha256:c74f58d607fdbd31f5280b88f4e2be0dc17b904e77a1a08245e6e35184731115
+  - results/mceg/20261029_ma_primary_review/review.json
+  scope: The five-page main article describes multistage core formation and directs thermodynamic
+    uncertainty details to SI Appendix Table S1. It states the dependence of metallic activity
+    coefficients on Si/O composition but does not supply the requested supplementary parameter
+    material. Neither oxygen coefficient is selected by this inspection.
+  context: primary_review_20261029
+  artifacts:
+  - source: urn:sha256:c74f58d607fdbd31f5280b88f4e2be0dc17b904e77a1a08245e6e35184731115
+    sha256: c74f58d607fdbd31f5280b88f4e2be0dc17b904e77a1a08245e6e35184731115
+  - source: results/mceg/20261029_ma_primary_review/review.json
+    sha256: 3842236c28d016f189aef96ac4b2864d9a57f7b6f001ef8b215330d379a62132
+  provenance:
+    role: primary
+    location: Supplied Badro main-paper PDF in refs, p. 2 (printed p. 12311), Methods and Results
+      and Discussion. File identity and filename are recorded in the review artifact.
+    inspection: inspected
+    note: The file contains printed pp. 12310-12314 and no embedded files. An inspected main-paper
+      record does not replace the uninspected pnas.1505672112.sapp.pdf record.
+- id: badro_supplement_supplied_20261029
+  kind: literature
+  summary: Supplied Badro SI inspected; the original oxygen self-interaction is -1873/T.
+  sources:
+  - https://doi.org/10.1073/pnas.1505672112
+  - urn:sha256:6857124d43c894c365d7cce5ce0446e02fc7e2756fe53dbc98c1e92e0bda7620
+  - results/mceg/20261029_badro_garberoglio_review/review.json
+  scope: 'SI Eqs.1-4 and p.3 parameter table: epsilon_SiSi=12.41*1873/T, epsilon_OO=-1873/T, epsilon_SiO=epsilon_OSi=-5*1873/T.
+    Infinite-dilution ln_gamma0_O=4.29-16500/T is separate. Regression ancestry and the uncertainty
+    procedure are inspected; individual calibration observations are not recovered.'
+  context: badro_supplement_review_20261029
+  artifacts:
+  - source: urn:sha256:6857124d43c894c365d7cce5ce0446e02fc7e2756fe53dbc98c1e92e0bda7620
+    sha256: 6857124d43c894c365d7cce5ce0446e02fc7e2756fe53dbc98c1e92e0bda7620
+  - source: results/mceg/20261029_badro_garberoglio_review/review.json
+    sha256: 822fee9c4c874d7046472180315031321b830f638058d402f32a3118bdc7abbb
+  provenance:
+    role: primary
+    location: Supplied 12-page SI, pp.1-3 Section 1a and parameter table; p.4 Section 1c; p.12 references
+      1-3.
+    inspection: inspected
+    note: Original PDF and complete table transcription remain local in refs/. Rendered equations, signs,
+      column headings and all six parameter rows were inspected. Source access is now complete at this
+      scope.
+- id: badro_parameter_comparison_20261029
+  kind: implementation
+  summary: Badro supports the author-code oxygen coefficient; the current printed-version default remains
+    a distinct choice.
+  sources:
+  - results/mceg/20261029_badro_garberoglio_review/review.json
+  - src/exoeos/ma_fe_si_o.py
+  - tests/reference/generate_fe_si_o_ma2001.py
+  - results/mceg/20261029_badro_garberoglio_review/compare_badro.py
+  - results/mceg/20261029_badro_garberoglio_review/badro_parameter_comparison.json
+  scope: The existing explicit interaction_K=(12.41*1873,-1873,-5*1873) option and source-standard conversion
+    match SI Eqs.3-4 at seven numerical fixture states (absolute tolerance 5e-12). The default still
+    uses -16500 for the oxygen interaction. Agreement is source algebra, not calibration or complete
+    author-solver equivalence.
+  subject: survey_20261020
+  context: badro_supplement_review_20261029
+  artifacts:
+  - source: results/mceg/20261029_badro_garberoglio_review/review.json
+    sha256: 822fee9c4c874d7046472180315031321b830f638058d402f32a3118bdc7abbb
+  - source: results/mceg/20261029_badro_garberoglio_review/compare_badro.py
+    sha256: c0febba0c514ae10bf86a7b9c766941a5ad3bb28543da69f80b1c69c416df99e
+  - source: results/mceg/20261029_badro_garberoglio_review/badro_parameter_comparison.json
+    sha256: 91c5432d702dcf2eb05aa78bd4c360c4be322445dd2ed22888e7f778711ff257
+  provenance:
+    role: implementation
+    location: Default interaction_K and standard_state_shift_RT; source comparison script/result; original
+      SI p.2 Eqs.3-4 and p.3 Table S1.
+    inspection: inspected
+    note: The source question is resolved in favor of +1873/T for the coefficient of ln(1-x_O). The
+      -16500/T infinite-dilution term is retained. No default or historical fixture was changed.
+    derived_from:
+    - evidence: badro_supplement_supplied_20261029
+      comparison: consistent
+      note: The explicitly selected Badro parameter option reproduces the inspected full Fe/solute equations
+        after standard conversion.
+    - evidence: young_printed_20261021
+      comparison: discrepancy
+      note: Young printed Eq.21 and the current default use +16500/T in the oxygen self term; Badro
+        supplies +1873/T.
+    - evidence: young_code_discrepancy_20261021
+      comparison: consistent
+      note: Only the oxygen self coefficient matches the pinned author/GCE code. Their gamma_Fe=1 treatment
+        is not equated with Badro Eq.3 or the completed provider.
+limitations:
+- statement: The pure Si/O scalar limits do not define full activity vectors or composition derivatives.
+  evidence:
+  - implementation
+- statement: The seven reference states and derivative checks do not establish an experimental Fe-Si-O
+    applicability envelope or phase stability.
+  evidence:
+  - implementation
+subjects:
+- id: survey_20261020
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 37b9173f37866495949fd7c90340a02b7ceaa78d
+    entry_points:
+    - exoeos.MaFeSiOLiquid
+    - exoeos.solution_state
+  selected_files:
+    documents/fe_si_o_reference.rst: 61c39d636ae8a49284175bb4dec06d2607afd76d975c133b5f1599192b5d1e52
+    pyproject.toml: e98593ed10b694c708c13e63d76aa47700c4237d1d957838f8d82237821b5883
+    src/exoeos/__init__.py: b53b3a90a57cbec34b794fd084379aed6e45526e38ee574ec6483e7e79d78592
+    src/exoeos/_arrays.py: 020679ce40515c27ce0bf31f5b71b1f737737d4a5ebc0301198a9e2bcbedf507
+    src/exoeos/constants.py: 69e57fe70ad4ea775f2d97722548276c87d3a91c76eb6be8f1be43ac30f83fa4
+    src/exoeos/contracts.py: ba1052326b066d7d3e5a57b5e63ac3dba5cc388e7d0bb9d2bf38431fe996d580
+    src/exoeos/gibbs_excess.py: c3354acd4f79940cee2723ec3d2c5500751c767666d295f8c04c3c97b8cfc7b3
+    src/exoeos/ma_fe_si_o.py: 32b526dc260d39a5071e25b198cc06fd331b1ceae89483d509702629ab5c7cde
+    src/exoeos/state.py: 76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54
+    tests/conftest.py: 87d47ae57e35ed7a10960ae12407c8a274188271ea86d5e0016d3d70501e2096
+    tests/reference/fe_si_o_ma2001.json: cf59178a3cf6622b924cd8d8ac1d03e7e5feb65c6f2e687dcb3b66820b601e0f
+    tests/reference/generate_fe_si_o_ma2001.py: 164940e336c9c4ab98be886efe9cfd0cd7023325c0bf54f3e51a349650469034
+    tests/unittests/ma_fe_si_o_test.py: e9a2190e07c54376929bd63cd844f1cbefc5de64d0588ca41fe5dab89d3209ca
+contexts:
+- id: test_environment
+  scope: Actual local test environment; test files and fixtures define individual calculation inputs.
+  settings:
+    python: 3.12.7
+    jax: 0.6.2
+    jaxlib: 0.6.2
+    numpy: 2.1.0
+    scipy: 1.14.1
+    pytest: 8.3.3
+    backend: cpu
+    x64: true
+    test_selection: tests/unittests/ma_fe_si_o_test.py
+- id: source_review_20261021
+  scope: Source inspection and formulation comparison only; no empirical T/P/composition application
+    or uncertainty target is defined by this context.
+  settings:
+    review_date: '2026-10-21'
+    parameter_choice: Printed Young Eqs. 20-21 with Ma-type Fe completion and formal symmetric standards.
+    source_hash_policy: Hashes identify retrieved source bytes; MCEG does not download or verify URI artifacts.
+- id: source_review_20261029
+  scope: Renewed attempts to obtain missing primary material; no new coefficient choice or empirical
+    assessment criteria.
+  settings:
+    review_date: '2026-10-29'
+    source_hash_policy: The local review artifact records retrieval outcomes; URI hashes are not verified
+      by offline MCEG.
+- id: primary_review_20261029
+  scope: Inspect supplied Ma original equations and Badro main paper; compare the selected source
+    formulation without a new empirical application or parameter choice.
+  settings:
+    review_date: '2026-10-29'
+    implementation_revision: 11887e0e8f963619d6dc6b95009c76a0b69dd65f
+    selected_files: The inspected provider and reference files retain the survey_20261020 hashes.
+    source_hash_policy: Supplied PDF bytes are identified by SHA-256 URNs; offline MCEG verifies only
+      the local review artifact, not the URI artifacts.
+- id: badro_supplement_review_20261029
+  scope: Supplied Badro SI inspection and existing custom-parameter source-algebra check; no new default,
+    calibration dataset or empirical error criterion.
+  settings:
+    review_date: '2026-10-29'
+    implementation_revision: 11887e0e8f963619d6dc6b95009c76a0b69dd65f
+    selected_files: The provider and reference generator retain survey_20261020 hashes.
+    source_storage: Primary files remain local in refs/. URI pins identify original bytes; offline MCEG
+      checks the review and comparison artifacts.
+conditions: []
+assessments:
+- id: numerical_review
+  kind: evidence_support
+  claim: numerical_verification
+  claim_revision: '1'
+  subject: survey_20261020
+  context: test_environment
+  method:
+    id: review_selected_pytest
+    revision: '1'
+    description: Read actual test outcomes and selected file pins; limit support to those numerical
+      assertions.
+  evidence:
+  - test_run
+  reasons:
+  - 39 tests in the selected modules; see the shared receipt for per-module counts.
+  - Selected files matched Git at execution and were unchanged afterward. Other revisions, environments
+    and empirical accuracy need separate review.
+  status: supported
+  origin: reviewed
+- id: physical_review
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: test_environment
+  method:
+    id: review_empirical_support
+    revision: '1'
+    description: Separate numerical verification from experimental or observational support.
+  evidence:
+  - upstream_model
+  - implementation
+  reasons:
+  - Source identities and distinctions were read in the provider guide; original papers were not re-inspected.
+    The provider implements the printed Young coefficients with the Ma solvent term, not every cited
+    parameterization.
+  - Numerical agreement and membership in metadata intervals do not establish physical accuracy.
+  status: unknown
+  origin: reviewed
+- id: physical_review_20261021
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: source_review_20261021
+  method:
+    id: inspect_published_formulation
+    revision: '1'
+    description: Inspect downloaded equations and pinned code, compare selected implementation
+      conventions, and distinguish source transcription from empirical support.
+  evidence:
+  - implementation_source_review_20261021
+  - young_code_discrepancy_20261021
+  - badro_supplement_20261021
+  reasons:
+  - Young Eqs. 20-21, Vogel A1-A4 and Buchan Eqs. 6-9 were inspected. The documented printed
+    coefficient choice and explicit Fe completion are traceable to those selected expressions.
+  - The original Ma equations and Badro supplementary parameter/calibration data remain uninspected.
+    The oxygen coefficient disagreement between publication and code remains unresolved.
+  - No independent empirical comparison, validated joint T/P/composition domain or physical error
+    bound was added. Source inspection alone cannot support the physical accuracy claim.
+  status: unknown
+  origin: reviewed
+- id: physical_review_20261029
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: source_review_20261029
+  method:
+    id: inspect_primary_sources
+    revision: '1'
+    description: Read original equations and tables, compare selected coefficients and conventions,
+      and preserve unresolved source or empirical gaps.
+  evidence:
+  - implementation_source_review_20261021
+  - young_code_discrepancy_20261021
+  - ma_original_access_20261029
+  - badro_supplement_access_20261029
+  reasons:
+  - The earlier inspected Young/Vogel/Buchan formulations retain their original scope.
+  - Ma full text and Badro supplementary parameters remain unavailable in this review. The oxygen-coefficient
+    discrepancy and empirical accuracy remain unresolved.
+  status: unknown
+  origin: reviewed
+- id: physical_primary_review_20261029
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: primary_review_20261029
+  method:
+    id: inspect_supplied_primary_sources
+    revision: '1'
+    description: Compare original equations, conventions and supplied file contents with the selected
+      implementation; separate completed source inspection from missing calibration and empirical evidence.
+  evidence:
+  - implementation_ma_primary_20261029
+  - vogel_a2_primary_comparison_20261029
+  - badro_main_supplied_20261029
+  - badro_supplement_access_20261029
+  - young_code_discrepancy_20261021
+  reasons:
+  - Ma original Eqs. 21-26 and conventions are now inspected. The implementation agrees after its
+    explicit standard-state shift, and the original confirms the chosen solute reciprocal-term sign.
+  - The supplied Badro file is the main paper. Its SI Appendix and parameter/calibration details
+    remain uninspected, so the +16500/T versus +1873/T oxygen coefficient difference remains open.
+  - No independent empirical comparison, validated joint T/P/composition domain or physical error
+    bound was added. Source agreement and the fresh 39-test pass do not establish physical accuracy.
+  status: unknown
+  origin: reviewed
+- id: physical_badro_review_20261029
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: badro_supplement_review_20261029
+  method:
+    id: inspect_badro_primary_and_compare
+    revision: '1'
+    description: Read original coefficients, conventions and calibration ancestry; compare source algebra
+      and retain implementation-version and empirical gaps.
+  evidence:
+  - badro_supplement_supplied_20261029
+  - badro_parameter_comparison_20261029
+  reasons:
+  - Badro supplementary equations, parameter table and uncertainty discussion are now inspected. Historical
+    missing-access records retain their earlier scope.
+  - Badro supports -1873/T for epsilon_OO, consistent with the pinned author-code coefficient. The current
+    default retains the different printed Young coefficient.
+  - Seven numerical-state comparisons establish algebraic consistency for an explicit parameter option,
+    not an empirical Fe-Si-O domain. Original calibration observations, their joint uncertainty and
+    pressure/phase applicability remain unreviewed.
+  status: unknown
+  origin: reviewed
+follow_ups:
+- id: empirical_scope
+  target_kind: claim
+  target: physical_accuracy
+  revision: '1'
+  action: Inspect the original model equations and relevant material-specific data; record a separate
+    empirical assessment for a declared application.
+  requires:
+  - Original source passages, equations and coefficient tables with inspection locations.
+  - Explicit T/P, composition basis, gas driving quantity, standard states and uncertainty criteria.
+  - Reproducible comparison against independent observations or experiments, when available.
+  completion: A new scoped assessment cites inspected evidence and states its remaining gaps; a numerical
+    pass alone does not complete this task.
+  sources:
+  - https://doi.org/10.1007/s11663-001-0011-0
+  - https://doi.org/10.1038/s41586-023-05823-0
+- id: inspect_accessible_formulations
+  target_kind: evidence
+  target: upstream_model
+  action: Retrieve and inspect Young's printed coefficients and the Vogel/Buchan reproductions used
+    by the provider; compare the documented formulation choices.
+  requires:
+  - Source URLs, downloaded-byte hashes, page/equation locations and explicit convention differences.
+  completion: Inspected source records and a scoped implementation comparison are recorded; this
+    task does not include original Ma or Badro calibration verification.
+- id: inspect_ma_original
+  target_kind: evidence
+  target: ma_original_20261021
+  action: Retrieve Ma (2001) full text and compare the original solvent/solute equations and assumptions
+    with the selected reproductions.
+  requires:
+  - Original Eqs. 23-24, definitions of composition and interaction parameters, and standard states.
+  completion: A new inspected primary-source record and explicit equation comparison retain any
+    remaining discrepancies.
+  sources:
+  - https://doi.org/10.1007/s11663-001-0011-0
+- id: inspect_badro_supplement
+  target_kind: evidence
+  target: badro_supplement_20261021
+  action: Obtain the Badro (2015) supplement and trace the adopted Fe-Si-O parameters to its equations,
+    coefficient tables and calibration data.
+  requires:
+  - A valid supplementary PDF with its hash and inspection locations.
+  - Temperature/composition basis, standard states, coefficient units and calibration conditions.
+  completion: An inspected primary-source record states which printed or coded coefficients are
+    supported and which applicability questions remain open.
+  sources:
+  - https://doi.org/10.1073/pnas.1505672112
+- id: resolve_oxygen_coefficient
+  target_kind: evidence
+  target: young_code_discrepancy_20261021
+  action: Determine whether original parameter data, a published correction or an authoritative
+    explanation resolves the +16500/T versus +1873/T oxygen coefficient difference.
+  requires:
+  - Source evidence beyond the observed publication/code mismatch.
+  completion: A new reviewed comparison justifies a coefficient choice or explicitly retains the
+    discrepancy; changing defaults would require a separately scoped numerical and empirical review.
+- id: review_oxygen_parameter_choice
+  target_kind: evidence
+  target: badro_parameter_comparison_20261029
+  action: Review whether a separate Badro parameter version or a change to the printed-Young default
+    is appropriate for the declared application.
+  requires:
+  - An explicit model-version and standard-state policy.
+  - Affected numerical/reference checks and a separate review of empirical applicability and uncertainty.
+  completion: A scoped implementation decision distinguishes the source-supported Badro coefficient
+    from the retained printed version without implying empirical validation.
+  sources:
+  - https://doi.org/10.1073/pnas.1505672112
+  - https://doi.org/10.1038/s41586-023-05823-0
+follow_up_resolutions:
+- follow_up: inspect_accessible_formulations
+  evidence:
+  - young_printed_20261021
+  - ma_reproductions_20261021
+  - implementation_source_review_20261021
+  note: Completed the scoped inspection on 2026-10-21. Original Ma, Badro calibration data, oxygen
+    coefficient intent and empirical validation remain separate open tasks.
+- follow_up: inspect_ma_original
+  evidence:
+  - ma_original_supplied_20261029
+  - implementation_ma_primary_20261029
+  - vogel_a2_primary_comparison_20261029
+  note: Completed on 2026-10-29 using the supplied original. Eqs. 21-26, composition/interaction
+    definitions and standard states were inspected and compared explicitly. The original supports
+    the selected reciprocal sign; the Vogel A2 discrepancy is retained. Badro parameters, oxygen
+    coefficient intent and empirical validation remain separate open tasks.
+- follow_up: inspect_badro_supplement
+  evidence:
+  - badro_supplement_supplied_20261029
+  - badro_parameter_comparison_20261029
+  note: Completed the specified original-SI and coefficient inspection using the supplied PDF. The report
+    states the supported coefficients and preserves calibration-data and applicability gaps.
+- follow_up: resolve_oxygen_coefficient
+  evidence:
+  - badro_supplement_supplied_20261029
+  - badro_parameter_comparison_20261029
+  note: 'Resolved the original-source attribution: Badro Table S1 and its temperature scaling support
+    +1873/T, independently of the publication/code mismatch. The default remains the printed Young version;
+    review_oxygen_parameter_choice tracks the separate implementation decision.'

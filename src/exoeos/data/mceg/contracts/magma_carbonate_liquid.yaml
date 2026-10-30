@@ -1,0 +1,741 @@
+schema_version: '0.2'
+model:
+  id: exoeos.magma_carbonate_liquid.v1
+  name: Native rhyolite-MELTS mode-4 carbon-bearing liquid
+  description: A thirteen-component liquid with internally relaxed CaSiO3 + CO2 = SiO2 + CaCO3 and
+    a separate carbon-free hydrous restriction.
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 37b9173f37866495949fd7c90340a02b7ceaa78d
+    entry_points:
+    - exoeos.magma_carbonate.liquid_gibbs
+    - exoeos.magma_carbonate.liquid_species_moles
+    - exoeos.magma_carbonate.hydrous_liquid_gibbs
+assumptions:
+- statement: Independent amounts follow HYDROUS_COMPONENTS then CO2; internal CaCO3 species are determined
+    by relaxation and are not an additional independent inventory.
+  evidence:
+  - implementation
+- statement: Mode 4 changes the water standard and interactions even at zero carbon. The twelve-component
+    hydrous restriction preserves this mode-4 identity.
+  evidence:
+  - implementation
+- statement: K/Pa/mol inputs produce full G in J, with standards and mixing already included.
+  evidence:
+  - implementation
+domains:
+- kind: numerical_evaluation
+  status: documented
+  description: Inspected numerical API and caller obligations; not a physical validation domain.
+  conditions:
+  - Finite scalar T >= 700 K, P > 0 and nonnegative amounts; enable x64 and validate values before
+    tracing.
+  - Full derivatives require supported positive independent interiors; fixed faces permit only their
+    documented tangent derivatives.
+  evidence:
+  - implementation
+- kind: scientific_applicability
+  status: unknown
+  description: Composition-specific physical accuracy and joint applicability remain unestablished
+    by this survey.
+  conditions: []
+  evidence:
+  - upstream_model
+  - implementation
+claims:
+- id: numerical_verification
+  revision: '1'
+  kind: numerical_verification
+  statement: Pinned source standards/interactions and saved mode-4 liquids, internal atom conservation,
+    relaxed Hessians, scaling and boundary semantics in the selected module.
+  scope: Only the selected tests, their asserted tolerances and the recorded CPU/x64 environment.
+- id: physical_accuracy
+  revision: '1'
+  kind: physical_validation
+  statement: The model has quantitatively established physical accuracy for the intended melt/fluid
+    composition and conditions.
+  scope: Requires independent empirical data and explicit composition, reference-state and driving-quantity
+    conventions; not established by this survey.
+evidence:
+- id: upstream_model
+  kind: literature
+  summary: Cited model origin and retained source-review boundary.
+  sources:
+  - https://github.com/magmasource/MAGMA/tree/705a0fb315e5054d18275a580562f6121c8e458c
+  - https://doi.org/10.1007/s00410-015-1141-8
+  scope: Source and binary references are separate archived numerical evidence. The original paper,
+    source generation and external runtime were not rerun or promoted to new empirical evidence.
+  provenance:
+    role: secondary
+    location: Citations and source descriptions in the selected provider code/guide.
+    inspection: not_inspected
+    note: Source and binary references are separate archived numerical evidence. The original paper,
+      source generation and external runtime were not rerun or promoted to new empirical evidence.
+- id: implementation
+  kind: implementation
+  summary: A thirteen-component liquid with internally relaxed CaSiO3 + CO2 = SiO2 + CaCO3 and a separate
+    carbon-free hydrous restriction.
+  sources:
+  - documents/native_carbonate_liquid.rst
+  - src/exoeos/__init__.py
+  - src/exoeos/_arrays.py
+  - src/exoeos/_magma_carbon.py
+  - src/exoeos/_magma_water.py
+  - src/exoeos/constants.py
+  - src/exoeos/contracts.py
+  - src/exoeos/helmholtz.py
+  - src/exoeos/magma.py
+  - src/exoeos/magma_carbonate.py
+  - src/exoeos/magma_fluid.py
+  - src/exoeos/state.py
+  scope: Inspected selected implementation, conventions and caller domains at revision 37b9173f37866495949fd7c90340a02b7ceaa78d.
+  subject: survey_20261020
+  provenance:
+    role: implementation
+    location: Selected provider source files and guide.
+    inspection: inspected
+    note: Code and declarations were read; an empirical calibration or external source replay is not
+      inferred.
+    derived_from:
+    - evidence: upstream_model
+      comparison: not_checked
+      note: Original-source scientific equivalence is not established by this implementation survey.
+- id: test_run
+  kind: numerical_test
+  summary: 124 selected tests passed.
+  sources:
+  - tests/unittests/magma_carbonate_test.py
+  - results/mceg/20261020_model_survey/receipt.json
+  - results/mceg/20261020_model_survey/tests.xml
+  - results/mceg/20261020_model_survey/tests.log
+  scope: Pinned source standards/interactions and saved mode-4 liquids, internal atom conservation,
+    relaxed Hessians, scaling and boundary semantics in the selected module.
+  result: passed
+  subject: survey_20261020
+  context: test_environment
+  artifacts:
+  - source: results/mceg/20261020_model_survey/receipt.json
+    sha256: 290a0e172f914bd74b24be1792e8d1c36f9a6d44f011a39b3d550573cb0874a3
+  - source: results/mceg/20261020_model_survey/tests.xml
+    sha256: 8bb6517ac0069238e42cb0381b56a2039a5e2498c2f7ad088eeadc710d58b78d
+  - source: results/mceg/20261020_model_survey/tests.log
+    sha256: 5b516c56e9e47d73013fe839c8329d18784540b7020e7be1b3adc15823020889
+  provenance:
+    role: primary
+    location: results/mceg/20261020_model_survey/receipt.json and tests.xml
+    inspection: inspected
+    note: Fresh local pytest execution; tests consume stored references where applicable. No external
+      reference program or experiment was rerun.
+- id: melts_versions_20261021
+  kind: literature
+  summary: Official distinction between rhyolite-MELTS 1.0.x, 1.1.x and 1.2.x.
+  sources:
+  - https://melts.ofm-research.org/Support/Understanding-rhyolite-MELTS-versions.html
+  scope: The 1.0.x model retains pure-H2O fluid; 1.1.x adds CO2/mixed terms while retaining older
+    water parameters; 1.2.x uses revised water parameters and the Duan-Zhang (2006) fluid EOS. These
+    model versions differ from the alphaMELTS software release number.
+  provenance:
+    role: primary
+    location: 'Understanding rhyolite-MELTS versions: descriptions of all three model versions.'
+    inspection: inspected
+    note: Retrieved and inspected on 2026-10-21; the scope names the passages reviewed.
+  artifacts:
+  - source: https://melts.ofm-research.org/Support/Understanding-rhyolite-MELTS-versions.html
+    sha256: f6af0243da8c7d1fbfe55ddb2c9f770decfcb1e700790f1d80a794645a10a298
+- id: ghiorso_gualda2015_20261021
+  kind: literature
+  summary: 'Original mixed-volatile model: abstract inspected; full text not retrieved.'
+  sources:
+  - https://doi.org/10.1007/s00410-015-1141-8
+  - https://link.springer.com/content/pdf/10.1007/s00410-015-1141-8.pdf
+  scope: The abstract describes hydroxyl water, molecular/carbonate CO2 and a natural-composition
+    calibration. The equations, parameter tables and calibration observations were not inspected.
+    Pinned implementation code and the official version note do not replace those original data.
+  provenance:
+    role: primary
+    location: Publisher abstract and access notice only; no full-text equation or table inspected.
+    inspection: partial
+    note: On 2026-10-21 the publisher PDF endpoint returned HTML rather than PDF; the article page
+      required full-text access. The inspected author index did not supply this paper. No PDF hash
+      or full-text inspection is claimed.
+- id: duan_zhang2006_20261021
+  kind: literature
+  summary: Original low-pressure pure-CO2 correlation used for the liquid one-bar reference.
+  sources:
+  - https://doi.org/10.1016/j.gca.2006.02.009
+  - https://efs.idsse.ac.cn/module1/citation/2006-05-01/article.pdf
+  scope: Eqs. 9-10 define physical Z and temperature-dependent coefficients; Table 4 separates 0-0.2
+    GPa and 0.2-10 GPa parameter sets. Only the lower-pressure pure-CO2 set enters the provider
+    real one-bar standard. The broad fluid-model domain is not a validation domain for the liquid
+    or the selected 2009 mixed-fluid EOS.
+  provenance:
+    role: primary
+    location: 'Printed pp. 2319-2320 (PDF pp. 9-10): Eqs. 9-11, critical constants and Table 4,
+      low-pressure CO2 column.'
+    inspection: inspected
+    note: Retrieved and inspected on 2026-10-21; the scope names the passages reviewed.
+  artifacts:
+  - source: https://efs.idsse.ac.cn/module1/citation/2006-05-01/article.pdf
+    sha256: 179f5adb0fdf8cffd38237c8627e0cf0a911517c4c117f8beb72b8f26c777f5e
+- id: magma_source_20261021
+  kind: implementation
+  summary: Inspected pinned MAGMA equations, coefficients and reference conventions.
+  sources:
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/liquid_CO2_H2O.c
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/param_struct_data_CO2_H2O.h
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/liq_struct_data.h
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/gibbs.c
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/water.c
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/fluidPhase.c
+  scope: Mode-4 species reaction, dissolved-water and CO2 standards, interaction parameters and
+    pure-CO2 one-bar reference. No independent link from the inspected source commit to the archived
+    binary build is established.
+  provenance:
+    role: primary
+    location: liquid_CO2_H2O.c rANDsTOx and model-parameter selection; param_struct_data_CO2_H2O.h
+      mode-4 parameters; gibbs.c H2O/CO2/CaCO3 branches; fluidPhase.c low-pressure CO2 coefficients.
+    inspection: inspected
+    note: Inspected downloaded or cached source bytes; hashes identify the pinned files. This does
+      not establish which C revision built the separately archived alphaMELTS binary.
+  artifacts:
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/liquid_CO2_H2O.c
+    sha256: 70fcc1b74785a45708c88c634f41a27590eb3619b493775e2d753470e36ad081
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/param_struct_data_CO2_H2O.h
+    sha256: 05b650b1c6b978e9269f1401848243948e5d79c27d7de87cbf6a3931b121e42e
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/liq_struct_data.h
+    sha256: 206b298d054d9110f28dd544dab1240aa252bb39650bcdf21e032fee0e7d95b4
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/gibbs.c
+    sha256: 2eceff9f315210ebdcf9dfc9bacd77f625cf04dbdc5084104c093caba34d4166
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/water.c
+    sha256: 5ee8b5d59eb813c50fd66d2a9b47b317a0cde327c6ac924967d2521f770a8b08
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/fluidPhase.c
+    sha256: 2aa11edc637c2aadc7722c8a606ce6e7ccde87a59add5c7f8d9abefdb8048cc0
+- id: implementation_source_review_20261021
+  kind: implementation
+  summary: Selected provider conventions are now linked to inspected original sources.
+  sources:
+  - src/exoeos/magma_carbonate.py
+  - src/exoeos/_magma_carbon.py
+  - documents/native_carbonate_liquid.rst
+  - tests/reference/generate_carbonate_reference.py
+  scope: The dependent reaction is CaSiO3 + CO2 = SiO2 + CaCO3. The mode-4 water branch uses the
+    revised offset and pressure polynomial; CO2 uses a real one-bar reference. The 15 low-pressure
+    CO2 coefficients match Duan-Zhang Table 4. The documented trace-carbon runtime chemical-potential
+    discrepancy is retained.
+  subject: survey_20261020
+  context: source_review_20261021
+  provenance:
+    role: implementation
+    location: Named provider functions and the source locations linked below.
+    inspection: inspected
+    note: Scoped source comparison; no empirical accuracy claim or external runtime execution.
+    derived_from:
+    - evidence: magma_source_20261021
+      comparison: consistent
+      note: The dependent reaction is CaSiO3 + CO2 = SiO2 + CaCO3. The mode-4 water branch uses
+        the revised offset and pressure polynomial; CO2 uses a real one-bar reference. The 15 low-pressure
+        CO2 coefficients match Duan-Zhang Table 4. The documented trace-carbon runtime chemical-potential
+        discrepancy is retained.
+    - evidence: melts_versions_20261021
+      comparison: consistent
+      note: Revised water and mixed-volatile parameters identify the 1.2.x model, separately from
+        the alphaMELTS software release.
+    - evidence: duan_zhang2006_20261021
+      comparison: consistent
+      note: The one-bar CO2 kernel uses the Table 4 low-pressure coefficients with Eqs. 9-10; it
+        is not a port of the full mixed-fluid EOS.
+    - evidence: ghiorso_gualda2015_20261021
+      comparison: not_checked
+      note: The original equations, fitted parameter tables and calibration data remain unavailable
+        in this review.
+- id: ghiorso_gualda2015_full_text_20261021
+  kind: literature
+  summary: Locally supplied Ghiorso-Gualda (2015) main paper inspected after the earlier access failure.
+  sources:
+  - https://doi.org/10.1007/s00410-015-1141-8
+  - urn:sha256:6de597b9aeb10241d14afc8831ce0494d6c1282579e932f6371c85a3ba1e4e3c
+  scope: The paper describes a model for natural silicate liquids at 600-1400 degrees C and
+    0-3 GPa, with sparse data below 800 degrees C. Natural compositions require finite SiO2,
+    Al2O3, FeO, MgO, CaO and Na2O or K2O. These are upstream objectives and calibration limits,
+    not a validated rectangle for this provider. Table 1 identifies experimental sources;
+    individual observations and the separate ESM were not recovered or replayed.
+  context: full_text_review_20261021
+  artifacts:
+  - source: urn:sha256:6de597b9aeb10241d14afc8831ce0494d6c1282579e932f6371c85a3ba1e4e3c
+    sha256: 6de597b9aeb10241d14afc8831ce0494d6c1282579e932f6371c85a3ba1e4e3c
+  provenance:
+    role: primary
+    location: Article 169:53, PDF pp. 2-6 (model scope, Eq. 1-2, Table 1 and natural-composition
+      footnote), p. 11 (Table 2 and notes), pp. 14-16 (CO2/CaCO3 model and Eqs. 3-5), and
+      p. 24 (original-water compromise for the quartz-two-feldspar cotectic).
+    inspection: inspected
+    note: User-supplied Ghiorso_Gualda.pdf, 30 pages, inspected on 2026-10-21. This restricted
+      PDF and its extracted text/images are retained outside the repository and are not
+      distributed. The URN identifies the actual local PDF bytes, not a public download;
+      offline MCEG does not verify URI artifacts. The earlier abstract-only record is historical.
+- id: gg2015_formulation_comparison_20261021
+  kind: implementation
+  summary: Main-paper model structure and selected parameter conventions compared with the mode-4 port.
+  sources:
+  - src/exoeos/magma_carbonate.py
+  - src/exoeos/_magma_carbon.py
+  - documents/native_carbonate_liquid.rst
+  subject: survey_20261020
+  context: full_text_review_20261021
+  scope: Eq. 1 supports the extra water entropy; p. 14 identifies molecular CO2 and CaCO3
+    species. Table 2 notes distinguish water corrections to the Haar/Robie reference from
+    CO2 corrections to real Duan-Zhang (2006) fluid at one bar. Of 28 nonblank interaction
+    entries, 27 match the pinned header to displayed rounding. Coefficient and temperature
+    differences are recorded separately. The detailed ESM speciation derivation remains unchecked.
+  provenance:
+    role: implementation
+    location: magma_carbonate.py interaction arrays and _mixing_gibbs; _magma_carbon.py
+      _water_mode4_gibbs and _co2_liquid_gibbs; the corresponding pinned MAGMA branches.
+    inspection: inspected
+    note: Scoped main-paper comparison only. The provider's selected Zhang-Duan (2009)
+      mixed-fluid example remains distinct from the paper's Duan-Zhang (2006) fluid model.
+    derived_from:
+    - evidence: ghiorso_gualda2015_full_text_20261021
+      comparison: consistent
+      note: Agreement is limited to the stated entropy/species structure, reference conventions
+        and 27 rounded interaction entries; it excludes the separately recorded discrepancies.
+    - evidence: magma_source_20261021
+      comparison: consistent
+      note: The provider follows the inspected mode-4 source choices; code agreement does
+        not establish agreement with every printed equation or empirical observation.
+- id: gg2015_publication_code_discrepancies_20261021
+  kind: implementation
+  summary: Printed SiO2-H2O interaction and standard-state temperature origins differ from the pinned code.
+  sources:
+  - src/exoeos/magma_carbonate.py
+  - src/exoeos/_magma_carbon.py
+  - documents/native_carbonate_liquid.rst
+  subject: survey_20261020
+  context: full_text_review_20261021
+  scope: Table 2 (p. 11) prints W(SiO2,H2O) = 27.557 kJ/mol; the pinned header and
+    magma_carbonate._WATER_W[0] use 27.357 kJ/mol, a 200 J/mol difference. Eq. 2 (p. 3)
+    explicitly labels a 1400 K reference, and Eq. 3 (p. 14) uses T-1400 while stating K
+    and bar units. The pinned gibbs.c and provider instead use T-1673.15 for H2O and
+    T-1673.0 for CO2. These observed differences do not establish which publication or
+    implementation choice is intended; no coefficient or temperature origin is changed.
+  provenance:
+    role: implementation
+    location: Visual checks of main-paper pp. 3, 11 and 14; MAGMA param_struct_data_CO2_H2O.h
+      W(H2O,SiO2), gibbs.c mode-4 H2O/CO2 branches and trl; provider functions named above.
+    inspection: inspected
+    note: Differences were checked in rendered PDF pages rather than relying on text extraction.
+      An author clarification, correction or original calibration record is still needed.
+    derived_from:
+    - evidence: ghiorso_gualda2015_full_text_20261021
+      comparison: discrepancy
+      note: The 0.200 kJ/mol interaction difference exceeds displayed rounding; the printed
+        temperature origins also differ from the source-port conventions.
+    - evidence: magma_source_20261021
+      comparison: consistent
+      note: ExoEOS retains the pinned header value and the two gibbs.c temperature origins.
+- id: gg2015_supplement_access_20261021
+  kind: literature
+  summary: Separately linked electronic supplement remains unavailable in this review.
+  sources:
+  - https://media.springernature.com/original/springer-static/esm/art%3A10.1007%2Fs00410-015-1141-8/MediaObjects/410_2015_1141_MOESM1_ESM.pdf
+  scope: The main paper refers to the ESM for detailed fluid/melt equations and regression
+    methods. Main-paper inspection does not constitute inspection of those derivations.
+  provenance:
+    role: primary
+    location: Main-paper pp. 2, 14 and 16 refer to the separate ESM; publisher download link.
+    inspection: not_inspected
+    note: On 2026-10-21 the publisher-linked endpoint returned HTTP 200 with HTML rather
+      than PDF. The response was rejected; no supplementary PDF hash or inspection is claimed.
+- id: ghiorso_gualda2015_supplement_20261021
+  kind: literature
+  summary: Locally supplied Ghiorso-Gualda (2015) electronic supplement inspected.
+  sources:
+  - https://doi.org/10.1007/s00410-015-1141-8
+  - urn:sha256:d7319ac8dd2f523a9ea16924195a3e61dd74d92757cae5c0ee0fb5b46d8a89b2
+  context: supplement_review_20261021
+  scope: Eqs. 20-22 define the associated liquid, water entropy and carbonate stationarity;
+    Eqs. 26-29 give species potentials. Eqs. 30-37 describe weighted melt/fluid potential
+    residuals and iterative singular-value fitting. Table A1 lists the full component basis.
+    ESM Figures 1-2 show parameter combinations; Figure 3 provides calibration comparison
+    plots, not a recovered table of individual observations with compositions and uncertainties.
+    The legend flags Cl-bearing and reducing, CO-bearing experiments that need separate scope.
+  artifacts:
+  - source: urn:sha256:d7319ac8dd2f523a9ea16924195a3e61dd74d92757cae5c0ee0fb5b46d8a89b2
+    sha256: d7319ac8dd2f523a9ea16924195a3e61dd74d92757cae5c0ee0fb5b46d8a89b2
+  provenance:
+    role: primary
+    location: PDF pp. 2-10 (Appendix pp. 1/10-9/10, Eqs. 1-37), p. 12 (Table A1),
+      p. 13 (figure legends), pp. 14-15 (ESM Figures 1-2) and pp. 16-49 (Figure 3 panels).
+    inspection: inspected
+    note: User-supplied Ghiorso_Gualda_sup.pdf, 49 pages, inspected on 2026-10-21.
+      PDF bytes, extracted text and images remain outside Git. The URN identifies the
+      locally hashed file; offline MCEG does not verify URI artifacts. The earlier failed
+      publisher-access record is historical. No calibration refit or plot digitization was performed.
+- id: gg2015_supplement_comparison_20261021
+  kind: implementation
+  summary: Liquid mixing, carbonate relaxation and final species potentials compared with the ESM.
+  sources:
+  - src/exoeos/magma_carbonate.py
+  - src/exoeos/_magma_carbon.py
+  - documents/native_carbonate_liquid.rst
+  subject: survey_20261020
+  context: supplement_review_20261021
+  scope: The symmetric interaction term and extra water entropy match Eq. 20 in form.
+    The species map and _extent residual implement CaSiO3 + CO2 = SiO2 + CaCO3 and Eq. 21;
+    _reaction_gibbs has the Eq. 22 form with zero reaction entropy in the pinned parameters.
+    Differentiating the relaxed energy gives the structures in Eqs. 26-29, including
+    twice log(X_H2O) for water and log(1-X_H2O) for other species. This comparison uses
+    the provider basis and parameters; it excludes literal chromium-basis equivalence,
+    intermediate printed expressions and the previously recorded coefficient differences.
+  provenance:
+    role: implementation
+    location: magma_carbonate.py _species, _mixing_gibbs, _extent, _reaction_gibbs and
+      liquid_gibbs; pinned liquid_CO2_H2O.c rANDsTOx and mixing terms.
+    inspection: inspected
+    note: The provider evaluates a fixed model; it does not implement the ESM regression.
+      The fitting description supplies neither a replayed calibration nor an uncertainty bound.
+    derived_from:
+    - evidence: ghiorso_gualda2015_supplement_20261021
+      comparison: consistent
+      note: Limited to the functional structures in Eqs. 20-22 and 26-29 and the carbonate
+        reaction coordinates in Table A1; discrepancies are recorded separately.
+    - evidence: magma_source_20261021
+      comparison: consistent
+      note: The existing mode-4 reaction map and fixed parameter choices are retained.
+- id: gg2015_supplement_discrepancies_20261021
+  kind: implementation
+  summary: Printed chromium basis and an intermediate derivative sign prevent literal ESM equivalence.
+  sources:
+  - src/exoeos/magma.py
+  - src/exoeos/magma_carbonate.py
+  subject: survey_20261020
+  context: supplement_review_20261021
+  scope: Table A1 row 4 prints Cr2O3, while the pinned MAGMA liquid basis/header and
+    provider use MgCr2O4. Mn-, Ni- and Co-bearing components are absent from the provider;
+    a chromium basis transformation is not established by dropping those components.
+    Eq. 23's independent-species line adds the composition-derivative sum, whereas the
+    corresponding Eq. 24 line subtracts it. The provider differentiates Eq. 20's energy
+    structure and does not copy that intermediate line. No author correction is inferred.
+  provenance:
+    role: implementation
+    location: Rendered ESM PDF pp. 7 and 12; magma.py component definitions and pinned
+      liq_struct_data.h/param_struct_data_CO2_H2O.h MgCr2O4 entries.
+    inspection: inspected
+    note: Eqs. 32-34 leave the reference functions unspecified; the supplement does not
+      settle the main-paper SiO2-H2O coefficient or H2O/CO2 temperature-origin differences.
+    derived_from:
+    - evidence: ghiorso_gualda2015_supplement_20261021
+      comparison: discrepancy
+      note: Literal basis labels and the intermediate derivative expression differ from
+        the inspected implementation; equivalence requires further source clarification.
+    - evidence: magma_source_20261021
+      comparison: consistent
+      note: The provider retains the pinned chromium species and energy formulation.
+limitations:
+- statement: The saved trace-carbon runtime discrepancy is retained; passing the selected tests does
+    not claim agreement of every trace-component potential.
+  evidence:
+  - implementation
+- statement: No sulfur/nitrogen extension, carbonate solids, redox solve, fluid saturation or assemblage
+    phase selection is supplied. Physical accuracy remains unassessed.
+  evidence:
+  - implementation
+subjects:
+- id: survey_20261020
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 37b9173f37866495949fd7c90340a02b7ceaa78d
+    entry_points:
+    - exoeos.magma_carbonate.liquid_gibbs
+    - exoeos.magma_carbonate.liquid_species_moles
+    - exoeos.magma_carbonate.hydrous_liquid_gibbs
+  selected_files:
+    documents/native_carbonate_liquid.rst: 62835cbbf1b63c328f3e7046f3f3f9c69a8a43a1cf5a595b591a375366360f47
+    pyproject.toml: e98593ed10b694c708c13e63d76aa47700c4237d1d957838f8d82237821b5883
+    src/exoeos/__init__.py: b53b3a90a57cbec34b794fd084379aed6e45526e38ee574ec6483e7e79d78592
+    src/exoeos/_arrays.py: 020679ce40515c27ce0bf31f5b71b1f737737d4a5ebc0301198a9e2bcbedf507
+    src/exoeos/_magma_carbon.py: 7030f9c70da6d51fc680cf1b5810078ef22e31fdf501b8d34a6bd5af99cd1b99
+    src/exoeos/_magma_water.py: 8c93e90181741952f56da7ae15007043db438ff15452cc07b968d3e80f921934
+    src/exoeos/constants.py: 69e57fe70ad4ea775f2d97722548276c87d3a91c76eb6be8f1be43ac30f83fa4
+    src/exoeos/contracts.py: ba1052326b066d7d3e5a57b5e63ac3dba5cc388e7d0bb9d2bf38431fe996d580
+    src/exoeos/helmholtz.py: 75d7ab3a68781c73e8d8197c05151f0a8adb076595bcfad296a544f00860318e
+    src/exoeos/magma.py: 4f085ac25f3781cc4120ac7b56c67446668d1911d8cdaeeef077ff9e529807ed
+    src/exoeos/magma_carbonate.py: 1ccdaa2c7a9ebeff2d084365bf14f9fe69ca8e944690655e3b47e4b38f19b2c2
+    src/exoeos/magma_fluid.py: a1c84490d83f6dab4b1fa15e775c53dd011f6120a21aa1b99df2bd187f5bb5da
+    src/exoeos/state.py: 76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54
+    tests/conftest.py: 87d47ae57e35ed7a10960ae12407c8a274188271ea86d5e0016d3d70501e2096
+    tests/reference/carbonate_melts_v1.json: 5a05454144c4b0f98d463b94c78fd07c9f181b20283a9cd2db0fb0a6814a931b
+    tests/reference/carbonate_source_v1.json: 0359915dc41b410eddf149eca197786827b8d31bff8cba9cb5a3a7f621d1474f
+    tests/unittests/magma_carbonate_test.py: a71bc94e2b7343c9010d4c636d82445a46b9ade385e2db6f4909de274356786f
+contexts:
+- id: test_environment
+  scope: Actual local test environment; test files and fixtures define individual calculation inputs.
+  settings:
+    python: 3.12.7
+    jax: 0.6.2
+    jaxlib: 0.6.2
+    numpy: 2.1.0
+    scipy: 1.14.1
+    pytest: 8.3.3
+    backend: cpu
+    x64: true
+    test_selection: tests/unittests/magma_carbonate_test.py
+- id: source_review_20261021
+  scope: Source inspection and formulation comparison; no empirical application or uncertainty target
+    is assigned.
+  settings:
+    review_date: '2026-10-21'
+    model_choice: Mode-4 DRY11 + H2O + CO2 with dependent CaCO3; revised water remains distinct
+      at zero carbon.
+    source_hash_policy: Hashes identify retrieved bytes; MCEG does not download or verify URI artifacts.
+- id: full_text_review_20261021
+  scope: Follow-up inspection of the privately supplied main paper and comparison with the
+    unchanged mode-4 source snapshot; no empirical calibration replay or EOS change.
+  settings:
+    review_date: '2026-10-21'
+    source_access: User-supplied restricted PDF; document bytes, extracted text and page images excluded from Git.
+    model_choice: Pinned mode-4 liquid; paper/code discrepancies remain unresolved.
+- id: supplement_review_20261021
+  scope: Inspection of the private electronic supplement and comparison with the unchanged
+    mode-4 implementation; no calibration replay or physical accuracy claim.
+  settings:
+    review_date: '2026-10-21'
+    source_access: Private PDF, extracted text and images excluded from Git; local byte hash recorded.
+    comparison_scope: Selected liquid equations, species conventions and regression description.
+conditions: []
+assessments:
+- id: numerical_review
+  kind: evidence_support
+  claim: numerical_verification
+  claim_revision: '1'
+  subject: survey_20261020
+  context: test_environment
+  method:
+    id: review_selected_pytest
+    revision: '1'
+    description: Read actual test outcomes and selected file pins; limit support to those numerical
+      assertions.
+  evidence:
+  - test_run
+  reasons:
+  - 124 tests in the selected modules; see the shared receipt for per-module counts.
+  - Selected files matched Git at execution and were unchanged afterward. Other revisions, environments
+    and empirical accuracy need separate review.
+  status: supported
+  origin: reviewed
+- id: physical_review
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: test_environment
+  method:
+    id: review_empirical_support
+    revision: '1'
+    description: Separate numerical verification from experimental or observational support.
+  evidence:
+  - upstream_model
+  - implementation
+  reasons:
+  - Source and binary references are separate archived numerical evidence. The original paper, source
+    generation and external runtime were not rerun or promoted to new empirical evidence.
+  - Numerical agreement and membership in metadata intervals do not establish physical accuracy.
+  status: unknown
+  origin: reviewed
+- id: physical_review_20261021
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: source_review_20261021
+  method:
+    id: inspect_published_formulation
+    revision: '1'
+    description: Compare inspected source passages and pinned code; separate implementation provenance
+      from empirical support.
+  evidence:
+  - implementation_source_review_20261021
+  - melts_versions_20261021
+  - ghiorso_gualda2015_20261021
+  - duan_zhang2006_20261021
+  reasons:
+  - Selected equations, parameter choices and reference conventions now have inspected source locations
+    and byte hashes.
+  - The Ghiorso-Gualda (2015) full text and calibration data remain uninspected. Trace-carbon runtime
+    differences and composition-specific solubility accuracy remain unresolved.
+  - No new empirical error bound or joint applicability domain is established; the earlier survey
+    and test receipt remain historical.
+  status: unknown
+  origin: reviewed
+- id: physical_full_text_review_20261021
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: full_text_review_20261021
+  method:
+    id: inspect_main_paper_and_compare_source
+    revision: '1'
+    description: Inspect the local main paper, compare selected equations and parameters,
+      and preserve discrepancies and unretrieved data as explicit review gaps.
+  evidence:
+  - gg2015_formulation_comparison_20261021
+  - gg2015_publication_code_discrepancies_20261021
+  - gg2015_supplement_access_20261021
+  reasons:
+  - Main-paper source inspection is now complete for the recorded scope; the earlier
+    abstract-only assessment remains historical. Table 1 and the p. 6 LEPR description
+    identify a route to the calibration observations, but those observations were not recovered.
+  - The SiO2-H2O interaction and temperature-origin discrepancies remain unresolved.
+    The separate ESM derivation, empirical replay and trace-carbon runtime discrepancy
+    also remain open; source access alone cannot establish physical accuracy.
+  - The paper's natural-composition scope and reported residuals do not validate every
+    restricted composition face or the provider's separately selected hybrid fluid.
+  status: unknown
+  origin: reviewed
+- id: physical_supplement_review_20261021
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: supplement_review_20261021
+  method:
+    id: inspect_supplement_and_compare_source
+    revision: '1'
+    description: Compare liquid equations and species conventions, retaining publication
+      discrepancies and unrecovered empirical observations as explicit gaps.
+  evidence:
+  - gg2015_supplement_comparison_20261021
+  - gg2015_supplement_discrepancies_20261021
+  - gg2015_publication_code_discrepancies_20261021
+  reasons:
+  - Supplement access and the scoped liquid/regression inspection are complete. The
+    earlier access failure and main-paper assessment remain historical.
+  - The main-paper coefficient/temperature differences, ESM chromium/sign issues and
+    saved trace-carbon runtime difference remain unresolved.
+  - Comparison plots and iterative fitting instructions do not supply an empirical
+    replay for this provider. Individual calibration observations and uncertainty criteria
+    are still needed; the separately selected hybrid fluid is not validated by this review.
+  status: unknown
+  origin: reviewed
+follow_ups:
+- id: empirical_scope
+  target_kind: claim
+  target: physical_accuracy
+  revision: '1'
+  action: Inspect the original model equations and relevant material-specific data; record a separate
+    empirical assessment for a declared application.
+  requires:
+  - Original source passages, equations and coefficient tables with inspection locations.
+  - Explicit T/P, composition basis, gas driving quantity, standard states and uncertainty criteria.
+  - Reproducible comparison against independent observations or experiments, when available.
+  completion: A new scoped assessment cites inspected evidence and states its remaining gaps; a numerical
+    pass alone does not complete this task.
+  sources:
+  - https://github.com/magmasource/MAGMA/tree/705a0fb315e5054d18275a580562f6121c8e458c
+  - https://doi.org/10.1007/s00410-015-1141-8
+- id: inspect_accessible_sources
+  target_kind: evidence
+  target: upstream_model
+  action: Inspect accessible model papers and pinned source branches for the declared provider conventions.
+  requires:
+  - Source locations and downloaded-byte hashes.
+  - Explicit scope for branch choices, standard states and remaining source/data gaps.
+  completion: New inspected source records and a scoped comparison are recorded; empirical calibration
+    replay and unavailable sources remain separate work.
+  sources:
+  - https://melts.ofm-research.org/Support/Understanding-rhyolite-MELTS-versions.html
+  - https://doi.org/10.1007/s00410-015-1141-8
+  - https://doi.org/10.1016/j.gca.2006.02.009
+- id: retrieve_gg2015_full_text
+  target_kind: evidence
+  target: ghiorso_gualda2015_20261021
+  action: Obtain readable Ghiorso-Gualda (2015) full text and any calibration supplement, then compare
+    equations and parameters with the pinned mode-4 branches.
+  requires:
+  - Original liquid-speciation equations, fitted coefficients, standard states and calibration observations.
+  - A valid full-text artifact, byte hash and inspection locations; the current publisher PDF response
+    is HTML.
+  completion: A new primary-source comparison states matches or discrepancies and the remaining
+    empirical uncertainties.
+  sources:
+  - https://doi.org/10.1007/s00410-015-1141-8
+- id: inspect_gg2015_supplement
+  target_kind: evidence
+  target: gg2015_supplement_access_20261021
+  action: Obtain the separate ESM and compare its fluid/melt equations, species relaxation
+    and regression conventions with the pinned source and the provider.
+  requires:
+  - A readable supplementary artifact with a byte hash and equation locations.
+  - Explicit treatment of the paper/code parameter and temperature-origin differences.
+  completion: A new scoped comparison records the ESM formulation and retains any unresolved differences.
+  sources:
+  - https://doi.org/10.1007/s00410-015-1141-8
+  - https://media.springernature.com/original/springer-static/esm/art%3A10.1007%2Fs00410-015-1141-8/MediaObjects/410_2015_1141_MOESM1_ESM.pdf
+- id: resolve_gg2015_publication_code
+  target_kind: evidence
+  target: gg2015_publication_code_discrepancies_20261021
+  action: Determine the intended SiO2-H2O interaction and H2O/CO2 temperature origins
+    using an authoritative clarification, correction or original calibration record.
+  requires:
+  - Evidence beyond the observed printed-paper versus pinned-code mismatch.
+  completion: A new comparison justifies the retained or revised conventions and any
+    required numerical review; matching the existing runtime alone does not resolve author intent.
+  sources:
+  - https://doi.org/10.1007/s00410-015-1141-8
+- id: recover_gg2015_calibration_data
+  target_kind: claim
+  target: physical_accuracy
+  revision: '1'
+  action: Recover the Table 1 observations or the combined LEPR-format data described
+    on p. 6, then define a composition-specific empirical comparison.
+  requires:
+  - Source attribution, joint T/P, melt and fluid compositions, uncertainties and the
+    treatment of Fe(II)/Fe(III); the paper estimates iron partitioning using Kress-Carmichael (1988).
+  - A declared fluid EOS, model variant, standard states and error criterion.
+  completion: A separate empirical assessment reports an actual data comparison and its
+    limitations; published calibration residuals are not relabeled as provider validation.
+  sources:
+  - https://doi.org/10.1007/s00410-015-1141-8
+  - https://lepr.ofm-research.org/
+- id: resolve_gg2015_supplement_melt_conventions
+  target_kind: evidence
+  target: gg2015_supplement_discrepancies_20261021
+  action: Resolve the printed chromium basis and intermediate derivative sign using an
+    authoritative correction or a documented derivation with the original calibration basis.
+  requires:
+  - An explicit Cr2O3/MgCr2O4 basis comparison and any required transformation of standards,
+    mixing terms and parameters, plus a check of Eqs. 23-29 against Eq. 20.
+  completion: A new scoped comparison justifies equivalence or a correction; existing
+    code agreement and physical accuracy remain separate questions.
+  sources:
+  - https://doi.org/10.1007/s00410-015-1141-8
+follow_up_resolutions:
+- follow_up: inspect_accessible_sources
+  evidence:
+  - melts_versions_20261021
+  - duan_zhang2006_20261021
+  - magma_source_20261021
+  - implementation_source_review_20261021
+  note: Completed the accessible-source inspection on 2026-10-21. The existing empirical_scope task
+    remains open; no physical validation or full runtime replay is inferred.
+- follow_up: retrieve_gg2015_full_text
+  evidence:
+  - ghiorso_gualda2015_full_text_20261021
+  - gg2015_formulation_comparison_20261021
+  - gg2015_publication_code_discrepancies_20261021
+  - gg2015_supplement_access_20261021
+  note: Main-paper acquisition and the scoped comparison are complete using the private PDF.
+    The original task's remaining supplement/data requirements are carried by
+    inspect_gg2015_supplement and recover_gg2015_calibration_data; discrepancies are carried
+    by resolve_gg2015_publication_code. This resolves the main-text access gap only, not
+    the ESM derivation, calibration replay or physical validation.
+- follow_up: inspect_gg2015_supplement
+  evidence:
+  - ghiorso_gualda2015_supplement_20261021
+  - gg2015_supplement_comparison_20261021
+  - gg2015_supplement_discrepancies_20261021
+  note: The private supplement and scoped comparison are now recorded. The associated
+    fluid inspection and Eq. 8 inconsistency are recorded in magma_fluid.yaml under
+    gg2015_supplement_fluid_comparison_20261021. Publication conventions, calibration
+    observations and empirical accuracy remain separate open follow-ups.

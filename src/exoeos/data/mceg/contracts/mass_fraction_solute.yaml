@@ -1,0 +1,224 @@
+schema_version: '0.2'
+model:
+  id: exoeos.mass_fraction_solute.v1
+  name: Extensive solute on a total-liquid mass-fraction basis
+  description: A mathematical construction that adds a solute and the corresponding host chemical-potential
+    response to a supplied full host Gibbs energy.
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 37b9173f37866495949fd7c90340a02b7ceaa78d
+    entry_points:
+    - exoeos.mass_fraction_solute_state
+assumptions:
+- statement: S=sum(W_i*n_i)/W_s, h=n_s and w_s=h/(S+h); the added G/(RT) is h*mu0 + S*ln(S/(S+h))
+    + h*ln(h/(S+h)).
+  evidence:
+  - implementation
+- statement: The supplied host G/(RT) [mol] and host mu/(RT) must be mutually consistent. The solute
+    standard is independent of host composition; existing host mixing is included exactly once.
+  evidence:
+  - implementation
+- statement: Molar masses are kg/mol, amounts are mol; atomic H and molecular H2 require their own
+    matching mass and amount basis.
+  evidence:
+  - implementation
+domains:
+- kind: numerical_evaluation
+  status: documented
+  description: Inspected numerical API and caller obligations; not a physical validation domain.
+  conditions:
+  - Positive finite host mass, positive finite molar masses, nonnegative finite host and solute amounts,
+    finite consistent host energy and occupied-component potentials.
+  - Zero solute retains the host with insertion potential minus infinity. Pure solute is unsupported.
+    Interior states support JAX differentiation.
+  evidence:
+  - implementation
+- kind: scientific_applicability
+  status: unknown
+  description: Composition-specific physical accuracy and joint applicability remain unestablished
+    by this survey.
+  conditions: []
+  evidence:
+  - upstream_model
+  - implementation
+claims:
+- id: numerical_verification
+  revision: '1'
+  kind: numerical_verification
+  statement: Full-scalar derivatives, host response, independent grand-potential minimization, scaling,
+    basis changes and zero/invalid boundaries in the selected test module.
+  scope: Only the selected tests, their asserted tolerances and the recorded CPU/x64 environment.
+- id: physical_accuracy
+  revision: '1'
+  kind: physical_validation
+  statement: The model has quantitatively established physical accuracy for the intended melt/fluid
+    composition and conditions.
+  scope: Requires independent empirical data and explicit composition, reference-state and driving-quantity
+    conventions; not established by this survey.
+evidence:
+- id: upstream_model
+  kind: literature
+  summary: Cited model origin and retained source-review boundary.
+  sources:
+  - src/exoeos/mass_fraction_solute.py
+  - documents/m2_material_contract.rst
+  scope: This is an analytic construction documented in the inspected provider implementation, not
+    an empirical fit.
+  provenance:
+    role: implementation
+    location: Citations and source descriptions in the selected provider code/guide.
+    inspection: inspected
+    note: This is an analytic construction documented in the inspected provider implementation, not
+      an empirical fit.
+- id: implementation
+  kind: implementation
+  summary: A mathematical construction that adds a solute and the corresponding host chemical-potential
+    response to a supplied full host Gibbs energy.
+  sources:
+  - documents/m2_material_contract.rst
+  - src/exoeos/__init__.py
+  - src/exoeos/_arrays.py
+  - src/exoeos/constants.py
+  - src/exoeos/contracts.py
+  - src/exoeos/gibbs_excess.py
+  - src/exoeos/ideal_solution.py
+  - src/exoeos/mass_fraction_solute.py
+  - src/exoeos/solution_gibbs.py
+  - src/exoeos/state.py
+  scope: Inspected selected implementation, conventions and caller domains at revision 37b9173f37866495949fd7c90340a02b7ceaa78d.
+  subject: survey_20261020
+  provenance:
+    role: implementation
+    location: Selected provider source files and guide.
+    inspection: inspected
+    note: Code and declarations were read; an empirical calibration or external source replay is not
+      inferred.
+    derived_from:
+    - evidence: upstream_model
+      comparison: not_checked
+      note: Original-source scientific equivalence is not established by this implementation survey.
+- id: test_run
+  kind: numerical_test
+  summary: 8 selected tests passed.
+  sources:
+  - tests/unittests/mass_fraction_solute_test.py
+  - results/mceg/20261020_model_survey/receipt.json
+  - results/mceg/20261020_model_survey/tests.xml
+  - results/mceg/20261020_model_survey/tests.log
+  scope: Full-scalar derivatives, host response, independent grand-potential minimization, scaling,
+    basis changes and zero/invalid boundaries in the selected test module.
+  result: passed
+  subject: survey_20261020
+  context: test_environment
+  artifacts:
+  - source: results/mceg/20261020_model_survey/receipt.json
+    sha256: 290a0e172f914bd74b24be1792e8d1c36f9a6d44f011a39b3d550573cb0874a3
+  - source: results/mceg/20261020_model_survey/tests.xml
+    sha256: 8bb6517ac0069238e42cb0381b56a2039a5e2498c2f7ad088eeadc710d58b78d
+  - source: results/mceg/20261020_model_survey/tests.log
+    sha256: 5b516c56e9e47d73013fe839c8329d18784540b7020e7be1b3adc15823020889
+  provenance:
+    role: primary
+    location: results/mceg/20261020_model_survey/receipt.json and tests.xml
+    inspection: inspected
+    note: Fresh local pytest execution; tests consume stored references where applicable. No external
+      reference program or experiment was rerun.
+limitations:
+- statement: This construction supplies no fitted Henry coefficient, experimental composition envelope
+    or gas-to-liquid standard alignment.
+  evidence:
+  - implementation
+- statement: Composition-dependent solute standards need an explicitly differentiated full scalar
+    and cannot be frozen into this helper.
+  evidence:
+  - implementation
+subjects:
+- id: survey_20261020
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 37b9173f37866495949fd7c90340a02b7ceaa78d
+    entry_points:
+    - exoeos.mass_fraction_solute_state
+  selected_files:
+    documents/m2_material_contract.rst: 2fbf912201b1c18bcc412152a7195cb70db812f755a70d205aa43409b1ae2686
+    pyproject.toml: e98593ed10b694c708c13e63d76aa47700c4237d1d957838f8d82237821b5883
+    src/exoeos/__init__.py: b53b3a90a57cbec34b794fd084379aed6e45526e38ee574ec6483e7e79d78592
+    src/exoeos/_arrays.py: 020679ce40515c27ce0bf31f5b71b1f737737d4a5ebc0301198a9e2bcbedf507
+    src/exoeos/constants.py: 69e57fe70ad4ea775f2d97722548276c87d3a91c76eb6be8f1be43ac30f83fa4
+    src/exoeos/contracts.py: ba1052326b066d7d3e5a57b5e63ac3dba5cc388e7d0bb9d2bf38431fe996d580
+    src/exoeos/gibbs_excess.py: c3354acd4f79940cee2723ec3d2c5500751c767666d295f8c04c3c97b8cfc7b3
+    src/exoeos/ideal_solution.py: b581faffae27988866fa88e0d2031413a81a0f1da33ceee9f524d663a758e4d0
+    src/exoeos/mass_fraction_solute.py: d49c698a2814c62b73f128ef8e87a869e940f180334e7ae7b95b994df919830b
+    src/exoeos/solution_gibbs.py: 6894b0821ab2955add1c85aa9087766d430b8bb2585b73aa1fe5c97ad463b693
+    src/exoeos/state.py: 76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54
+    tests/conftest.py: 87d47ae57e35ed7a10960ae12407c8a274188271ea86d5e0016d3d70501e2096
+    tests/unittests/mass_fraction_solute_test.py: d8d13f954e61c49bd0ee19dc83024a16923e181a6258f8c2eca11beb925e5298
+contexts:
+- id: test_environment
+  scope: Actual local test environment; test files and fixtures define individual calculation inputs.
+  settings:
+    python: 3.12.7
+    jax: 0.6.2
+    jaxlib: 0.6.2
+    numpy: 2.1.0
+    scipy: 1.14.1
+    pytest: 8.3.3
+    backend: cpu
+    x64: true
+    test_selection: tests/unittests/mass_fraction_solute_test.py
+conditions: []
+assessments:
+- id: numerical_review
+  kind: evidence_support
+  claim: numerical_verification
+  claim_revision: '1'
+  subject: survey_20261020
+  context: test_environment
+  method:
+    id: review_selected_pytest
+    revision: '1'
+    description: Read actual test outcomes and selected file pins; limit support to those numerical
+      assertions.
+  evidence:
+  - test_run
+  reasons:
+  - 8 tests in the selected modules; see the shared receipt for per-module counts.
+  - Selected files matched Git at execution and were unchanged afterward. Other revisions, environments
+    and empirical accuracy need separate review.
+  status: supported
+  origin: reviewed
+- id: physical_review
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: test_environment
+  method:
+    id: review_empirical_support
+    revision: '1'
+    description: Separate numerical verification from experimental or observational support.
+  evidence:
+  - upstream_model
+  - implementation
+  reasons:
+  - This is an analytic construction documented in the inspected provider implementation, not an empirical
+    fit.
+  - Numerical agreement and membership in metadata intervals do not establish physical accuracy.
+  status: unknown
+  origin: reviewed
+follow_ups:
+- id: empirical_scope
+  target_kind: claim
+  target: physical_accuracy
+  revision: '1'
+  action: Inspect the original model equations and relevant material-specific data; record a separate
+    empirical assessment for a declared application.
+  requires:
+  - Original source passages, equations and coefficient tables with inspection locations.
+  - Explicit T/P, composition basis, gas driving quantity, standard states and uncertainty criteria.
+  - Reproducible comparison against independent observations or experiments, when available.
+  completion: A new scoped assessment cites inspected evidence and states its remaining gaps; a numerical
+    pass alone does not complete this task.
+  sources:
+  - src/exoeos/mass_fraction_solute.py
+  - documents/m2_material_contract.rst
