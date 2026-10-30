@@ -24,6 +24,39 @@ mceg explain mceg/contracts/ma_fe_si_o.yaml --assessment physical_review_2026102
 Source inspection does not establish physical accuracy. Remote artifact hashes
 identify downloaded bytes; offline MCEG checks do not verify those URLs.
 
+## Installed-package discovery
+
+The packaged [evidence catalog](../src/exoeos/data/mceg/index.json) uses MCEG's
+catalog format `1`. It contains the nine registered model contracts and explicit
+assessment selections, including their historical source reviews. With a version
+of MCEG that supports package catalogs:
+
+```bash
+mceg explain --package exoeos
+mceg explain --package exoeos --model exoeos.magma_volatiles.v1
+mceg graph --package exoeos
+```
+
+For a checkout or editable installation, use the explicit catalog path:
+
+```bash
+mceg explain --catalog src/exoeos/data/mceg/index.json
+mceg graph --catalog src/exoeos/data/mceg/index.json
+```
+
+`python mceg/build_catalog.py` regenerates the index and byte-for-byte copies
+from the canonical `mceg/contracts/` files using only the standard library.
+Review the model/assessment selections and update the record version when
+publishing a new evidence snapshot. Commit the generated files with that review.
+
+This is model-level discovery; species-specific coverage is not declared.
+Assessment selections preserve the recorded history without choosing a current
+or most favorable result. The catalog checks bundled contract hashes; original
+repository paths and source URIs remain unchanged and are not audited by package
+lookup. Use a canonical contract path and an explicit assessment with `--root .`
+to audit local evidence in the checkout. URI sources remain unchecked offline.
+Original papers and table transcriptions in local `refs/` are not packaged.
+
 ## Source review, 2026-10-29
 
 The [volatile-liquid contract](contracts/magma_volatiles.yaml) now records
@@ -247,8 +280,8 @@ without a run are `not_run`, and current numerical claims without support are
 `unknown`. Physical validation remains a separate question.
 
 The JSON receipt is a pilot artifact, not an extension to the v0.1 contract
-schema. These files are checkout metadata; wheel-level contract discovery and
-automatic scientific decisions are outside this pilot.
+schema. The packaged catalog exposes recorded evidence; automatic scientific
+decisions remain outside this pilot.
 
 ## Inventory coverage
 

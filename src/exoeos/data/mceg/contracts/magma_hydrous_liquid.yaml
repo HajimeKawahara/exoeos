@@ -1,0 +1,384 @@
+schema_version: '0.2'
+model:
+  id: exoeos.magma_hydrous_liquid.v1
+  name: Native MELTS mode-1 hydrous silicate liquid
+  description: A twelve-component full liquid Gibbs scalar adding H2O, its Haar standard, eleven water
+    interactions and extra water mixing entropy to dry11.
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 37b9173f37866495949fd7c90340a02b7ceaa78d
+    entry_points:
+    - exoeos.magma.liquid_gibbs [HYDROUS_COMPONENTS]
+    - exoeos.magma.liquid_standard_gibbs [include_h2o=True]
+assumptions:
+- statement: The ordered amount basis is DRY11_COMPONENTS followed by H2O; K/Pa/mol inputs give full
+    extensive J.
+  evidence:
+  - implementation
+- statement: The native water standard, interactions and extra RT*N*[xw*ln(xw)+(1-xw)*ln(1-xw)] are
+    part of G; an empirical water-solubility correction must not be added again.
+  evidence:
+  - implementation
+domains:
+- kind: numerical_evaluation
+  status: documented
+  description: Inspected numerical API and caller obligations; not a physical validation domain.
+  conditions:
+  - Finite scalar T >= 700 K, positive P, finite nonnegative shape-(12,) amounts; enable x64 and validate
+    values before tracing.
+  - Full composition derivatives require positive amounts. Dry/pure-water faces have continuous energies,
+    and an absent phase has G=0 without chemical potentials.
+  evidence:
+  - implementation
+- kind: scientific_applicability
+  status: unknown
+  description: Composition-specific physical accuracy and joint applicability remain unestablished
+    by this survey.
+  conditions: []
+  evidence:
+  - upstream_model
+  - implementation
+claims:
+- id: numerical_verification
+  revision: '1'
+  kind: numerical_verification
+  statement: Water standard and full hydrous properties against saved references, eleven water pairs,
+    entropy, inventories, endpoint energies and implicit-root derivatives in the selected module.
+  scope: Only the selected tests, their asserted tolerances and the recorded CPU/x64 environment.
+- id: physical_accuracy
+  revision: '1'
+  kind: physical_validation
+  statement: The model has quantitatively established physical accuracy for the intended melt/fluid
+    composition and conditions.
+  scope: Requires independent empirical data and explicit composition, reference-state and driving-quantity
+    conventions; not established by this survey.
+evidence:
+- id: upstream_model
+  kind: literature
+  summary: Cited model origin and retained source-review boundary.
+  sources:
+  - https://github.com/magmasource/MAGMA/tree/705a0fb315e5054d18275a580562f6121c8e458c
+  scope: The provider guide and frozen source/runtime fixtures were inspected. Their original generation
+    and empirical calibration were not independently repeated.
+  provenance:
+    role: secondary
+    location: Citations and source descriptions in the selected provider code/guide.
+    inspection: not_inspected
+    note: The provider guide and frozen source/runtime fixtures were inspected. Their original generation
+      and empirical calibration were not independently repeated.
+- id: implementation
+  kind: implementation
+  summary: A twelve-component full liquid Gibbs scalar adding H2O, its Haar standard, eleven water
+    interactions and extra water mixing entropy to dry11.
+  sources:
+  - documents/native_hydrous_liquid.rst
+  - src/exoeos/__init__.py
+  - src/exoeos/_arrays.py
+  - src/exoeos/_magma_water.py
+  - src/exoeos/constants.py
+  - src/exoeos/contracts.py
+  - src/exoeos/magma.py
+  - src/exoeos/state.py
+  scope: Inspected selected implementation, conventions and caller domains at revision 37b9173f37866495949fd7c90340a02b7ceaa78d.
+  subject: survey_20261020
+  provenance:
+    role: implementation
+    location: Selected provider source files and guide.
+    inspection: inspected
+    note: Code and declarations were read; an empirical calibration or external source replay is not
+      inferred.
+    derived_from:
+    - evidence: upstream_model
+      comparison: not_checked
+      note: Original-source scientific equivalence is not established by this implementation survey.
+- id: test_run
+  kind: numerical_test
+  summary: 180 selected tests passed.
+  sources:
+  - tests/unittests/magma_hydrous_test.py
+  - results/mceg/20261020_model_survey/receipt.json
+  - results/mceg/20261020_model_survey/tests.xml
+  - results/mceg/20261020_model_survey/tests.log
+  scope: Water standard and full hydrous properties against saved references, eleven water pairs,
+    entropy, inventories, endpoint energies and implicit-root derivatives in the selected module.
+  result: passed
+  subject: survey_20261020
+  context: test_environment
+  artifacts:
+  - source: results/mceg/20261020_model_survey/receipt.json
+    sha256: 290a0e172f914bd74b24be1792e8d1c36f9a6d44f011a39b3d550573cb0874a3
+  - source: results/mceg/20261020_model_survey/tests.xml
+    sha256: 8bb6517ac0069238e42cb0381b56a2039a5e2498c2f7ad088eeadc710d58b78d
+  - source: results/mceg/20261020_model_survey/tests.log
+    sha256: 5b516c56e9e47d73013fe839c8329d18784540b7020e7be1b3adc15823020889
+  provenance:
+    role: primary
+    location: results/mceg/20261020_model_survey/receipt.json and tests.xml
+    inspection: inspected
+    note: Fresh local pytest execution; tests consume stored references where applicable. No external
+      reference program or experiment was rerun.
+- id: ghiorso_sack1995_20261021
+  kind: literature
+  summary: Original MELTS liquid mixing formulation and calibration context.
+  sources:
+  - https://doi.org/10.1007/BF00307281
+  - https://enki-portal.org/Ghiorso/Contributions%20to%20Mineralogy%20and%20Petrology%201995%20Ghiorso.pdf
+  scope: The molar Gibbs energy combines pure-component standards, ideal mixing, symmetric regular-solution
+    pairs and an extra binary water entropy. The reported calibration uses mineral/liquid equilibria;
+    it does not independently validate this restricted provider basis.
+  provenance:
+    role: primary
+    location: Printed pp. 198-199 (PDF pp. 2-3), basic thermodynamic relations, Eq. 1 and Eqs. 2a-2b;
+      Table 1 calibration-source inventory.
+    inspection: inspected
+    note: Retrieved and inspected on 2026-10-21; the scope names the passages reviewed.
+  artifacts:
+  - source: https://enki-portal.org/Ghiorso/Contributions%20to%20Mineralogy%20and%20Petrology%201995%20Ghiorso.pdf
+    sha256: 5c1063b8c95b9e392814caf118d99773331f7e20f860f45a953cc3e2fa20b55a
+- id: gualda2012_20261021
+  kind: literature
+  summary: rhyolite-MELTS modifies quartz and alkali-feldspar calibration.
+  sources:
+  - https://doi.org/10.1093/petrology/egr080
+  - https://enki-portal.org/Ghiorso/2012%20GuaLDA.pdf
+  scope: The modified calibration targets fluid-bearing silicic systems through quartz and potassium-feldspar
+    formation enthalpies. It is not a new fit of every liquid interaction, a CO2-solubility calibration,
+    or evidence for omitted phases in this property model.
+  provenance:
+    role: primary
+    location: 'Printed pp. 875 and 877-878 (PDF pp. 1 and 3-4): abstract, model motivation and The
+      Modified Calibration.'
+    inspection: inspected
+    note: Retrieved and inspected on 2026-10-21; the scope names the passages reviewed.
+  artifacts:
+  - source: https://enki-portal.org/Ghiorso/2012%20GuaLDA.pdf
+    sha256: 9bbd578aac832960bde023ef99cc4d2b79cfd6fc4ceab70418356f76a9fb4b82
+- id: melts_versions_20261021
+  kind: literature
+  summary: Official distinction between rhyolite-MELTS 1.0.x, 1.1.x and 1.2.x.
+  sources:
+  - https://melts.ofm-research.org/Support/Understanding-rhyolite-MELTS-versions.html
+  scope: The 1.0.x model retains pure-H2O fluid; 1.1.x adds CO2/mixed terms while retaining older
+    water parameters; 1.2.x uses revised water parameters and the Duan-Zhang (2006) fluid EOS. These
+    model versions differ from the alphaMELTS software release number.
+  provenance:
+    role: primary
+    location: 'Understanding rhyolite-MELTS versions: descriptions of all three model versions.'
+    inspection: inspected
+    note: Retrieved and inspected on 2026-10-21; the scope names the passages reviewed.
+  artifacts:
+  - source: https://melts.ofm-research.org/Support/Understanding-rhyolite-MELTS-versions.html
+    sha256: f6af0243da8c7d1fbfe55ddb2c9f770decfcb1e700790f1d80a794645a10a298
+- id: magma_source_20261021
+  kind: implementation
+  summary: Inspected pinned MAGMA equations, coefficients and reference conventions.
+  sources:
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/liquid_v34.c
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/param_struct_data_v34.h
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/gibbs.c
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/water.c
+  scope: Mode-1 water standard, eleven water/DRY11 interactions and extra entropy. The separately
+    released binary is a numerical comparator, not independent experimental evidence.
+  provenance:
+    role: primary
+    location: liquid_v34.c gmixLiq_v34 extra water entropy and actLiq_v34; param_struct_data_v34.h
+      H2O pairs; gibbs.c MODE__MELTS H2O branch; water.c whaar.
+    inspection: inspected
+    note: Inspected downloaded or cached source bytes; hashes identify the pinned files. This does
+      not establish which C revision built the separately archived alphaMELTS binary.
+  artifacts:
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/liquid_v34.c
+    sha256: 584ac446d03abf64ca7406768ad84975e1af346d159bc743c9adafd9441e91f6
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/includes/param_struct_data_v34.h
+    sha256: ad78f9ac9a59c030aeee240893b00efc034ea81aed4d551abaed770215af7059
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/gibbs.c
+    sha256: 2eceff9f315210ebdcf9dfc9bacd77f625cf04dbdc5084104c093caba34d4166
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/water.c
+    sha256: 5ee8b5d59eb813c50fd66d2a9b47b317a0cde327c6ac924967d2521f770a8b08
+- id: implementation_source_review_20261021
+  kind: implementation
+  summary: Selected provider conventions are now linked to inspected original sources.
+  sources:
+  - src/exoeos/magma.py
+  - src/exoeos/_magma_water.py
+  - documents/native_hydrous_liquid.rst
+  - tests/reference/generate_hydrous_reference.py
+  scope: The eleven H2O pairs and extra RT[xw ln xw + (1-xw) ln(1-xw)] term match the pinned mode-1
+    source. The liquid standard uses real Haar water at one bar, Robie subtraction and the absolute-bar
+    pressure polynomial. Pure-water endpoint evaluation is not a stable-liquid claim.
+  subject: survey_20261020
+  context: source_review_20261021
+  provenance:
+    role: implementation
+    location: Named provider functions and the source locations linked below.
+    inspection: inspected
+    note: Scoped source comparison; no empirical accuracy claim or external runtime execution.
+    derived_from:
+    - evidence: magma_source_20261021
+      comparison: consistent
+      note: The eleven H2O pairs and extra RT[xw ln xw + (1-xw) ln(1-xw)] term match the pinned
+        mode-1 source. The liquid standard uses real Haar water at one bar, Robie subtraction and
+        the absolute-bar pressure polynomial. Pure-water endpoint evaluation is not a stable-liquid
+        claim.
+    - evidence: ghiorso_sack1995_20261021
+      comparison: consistent
+      note: Eq. 1 includes the extra water entropy; Eqs. 2a-2b distinguish dry and water chemical-potential
+        entropy terms.
+    - evidence: melts_versions_20261021
+      comparison: consistent
+      note: The reviewed original-water branch is distinct from revised mode-4 water; 2012 solid-phase
+        corrections do not redefine these liquid interactions.
+limitations:
+- statement: Compiled-source and saved native-runtime agreement do not establish water solubility
+    accuracy for arbitrary melt or H2/He-rich atmospheres.
+  evidence:
+  - implementation
+- statement: The 1480 K SiO2 branch and unsupported composition derivatives remain separate boundaries.
+    This model is distinct from the zero-carbon face of mode 4.
+  evidence:
+  - implementation
+subjects:
+- id: survey_20261020
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 37b9173f37866495949fd7c90340a02b7ceaa78d
+    entry_points:
+    - exoeos.magma.liquid_gibbs [HYDROUS_COMPONENTS]
+    - exoeos.magma.liquid_standard_gibbs [include_h2o=True]
+  selected_files:
+    documents/native_hydrous_liquid.rst: 9ba5048730e1a8baca59924dded3c26ee6582ed628927ce60589bb77e5bcd099
+    pyproject.toml: e98593ed10b694c708c13e63d76aa47700c4237d1d957838f8d82237821b5883
+    src/exoeos/__init__.py: b53b3a90a57cbec34b794fd084379aed6e45526e38ee574ec6483e7e79d78592
+    src/exoeos/_arrays.py: 020679ce40515c27ce0bf31f5b71b1f737737d4a5ebc0301198a9e2bcbedf507
+    src/exoeos/_magma_water.py: 8c93e90181741952f56da7ae15007043db438ff15452cc07b968d3e80f921934
+    src/exoeos/constants.py: 69e57fe70ad4ea775f2d97722548276c87d3a91c76eb6be8f1be43ac30f83fa4
+    src/exoeos/contracts.py: ba1052326b066d7d3e5a57b5e63ac3dba5cc388e7d0bb9d2bf38431fe996d580
+    src/exoeos/magma.py: 4f085ac25f3781cc4120ac7b56c67446668d1911d8cdaeeef077ff9e529807ed
+    src/exoeos/state.py: 76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54
+    tests/conftest.py: 87d47ae57e35ed7a10960ae12407c8a274188271ea86d5e0016d3d70501e2096
+    tests/reference/hydrous_melts_v1.json: 6290bafd3c2be569e1f73b25ecb1c16d3ea3ef68165602ff417576a48dff0db5
+    tests/reference/hydrous_source_v1.json: ddca061f5e0046ef03488fa4b90c442123507cf8e50303ad226b5b0ae5554f7d
+    tests/unittests/magma_hydrous_test.py: 64b9ed01c16f93fe8acc87bbc4075e4354174a9227495b920483e4095f1fbff3
+contexts:
+- id: test_environment
+  scope: Actual local test environment; test files and fixtures define individual calculation inputs.
+  settings:
+    python: 3.12.7
+    jax: 0.6.2
+    jaxlib: 0.6.2
+    numpy: 2.1.0
+    scipy: 1.14.1
+    pytest: 8.3.3
+    backend: cpu
+    x64: true
+    test_selection: tests/unittests/magma_hydrous_test.py
+- id: source_review_20261021
+  scope: Source inspection and formulation comparison; no empirical application or uncertainty target
+    is assigned.
+  settings:
+    review_date: '2026-10-21'
+    model_choice: Mode-1 hydrous DRY11 + H2O; original water interaction convention.
+    source_hash_policy: Hashes identify retrieved bytes; MCEG does not download or verify URI artifacts.
+conditions: []
+assessments:
+- id: numerical_review
+  kind: evidence_support
+  claim: numerical_verification
+  claim_revision: '1'
+  subject: survey_20261020
+  context: test_environment
+  method:
+    id: review_selected_pytest
+    revision: '1'
+    description: Read actual test outcomes and selected file pins; limit support to those numerical
+      assertions.
+  evidence:
+  - test_run
+  reasons:
+  - 180 tests in the selected modules; see the shared receipt for per-module counts.
+  - Selected files matched Git at execution and were unchanged afterward. Other revisions, environments
+    and empirical accuracy need separate review.
+  status: supported
+  origin: reviewed
+- id: physical_review
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: test_environment
+  method:
+    id: review_empirical_support
+    revision: '1'
+    description: Separate numerical verification from experimental or observational support.
+  evidence:
+  - upstream_model
+  - implementation
+  reasons:
+  - The provider guide and frozen source/runtime fixtures were inspected. Their original generation
+    and empirical calibration were not independently repeated.
+  - Numerical agreement and membership in metadata intervals do not establish physical accuracy.
+  status: unknown
+  origin: reviewed
+- id: physical_review_20261021
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: source_review_20261021
+  method:
+    id: inspect_published_formulation
+    revision: '1'
+    description: Compare inspected source passages and pinned code; separate implementation provenance
+      from empirical support.
+  evidence:
+  - implementation_source_review_20261021
+  - ghiorso_sack1995_20261021
+  - gualda2012_20261021
+  - melts_versions_20261021
+  reasons:
+  - Selected equations, parameter choices and reference conventions now have inspected source locations
+    and byte hashes.
+  - Neither original water-solubility observations nor phase-equilibrium calibration cases were
+    replayed; source/runtime numerical agreement does not assign a hydrous-liquid error bound.
+  - No new empirical error bound or joint applicability domain is established; the earlier survey
+    and test receipt remain historical.
+  status: unknown
+  origin: reviewed
+follow_ups:
+- id: empirical_scope
+  target_kind: claim
+  target: physical_accuracy
+  revision: '1'
+  action: Inspect the original model equations and relevant material-specific data; record a separate
+    empirical assessment for a declared application.
+  requires:
+  - Original source passages, equations and coefficient tables with inspection locations.
+  - Explicit T/P, composition basis, gas driving quantity, standard states and uncertainty criteria.
+  - Reproducible comparison against independent observations or experiments, when available.
+  completion: A new scoped assessment cites inspected evidence and states its remaining gaps; a numerical
+    pass alone does not complete this task.
+  sources:
+  - https://github.com/magmasource/MAGMA/tree/705a0fb315e5054d18275a580562f6121c8e458c
+- id: inspect_accessible_sources
+  target_kind: evidence
+  target: upstream_model
+  action: Inspect accessible model papers and pinned source branches for the declared provider conventions.
+  requires:
+  - Source locations and downloaded-byte hashes.
+  - Explicit scope for branch choices, standard states and remaining source/data gaps.
+  completion: New inspected source records and a scoped comparison are recorded; empirical calibration
+    replay and unavailable sources remain separate work.
+  sources:
+  - https://doi.org/10.1007/BF00307281
+  - https://doi.org/10.1093/petrology/egr080
+  - https://melts.ofm-research.org/Support/Understanding-rhyolite-MELTS-versions.html
+follow_up_resolutions:
+- follow_up: inspect_accessible_sources
+  evidence:
+  - ghiorso_sack1995_20261021
+  - gualda2012_20261021
+  - melts_versions_20261021
+  - magma_source_20261021
+  - implementation_source_review_20261021
+  note: Completed the accessible-source inspection on 2026-10-21. The existing empirical_scope task
+    remains open; no physical validation or full runtime replay is inferred.

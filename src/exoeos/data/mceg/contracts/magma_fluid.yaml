@@ -1,0 +1,655 @@
+schema_version: '0.2'
+model:
+  id: exoeos.magma_fluid.v1
+  name: Magma-reference H2O and H2O-CO2 fluid Gibbs energy
+  description: Native ideal gas standards combined with an explicitly selected residual EOS for pure
+    water or an ordered binary H2O/CO2 fluid.
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 37b9173f37866495949fd7c90340a02b7ceaa78d
+    entry_points:
+    - exoeos.magma_fluid.water_fluid_gibbs
+    - exoeos.magma_fluid.mixed_fluid_gibbs
+    - exoeos.magma_fluid.water_gas_standard_gibbs
+    - exoeos.magma_fluid.co2_gas_standard_gibbs
+assumptions:
+- statement: 'An explicitly supplied EOS must match the species count and order: pure H2O or (H2O,CO2).
+    The vapor-root policy and its mechanical-stability restrictions belong to that EOS.'
+  evidence:
+  - implementation
+- statement: The standards are the zero-density one-bar references. The full energy includes standards,
+    ideal pressure/mixing and the selected residual term exactly once.
+  evidence:
+  - implementation
+- statement: This hybrid is distinct from the native MELTS fluid EOS. K/Pa/mol inputs give extensive
+    J.
+  evidence:
+  - implementation
+domains:
+- kind: numerical_evaluation
+  status: documented
+  description: Inspected numerical API and caller obligations; not a physical validation domain.
+  conditions:
+  - Finite scalar T >= 700 K, P > 0 and nonnegative amounts, plus the selected EOS domain. Enable
+    x64; value validation and species identity are caller obligations.
+  - Binary composition derivatives require both components positive; pure endpoints have fixed-face
+    derivatives. G=0 for an absent phase does not define insertion potentials.
+  evidence:
+  - implementation
+- kind: scientific_applicability
+  status: unknown
+  description: Composition-specific physical accuracy and joint applicability remain unestablished
+    by this survey.
+  conditions: []
+  evidence:
+  - upstream_model
+  - implementation
+claims:
+- id: numerical_verification
+  revision: '1'
+  kind: numerical_verification
+  statement: Saved ideal-standard and independent pressure-integral controls, fugacities, extensive
+    derivatives and liquid/fluid transfer identities in the two selected modules.
+  scope: Only the selected tests, their asserted tolerances and the recorded CPU/x64 environment.
+- id: physical_accuracy
+  revision: '1'
+  kind: physical_validation
+  statement: The model has quantitatively established physical accuracy for the intended melt/fluid
+    composition and conditions.
+  scope: Requires independent empirical data and explicit composition, reference-state and driving-quantity
+    conventions; not established by this survey.
+evidence:
+- id: upstream_model
+  kind: literature
+  summary: Cited model origin and retained source-review boundary.
+  sources:
+  - https://github.com/magmasource/MAGMA/tree/705a0fb315e5054d18275a580562f6121c8e458c
+  - https://doi.org/10.1016/j.gca.2009.01.021
+  scope: Provider standards, formula definitions and saved references were inspected. Original pure-fluid
+    source generation and the cited EOS paper were not re-inspected.
+  provenance:
+    role: secondary
+    location: Citations and source descriptions in the selected provider code/guide.
+    inspection: not_inspected
+    note: Provider standards, formula definitions and saved references were inspected. Original pure-fluid
+      source generation and the cited EOS paper were not re-inspected.
+- id: implementation
+  kind: implementation
+  summary: Native ideal gas standards combined with an explicitly selected residual EOS for pure water
+    or an ordered binary H2O/CO2 fluid.
+  sources:
+  - documents/native_magma_fluid.rst
+  - src/exoeos/__init__.py
+  - src/exoeos/_arrays.py
+  - src/exoeos/_magma_carbon.py
+  - src/exoeos/_magma_water.py
+  - src/exoeos/constants.py
+  - src/exoeos/contracts.py
+  - src/exoeos/helmholtz.py
+  - src/exoeos/ideal.py
+  - src/exoeos/magma.py
+  - src/exoeos/magma_carbonate.py
+  - src/exoeos/magma_fluid.py
+  - src/exoeos/peng_robinson.py
+  - src/exoeos/state.py
+  - src/exoeos/zhang_duan.py
+  scope: Inspected selected implementation, conventions and caller domains at revision 37b9173f37866495949fd7c90340a02b7ceaa78d.
+  subject: survey_20261020
+  provenance:
+    role: implementation
+    location: Selected provider source files and guide.
+    inspection: inspected
+    note: Code and declarations were read; an empirical calibration or external source replay is not
+      inferred.
+    derived_from:
+    - evidence: upstream_model
+      comparison: not_checked
+      note: Original-source scientific equivalence is not established by this implementation survey.
+- id: test_run
+  kind: numerical_test
+  summary: 97 selected tests passed.
+  sources:
+  - tests/unittests/magma_fluid_test.py
+  - tests/unittests/magma_mixed_fluid_test.py
+  - results/mceg/20261020_model_survey/receipt.json
+  - results/mceg/20261020_model_survey/tests.xml
+  - results/mceg/20261020_model_survey/tests.log
+  scope: Saved ideal-standard and independent pressure-integral controls, fugacities, extensive derivatives
+    and liquid/fluid transfer identities in the two selected modules.
+  result: passed
+  subject: survey_20261020
+  context: test_environment
+  artifacts:
+  - source: results/mceg/20261020_model_survey/receipt.json
+    sha256: 290a0e172f914bd74b24be1792e8d1c36f9a6d44f011a39b3d550573cb0874a3
+  - source: results/mceg/20261020_model_survey/tests.xml
+    sha256: 8bb6517ac0069238e42cb0381b56a2039a5e2498c2f7ad088eeadc710d58b78d
+  - source: results/mceg/20261020_model_survey/tests.log
+    sha256: 5b516c56e9e47d73013fe839c8329d18784540b7020e7be1b3adc15823020889
+  provenance:
+    role: primary
+    location: results/mceg/20261020_model_survey/receipt.json and tests.xml
+    inspection: inspected
+    note: Fresh local pytest execution; tests consume stored references where applicable. No external
+      reference program or experiment was rerun.
+- id: zd2009_20261021
+  kind: literature
+  summary: Original residual EOS used by the explicit Zhang-Duan fluid example.
+  sources:
+  - https://doi.org/10.1016/j.gca.2009.01.021
+  - https://efs.idsse.ac.cn/module1/citation/2009-04-01/article.pdf
+  scope: Eq. 8 and Tables 3-4 specify the residual correlation and H2O/CO2 constants. They do not
+    prescribe the provider MELTS energy offsets. The implementation uses physical Z rather than
+    the additional scaling printed on the left of Eq. 8; water volume controls do not establish
+    hybrid solubility accuracy.
+  provenance:
+    role: primary
+    location: 'Printed pp. 2091-2093 (PDF pp. 3-5): Section 2.2, Eqs. 7-11 and Tables 3-6.'
+    inspection: inspected
+    note: Retrieved and inspected on 2026-10-21; the scope names the passages reviewed.
+  artifacts:
+  - source: https://efs.idsse.ac.cn/module1/citation/2009-04-01/article.pdf
+    sha256: 6d72a0eed45e9a83887a73f01ae08d10f77fa251720662195dfb66a1f159d9d6
+- id: melts_versions_20261021
+  kind: literature
+  summary: Official distinction between rhyolite-MELTS 1.0.x, 1.1.x and 1.2.x.
+  sources:
+  - https://melts.ofm-research.org/Support/Understanding-rhyolite-MELTS-versions.html
+  scope: The 1.0.x model retains pure-H2O fluid; 1.1.x adds CO2/mixed terms while retaining older
+    water parameters; 1.2.x uses revised water parameters and the Duan-Zhang (2006) fluid EOS. These
+    model versions differ from the alphaMELTS software release number.
+  provenance:
+    role: primary
+    location: 'Understanding rhyolite-MELTS versions: descriptions of all three model versions.'
+    inspection: inspected
+    note: Retrieved and inspected on 2026-10-21; the scope names the passages reviewed.
+  artifacts:
+  - source: https://melts.ofm-research.org/Support/Understanding-rhyolite-MELTS-versions.html
+    sha256: f6af0243da8c7d1fbfe55ddb2c9f770decfcb1e700790f1d80a794645a10a298
+- id: magma_source_20261021
+  kind: implementation
+  summary: Inspected pinned MAGMA equations, coefficients and reference conventions.
+  sources:
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/water.c
+  - https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/fluidPhase.c
+  scope: Analytic zero-density H2O and idealGasCO2 one-bar standards. This inspection does not validate
+    the original Haar calibration or the complete native MELTS mixed-fluid implementation.
+  provenance:
+    role: primary
+    location: water.c whaar ideal term ci and MELTS energy-reference shift; fluidPhase.c idealCoeff
+      and idealGasCO2.
+    inspection: inspected
+    note: Inspected downloaded or cached source bytes; hashes identify the pinned files. This does
+      not establish which C revision built the separately archived alphaMELTS binary.
+  artifacts:
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/water.c
+    sha256: 5ee8b5d59eb813c50fd66d2a9b47b317a0cde327c6ac924967d2521f770a8b08
+  - source: https://github.com/magmasource/MAGMA/blob/705a0fb315e5054d18275a580562f6121c8e458c/sources/fluidPhase.c
+    sha256: 2aa11edc637c2aadc7722c8a606ce6e7ccde87a59add5c7f8d9abefdb8048cc0
+- id: implementation_source_review_20261021
+  kind: implementation
+  summary: Selected provider conventions are now linked to inspected original sources.
+  sources:
+  - src/exoeos/magma_fluid.py
+  - src/exoeos/_magma_water.py
+  - src/exoeos/_magma_carbon.py
+  - documents/native_magma_fluid.rst
+  - tests/reference/generate_magma_fluid_reference.py
+  scope: The water ideal term and fixed reference shift follow water.c; the CO2 ideal polynomial
+    and H/S offsets follow idealGasCO2. Standards, ideal pressure/mixing and the selected residual
+    contribution are counted once. Real one-bar liquid references cannot replace these zero-density
+    gas standards.
+  subject: survey_20261020
+  context: source_review_20261021
+  provenance:
+    role: implementation
+    location: Named provider functions and the source locations linked below.
+    inspection: inspected
+    note: Scoped source comparison; no empirical accuracy claim or external runtime execution.
+    derived_from:
+    - evidence: magma_source_20261021
+      comparison: consistent
+      note: The water ideal term and fixed reference shift follow water.c; the CO2 ideal polynomial
+        and H/S offsets follow idealGasCO2. Standards, ideal pressure/mixing and the selected residual
+        contribution are counted once. Real one-bar liquid references cannot replace these zero-density
+        gas standards.
+    - evidence: zd2009_20261021
+      comparison: not_checked
+      note: The residual coefficients were read, but the documented physical-Z interpretation differs
+        from the printed Eq. 8 left side; complete paper-to-hybrid equivalence is not asserted.
+    - evidence: melts_versions_20261021
+      comparison: consistent
+      note: The provider documents its explicit 2009 EOS choice separately from the native 1.2.x
+        Duan-Zhang (2006) fluid model.
+- id: ghiorso_gualda2015_supplement_20261021
+  kind: literature
+  summary: Ghiorso-Gualda (2015) ESM fluid specification inspected from a privately supplied PDF.
+  sources:
+  - https://doi.org/10.1007/s00410-015-1141-8
+  - urn:sha256:d7319ac8dd2f523a9ea16924195a3e61dd74d92757cae5c0ee0fb5b46d8a89b2
+  context: supplement_review_20261021
+  scope: The ESM selects Duan-Zhang (2006), referring to its Tables 4-6 for parameters
+    and mixing rules. Eq. 8 describes fluid potentials relative to an ideal-gas standard;
+    Eqs. 9-19 derive fugacity coefficients. The provider's Zhang-Duan (2009) example uses
+    a different residual EOS; equivalence of the suggested caloric reference to its pinned
+    Haar/idealGasCO2 standards is not established.
+  artifacts:
+  - source: urn:sha256:d7319ac8dd2f523a9ea16924195a3e61dd74d92757cae5c0ee0fb5b46d8a89b2
+    sha256: d7319ac8dd2f523a9ea16924195a3e61dd74d92757cae5c0ee0fb5b46d8a89b2
+  provenance:
+    role: primary
+    location: PDF pp. 2-5 (Appendix pp. 1/10-4/10, Eqs. 1-19), including rendered Eq. 8 on p. 3.
+    inspection: inspected
+    note: User-supplied Ghiorso_Gualda_sup.pdf, 49 pages, inspected on 2026-10-21.
+      The document, extracted text and images remain outside Git. Its hash was verified
+      locally; offline MCEG does not verify URI artifacts. Full EOS equivalence was not established.
+- id: gg2015_supplement_fluid_comparison_20261021
+  kind: implementation
+  summary: The ESM fluid Eq. 8 has inconsistent printed equalities; the explicit hybrid convention is retained.
+  sources:
+  - src/exoeos/magma_fluid.py
+  - documents/native_magma_fluid.rst
+  subject: survey_20261020
+  context: supplement_review_20261021
+  scope: The middle expression in ESM Eq. 8 adds RT*log(phi_pure*P) and
+    RT*log(X_i*phi_i*P); its final expression instead contains RT*log(X_i*phi_i/phi_pure).
+    These are not algebraically equal. The provider uses its ideal one-bar gas standards
+    plus ideal mixing, log(P/1e5) and the selected EOS residual exactly once. It does not
+    adopt the ESM's final ratio as its absolute potential or claim native MELTS-fluid equivalence.
+  provenance:
+    role: implementation
+    location: Rendered ESM PDF p. 3, Eq. 8; magma_fluid.py mixed_fluid_gibbs and water_fluid_gibbs.
+    inspection: inspected
+    note: This is a reviewer-observed algebraic inconsistency, not an established author
+      correction. It is separate from the Zhang-Duan (2009) Eq. 8 Z convention recorded earlier.
+    derived_from:
+    - evidence: ghiorso_gualda2015_supplement_20261021
+      comparison: discrepancy
+      note: The printed equality chain cannot be used as an unambiguous implementation
+        specification; fluid EOS selection and caloric standards also require explicit choices.
+    - evidence: magma_source_20261021
+      comparison: consistent
+      note: The existing comparison of the provider's Haar and idealGasCO2 standards is
+        retained; this does not assert equivalence to the complete upstream fluid EOS.
+- id: zd2009_extended_review_20261021
+  kind: literature
+  summary: Public Zhang-Duan (2009) PDF inspected for residual equations, mixture rules and published model volumes.
+  sources:
+  - https://doi.org/10.1016/j.gca.2009.01.021
+  - https://efs.idsse.ac.cn/module1/citation/2009-04-01/article.pdf
+  context: zd2009_comparison_review_20261021
+  scope: Eqs. 1-2 define chemical potential and fugacity with a 0.1 MPa ideal-gas standard.
+    Eqs. 8-16 and Tables 3-4 specify the residual EOS, scaling and mixture rules. Table 6
+    distinguishes experimental water volumes from the model's This study column; only
+    the latter is replayed here. Table 7 gives H2O-CO2 k1=0.85 and k2=1.02 and reports
+    a calibration range of 673-2573 K and 1-10000 MPa. That range and its reported
+    errors are not transferred to the provider's hybrid Gibbs model.
+  artifacts:
+  - source: https://efs.idsse.ac.cn/module1/citation/2009-04-01/article.pdf
+    sha256: 6d72a0eed45e9a83887a73f01ae08d10f77fa251720662195dfb66a1f159d9d6
+  provenance:
+    role: primary
+    location: 'Printed pp. 2090-2094 (PDF pp. 2-6): Eqs. 1-2 and 7-16; Tables 3, 4, 6 and 7.'
+    inspection: inspected
+    note: Fresh public download matched the earlier zd2009_20261021 hash. Equations and
+      tables were visually checked on rendered pages. The PDF and extracted pages stay
+      outside Git; URI hashes were verified locally, not by offline MCEG.
+- id: zd2009_residual_comparison_20261021
+  kind: implementation
+  summary: Residual coefficients, H2O/CO2 parameters and mixture rules match the inspected paper.
+  sources:
+  - src/exoeos/zhang_duan.py
+  - src/exoeos/helmholtz.py
+  subject: survey_20261020
+  context: zd2009_comparison_review_20261021
+  scope: All 15 Table 3 coefficients, H2O/CO2 Table 4 constants and Table 7 binary
+    parameters agree. The Eq. 8 right side, Eq. 10 temperature scaling, Eq. 11 volume
+    conversion, Eqs. 12-13 mixture rules and Eq. 15 residual Helmholtz expression agree.
+    The Eq. 8 left side and Eq. 14 are assessed separately below; full paper-to-hybrid
+    equivalence, including the caloric standards, is not claimed.
+  provenance:
+    role: implementation
+    location: zhang_duan.py _mixture_parameters, _compressibility_factor, _density_scale and alphar.
+    inspection: inspected
+    note: The existing implementation and all survey file pins are unchanged.
+    derived_from:
+    - evidence: zd2009_extended_review_20261021
+      comparison: consistent
+      note: Consistency is limited to the explicitly listed residual equations and parameters.
+- id: zd2009_equation_discrepancies_20261021
+  kind: implementation
+  summary: The printed Eq. 8 scaling and Eq. 14 fugacity expression differ from the retained implementation.
+  sources:
+  - src/exoeos/zhang_duan.py
+  - src/exoeos/helmholtz.py
+  - results/mceg/20261021_zd2009_fluid_review/reproduce.py
+  subject: survey_20261020
+  context: zd2009_comparison_review_20261021
+  scope: With P/Pm in MPa, V in cm3/mol, Vm in L/mol and R=0.00831446261815324
+    MPa L/(mol K), Eqs. 9-11 give Pm*Vm/(R*Tm)=C*Z_physical, where
+    C=3.0636*3.691^3/154=1.0003304193597116. Physical Z reproduces all 31 Table 6
+    model volumes within 0.005 cm3/mol; this scaled reading reproduces 27 of 31.
+    Differentiating N*S1 at fixed T,V gives a -2*S2 energy term and k2 in the size
+    sum, whereas printed Eq. 14 has +2*S2 and k1 there. The derived expression
+    agrees with provider lnphi at three H2O-CO2 compositions. Neither result
+    establishes the authors' intended correction or empirical hybrid accuracy.
+  provenance:
+    role: implementation
+    location: 'PDF pp. 3-4, Eqs. 8-16; zhang_duan.py alphar/molar_density and helmholtz.py state_trho.'
+    inspection: inspected
+    note: Reviewer derivation from the printed scaling and mixture rules, not an
+      author-confirmed erratum. The separate Ghiorso-Gualda (2015) ESM Eq. 8 issue
+      and the hybrid's Haar/idealGasCO2 caloric-standard differences remain open.
+    derived_from:
+    - evidence: zd2009_extended_review_20261021
+      comparison: discrepancy
+      note: Eq. 8 retains an extra scaling factor under the stated unit convention;
+        Eq. 14's printed energy sign and size interaction coefficient differ from
+        the derivative of the paper's residual Helmholtz expression and mixture rules.
+- id: zd2009_comparison_run_20261021
+  kind: numerical_test
+  summary: All 31 published water model volumes and three derived binary fugacity comparisons passed.
+  sources:
+  - results/mceg/20261021_zd2009_fluid_review/reproduce.py
+  - results/mceg/20261021_zd2009_fluid_review/comparison.json
+  subject: survey_20261020
+  context: zd2009_comparison_review_20261021
+  result: passed
+  scope: Table 6 model volumes agree within half the printed 0.01 cm3/mol step;
+    maximum absolute difference is 0.004795474503385577 cm3/mol. Independent NumPy/SciPy
+    inversion agrees with provider volumes within 1e-9 cm3/mol. At 1573.15 K,
+    1450 MPa and x_H2O=0.5, 0.7, 0.9, the derived lnphi agrees within 1e-11 for both
+    components; the printed Eq. 14 values are saved alongside it. These are source
+    and thermodynamic-consistency checks, not new experimental comparisons.
+  artifacts:
+  - source: results/mceg/20261021_zd2009_fluid_review/reproduce.py
+    sha256: daa1a1e44627fd95de34d15192bab8d92622ebff177203cd88e12453f742b4fe
+  - source: results/mceg/20261021_zd2009_fluid_review/comparison.json
+    sha256: 3d24500c476db5b48d57b9dc6fe52edf7a1c9bb2a55c5b99c8104d7304c0c752
+  provenance:
+    role: primary
+    location: Archived comparison.json; replay with the command in reproduce.py's module docstring.
+    inspection: inspected
+    note: Fresh CPU/x64 execution with source values transcribed from rendered tables.
+      The report records conditions, units, conventions, dependency versions and source-file hashes.
+    derived_from:
+    - evidence: zd2009_extended_review_20261021
+      comparison: consistent
+      note: Numerical agreement applies to Table 6's This study model-output column only;
+        neither the experimental columns nor the full calibration dataset were replayed.
+limitations:
+- statement: Saved pressure-integral and derivative comparisons are implementation evidence, not physical
+    validation of solubility, saturation or the selected fluid mixture.
+  evidence:
+  - implementation
+- statement: No phase-equilibrium solver is included; reference alignment does not remove empirical
+    EOS limitations.
+  evidence:
+  - implementation
+subjects:
+- id: survey_20261020
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 37b9173f37866495949fd7c90340a02b7ceaa78d
+    entry_points:
+    - exoeos.magma_fluid.water_fluid_gibbs
+    - exoeos.magma_fluid.mixed_fluid_gibbs
+    - exoeos.magma_fluid.water_gas_standard_gibbs
+    - exoeos.magma_fluid.co2_gas_standard_gibbs
+  selected_files:
+    documents/native_magma_fluid.rst: 30e4aad8930170eca25b9dafa84efd218a91252469409fab1f075087a988df56
+    pyproject.toml: e98593ed10b694c708c13e63d76aa47700c4237d1d957838f8d82237821b5883
+    src/exoeos/__init__.py: b53b3a90a57cbec34b794fd084379aed6e45526e38ee574ec6483e7e79d78592
+    src/exoeos/_arrays.py: 020679ce40515c27ce0bf31f5b71b1f737737d4a5ebc0301198a9e2bcbedf507
+    src/exoeos/_magma_carbon.py: 7030f9c70da6d51fc680cf1b5810078ef22e31fdf501b8d34a6bd5af99cd1b99
+    src/exoeos/_magma_water.py: 8c93e90181741952f56da7ae15007043db438ff15452cc07b968d3e80f921934
+    src/exoeos/constants.py: 69e57fe70ad4ea775f2d97722548276c87d3a91c76eb6be8f1be43ac30f83fa4
+    src/exoeos/contracts.py: ba1052326b066d7d3e5a57b5e63ac3dba5cc388e7d0bb9d2bf38431fe996d580
+    src/exoeos/helmholtz.py: 75d7ab3a68781c73e8d8197c05151f0a8adb076595bcfad296a544f00860318e
+    src/exoeos/ideal.py: 556d07bb0ffe4d2b3d00a0ea451be128185e1f789382c5ac54f0ad7363c90b6b
+    src/exoeos/magma.py: 4f085ac25f3781cc4120ac7b56c67446668d1911d8cdaeeef077ff9e529807ed
+    src/exoeos/magma_carbonate.py: 1ccdaa2c7a9ebeff2d084365bf14f9fe69ca8e944690655e3b47e4b38f19b2c2
+    src/exoeos/magma_fluid.py: a1c84490d83f6dab4b1fa15e775c53dd011f6120a21aa1b99df2bd187f5bb5da
+    src/exoeos/peng_robinson.py: d41306a6ae5c8ea8360e79d9ef28b75ddd1a73ba31446b55984f6dcbc56316f3
+    src/exoeos/state.py: 76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54
+    src/exoeos/zhang_duan.py: bacbb5d7d1295258fa3d888067bb8060450a01a4bbfa8a40eb499483a3bee986
+    tests/conftest.py: 87d47ae57e35ed7a10960ae12407c8a274188271ea86d5e0016d3d70501e2096
+    tests/reference/carbonate_source_v1.json: 0359915dc41b410eddf149eca197786827b8d31bff8cba9cb5a3a7f621d1474f
+    tests/reference/magma_fluid_v1.json: cb017b559868a372be9b6cce70614cd6d87400950bd344aa3942da63d6a612d4
+    tests/unittests/magma_fluid_test.py: be3146c68af2c11f603789ca769b711bb2f6bb099749940f96746be20667f5af
+    tests/unittests/magma_mixed_fluid_test.py: 7f0dcbc47ad07b73d9f9cf82eb5f93c44fcbcd4c8d470b9740c4ea6119b835fa
+contexts:
+- id: test_environment
+  scope: Actual local test environment; test files and fixtures define individual calculation inputs.
+  settings:
+    python: 3.12.7
+    jax: 0.6.2
+    jaxlib: 0.6.2
+    numpy: 2.1.0
+    scipy: 1.14.1
+    pytest: 8.3.3
+    backend: cpu
+    x64: true
+    test_selection: tests/unittests/magma_fluid_test.py; tests/unittests/magma_mixed_fluid_test.py
+- id: source_review_20261021
+  scope: Source inspection and formulation comparison; no empirical application or uncertainty target
+    is assigned.
+  settings:
+    review_date: '2026-10-21'
+    model_choice: MELTS-reference ideal standards plus an explicitly selected residual EOS; example
+      uses Zhang-Duan (2009).
+    source_hash_policy: Hashes identify retrieved bytes; MCEG does not download or verify URI artifacts.
+- id: supplement_review_20261021
+  scope: Private ESM fluid-source review against the explicitly selected hybrid model;
+    no EOS substitution, calibration replay or empirical error bound.
+  settings:
+    review_date: '2026-10-21'
+    source_access: Private PDF, extracted text and images excluded from Git; local byte hash recorded.
+- id: zd2009_comparison_review_20261021
+  scope: Public-source inspection and numerical reproduction of specified residual-model
+    quantities; no empirical error bound or joint physical applicability domain.
+  settings:
+    review_date: '2026-10-21'
+    python: 3.12.7
+    jax: 0.6.2
+    numpy: 2.1.0
+    scipy: 1.14.1
+    backend: cpu
+    x64: true
+    water_selection: All 31 Table 6 This study model volumes, using listed paired T/P values.
+    binary_selection: '1573.15 K; 1450 MPa; ordered (H2O, CO2) mole fractions with x_H2O=0.5, 0.7, 0.9.'
+    source_hash_policy: Public PDF hash verified locally; offline MCEG checks the two local review artifacts.
+conditions: []
+assessments:
+- id: numerical_review
+  kind: evidence_support
+  claim: numerical_verification
+  claim_revision: '1'
+  subject: survey_20261020
+  context: test_environment
+  method:
+    id: review_selected_pytest
+    revision: '1'
+    description: Read actual test outcomes and selected file pins; limit support to those numerical
+      assertions.
+  evidence:
+  - test_run
+  reasons:
+  - 97 tests in the selected modules; see the shared receipt for per-module counts.
+  - Selected files matched Git at execution and were unchanged afterward. Other revisions, environments
+    and empirical accuracy need separate review.
+  status: supported
+  origin: reviewed
+- id: physical_review
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: test_environment
+  method:
+    id: review_empirical_support
+    revision: '1'
+    description: Separate numerical verification from experimental or observational support.
+  evidence:
+  - upstream_model
+  - implementation
+  reasons:
+  - Provider standards, formula definitions and saved references were inspected. Original pure-fluid
+    source generation and the cited EOS paper were not re-inspected.
+  - Numerical agreement and membership in metadata intervals do not establish physical accuracy.
+  status: unknown
+  origin: reviewed
+- id: physical_review_20261021
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: source_review_20261021
+  method:
+    id: inspect_published_formulation
+    revision: '1'
+    description: Compare inspected source passages and pinned code; separate implementation provenance
+      from empirical support.
+  evidence:
+  - implementation_source_review_20261021
+  - zd2009_20261021
+  - melts_versions_20261021
+  reasons:
+  - Selected equations, parameter choices and reference conventions now have inspected source locations
+    and byte hashes.
+  - Original Haar calibration data, the Eq. 8 convention and independent observations for the selected
+    hybrid remain outside this review. Agreement with stored pressure-integral controls is numerical
+    evidence only.
+  - No new empirical error bound or joint applicability domain is established; the earlier survey
+    and test receipt remain historical.
+  status: unknown
+  origin: reviewed
+- id: physical_supplement_review_20261021
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: supplement_review_20261021
+  method:
+    id: inspect_supplement_fluid_conventions
+    revision: '1'
+    description: Compare fluid reference conventions and distinguish printed algebra,
+      selected EOS choices and empirical support.
+  evidence:
+  - gg2015_supplement_fluid_comparison_20261021
+  - implementation_source_review_20261021
+  reasons:
+  - The supplied ESM establishes the upstream 2006 fluid choice and exposes an Eq. 8
+    equality inconsistency; it does not justify changing the provider's explicit hybrid.
+  - Original Haar calibration observations, the separate 2009 Z convention and
+    independent solubility observations for the selected hybrid remain unresolved.
+  status: unknown
+  origin: reviewed
+- id: physical_zd2009_review_20261021
+  kind: evidence_support
+  claim: physical_accuracy
+  claim_revision: '1'
+  subject: survey_20261020
+  context: zd2009_comparison_review_20261021
+  method:
+    id: compare_zd2009_residual_sources
+    revision: '1'
+    description: Compare printed residual equations, parameters and model-output tables;
+      distinguish implementation consistency from empirical support for the hybrid.
+  evidence:
+  - zd2009_residual_comparison_20261021
+  - zd2009_equation_discrepancies_20261021
+  - zd2009_comparison_run_20261021
+  - gg2015_supplement_fluid_comparison_20261021
+  reasons:
+  - The formerly unchecked residual-source comparison now records matching coefficients,
+    all 31 Table 6 model volumes, and specific Eq. 8/14 differences with reproducible calculations.
+  - The physical-Z and differentiated-Helmholtz conventions are supported for the checked
+    quantities; this is not an authoritative correction of the paper or an experimental error bound.
+  - Independent hybrid observations, original Haar calibration and caloric-reference alignment
+    remain outside this review. The distinct 2015 ESM potential convention remains unresolved.
+  status: unknown
+  origin: reviewed
+follow_ups:
+- id: empirical_scope
+  target_kind: claim
+  target: physical_accuracy
+  revision: '1'
+  action: Inspect the original model equations and relevant material-specific data; record a separate
+    empirical assessment for a declared application.
+  requires:
+  - Original source passages, equations and coefficient tables with inspection locations.
+  - Explicit T/P, composition basis, gas driving quantity, standard states and uncertainty criteria.
+  - Reproducible comparison against independent observations or experiments, when available.
+  completion: A new scoped assessment cites inspected evidence and states its remaining gaps; a numerical
+    pass alone does not complete this task.
+  sources:
+  - https://github.com/magmasource/MAGMA/tree/705a0fb315e5054d18275a580562f6121c8e458c
+  - https://doi.org/10.1016/j.gca.2009.01.021
+- id: inspect_accessible_sources
+  target_kind: evidence
+  target: upstream_model
+  action: Inspect accessible model papers and pinned source branches for the declared provider conventions.
+  requires:
+  - Source locations and downloaded-byte hashes.
+  - Explicit scope for branch choices, standard states and remaining source/data gaps.
+  completion: New inspected source records and a scoped comparison are recorded; empirical calibration
+    replay and unavailable sources remain separate work.
+  sources:
+  - https://doi.org/10.1016/j.gca.2009.01.021
+  - https://melts.ofm-research.org/Support/Understanding-rhyolite-MELTS-versions.html
+- id: resolve_gg2015_fluid_potential_convention
+  target_kind: evidence
+  target: gg2015_supplement_fluid_comparison_20261021
+  action: Clarify the intended Eq. 8 standard state and pure-fluid fugacity factors before
+    asserting any native MELTS-fluid equivalence.
+  requires:
+  - An authoritative correction or derivation with explicit ideal/real standards and
+    pressure units, checked against the appropriate Duan-Zhang (2006) fluid implementation.
+  completion: A new comparison resolves the equality chain and documents the remaining
+    differences from the provider's selected residual EOS and caloric references.
+  sources:
+  - https://doi.org/10.1007/s00410-015-1141-8
+- id: compare_zd2009_residual
+  target_kind: evidence
+  target: implementation_source_review_20261021
+  action: Compare the accessible Zhang-Duan (2009) residual source against the provider,
+    including coefficients, units, definitions and published model-output controls.
+  requires:
+  - Inspected source pages and a verified download hash.
+  - Reproducible residual calculations and explicit matching or differing equations.
+  completion: New scoped comparisons record the checked quantities and discrepancies;
+    authoritative equation clarification and empirical validation remain separate work.
+  sources:
+  - https://doi.org/10.1016/j.gca.2009.01.021
+  - https://efs.idsse.ac.cn/module1/citation/2009-04-01/article.pdf
+- id: resolve_zd2009_printed_equations
+  target_kind: evidence
+  target: zd2009_equation_discrepancies_20261021
+  action: Seek an authoritative clarification or original author implementation of
+    Zhang-Duan (2009) Eqs. 8 and 14, and compare it with the recorded reviewer derivation.
+  requires:
+  - Explicit pressure, volume and gas-constant units for the Eq. 8 normalization.
+  - The intended energy sign and size-interaction coefficient in Eq. 14.
+  completion: A new inspected comparison identifies any authoritative resolution;
+    numerical agreement alone does not establish author intent or physical accuracy.
+  sources:
+  - https://doi.org/10.1016/j.gca.2009.01.021
+follow_up_resolutions:
+- follow_up: inspect_accessible_sources
+  evidence:
+  - zd2009_20261021
+  - melts_versions_20261021
+  - magma_source_20261021
+  - implementation_source_review_20261021
+  note: Completed the accessible-source inspection on 2026-10-21. The existing empirical_scope task
+    remains open; no physical validation or full runtime replay is inferred.
+- follow_up: compare_zd2009_residual
+  evidence:
+  - zd2009_extended_review_20261021
+  - zd2009_residual_comparison_20261021
+  - zd2009_equation_discrepancies_20261021
+  - zd2009_comparison_run_20261021
+  note: Completed the scoped residual-source comparison on 2026-10-21. The earlier
+    not_checked link remains historical; use physical_zd2009_review_20261021 for the
+    new assessment. resolve_zd2009_printed_equations and empirical_scope remain open.
