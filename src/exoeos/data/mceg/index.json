@@ -1,7 +1,7 @@
 {
   "schema_version": "1",
   "provider": "exoeos",
-  "record_version": "2026-10-30",
+  "record_version": "2026-11-01",
   "models": [
     {
       "id": "exoeos.ma_fe_si_o.v1",
@@ -11,7 +11,7 @@
         {
           "id": "ma_fe_si_o",
           "path": "contracts/ma_fe_si_o.yaml",
-          "sha256": "5a03146512da896f9df05036f16dbc4d367236b363956f627da8923b01c3c002",
+          "sha256": "20228488837fa84cf58071db7e59363e678ec44ed347f5e299a62c9117e4afe3",
           "species": [
             "*"
           ],
@@ -42,6 +42,26 @@
             "numerical_review",
             "physical_review",
             "physical_source_review_20261029"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exoeos.ma_fe_si_o_badro2015.provisional.v1",
+      "label": "Provisional Badro Fe-Si-O default and ideal-H wrapper",
+      "species": [],
+      "records": [
+        {
+          "id": "ma_fe_si_o_badro",
+          "path": "contracts/ma_fe_si_o_badro.yaml",
+          "sha256": "92f71f77ab5914fdeb8fef9163e64e0259a3ffec831fd8015a8514cc9ceae040",
+          "species": [
+            "*"
+          ],
+          "assessments": [
+            "numerical_review",
+            "author_intent_review",
+            "physical_review"
           ]
         }
       ]

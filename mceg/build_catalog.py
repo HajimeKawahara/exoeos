@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "src/exoeos/data/mceg"
-RECORD_VERSION = "2026-10-30"
+RECORD_VERSION = "2026-11-01"
 
 # Explicit model-level selections preserve the complete recorded history.
 # They do not choose a current or most favorable scientific assessment.
@@ -23,6 +23,10 @@ MODELS = [
     ("ma_fe_si_o_h", "exoeos.ma_fe_si_o_h.v1", "Formal Fe-Si-O-H liquid with ideal H dilution", [
         "numerical_review", "physical_review", "physical_source_review_20261029",
     ]),
+    ("ma_fe_si_o_badro", "exoeos.ma_fe_si_o_badro2015.provisional.v1",
+     "Provisional Badro Fe-Si-O default and ideal-H wrapper", [
+         "numerical_review", "author_intent_review", "physical_review",
+     ]),
     ("magma_carbonate_liquid", "exoeos.magma_carbonate_liquid.v1",
      "Native rhyolite-MELTS mode-4 carbon-bearing liquid", [
          "numerical_review", "physical_review", "physical_review_20261021",

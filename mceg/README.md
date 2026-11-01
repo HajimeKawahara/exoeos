@@ -27,7 +27,7 @@ identify downloaded bytes; offline MCEG checks do not verify those URLs.
 ## Installed-package discovery
 
 The packaged [evidence catalog](../src/exoeos/data/mceg/index.json) uses MCEG's
-catalog format `1`. It contains the nine registered model contracts and explicit
+catalog format `1`. It contains the ten registered model contracts and explicit
 assessment selections, including their historical source reviews. With a version
 of MCEG that supports package catalogs:
 
@@ -48,6 +48,8 @@ mceg graph --catalog src/exoeos/data/mceg/index.json
 from the canonical `mceg/contracts/` files using only the standard library.
 Review the model/assessment selections and update the record version when
 publishing a new evidence snapshot. Commit the generated files with that review.
+The 2026-11-01 snapshot includes the existing provisional Badro contract and
+refreshes the historical Ma contract copies to match their canonical sources.
 
 This is model-level discovery; species-specific coverage is not declared.
 Assessment selections preserve the recorded history without choosing a current
@@ -71,6 +73,13 @@ wrapper; numerical consistency and physical accuracy remain separate judgments.
 The [evidence transition](../results/mceg/20261029_badro_default/evidence_transition.json)
 records exact reviewed file changes. Repository checks require the new numerical
 receipt for the changed Ma model and retain the old survey and H2 receipts.
+
+The [2026-11-01 API review](../results/mceg/20261101_material_response/evidence_transition.json)
+records the additive `gibbs_response` exports and `GibbsResponse` state type.
+It chains exact before/after file hashes onto the previous transition. Existing
+state definitions and material scalars are unchanged; the previous transition,
+receipts and test reports remain byte-identical. This review grants no new
+physical validation or extension of the historical numerical claims.
 
 ```bash
 mceg check mceg/contracts/ma_fe_si_o_badro.yaml --assessment numerical_review --root .

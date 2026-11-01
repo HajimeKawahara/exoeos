@@ -23,6 +23,81 @@ supplies the material's standard-state convention and checks its supported
 domain. The helper checks static shapes; finite returned values alone do not
 certify material validity or equilibrium stability.
 
+A complete ExoEOS-only example
+-------------------------------
+
+How do the chemical potentials of a silicate liquid respond to a small
+composition change? Use the built-in ``magma.liquid_gibbs`` model, including
+its standard energies and nonideal mixing. Only ExoEOS and its JAX dependency
+are needed; run this after installing the branch that provides this API.
+
+Hold T = 1700 K and P = 500 bar fixed. The two-component basis is
+``(SiO2, Mg2SiO4)`` in mol of **liquid components**, not separate solid phases.
+Set ``n = [1-x, x]`` mol, so ``x`` is the Mg2SiO4 component fraction at a
+fixed total of one mol of components. Start at ``x = 0.40`` and predict
+the response to ``x = 0.41`` (one percentage point).
+
+.. code-block:: python
+
+   import jax
+   jax.config.update("jax_enable_x64", True)
+   import jax.numpy as jnp
+   from exoeos import gibbs_response
+   from exoeos.magma import COMPONENTS, liquid_gibbs
+
+   T, P = 1700.0, 5.0e7  # K, Pa (500 bar)
+
+   def evaluate(x):
+       n = jnp.array([1.0 - x, x])  # mol, in COMPONENTS order
+       return gibbs_response(liquid_gibbs, T, P, n)
+
+   x, dx = jnp.array(0.40), 0.01
+   # The unit tangent requests the derivative with respect to x.
+   state, tangent = jax.jvp(evaluate, (x,), (jnp.array(1.0),))
+   mu = state.chemical_potentials_j_mol
+   slope = tangent.chemical_potentials_j_mol  # dmu/dx
+   change_ad = dx * slope
+   change_direct = evaluate(x + dx).chemical_potentials_j_mol - mu
+
+   print(f"G = {float(state.gibbs_j):.2f} J")
+   print("component       mu [J/mol]   dmu/dx [J/mol]   AD change   direct change")
+   for name, m, d, ad, direct in zip(COMPONENTS, mu, slope, change_ad, change_direct):
+       print(f"{name:<10} {float(m):14.2f} {float(d):16.2f} "
+             f"{float(ad):11.2f} {float(direct):15.2f}")
+
+Output (both change columns are in J/mol):
+
+.. code-block:: text
+
+   G = -1672559.11 J
+   component       mu [J/mol]   dmu/dx [J/mol]   AD change   direct change
+   SiO2          -1082377.02        -20820.38     -208.20         -209.85
+   Mg2SiO4       -2557832.25         31230.58      312.31          308.30
+
+``gibbs_response`` gives G and the component chemical potentials at the
+supplied composition. ``jax.jvp`` differentiates that response along
+``n(x)``. The resulting slope gives the local prediction
+
+.. math::
+
+   \Delta\mu_i \simeq \frac{d\mu_i}{dx}\,\Delta x,
+   \qquad \frac{d\boldsymbol{\mu}}{dx}
+       = G_{nn}\begin{pmatrix}-1\\1\end{pmatrix}.
+
+Here increasing Mg2SiO4 lowers the SiO2 chemical potential and raises the
+Mg2SiO4 chemical potential. The AD prediction differs slightly from the
+direct finite change because it is a first-order approximation; halving
+``dx`` reduces the leading absolute discrepancy by approximately four.
+Chemical potential is the marginal Gibbs energy of adding a component
+while holding the other amounts fixed. Its derivative along ``n(x)``
+describes how that marginal energy changes with composition.
+
+This is a response of a supplied single liquid. It does not determine the
+equilibrium composition, crystallization, or transfer to another reservoir.
+The chosen composition path changes the elemental inventory: Mg/Si = 2x,
+and O also changes. It is not a closed-system chemical reaction. See
+:ref:`native-magma-contract` for this material's basis and derivative domain.
+
 An ideal example
 ----------------
 
