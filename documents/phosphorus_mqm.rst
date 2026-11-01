@@ -75,6 +75,16 @@ This recovers the binary MQM with other components absent and the parent
 host when P is absent. Host composition restrictions remain the caller's
 responsibility; there is no phosphorus concentration cap.
 
+The optional ``host_model`` argument selects the Fe-Si-O excess model;
+omitting it retains ``MaFeSiOLiquid()`` and its current defaults. To reproduce
+an explicitly chosen older conditional model, construct, for example,
+``MaFeSiOLiquid(interaction_K=(12.41*1873., -16500., -5.*1873.))`` and pass
+that instance to ``gibbs_j``. Convert source Fe/Si/O standards with the same
+instance's ``standard_state_shift_RT(T)`` before supplying the twenty
+standards. Changing only the excess term would mix two conventions. The host
+coefficients remain differentiable through JAX, including through
+``gibbs_response``; this selection supplies no new calibration or phase proof.
+
 Pass pure-liquid Fe/P standards to ``phosphorus_mqm_alloy.gibbs_j``. For a
 joint absolute reference, ``pure_p_standard_rt(T, gas_p2_standard_rt)`` in
 ``phosphorus_mqm`` translates SGTE liquid P using the caller's one-bar P2

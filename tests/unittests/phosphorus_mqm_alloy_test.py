@@ -11,8 +11,33 @@ from exoeos import phosphorus_mqm as binary
 from exoeos import phosphorus_mqm_alloy as alloy
 from exoeos import phosphorus_phosphides as solid
 from exoeos._conditional_data import R
+from exoeos.ma_fe_si_o import MaFeSiOLiquid
 
 jax.config.update("jax_enable_x64", True)
+
+
+def test_explicit_host_preserves_defaults_and_differentiates_selected_coefficients():
+    t, p = 2173.15, 5e7
+    eps, matrix = associated_metal.interaction_parameters(t)
+    n = jnp.linspace(.001, .004, 21).at[0].set(1.8)
+    standards = jnp.linspace(-10., 2., 20)
+    def g(n, host=None):
+        return alloy.gibbs_j(t, p, n, standards, eps, matrix, model="you2020",
+                             delta_v_p_m3_mol=0., host_model=host)
+    default = MaFeSiOLiquid()
+    selected = MaFeSiOLiquid(interaction_K=(12.41*1873., -16500., -5.*1873.))
+    np.testing.assert_array_equal(g(n), g(n, default))
+    # Independent O-self term, with pseudo-Fe Na in the dry host ledger.
+    collapsed = alloy.collapse_matrix(model="you2020") @ n
+    dry = collapsed[:3].sum()+collapsed[19]
+    oxygen = collapsed[2]/dry
+    dg_dko = R*dry*(1-oxygen)*jnp.log1p(-oxygen)
+    np.testing.assert_allclose(g(n, selected)-g(n), (-16500.+1873.)*dg_dko, rtol=2e-12)
+    derivative = jax.jit(jax.grad(lambda k: g(n, MaFeSiOLiquid(k))))(selected.interaction_K)
+    np.testing.assert_allclose(derivative[1], dg_dko, rtol=2e-14)
+    # Supplying an explicit host preserves chemical-potential extensivity.
+    mu = jax.grad(lambda n: g(n, selected))(n)
+    np.testing.assert_allclose(mu @ n, g(n, selected), rtol=2e-14)
 
 
 @pytest.mark.parametrize("model", binary.MODELS)

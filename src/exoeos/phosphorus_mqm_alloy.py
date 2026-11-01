@@ -27,7 +27,8 @@ def collapse_matrix(*, model):
 
 
 def gibbs_j(temperature_k, pressure_pa, amounts_mol, pure_standards_rt,
-            phosphorus_epsilon, additional_matrix, *, model, delta_v_p_m3_mol):
+            phosphorus_epsilon, additional_matrix, *, model, delta_v_p_m3_mol,
+            host_model=None):
     """Extensive G [J]; standards use pure liquid Fe/P, not Henry P.
 
     Global ideal mixing uses the collapsed chemical ledger. Replace its
@@ -39,6 +40,12 @@ def gibbs_j(temperature_k, pressure_pa, amounts_mol, pure_standards_rt,
     The caller must choose the constant P partial-volume *increment* relative
     to the supplied standards. Add n_P*(P-1 bar)*delta_v, not a second total
     alloy volume. Zero is a declared continuation, not a measured P law.
+
+    ``host_model`` selects the Fe-Si-O excess scalar (default:
+    ``MaFeSiOLiquid()``). Use the same instance's ``standard_state_shift_RT``
+    when converting source standards to the supplied symmetric standards.
+    Explicit coefficients preserve a chosen conditional model; they do not
+    establish its calibration or extend its material domain.
     """
     n, s = jnp.asarray(amounts_mol), jnp.asarray(pure_standards_rt)
     epsilon, matrix = jnp.asarray(phosphorus_epsilon), jnp.asarray(additional_matrix)
@@ -50,7 +57,7 @@ def gibbs_j(temperature_k, pressure_pa, amounts_mol, pure_standards_rt,
     rt = R*temperature_k
     energy = rt*(collapsed @ s+binary._ideal(collapsed)
                  +_host_excess(temperature_k, pressure_pa, collapsed, epsilon,
-                               matrix, self_interaction=False)
+                               matrix, self_interaction=False, host_model=host_model)
                  -binary._ideal(collapsed[jnp.array([0, 4])]))
     energy += binary.gibbs_j(temperature_k, pairs, jnp.zeros(2), model=model)
     return energy+collapsed[4]*(pressure_pa-1e5)*delta_v_p_m3_mol
