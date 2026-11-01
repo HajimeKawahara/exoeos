@@ -488,6 +488,26 @@ evidence:
       comparison: consistent
       note: Only the oxygen self coefficient matches the pinned author/GCE code. Their gamma_Fe=1 treatment
         is not equated with Badro Eq.3 or the completed provider.
+- id: provisional_choice_20261029
+  kind: implementation
+  summary: Provisional oxygen-default decision recorded separately from the historical printed model.
+  sources:
+  - results/mceg/20261029_badro_default/decision.json
+  - mceg/contracts/ma_fe_si_o_badro.yaml
+  scope: Use -1873/T provisionally with no author confirmation or empirical promotion; the new contract
+    owns the new implementation and test result.
+  artifacts:
+  - source: results/mceg/20261029_badro_default/decision.json
+    sha256: 6110f6e0d805d49d54e3064dac6e2fbf5f678598b1e9bbb227328df11af82146
+  provenance:
+    role: implementation
+    location: New decision and versioned provisional contract.
+    inspection: inspected
+    note: Historical assertions, subjects and execution records retain their original values.
+    derived_from:
+    - evidence: badro_parameter_comparison_20261029
+      comparison: consistent
+      note: The new default adopts the already verified source coefficient.
 limitations:
 - statement: The pure Si/O scalar limits do not define full activity vectors or composition derivatives.
   evidence:
@@ -800,3 +820,8 @@ follow_up_resolutions:
   note: 'Resolved the original-source attribution: Badro Table S1 and its temperature scaling support
     +1873/T, independently of the publication/code mismatch. The default remains the printed Young version;
     review_oxygen_parameter_choice tracks the separate implementation decision.'
+- follow_up: review_oxygen_parameter_choice
+  evidence:
+  - provisional_choice_20261029
+  note: A separate provisional model adopts the Badro coefficient. The original printed model and assessments
+    remain historical; record_author_clarification in the new contract tracks a future reply or correction.

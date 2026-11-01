@@ -11,6 +11,18 @@ from exoeos.constants import AVOGADRO_CONSTANT, MOLAR_GAS_CONSTANT
 Array = jax.Array
 
 
+class GibbsResponse(NamedTuple):
+    """Extensive G [J] and dG/dn [J/mol] in the callback's component basis.
+
+    This JAX pytree contains material values, without an equilibrium or
+    derivative-validity certificate. Its JVP gives dG and d(mu) along the
+    caller's specified direction in temperature, pressure and amounts.
+    """
+
+    gibbs_j: Array
+    chemical_potentials_j_mol: Array
+
+
 class HelmholtzThermodynamicState(NamedTuple):
     """Total single-phase state from a molar Helmholtz potential.
 

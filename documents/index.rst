@@ -14,6 +14,7 @@ Start here
    model_guide
    mceg/index
    thermodynamic_derivatives
+   material_sensitivity
    potential_tables
    feature_plots
 

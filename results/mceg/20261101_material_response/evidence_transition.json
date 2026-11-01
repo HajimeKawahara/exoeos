@@ -1,0 +1,21 @@
+{
+  "date": "2026-11-01",
+  "status": "reviewed",
+  "base_revision": "e49a3a7c09f6e47ea26760e4d47e064cd7008338",
+  "scope": "Review of additive API declarations only. Existing thermodynamic scalars, coefficients and material domains are unchanged. Historical receipts remain byte-identical and retain their original scope; this is not a new numerical receipt or physical validation.",
+  "review": "Removing only the new imports, exports and GibbsResponse class reproduces the base-revision ASTs. Material-response derivatives are checked separately in tests/unittests/material_response_test.py.",
+  "previous_transition": "results/mceg/20261029_badro_default/evidence_transition.json",
+  "previous_transition_sha256": "cf8b085a719cf61ae44c9c6cc413274a600709e6f7fa010683ac58bb87bb774b",
+  "file_updates": {
+    "src/exoeos/__init__.py": {
+      "previous_sha256": "b53b3a90a57cbec34b794fd084379aed6e45526e38ee574ec6483e7e79d78592",
+      "reviewed_sha256": "e256fbc01398fd8346b37e3e8cb9a7f091f22be62206d8646a56916d73d8f6ff",
+      "reason": "Only the gibbs_response and GibbsResponse imports and public exports are added; existing exports and initialization are unchanged."
+    },
+    "src/exoeos/state.py": {
+      "previous_sha256": "76968b4d4c64a0a585a2554ed824f92346ad0e5a67289a4b6d0623b20905ee54",
+      "reviewed_sha256": "5f09f413c898daee8f250b3ee80a28213acbf183cd5df02ce31c05c26add9733",
+      "reason": "Only the GibbsResponse NamedTuple is added; all existing state classes and properties are unchanged."
+    }
+  }
+}

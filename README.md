@@ -44,6 +44,9 @@ outputs change with temperature, pressure or composition, with reproducible
 code and explicit source conditions.
 The [Helmholtz derivative guide](documents/thermodynamic_derivatives.rst)
 covers heat capacities, sound speed and atmospheric/RCE use.
+The [material sensitivity guide](documents/material_sensitivity.rst) explains
+chemical potentials and JAX directional/adjoint responses from an extensive
+Gibbs scalar, with explicit component bases and local-domain limits.
 The [native JAX magma example](documents/native_magma.rst) evaluates
 MgO--SiO2 liquid and solid standards, derivatives, and closed cooling with
 forsterite, enstatite and three SiO2 polymorphs without an external MELTS
