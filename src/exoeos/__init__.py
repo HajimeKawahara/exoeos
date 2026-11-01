@@ -40,10 +40,12 @@ from exoeos.marcum_silicate_hydrogen import (
     MarcumSilicateHydrogenTableLoader,
 )
 from exoeos.mass_fraction_solute import MassFractionSoluteState, mass_fraction_solute_state
+from exoeos.material_response import gibbs_response
 from exoeos.peng_robinson import PengRobinsonEOS
 from exoeos.second_virial import SecondVirialEOS
 from exoeos.solution_gibbs import total_solution_gibbs_RT, total_solution_state
 from exoeos.state import (
+    GibbsResponse,
     HelmholtzThermodynamicState,
     MassThermodynamicState,
     MassHelmholtzThermodynamicState,
@@ -72,6 +74,7 @@ __all__ = [
     "FixedCompositionDensityProvider",
     "FluidCriticalProperties",
     "GibbsExcessModel",
+    "GibbsResponse",
     "HelmholtzEOS",
     "HelmholtzThermodynamicState",
     "HelmholtzThermodynamics",
@@ -102,6 +105,7 @@ __all__ = [
     "additive_volume_mass_density",
     "available_critical_properties",
     "get_critical_properties",
+    "gibbs_response",
     "mass_density_tp",
     "mass_fraction_solute_state",
     "psir",
