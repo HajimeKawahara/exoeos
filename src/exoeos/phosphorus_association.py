@@ -82,13 +82,15 @@ def binary_gibbs_j(temperature_k, amounts_mol, elemental_standards_rt):
     return R*temperature_k*(atoms @ standard+_ideal(n))+binary_nonideal_j(temperature_k, n)
 
 
-def _host_excess(t, p, collapsed, epsilon, matrix, *, self_interaction):
+def _host_excess(t, p, collapsed, epsilon, matrix, *, self_interaction, host_model=None):
     # Retain the original pseudo-Fe Na and finite-host perspectives. Bound Fe
     # and P enter host/cross terms through their conserved collapsed amounts.
     core = collapsed[:18].at[0].add(collapsed[19])
     dry = jnp.sum(core[:3])
     x = jnp.where(dry > 0, core[:3]/jnp.where(dry > 0, dry, 1.), jnp.array([1., 0., 0.]))
-    host = dry*MaFeSiOLiquid().gex_RT(t, p, x)
+    if host_model is None:
+        host_model = MaFeSiOLiquid()
+    host = dry*host_model.gex_RT(t, p, x)
     five, total = jnp.sum(core[:5]), jnp.sum(core)
     phosphorus = core[4]*(epsilon[1:] @ core[1:4])
     if self_interaction:
