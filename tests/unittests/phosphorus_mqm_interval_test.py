@@ -186,9 +186,13 @@ def test_negative_phosphorus_cross_and_self_terms_are_retained():
 
 def test_reduced_precision_coefficients_are_rejected():
     args = inputs()
-    with jax.experimental.enable_x64(False):
+    original_x64 = jax.config.x64_enabled
+    try:
+        jax.config.update('jax_enable_x64', False)
         with pytest.raises(ValueError, match='float64'):
             mqm_alloy_insertion_bound(**args)
+    finally:
+        jax.config.update('jax_enable_x64', original_x64)
 
 
 @pytest.mark.parametrize('changes', [
