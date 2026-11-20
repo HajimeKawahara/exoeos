@@ -139,3 +139,171 @@ Hessians, volume derivatives, common-reference reaction invariance and
 independent numerical integration of heat capacities. The ExoInventory
 comparison also checks the published Fe2P and FeP congruent temperatures.
 These four candidates do not constitute a complete phase-diagram proof.
+
+Global insertion lower bound
+-----------------------------
+
+``exoeos.phosphorus_mqm_interval.mqm_alloy_insertion_bound`` supplies a
+conservative lower bound for the unchanged conditional alloy scalar. This is
+an eager NumPy/interval calculation; it is not differentiable or JIT-compatible.
+It can be used after a local equilibrium solve. ExoGibbs still owns phase
+selection, and an accepted alloy bound does not establish stability of the
+melt or of the complete phase assemblage.
+
+The two 20-entry potential arrays follow
+``associated_metal.COMPONENTS``. Standards use RT per mole of collapsed
+chemical species. A supporting potential is the elemental chemical-potential
+plane evaluated for that chemical species. The output ``lower_rt`` instead
+uses **RT per mole of the original 21 phase coordinates**, including pair
+coordinates. The other result fields retain the chemical-mole intermediate
+bound and each conservative contribution.
+
+``host_lower`` and ``host_upper`` bound chemical-species fractions after P
+has been removed from the host normalization. Their P entries must be zero;
+this does not restrict the total P concentration. The bound covers pure P
+by continuity. Pass the same ``host_model`` and dynamic material coefficients
+as the forward scalar. The supplied box must have positive lower Fe and
+upper Si/Fe and O/Fe ratios below one. The implemented Ma coefficient signs
+are nonnegative Si self interaction and nonpositive O self/cross interactions.
+Unsupported signs, nonfinite inputs and reduced-precision provider
+coefficients raise errors. This numerical domain is not an empirical domain.
+
+A standalone ExoEOS example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example deliberately supplies a synthetic supporting plane and
+standards, so it needs no equilibrium solver. It demonstrates the sign and
+normalization of the result; these numbers do not describe a planetary state.
+The declared host box is likewise an illustrative mathematical input.
+
+.. code-block:: python
+
+   import jax
+   jax.config.update("jax_enable_x64", True)
+   import numpy as np
+   from exoeos import associated_metal
+   from exoeos.phosphorus_mqm_interval import mqm_alloy_insertion_bound
+
+   temperature = 2173.15
+   epsilon, matrix = associated_metal.interaction_parameters(temperature)
+   lower = np.zeros(20)
+   lower[0] = 0.75  # At least 75% Fe in the P-free chemical host.
+   upper = np.full(20, 0.02)
+   upper[0], upper[4] = 1.0, 0.0  # P is free outside this host normalization.
+   inputs = dict(
+       temperature_k=temperature, pressure_pa=6e6,
+       pure_standards_rt=np.full(20, 40.0),
+       supporting_potentials_rt=np.zeros(20),
+       phosphorus_epsilon=epsilon, additional_matrix=matrix,
+       host_lower=lower, host_upper=upper,
+       model="you2020", delta_v_p_m3_mol=0.0,
+   )
+   bound = mqm_alloy_insertion_bound(**inputs)
+   assert bound.lower_rt > 0
+   print("Insertion is excluded against this plane:", bound.lower_rt)
+
+   inputs["supporting_potentials_rt"] = np.full(20, 50.0)
+   unresolved = mqm_alloy_insertion_bound(**inputs)
+   assert unresolved.lower_rt < 0
+   print("This lower bound is inconclusive:", unresolved.lower_rt)
+
+A positive lower bound excludes insertion on the declared domain. A negative
+lower bound is only inconclusive: it is not a feasible negative-energy witness.
+For real equilibrium outputs, use a common elemental gauge and enclose the
+external atom-matrix/dual product. The function accepts an outward upper bound
+on each supporting potential because all chemical amounts are nonnegative.
+Supplied binary64 standards and material coefficients are treated as exact
+constants of the mathematical scalar being bounded; experimental uncertainty
+and arbitrary floating-point errors in separate forward evaluations are not
+included. The bound evaluation itself uses outward-rounded arithmetic and a
+logarithm series with an explicit remainder.
+
+Why the bound is global
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Let :math:`y=Cn` be the collapsed chemical amounts, :math:`H=\sum_{i\ne P}y_i`
+the P-free host amount, and :math:`N=H+y_P`. The supporting-plane costs are
+:math:`c_i=s_i-v_i`; include the declared pressure-volume term in :math:`c_P`.
+After cancelling the binary ideal term that is replaced by the MQM scalar,
+the mixing terms are chemical ideal entropy plus the pair correction
+
+.. math::
+
+   N_q\left[\sum_{ab}p_{ab}\ln p_{ab}
+                -2\sum_a p_a\ln p_a\right]
+   =N_q D_{\rm KL}(p_{ab}\Vert p_a p_b)\geq0.
+
+Here :math:`p_{FeP}=p_{PFe}=X_{FeP}/2`, and the two diagonal entries are
+:math:`X_{FeFe},X_{PP}`. Thus the correction is mutual information, including
+the explicit unlike-pair :math:`-n_{FeP}\ln2` term. The remaining chemical
+ideal term satisfies :math:`\sum_i y_i\ln(y_i/N)\geq-N\ln20`, including K
+and Na even though their excess-energy treatment differs.
+
+For the pair polynomial :math:`\Delta g=d_0+d_1a+d_2a^2+d_3b`,
+:math:`0\leq a,b\leq1` gives the conservative bound
+
+.. math::
+
+   d_* = d_0+\sum_{i=1}^3\min(0,d_i)\leq\Delta g,\qquad
+   \frac{n_{FeP}\Delta g}{2RT}\geq y_P b_q,
+   \quad b_q=\frac{\min(0,d_*)}{2C_{P,FeP}RT}.
+
+The exact stored collapse coefficient :math:`C_{P,FeP}` is used, rather than
+assuming that a rounded reciprocal is exact. This covers the entire pair
+simplex and the unrestricted P range. No sampled pair minimum is used.
+
+The P-free host box gives a linear cost bound. For every real :math:`\beta`,
+
+.. math::
+
+   \sum_{i\ne P} c_i y_i/H\geq
+   \beta+\sum_{i\ne P}
+   \left[l_i(c_i-\beta)_+ + u_i(c_i-\beta)_-\right].
+
+The implementation maximizes several such valid bounds to obtain
+:math:`L_h`. Candidate choices do not require an optimizer certificate.
+The remaining host excess is bounded below by :math:`Hb_h+y_Pb_P`:
+
+* The Ma Si term uses :math:`(1-x)\ln(1-x)\geq-x`; the nonnegative O-self
+  contribution can be omitted. The Si--O term uses
+  :math:`-\ln(1-x)\leq x/(1-x)` on the enclosing Si/O box. Its dry host amount
+  is between :math:`l_{Fe}H` and :math:`H`.
+* The additional-matrix core includes Na as pseudo-Fe, excludes K, and includes
+  P. Its denominator is at least both :math:`l_{Fe}H` and :math:`y_P`.
+  Every negative non-P matrix term is bounded using the host upper amounts
+  and the first denominator bound. For negative P-cross terms,
+  :math:`y_P/\mathrm{core}\leq1` gives a host-linear bound. A negative P-self
+  term contributes :math:`b_P=\min(0,M_{PP})/2`. Positive terms may be omitted.
+* The separate P-cross coefficients use the same argument with their
+  five-component denominator, which is at least :math:`y_P`. Na changes only
+  the pseudo-Fe host coordinate and its upper bound, never the pair polynomial.
+
+For clarity, the Ma cross-term upper function used above is
+
+.. math::
+
+   \Phi(s,o)=so\left[-1+\frac{1}{1-s}+\frac{1}{1-o}\right]
+     +\frac{(so)^2}{2}\left[\frac{1}{1-s}+\frac{1}{1-o}-1\right].
+
+Every factor and bracket is nonnegative and nondecreasing for
+:math:`0\leq s,o<1`. Replacing them by the enclosing upper values
+:math:`s\leq u_{Si}/l_{Fe}`, :math:`o\leq u_O/l_{Fe}` therefore bounds the
+whole term above. Multiplying by the nonpositive Ma cross coefficient reverses
+the bound, as required. Finite inputs that overflow any interval step are
+rejected; an infinite or NaN intermediate cannot produce a certificate.
+
+Combining these inequalities gives
+
+.. math::
+
+   q(n)/(RT)\geq N B,\qquad
+   B=\min(L_h+b_h,\ c_P+b_q+b_P)-\ln20.
+
+For :math:`\sum_j n_j=1`, the collapse columns give
+:math:`r_{\min}\leq N\leq r_{\max}`. Consequently the reported bound is
+:math:`r_{\min}B` if :math:`B\geq0`, and :math:`r_{\max}B` otherwise. Using
+only the minimum normalization factor for negative bounds would be incorrect.
+All these evaluation steps are enclosed with interval arithmetic. Fe/P pure
+faces and zero guest amounts are included by continuity. The bound can remain
+loose at an existing alloy's tangent plane; local sampling cannot tighten a
+negative lower bound into a global certificate.
