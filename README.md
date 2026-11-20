@@ -3,730 +3,127 @@
 Differentiable equations of state and excess free-energy models for planetary
 atmospheres, fluids, and melts, built with JAX.
 
-Residual equation-of-state models use reduced residual Helmholtz energy as
-their source of truth. Mole-fraction solution models use reduced molar excess
-Gibbs energy, from which logarithmic activity coefficients are obtained by
-automatic differentiation. Total Helmholtz derivatives provide caloric
-properties and response functions for fluids with a supplied ideal closure.
-A calorically perfect ideal-gas mixture is also available through the
-original temperature-pressure state interface.
+ExoEOS provides fluid density and fugacity, solution activities, caloric
+properties, tabulated EOS, and native JAX Gibbs models for silicate liquids
+and minerals. It evaluates properties at a supplied state and composition;
+phase-equilibrium solvers remain separate.
 
 ## Installation
+
+Requires Python 3.9 or newer.
 
 ```bash
 python -m pip install "exoeos>=0.3.0"
 ```
 
-Version `0.3.0` adds native JAX Gibbs models for dry, hydrous and
-carbonate-bearing silicate liquids, dry and hydrous minerals, and H2O/CO2
-fluid connections. These phase-property models and their derivatives run
-without an external MELTS runtime; phase-equilibrium solvers remain separate.
-The fluid, solution and caloric thermodynamics APIs from earlier releases
-remain available.
+## Quick start
 
-To install from a repository checkout:
+Evaluate CO2 density and fugacity with the Peng–Robinson EOS:
 
-```bash
-python -m pip install .
+```python
+import jax.numpy as jnp
+from exoeos import PengRobinsonEOS, get_critical_properties, state_tp
+
+co2 = get_critical_properties("CO2")
+eos = PengRobinsonEOS(
+    critical_temperatures=jnp.array([co2.critical_temperature]),
+    critical_pressures=jnp.array([co2.critical_pressure]),
+    acentric_factors=jnp.array([co2.acentric_factor]),
+)
+state = state_tp(eos, T=400.0, P=1.0e6, x=jnp.array([1.0]))
+
+print(state.rho)    # Molar density, mol/m3
+print(state.Z)      # Compressibility factor, dimensionless
+print(state.lnphi)  # Log fugacity coefficients, dimensionless
 ```
+
+Here `T` is in K, `P` is in Pa, and `x` contains normalized mole fractions
+in component order. `state_tp` evaluates one state; use `jax.vmap` for batches.
+Compositions are not clipped or normalized. Check each model's domain and
+root policy in the [model guide](documents/model_guide.rst).
+For heat capacities and sound speed, combine a residual EOS with an ideal
+free energy using [HelmholtzThermodynamics](documents/thermodynamic_derivatives.rst).
 
 ## Documentation
 
-The [experimental MCEG metadata](mceg/README.md) records assumptions, evidence
-and limitations for the pure-H2 Zhang-Duan model. It uses the frozen MCEG v0.1
-format and adds no package dependency.
+- [Capability overview](documents/overview.rst) — available models and scope.
+- [Model selection and usage](documents/model_guide.rst) — entry points,
+  examples, and applicability.
+- [Plot gallery](documents/feature_plots.rst) — reproducible comparisons.
+- [Thermodynamic-state contract](documents/thermodynamic_state_contract.md) —
+  units, shapes, reference states, and JAX transformations.
+- [Material sensitivity](documents/material_sensitivity.rst) — chemical
+  potentials and directional/adjoint responses from an extensive Gibbs scalar.
 
-Start with the [capability overview](documents/overview.rst) and
-[model selection and usage guide](documents/model_guide.rst). They distinguish
-package APIs, checkout examples, and the evidence supporting each model.
-The [plot gallery](documents/feature_plots.rst) shows how each capability's
-outputs change with temperature, pressure or composition, with reproducible
-code and explicit source conditions.
-The [Helmholtz derivative guide](documents/thermodynamic_derivatives.rst)
-covers heat capacities, sound speed and atmospheric/RCE use.
-The [material sensitivity guide](documents/material_sensitivity.rst) explains
-chemical potentials and JAX directional/adjoint responses from an extensive
-Gibbs scalar, with explicit component bases and local-domain limits.
-The [native JAX magma example](documents/native_magma.rst) evaluates
-MgO--SiO2 liquid and solid standards, derivatives, and closed cooling with
-forsterite, enstatite and three SiO2 polymorphs without an external MELTS
-runtime. The native JAX Gibbs model follows crystallization order, phase
-appearance/disappearance and residual liquid composition, with comparison
-plots against independent restricted equilibria using pinned MELTS properties.
-The Fe(II) extension adds a three-component liquid and a forsterite--fayalite
-olivine solution. Its [closed cooling example](examples/magma_olivine.py)
-computes crystal amounts and liquid/crystal Fe/Mg partitioning from the same G.
-The CaO/Al2O3 extension adds four- and five-component liquids, Di--Hd
-clinopyroxene and pure anorthite. Its [dry cooling example](examples/magma_dry.py)
-allows these minerals to compete with olivine, Mg orthopyroxene and silica.
-Comparisons show both agreement with the same restricted MELTS model and
-the different crystallization obtained with full MELTS mineral compositions.
-The [Ca--Mg--Fe pyroxene extension](documents/native_magma.rst#ca-mg-fe-clinopyroxene-and-orthopyroxene)
-adds both pyroxene structures with relaxed Mg/Fe site order and implicit JAX
-derivatives. Its [cooling example](examples/magma_pyroxene.py) includes variable
-Ca and Fe in both pyroxenes and compares with independent MELTS property roots.
-The [shared magma property contract](documents/native_magma.rst#shared-property-contract)
-defines component amount bases, the `element_matrix` atom ledger, standard-state
-alignment, reduced units and derivative domains for these functions.
-The [dry eleven-component liquid](documents/native_magma.rst#dry-eleven-component-liquid)
-adds TiO2, MgCr2O4, Na2SiO3, KAlSiO4 and Ca3(PO4)2, all 55 interactions,
-and atom-conserving oxide conversion. Its [comparison example](examples/magma_dry11.py)
-checks supplied BSE, basalt-like, rhyolite-like and alkali-rich compositions
-against pinned MELTS, plus the existing two- through six-component faces.
-The [ferric liquid extension](documents/native_magma.rst#fe-iii-liquid-component)
-appends Fe2O3 to the five-component liquid, including its standard, pressure
-and mixing terms. Independent MELTS comparisons cover G, chemical potentials
-and thermodynamic derivatives; a zero-ferric check recovers the existing model.
-This supplies phase properties without a redox solve.
-The [dry solid extension](documents/native_dry_solids.rst) adds Na/Ca/K
-feldspars, ordered spinel and Fe/Ti oxides, rutile/corundum, and
-Al/Na/Ti/Fe(III)-bearing pyroxenes in small phase modules under
-`exoeos.magma_solids`. Standards, mixing, site relaxation and implicit
-first/second derivatives are checked against independent MELTS properties.
-Its [comparison example](examples/magma_dry_solids.py) plots the phase
-characteristics and numerical errors; assemblage selection remains separate.
-The [conditional native M2 materials](documents/conditional_materials.rst) package
-the fourteen-component volatile-bearing liquid and twenty-species associated
-alloy as full JAX Gibbs scalars, with explicit standards and conditional domains.
 The [Japanese explanation](https://github.com/HajimeKawahara/doc_ExoEOS) is
-maintained separately; current English documentation lives in `documents/`.
-
-The [hydrous liquid extension](documents/native_hydrous_liquid.rst) appends
-H2O to the dry eleven-component basis, with the MELTS Haar/Robie standard,
-all eleven water interactions and the extra water mixing entropy. Its
-[comparison example](examples/magma_hydrous.py) reproduces supplied wet
-BSE, basalt-like and rhyolite-like properties without an external runtime.
-This is the MELTS water option; empirical solubility models remain separate.
-
-The [hydrous mineral extension](documents/native_hydrous_solids.rst) adds
-biotite, hornblende and ordered clino/orthoamphiboles, with a phase/reference
-table and independent MELTS comparisons. Its [example](examples/magma_hydrous_solids.py)
-also verifies water-induced changes in restricted liquid-plus-forsterite
-crystallization; full hydrous phase selection remains separate.
-
-The [H2O fluid connection](documents/native_magma_fluid.rst) combines an
-explicit Haar ideal-gas standard with a selected existing EOS. It provides
-extensive G and JAX derivatives on the liquid's reference convention.
-The [comparison example](examples/magma_fluid.py) plots liquid/fluid water
-chemical potentials; saturation and fluid amounts remain ExoGibbs tasks.
-
-The separate [carbonate liquid and mixed fluid](documents/native_carbonate_liquid.rst)
-extension implements the mode-4 liquid in `exoeos.magma_carbonate`: thirteen
-independent amounts, internal CaCO3 formation, and implicit reaction relaxation
-in first/second derivatives. `magma_fluid.mixed_fluid_gibbs` adds H2O--CO2
-fluid G with an explicit EOS. The [example](examples/magma_carbonate.py)
-compares pinned mode-4 liquids and independent ZD09 fluid references.
-Mode 4 changes water thermodynamics even at zero carbon; S/N remains separate.
-
-Install the documentation dependencies and build the committed notebook-based
-tutorials with:
-
-```bash
-python -m pip install -e ".[docs]"
-./update_doc.sh
-```
-
-The independent-reference notebooks additionally require the pinned reference
-backend:
-
-```bash
-python -m pip install -e ".[docs,reference]"
-```
-
-The executable notebooks are the editable sources. After changing one, run it
-with `jupyter nbconvert --to notebook --execute --inplace <notebook>`, then run
-`python documents/tutorials/convert_notebooks.py` to refresh its committed RST
-and image assets.
-
-## Residual Helmholtz API
-
-Models implement
-
-```text
-alphar(T, rho, x) = A_res / (n R T),
-```
-
-where `rho` is molar density in `mol m-3`. The initial `IdealEOS` is a zero
-residual placeholder behind this interface. `A_res` excludes the complete
-ideal-gas Helmholtz contribution.
-
-```python
-import jax
-import jax.numpy as jnp
-
-from exoeos import IdealEOS, psir, state_trho
-
-
-eos = IdealEOS()
-T = 1000.0
-rho = 12.0
-x = jnp.array([0.85, 0.15])
-
-alpha_r = eos.alphar(T, rho, x)
-psi_r = psir(eos, T, rho * x)
-state = state_trho(eos, T, rho, x)
-
-state.P
-state.Z
-state.alphar
-state.mu_res_RT
-state.lnphi
-state.gres_RT
-
-batched_Z = jax.vmap(state_trho, in_axes=(None, 0, 0, 0))(
-    eos,
-    jnp.array([800.0, 1000.0]),
-    jnp.array([10.0, 12.0]),
-    jnp.array([[0.9, 0.1], [0.85, 0.15]]),
-).Z
-```
-
-`IdealEOS` also implements pressure inversion, so it can be compared with
-other TP-capable residual models through the same entry point:
-
-```python
-from exoeos import state_tp
-
-ideal_state = state_tp(IdealEOS(), T=1000.0, P=1.0e5, x=x)
-```
-
-`alphar` and `state_trho` accept one state at a time: scalar `T`, scalar
-`rho`, and `x` with shape `(K,)`. `psir` instead accepts the component molar
-density vector `rho_vec` with shape `(K,)`. Use `jax.vmap` for batches.
-Compositions are neither clipped nor normalized.
-
-Models that can invert pressure additionally implement `TPHelmholtzEOS` by
-providing `molar_density(T, P, x, phase="vapor")`. The common
-`state_tp(eos, T, P, x, phase="vapor")` entry point delegates density and
-root selection to that hook, then evaluates `state_trho` and returns the same
-`TRhoState`. This gives ExoGibbs both molar density and fugacity coefficients
-from its natural `T`, `P`, and `x` inputs.
-
-Mass density follows from the same TP density hook when component molar masses
-are supplied in `kg mol-1`:
-
-```python
-from exoeos import additive_volume_mass_density, mass_density_tp
-
-
-rho = mass_density_tp(eos, T, P, x, molar_masses, phase="vapor")
-rho_mixture = additive_volume_mass_density(mass_fractions, component_densities)
-```
-
-Both results use `kg m-3`. The additive-volume closure evaluates
-`1 / rho_mixture = sum_i(w_i / rho_i)` and does not normalize its inputs.
-
-```python
-from exoeos import SecondVirialEOS, state_tp
-
-
-eos = SecondVirialEOS(
-    jnp.array([[1.0e-4, 2.0e-5], [2.0e-5, 8.0e-5]])  # B_ij, m3 mol-1
-)
-state = state_tp(eos, T=700.0, P=2.0e5, x=jnp.array([0.4, 0.6]))
-
-state.rho
-state.Z
-state.lnphi
-state.gres_RT
-```
-
-`SecondVirialEOS` is the first non-ideal fluid model. It uses a constant,
-symmetric pair-coefficient matrix and
-
-```text
-B_mix = sum_i sum_j x_i x_j B_ij,
-alphar = rho B_mix,
-Z = 1 + rho B_mix,
-P = rho R T (1 + rho B_mix),
-mu_res_i / (R T) = 2 rho sum_j B_ij x_j,
-ln(phi_i) = mu_res_i / (R T) - ln(Z),
-g_res / (R T) = 2 rho B_mix - ln(Z).
-```
-
-For `state_tp`, let `rho_0 = P / (R T)` and
-`D = 1 + 4 B_mix rho_0`. The vapor root is evaluated as
-`rho = 2 rho_0 / (1 + sqrt(D))`. Its domain requires `T > 0`, `P > 0`,
-normalized nonnegative `x`, `Z > 0`, and `D > 0`. Only
-`phase="vapor"` is supported. The second-virial truncation is a low-density
-model and should be used only where neglected higher virial terms are small;
-the constant coefficients also omit real temperature dependence.
-
-`PengRobinsonEOS` adds a cubic EOS using critical temperatures in K, critical
-pressures in Pa, acentric factors, and optional binary interaction parameters:
-
-```python
-from exoeos import PengRobinsonEOS
-
-
-eos = PengRobinsonEOS(
-    critical_temperatures=jnp.array([190.564]),
-    critical_pressures=jnp.array([4_599_200.0]),
-    acentric_factors=jnp.array([0.01142]),
-)
-vapor = state_tp(eos, T=150.0, P=1.0e6, x=jnp.array([1.0]))
-liquid = state_tp(
-    eos,
-    T=150.0,
-    P=1.0e6,
-    x=jnp.array([1.0]),
-    phase="liquid",
-)
-```
-
-The implementation uses the original PR76 alpha correlation for every
-component and the exact critical-condition coefficients
-`Omega_a = 0.45723552892138218938` and
-`Omega_b = 0.077796073903888455972`.
-
-`PengRobinsonEOS.second_virial_coefficients(T)` returns the exact
-low-density, density-form coefficient matrix of that PR model at `T`. It can
-be passed directly to `SecondVirialEOS` when comparing PR with its consistent
-second-virial truncation.
-
-A small curated critical-property table is available through
-`get_critical_properties(formula)`. It contains `CO`, `H2O`, `CO2`, `H2`,
-`CH4`, `N2`, `NH3`, `H2S`, and `SO2`, with CoolProp source URLs retained in
-every record. These records can populate the existing `PengRobinsonEOS`
-constructor; they supply no fitted mixture interactions or validation at
-magma temperatures. HCN is not included in the curated table.
-
-The optional `binary_interaction_parameters` matrix defaults to zero and uses
-`a_ij = (1 - k_ij) sqrt(a_i a_j)`. `phase="vapor"` selects the largest
-physical real root of the Peng-Robinson cubic, while `phase="liquid"`
-selects the smallest. Both selectors return the same root in a one-root
-region. Density derivatives are defined away from multiple roots; exact
-critical and spinodal states are not differentiable root-selection points.
-
-Use `float64` when evaluating very-low-pressure liquid roots: reconstructing a
-small pressure from dense-liquid Helmholtz terms is ill-conditioned in
-`float32` even when the selected density root is accurate.
-
-Like `state_trho`, `state_tp` accepts one scalar state at a time. Use
-`jax.vmap` for batches. The `phase` string is a static selector: capture it in
-the transformed function or mark it static rather than mapping it.
-
-The reduced fields `alphar`, `mu_res_RT`, and `gres_RT` are dimensionless.
-`psir = A_res / (R T V)` has units of `mol m-3`. This differs from
-`ThermodynamicState.residual_gibbs`, which is a molar energy in `J mol-1`.
-
-`ZhangDuanEOS` implements the Zhang-Duan (2009) corresponding-states EOS for
-C-O-H fluids. The published species parameters and the fitted H2O-CO2 and
-H2O-CH4 interactions are available through `from_species`:
-
-```python
-from exoeos import ZhangDuanEOS
-
-
-species = ("CO", "H2O", "CO2", "H2")
-eos = ZhangDuanEOS.from_species(species)
-state = state_tp(
-    eos,
-    T=1000.0,
-    P=1.0e9,
-    x=jnp.array([0.4, 0.4, 0.1, 0.1]),
-)
-```
-
-The model also supports `CH4`, `O2`, and `C2H6`. It is intended for the
-homogeneous-fluid calibration ranges reported in
-[Zhang and Duan (2009)](https://doi.org/10.1016/j.gca.2009.01.021).
-The principal mixture range is 673--2573 K and 1 MPa--10 GPa; H2O-CH4 starts
-at 10 MPa, and the pure-species data ranges differ.
-Pressure inversion selects the mechanically stable root connected to the
-low-density branch and supports only `phase="vapor"`. Fugacity coefficients
-are obtained by differentiating the residual Helmholtz energy rather than by
-transcribing the paper's mixture fugacity equation. The implementation uses
-the physical `P V / (R T)` compressibility; the scaled left-hand side printed
-in Equation 8 does not reproduce the paper's Table 6 values.
-
-## Excess Gibbs API
-
-Solution models implement
-
-```text
-gex_RT(T, P, x) = g_ex / (R T),
-```
-
-where `P` is absolute pressure in Pa. The extensive helper and its amount
-derivative are
-
-```text
-G_ex / (R T) = total_gex_RT(model, T, P, n)
-             = n_total gex_RT(T, P, n / n_total),
-ln(gamma_i) = partial [G_ex / (R T)] / partial n_i.
-```
-
-```python
-import jax
-import jax.numpy as jnp
-
-from exoeos import IdealSolution, solution_state, total_gex_RT
-
-
-model = IdealSolution()
-T = 1600.0
-P = 1.0e5
-x = jnp.array([0.4, 0.6])
-
-gex_RT = model.gex_RT(T, P, x)
-total = total_gex_RT(model, T, P, x)
-state = solution_state(model, T, P, x)
-
-state.gex_RT
-state.lngamma
-
-batched_lngamma = jax.vmap(solution_state, in_axes=(None, 0, 0, 0))(
-    model,
-    jnp.array([1400.0, 1600.0]),
-    jnp.array([1.0e5, 2.0e5]),
-    jnp.array([[0.3, 0.7], [0.4, 0.6]]),
-).lngamma
-```
-
-`IdealSolution` is the zero-excess placeholder: `gex_RT` and `lngamma` are
-zero. It does not add the ideal-mixing Gibbs energy. The API uses only the
-symmetric mole-fraction standard-state convention, `a_i = x_i gamma_i`, and
-satisfies `gex_RT = sum_i x_i ln(gamma_i)` for normalized compositions.
-The reference is the pure component, or a specified pure endmember, at the
-same `T` and `P`.
-Standard/endmember Gibbs energies, component-basis mapping, and phase
-equilibrium remain responsibilities of the calling application.
-
-`gex_RT` and `solution_state` accept one state at a time: scalar `T`, scalar
-`P`, and normalized `x` with shape `(K,)`. `total_gex_RT` instead accepts a
-component amount vector and forms `x = n / sum(n)`. The kernel does not clip
-or numerically validate inputs; the extensive construction uses `n / sum(n)`
-by definition. Use `jax.vmap` for batches.
-
-### Fe-Si-O liquid activities
-
-`MaFeSiOLiquid` implements a native JAX excess-energy model for ordered
-atomic mole fractions `(Fe, Si, O)`. Its defaults complete Young (2023)'s
-printed alloy coefficients with the Ma Fe solvent term and use explicit
-formal endmember standards.
-
-```python
-import jax.numpy as jnp
-from exoeos import MaFeSiOLiquid, solution_state
-
-model = MaFeSiOLiquid()
-T, P = 2350.0, 1.0e5  # K, Pa
-x = jnp.array([0.85, 0.10, 0.05])  # Fe, Si, O
-model.validate_state(T, P, x)  # Validate eagerly, before JAX transformations.
-state = solution_state(model, T, P, x)
-shift_RT = model.standard_state_shift_RT(T)
-lngamma_source = state.lngamma + shift_RT
-```
-
-The consumer must also transform its source standard potentials:
-`mu0_formal_RT = mu0_source_RT + shift_RT`, where potentials are divided by
-`R*T`. The model supplies the conversion, not absolute thermochemical data.
-`interaction_K` is a differentiable array of shape `(3,)`, ordered
-`(Si-Si, O-O, Si-O)`, with defaults `(12.41*1873, -16500, -5*1873)` K.
-Custom interactions have no established physical calibration.
-
-The activity domain requires positive `T`, `P`, and `x_Fe`, nonnegative
-fractions, and normalized composition. Call `validate_state` explicitly;
-the evaluator does not invoke it. Pure Si/O have zero formal scalar energy,
-but their activity derivatives are unsupported. No calibrated T/P/composition
-box or high-pressure validity is established, and liquid stability must be
-assessed separately. This metal-only model supplies no silicate activities
-or equilibrium calculation. See the
-[model and reference specification](documents/fe_si_o_reference.rst) for
-equations, provenance, limits, and independent fixtures.
-
-### Fe-Si-O-H dilution control
-
-`MaFeSiOHLiquid` extends the dry alloy in atomic `(Fe, Si, O, H)` order:
-`gex_RT = (1 - x_H) * dry_model.gex_RT(T, P, x[:3] / (1 - x_H))`.
-The four-component ideal activities use `x`; the dry excess term uses the
-normalized dry composition. Differentiating this scalar preserves the dry
-activity coefficients and gives `ln(gamma_H) = 0`.
-
-```python
-import jax.numpy as jnp
-from exoeos import MaFeSiOHLiquid, solution_state
-
-model = MaFeSiOHLiquid()
-x = jnp.array([0.765, 0.09, 0.045, 0.10])
-model.validate_state(2350.0, 1.0e5, x)
-state = solution_state(model, 2350.0, 1.0e5, x)
-shift_RT = model.standard_state_shift_RT(2350.0)
-```
-
-This is a formal control with no H excess interactions or H partition
-calibration. It requires positive dry amount and the dry Fe-rich domain;
-pure H is unsupported. The returned H standard-state shift is zero and
-preserves the consumer's H standard, whose absolute potential must be supplied
-separately. See the [control specification](documents/fe_si_o_h_reference.rst)
-for its limits and runnable finite-H numerical check.
-
-Independent [MELTS silicate references](documents/melts_silicate_reference.rst)
-provide three partially crystallized basalt states from a pinned external
-alphaMELTS release. They record phase masses, liquid endmember activities,
-chemical potentials, and the explicit oxide-basis conversion. The fixture
-and its offline consistency tests require no MELTS installation; regenerating
-it uses a separate runtime. These references add no native silicate model
-or coupled melt-metal equilibrium calculation.
-
-The optional [supplied-composition evaluator](documents/melts_liquid_evaluator.rst)
-under `examples/melts_liquid_evaluator.py` calls the same pinned backend at
-requested K, Pa, and liquid endmember amounts. Each evaluation uses a fresh
-process and checks that the returned composition matches the request with
-oxygen buffering disabled. It returns full chemical potentials, phase Gibbs
-energy, standards, activities, and provenance, including explicit conversion
-to the consumer's `mu/(R*T)` convention. Its `--validate` command checks the
-three saved liquids, Fe/Si/O perturbations, amount scaling, and numerical
-derivatives. This property evaluator supplies no phase-stability result or
-alloy/gas standard-state alignment.
-
-An explicit `calculation_mode=4` selects a separate rhyolite-MELTS 1.2.0
-carbon property path. It retains 19 independent input components and maps the
-backend's dependent CaCO3 species back to that basis. Positive CO2 requires
-this mode; SO3 is unsupported and N is absent from the basis. A separate
-carbon fixture checks finite-difference potentials, amount scaling, and exact
-zero C on the same model. See the [C/N/S provider scope](documents/cns_provider_scope.rst)
-for remaining standard alignment, alloy, dissolution, and calibration work.
-
-## Fixed-composition tabulated H/He API
-
-`ChabrierDebrasEOS` loads the published
-[Chabrier-Debras (2021)](https://doi.org/10.3847/1538-4357/abfc48) H/He TP
-and T-rho table pair for one fixed composition. The table loader downloads
-the [official data archive](https://perso.ens-lyon.fr/gilles.chabrier/DirEOS/)
-when the selected pair is absent, verifies SHA-256 checksums, and caches only
-the required files. Select one of the published `Y0275`, `Y0292`, or `Y0297`
-variants:
-
-```python
-from exoeos import ChabrierDebrasTableLoader
-
-
-loader = ChabrierDebrasTableLoader(
-    variant="Y0275",
-    # cache_directory="/optional/custom/cache/DirEOS2021",
-)
-eos = loader.load()
-tp_state = eos.state_tp(T=1.0e4, P=1.0e11)
-trho_state = eos.state_trho(T=1.0e4, mass_density=1.0e3)
-
-tp_state.rho
-tp_state.u
-tp_state.s
-tp_state.nabla_ad
-```
-
-The default cache is `$XDG_CACHE_HOME/exoeos/DirEOS2021`, falling back to
-`~/.cache/exoeos/DirEOS2021`. Loader metadata is available through
-`expected_filenames`, `variant`, `checksum`, `checksums`, `citation`,
-`table_domain`, and `cache_directory`. Existing local tables can still be
-opened directly with `ChabrierDebrasEOS.from_directory(...)`.
-
-Inputs and returned quantities use SI units. The logarithmic derivative fields
-are dimensionless. This original-table backend interpolates each published
-field independently; its response columns can differ from automatic
-derivatives of the interpolated density or entropy, and first derivatives
-can jump at cell boundaries. The variants are separate fixed-composition datasets;
-ExoEOS does not interpolate in helium mass fraction. Queries outside the
-nominal rectangular grids return `nan`, and the tables do not provide a mask
-for unphysical states inside those rectangles. If conversion to the selected
-floating-point dtype makes any returned field non-finite, the complete state
-is returned as `nan`. Both evaluators accept one state at a time; use
-`jax.vmap` for batches. `Y0292` and `Y0297` are the effective-abundance
-variants defined by the authors.
-
-For a separate potential-consistent reconstruction, enable JAX 64-bit mode
-before loading and call ``original.to_helmholtz()``:
-
-```python
-import jax
-from exoeos import ChabrierDebrasTableLoader
-
-jax.config.update("jax_enable_x64", True)
-original = ChabrierDebrasTableLoader(variant="Y0275").load()
-potential = original.to_helmholtz()
-state = potential.state_trho(T=1.0e4, mass_density=1.0e3)
-residuals = original.helmholtz_residuals(potential, 1.0e4, 1.0e3)
-```
-
-This opt-in backend reconstructs `a = u - T*s`, interpolates a local C2
-Helmholtz potential, and derives pressure, entropy and responses from it.
-It retains mass-specific SI units. `residuals` exposes signed differences
-from every original T-rho field, and `state.is_stable` checks local thermal
-and mechanical stability. Consistency does not guarantee source accuracy or
-stability; see the [method, API and numerical comparison](documents/potential_tables.rst).
-
-## Composition-dependent tabulated silicate-hydrogen API
-
-`MarcumSilicateHydrogenEOS` interpolates the published
-[Marcum, Stixrude, and Young (2026)](https://arxiv.org/abs/2608.27401)
-MgSiO3-H lookup table at temperature, pressure, and composition. The ordered
-endmember mole-fraction vector is `(MgSiO3, MgSiO3H4)`, so `X = x[1]` and the
-corresponding hydrogen mass fraction is
-`4 X M_H / (M_MgSiO3 + 4 X M_H)`.
-
-```python
-import jax.numpy as jnp
-
-from exoeos import MarcumSilicateHydrogenTableLoader
-
-
-eos = MarcumSilicateHydrogenTableLoader().load()
-state = eos.state_tp(
-    T=6000.0,
-    P=1.0e11,
-    x=jnp.array([0.5, 0.5]),
-)
-
-state.rho
-state.h
-state.s
-state.cp
-state.Ks
-state.nabla_ad
-```
-
-The loader downloads the single CSV from the
-[authors' table repository](https://github.com/s-marcum/MgSiO3-H-EOS),
-verifies its SHA-256 checksum, and caches it. An existing file can be opened
-with `MarcumSilicateHydrogenEOS.from_file(path)`.
-The default cache is `$XDG_CACHE_HOME/exoeos/MgSiO3-H-EOS`, falling back to
-`~/.cache/exoeos/MgSiO3-H-EOS`. Provenance and domain metadata are exposed by
-`expected_filename`, `checksum`, `commit`, `table_url`, `citation`, and
-`table_domain`.
-
-Inputs and outputs use SI units. The table coordinates are 3000--10000 K,
-1--800 GPa, and `2.5e-5 <= X <= 1`; the 1--4 GPa slices stop at 6000 K.
-Queries that require a missing cell or lie outside the table return an
-all-`nan` state; there is no clipping or extrapolation. The evaluator accepts
-one scalar state and a normalized, nonnegative composition of shape `(2,)`;
-it never clips or renormalizes inputs. Use `jax.vmap` for batches. Its
-`molar_masses` and `mass_density_tp` method also satisfy the
-`MassDensityProvider` contract directly.
-
-The table extends beyond the directly simulated calibration range of roughly
-4000--8000 K and 4.9--615.83 GPa. Intermediate compositions are the authors'
-ideal Gibbs mixture of the dry and fully hydrogenated endmembers, not an
-additive-volume mixture with a separate pure-H2 EOS.
-
-## Composite density providers
-
-The density-provider layer combines heterogeneous EOS backends without
-assigning workflow-specific species mappings to ExoEOS. Its public types are
-`MassDensityProvider`, `DensityComponent`, `TPHelmholtzDensityProvider`,
-`FixedCompositionDensityProvider`, and
-`AdditiveVolumeCompositeDensityProvider`. A composite maps an ordered global
-species tuple to components, converts mole fractions to component mass
-fractions, and applies the additive-volume law.
-
-Component species must form an exact, non-overlapping partition of the global
-species tuple. `TPHelmholtzDensityProvider` adapts a TP Helmholtz EOS, while
-`FixedCompositionDensityProvider` adapts a fixed-composition backend such as
-`ChabrierDebrasEOS`. If the supplied within-group mass fractions do not match
-that backend's configured composition within its declared tolerance, the
-density result is `nan`.
-
-`mass_density_tp(T, P, x)` evaluates one state: `T` and `P` are scalars in K
-and Pa, `x` is a one-dimensional mole-fraction vector in the declared species
-order, molar masses use `kg mol-1`, and the result uses `kg m-3`. Use external
-`jax.vmap` for batches. Numerical normalization and positivity are caller
-contracts. MELTYQ-specific species aliases and EOS assignments, and
-conversions to or from ExoGibbs or ExoJAX units, remain at the calling workflow
-or example boundary.
-
-## Caloric ideal-gas API
-
-All public quantities use SI units. Component molar masses are in `kg mol-1`,
-component molar heat capacities are in `J mol-1 K-1`, temperature is in K, and
-pressure is in Pa.
-
-```python
-import jax
-import jax.numpy as jnp
-
-from exoeos import IdealGas
-
-
-eos = IdealGas(
-    molar_masses=jnp.array([2.01588e-3, 4.002602e-3]),
-    molar_heat_capacities=jnp.array([28.84, 20.786]),
-)
-
-x = jnp.array([0.85, 0.15])
-state = eos.state(T=1000.0, P=1.0e5, x=x)
-
-state.Z
-state.mass_density
-state.number_density
-state.log_fugacity_coefficients
-state.residual_gibbs
-state.residual_enthalpy
-state.cp
-state.cv
-state.thermal_expansion
-state.adiabatic_gradient
-
-jitted_density = jax.jit(
-    lambda temperature: eos.state(temperature, 1.0e5, x).mass_density
-)
-density_gradient = jax.grad(jitted_density)(1000.0)
-```
-
-`x` contains normalized mole fractions on its last axis. ExoEOS does not
-renormalize composition. Component molar masses and heat capacities are
-required because `T`, `P`, and `x` alone do not determine mass density or
-caloric properties. Reference enthalpies and entropies default to zero; pass
-physical reference data when absolute values are needed.
-
-The complete units, shape, reference-state, and transformation contract is in
-[the thermodynamic-state contract](https://github.com/HajimeKawahara/exoeos/blob/main/documents/thermodynamic_state_contract.md).
-
-## Total Helmholtz thermodynamics
-
-`HelmholtzThermodynamics(residual, ideal)` combines an existing residual EOS
-with an ideal free energy and evaluates its first and second T/rho
-derivatives. It provides molar enthalpy, entropy, internal/Gibbs/Helmholtz
-energies, `cp`, `cv`, sound speed, adiabatic gradient, compressibilities and
-thermal expansion in one `HelmholtzThermodynamicState`:
-
-```python
-import jax.numpy as jnp
-from exoeos import HelmholtzThermodynamics, IdealGas, SecondVirialEOS
-
-ideal = IdealGas(molar_masses=[0.028], molar_heat_capacities=[29.1])
-eos = HelmholtzThermodynamics(SecondVirialEOS([[1.0e-5]]), ideal)
-state = eos.state_tp(T=500.0, P=1.0e5, x=jnp.array([1.0]))
-cp_mass = state.cp / state.mean_molar_mass  # J/(kg K), useful for RCE
-sound_speed = state.sound_speed            # m/s
-adiabatic_gradient = state.nabla_ad
-```
-
-`state_trho(T, rho, x)` accepts molar density in mol/m3; `state` aliases
-`state_tp`. The generic `thermodynamic_state_trho(model, T, rho, x)` also
-accepts a complete custom `MolarHelmholtzEOS` implementing
-`molar_helmholtz(T, rho, x)` in J/mol and `molar_masses` in kg/mol.
-`IdealGas` supplies a constant-cp ideal closure; custom ideal closures can
-represent temperature-dependent heat capacities. A residual EOS alone does
-not specify total caloric properties.
-
-Calls evaluate a single state and support `jax.jit` and external `jax.vmap`.
-Responses hold composition fixed in a homogeneous phase; chemical-equilibrium
-and latent-heat responses require an additional closure. Values are not
-clipped at unstable or singular states. For ExoJAX pressure inputs in bar,
-convert to Pa with `P_bar * 1.0e5`. See the
-[derivative guide](documents/thermodynamic_derivatives.rst) for equations,
-units and a batched atmospheric example. Existing residual states and their
-fugacity fields remain available through `state_trho` and `state_tp`.
+maintained separately.
+
+<details>
+<summary>Model-specific guides and API entry points</summary>
+
+| Capability | Entry point | Guide |
+| --- | --- | --- |
+| Residual fluid density and fugacity | `state_tp`, `state_trho` | [Peng–Robinson](documents/tutorials/peng_robinson_eos.rst), [Zhang–Duan](documents/tutorials/zhang_duan_eos.rst) |
+| Solution Gibbs energy and activities | `solution_state`, `total_solution_state` | [Fe–Si–O](documents/fe_si_o_reference.rst), [Fe–Si–O–H](documents/fe_si_o_h_reference.rst) |
+| Ideal-gas and total caloric properties | `IdealGas`, `HelmholtzThermodynamics` | [Helmholtz derivatives](documents/thermodynamic_derivatives.rst) |
+| H/He and silicate–hydrogen tables | `ChabrierDebrasTableLoader`, `MarcumSilicateHydrogenTableLoader` | [Table models](documents/model_guide.rst#tables-caloric-quantities-and-density), [potential-consistent H/He](documents/potential_tables.rst) |
+| Composite mass density | `mass_density_tp`, `AdditiveVolumeCompositeDensityProvider` | [Density providers](documents/model_guide.rst#tables-caloric-quantities-and-density) |
+| Dry and hydrous silicate liquids | `exoeos.magma` | [Native magma and cooling examples](documents/native_magma.rst), [hydrous liquids](documents/native_hydrous_liquid.rst) |
+| Dry and hydrous minerals | `exoeos.magma_solids` | [Dry minerals](documents/native_dry_solids.rst), [hydrous minerals](documents/native_hydrous_solids.rst) |
+| Carbonate liquids and H2O–CO2 fluids | `exoeos.magma_carbonate`, `exoeos.magma_fluid` | [Carbonate and mixed fluids](documents/native_carbonate_liquid.rst), [H2O fluid connection](documents/native_magma_fluid.rst) |
+| Conditional volatile liquids and alloys | `exoeos.magma_volatiles`, `exoeos.associated_metal` | [Conditional materials](documents/conditional_materials.rst) |
+
+Native JAX magma models run without an external MELTS runtime. The optional
+[supplied-composition MELTS evaluator](documents/melts_liquid_evaluator.rst)
+and [independent silicate references](documents/melts_silicate_reference.rst)
+describe separate checkout tools and their backend requirements.
+The [C/N/S provider scope](documents/cns_provider_scope.rst) records remaining
+standard-state and calibration limits.
+
+[Experimental MCEG metadata](mceg/README.md) records model assumptions,
+applicability, and scoped evidence.
+
+</details>
 
 ## Development
+
+<details>
+<summary>Install from source and run tests</summary>
+
+From a repository checkout:
 
 ```bash
 python -m pip install -e ".[test]"
 pytest tests/unittests
 ```
 
-`SecondVirialEOS`, `PengRobinsonEOS` and `ZhangDuanEOS` are the non-ideal
-fluid backends.
-Additional fluid EOS and nonzero Gibbs-excess models can be added behind the
-separate `TPHelmholtzEOS` and `GibbsExcessModel` contracts.
+For a regular installation from the checkout, use `python -m pip install .`.
+
+</details>
+
+<details>
+<summary>Build documentation and update notebooks</summary>
+
+Follow the [documentation build guide](documents/mceg/build.rst) to install
+the documentation extras, MCEG, and Graphviz, then run:
+
+```bash
+./update_doc.sh
+```
+
+Independent-reference notebooks additionally require the pinned reference
+backend:
+
+```bash
+python -m pip install -e ".[docs,reference]"
+```
+
+The executable notebooks are the editable sources. After changing one,
+execute it and refresh its committed RST and image assets:
+
+```bash
+jupyter nbconvert --to notebook --execute --inplace <notebook>
+python documents/tutorials/convert_notebooks.py
+```
+
+</details>
