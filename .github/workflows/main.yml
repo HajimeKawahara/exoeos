@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   pytest:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     env:
       OPENBLAS_NUM_THREADS: "1"
     strategy:
@@ -19,8 +19,11 @@ jobs:
         include:
           - python-version: "3.9"
             jax-version: "0.4.30"
+            # Python 3.9 binaries are available for Ubuntu 22.04.
+            os: ubuntu-22.04
           - python-version: "3.13"
             jax-version: "latest"
+            os: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -69,7 +72,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e ".[docs]"
-          python -m pip install "mceg @ git+https://github.com/HajimeKawahara/mceg.git@471e2516d644031b561e7bef4f4d4093b52fe07e"
+          python -m pip install "mceg @ git+https://github.com/HajimeKawahara/mceg.git@ecbc2cc4352188f9c2779274205b788bf54545ca"
           dot -V
 
       - name: Build documentation

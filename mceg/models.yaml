@@ -3,6 +3,8 @@ scope: 2026-10-20 solubility/magma inventory at 37b9173f37866495949fd7c90340a02b
   source/data. Explicit priority models and located remaining families; unlisted files remain unreviewed.
   Family registrations do not certify every internal variant, caller-supplied EOS, water/helium cross-product,
   external table, or examples outside src.
+  The 2026-11-24 additions register the uniform water quadrature and reduced melt simplex bounds
+  with separate mathematical and physical Assessments; earlier histories retain their scope.
 source_roots:
 - src/exoeos
 contract_roots:
@@ -218,6 +220,14 @@ files:
     role: model
     note: Located model definitions/data and mapped the stated families on 2026-10-20; this is a boundary
       inventory, not physical validation or exhaustive variant review.
+  src/exoeos/water_interval.py:
+    sha256: 71ced18775a71b4653140f513068b6e96192079b84f05ecbff373f312543535c
+    role: model
+    note: Mathematical integration-error bound; full scalar and empirical support remain separate.
+  src/exoeos/magma_water_interval.py:
+    sha256: 9b8c574cf6b6875b84c0997f490ad51ea74e582a4edc1993c4f9f0a690a47cf8
+    role: model
+    note: Continuous reduced dry11 simplex bound; originating backend and physical support remain separate.
 models:
 - id: exoeos.ma_fe_si_o
   description: Provisional Badro default with completed Fe activity; printed-version history retained.
@@ -609,3 +619,19 @@ models:
   - path: src/exoeos/magma_solids/hornblende.py
     symbol: gibbs
   contracts: []
+- id: exoeos.two_power_water_quadrature_bound.v1
+  description: Uniform real-arithmetic quadrature-error bound over positive two-power capacity mixtures.
+  bindings:
+  - path: src/exoeos/water_interval.py
+    symbol: two_power_water_quadrature_bound
+  contracts:
+  - path: mceg/contracts/water_interval.yaml
+    model_id: exoeos.two_power_water_quadrature_bound.v1
+- id: exoeos.reduced_two_power_melt_bound.v1
+  description: Outward full-simplex insertion bound for a declared continuous reduced two-power melt.
+  bindings:
+  - path: src/exoeos/magma_water_interval.py
+    symbol: reduced_two_power_melt_bound
+  contracts:
+  - path: mceg/contracts/magma_water_interval.yaml
+    model_id: exoeos.reduced_two_power_melt_bound.v1

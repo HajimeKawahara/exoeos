@@ -59,3 +59,5 @@ Physical model references
    m2_material_contract
    m2_reaction_calibration
    phosphorus_mqm
+   water_interval
+   magma_water_interval

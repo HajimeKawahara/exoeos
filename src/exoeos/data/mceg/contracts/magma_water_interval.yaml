@@ -1,0 +1,361 @@
+schema_version: '0.4'
+model:
+  id: exoeos.reduced_two_power_melt_bound.v1
+  name: Reduced two-power dry11 simplex bound
+  description: Material-owned outward global minimum bound with explicit caller and backend limits.
+  implementation: &id001
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: source-review:20261124-reduced-melt-v1
+    entry_points:
+    - src/exoeos/magma_water_interval.py:reduced_two_power_melt_bound
+assumptions:
+- statement: The caller supplies intervals enclosing the coefficients of the declared continuous reduced
+    scalar.
+  evidence:
+  - derivation
+domains:
+- kind: scientific_applicability
+  status: unknown
+  description: Mathematical domain coverage does not establish empirical material or full-planet phase
+    acceptance.
+  conditions: []
+  evidence:
+  - derivation
+claims:
+- id: reduced-simplex-bound
+  revision: '1'
+  kind: theoretical
+  statement: A completed result encloses the minimum of the declared continuous reduced scalar on the
+    entire dry11 simplex.
+  scope: The two equations, supplied interval coefficients, declared domain and outward proof algorithm
+    only; not automatic guest reduction or complete backend verification.
+  equations:
+  - id: reduced-scalar
+    revision: '1'
+  - id: simplex-lower-bound
+    revision: '1'
+- id: complete-backend
+  revision: '1'
+  kind: numerical_verification
+  statement: The complete originating material backend is enclosed, including all coefficient construction,
+    pressure inversion, quadrature and floating-point errors.
+  scope: Not established by the reduced-scalar API; callers need separate uniform bounds and source correspondence.
+- id: empirical-material
+  revision: '1'
+  kind: physical_validation
+  statement: The originating material model is empirically accurate throughout the planetary domain.
+  scope: A mathematical insertion bound does not validate the conditional material calibration or every
+    planetary phase.
+evidence:
+- id: derivation
+  kind: theory
+  summary: Analytic guest reduction context, local curvature, valid box bounds and exhaustive domain coverage.
+  sources:
+  - documents/magma_water_interval.rst
+  scope: Reviewed continuous-model proof and explicit exclusions.
+  provenance:
+    role: primary
+    location: Scalar definition, box/simplex proof and scope
+    inspection: inspected
+    note: Independent mathematical/source review with actual regression evidence; complete backend and
+      empirical propositions remain separate.
+  artifacts:
+  - source: documents/magma_water_interval.rst
+    sha256: 3fd3e3f671d9eaee24ad644694d51ed061a466a412b1cfb9a6ca5e8c3dd966f0
+- id: implementation
+  kind: implementation
+  summary: Inspected outward proof implementation, shared interval arithmetic and actual regression definitions.
+  sources:
+  - src/exoeos/magma_water_interval.py
+  - src/exoeos/ma_interval.py
+  - src/exoeos/water_interval.py
+  - tests/unittests/magma_water_interval_test.py
+  scope: The selected source bytes; no unseen caller or backend is certified.
+  provenance:
+    role: primary
+    location: Source implementation and targeted independent controls
+    inspection: inspected
+    note: Independent mathematical/source review with actual regression evidence; complete backend and
+      empirical propositions remain separate.
+  subject: reduced-melt-20261124
+- id: regressions
+  kind: numerical_test
+  summary: Executed analytic controls, exterior-box paths, negative bounds, finite-budget and invalid-domain
+    regressions.
+  sources:
+  - results/mceg/20261124_magma_water_interval/validation.json
+  scope: The selected regression execution, separate from the calling S2 multi-source experiment.
+  result: passed
+  provenance:
+    role: primary
+    location: Executed pytest receipt and exact selected source hashes
+    inspection: inspected
+    note: Independent mathematical/source review with actual regression evidence; complete backend and
+      empirical propositions remain separate.
+  subject: reduced-melt-20261124
+  context: continuous-dry11-simplex
+  artifacts:
+  - source: results/mceg/20261124_magma_water_interval/validation.json
+    sha256: 9142c9ef60a587be0e541568f6cf750222317971485d8a3ea8593ce24894000b
+limitations:
+- statement: This provider result excludes originating coefficient construction, pressure inversion, stored-rule
+    error and floating-point backend operations unless separately bounded by the consumer.
+  evidence:
+  - derivation
+subjects:
+- id: reduced-melt-20261124
+  implementation: *id001
+  selected_files:
+    src/exoeos/magma_water_interval.py: 9b8c574cf6b6875b84c0997f490ad51ea74e582a4edc1993c4f9f0a690a47cf8
+    src/exoeos/ma_interval.py: 01529ac84b6318b27e905be8e8cd0dd3d11ba7f05f05de6e67450429714a5b68
+    src/exoeos/water_interval.py: 71ced18775a71b4653140f513068b6e96192079b84f05ecbff373f312543535c
+    tests/unittests/magma_water_interval_test.py: 5046f80cc2582ca93b7d65e57431c96fdf7c32d2f7e3765f1c1a7cd5c9e221cc
+contexts:
+- id: continuous-dry11-simplex
+  scope: Continuous reduced scalar on the full eleven-component simplex with positive, explicitly enclosed
+    water terms.
+  settings:
+    default_local_margin: 0.03
+    default_curvature_floor: 0.5
+    default_max_boxes: 200000
+equations:
+- id: reduced-scalar
+  revision: '1'
+  latex: q(x)&=c\mathbin{\cdot}x+r\sum_jx_j\log x_j+\tfrac12x^{\mathsf T}Wx-(S\mathbin{\cdot}x)I(t(x)),\\
+    t_i(x)&=\exp\!\left(b_i+\frac{v_i\mathbin{\cdot}x}{d\mathbin{\cdot}x}\right),\quad x\geq0,\quad\sum_jx_j=1,\\
+    I(t)&=\int_{-\infty}^{0}\frac{\sum_i t_i e^{a_i z}}{1-\sum_i t_i e^{a_i z}}\,dz
+  description: Continuous two-power water coupled to the dry11 insertion scalar.
+  scope: Eleven dry components, two positive power terms, positive counts and water-equivalent factors;
+    supplied coefficient intervals enclose the intended real constants.
+  symbols:
+    q:
+      latex: q
+      description: Insertion cost
+      unit: RT per dry-component mol
+    x:
+      latex: x
+      description: Dry-component mole fractions
+      unit: dimensionless
+    c:
+      latex: c
+      description: Linear insertion coefficients
+      unit: RT per dry-component mol
+    r:
+      latex: r
+      description: Positive dry ideal-mixing coefficient
+      unit: dimensionless
+    W:
+      latex: W
+      description: Symmetric dry interaction matrix with zero diagonal
+      unit: RT per dry-component mol
+    S:
+      latex: S
+      description: Water-equivalent factors
+      unit: mol water-equivalent per dry-component mol
+    b:
+      latex: b_i
+      description: Water log-term offsets
+      unit: dimensionless
+    v:
+      latex: v_i
+      description: Dry water-predictor coefficients
+      unit: dimensionless
+    d:
+      latex: d
+      description: Positive predictor counts
+      unit: dimensionless
+    a:
+      latex: a_i
+      description: Water power exponents in [0.25,1]
+      unit: dimensionless
+    I:
+      latex: I
+      description: Continuous isotherm integral
+      unit: dimensionless
+    t:
+      latex: t_i
+      description: Positive water terms
+      unit: dimensionless
+  assumptions:
+  - The caller establishes the H2/He/water reduction, elemental gauge and units; the provider does not
+    infer a material model from a callback.
+  - Coefficient intervals need not be independent; enclosing them independently is conservative.
+  - The required water-term sums are bounded below one half on each evaluated region.
+  - This definition uses continuous water integration and exact real arithmetic, not a complete floating-point
+    Gibbs backend.
+  evidence:
+  - derivation
+- id: simplex-lower-bound
+  revision: '1'
+  latex: \nabla_y^2q&\succeq\kappa I\quad\text{on }B_{\rm local},\\ L_{\rm local}&=q(y_*)-\frac{\|\nabla_yq(y_*)\|_2^2}{2\kappa},\\
+    \inf_{x\in\Delta_{10}}q(x)&\geq\min\!\left\{L_{\rm local},\min_{B\in\mathcal B_{\rm outer}}L_B\right\}
+  description: Local curvature and complete exterior-box exclusion give a global lower bound.
+  scope: The exact reference uses x_0=1-sum(x_1,...,x_10). Caps and the reference are enclosed, interval
+    LDL proves the positive curvature floor, and no unresolved box may remain.
+  symbols:
+    q:
+      latex: q
+      description: Reduced scalar from the previous definition
+      unit: RT per dry-component mol
+    y:
+      latex: y
+      description: Ten independent simplex coordinates
+      unit: dimensionless
+    xref:
+      latex: x_*
+      description: Supplied positive reference composition
+      unit: dimensionless
+    eta:
+      latex: \eta
+      description: Positive local margin defining caps min(x_*+eta,1)
+      unit: dimensionless
+    kappa:
+      latex: \kappa
+      description: Certified local curvature floor
+      unit: RT per dry-component mol
+    Nbox:
+      latex: "N_{\rm boxes}"
+      description: Finite search budget
+      unit: integer
+    L:
+      latex: L
+      description: Reported global lower bound
+      unit: RT per dry-component mol
+    Bloc:
+      latex: "B_{\rm local}"
+      description: Simplex intersection of the declared local caps
+      unit: set
+    B:
+      latex: \mathcal B_{\rm outer}
+      description: Boxes covering the remaining simplex
+      unit: set
+    LB:
+      latex: L_B
+      description: Outward McCormick/entropy-dual lower bound on a box
+      unit: RT per dry-component mol
+  assumptions:
+  - The scalar coefficient definitions and supplied domains are those of reduced-scalar.
+  - Dry ideal curvature and the interaction Hessian are reduced by a conservative water Hessian norm;
+    interval LDL verifies the remaining matrix.
+  - McCormick cuts are valid box bounds and any finite entropy-dual multiplier is allowed; proposals do
+    not certify acceptance.
+  - Every accepted proof value starts inside outward arithmetic, including the first product in the clamped
+    entropy term.
+  - An exhausted budget returns an incomplete result without a global bound; negative bounds are retained.
+  evidence:
+  - derivation
+bindings:
+- id: reduced-melt-coefficients
+  equation:
+    id: reduced-scalar
+    revision: '1'
+  subject: reduced-melt-20261124
+  source: src/exoeos/magma_water_interval.py
+  symbol: reduced_two_power_melt_bound
+  arguments:
+    linear_rt:
+      symbol: c
+    quadratic_rt:
+      symbol: W
+    entropy_coefficient:
+      symbol: r
+    water_equivalent:
+      symbol: S
+    water_log_terms:
+      symbol: b
+    water_log_predictors:
+      symbol: v
+    predictor_counts:
+      symbol: d
+    water_exponents:
+      symbol: a
+  constants: {}
+  note: The function bounds this scalar; it does not return a scalar q evaluation. Interval coefficients
+    use a trailing endpoint axis; counts and exponents are exact binary64 constants.
+- id: reduced-melt-minimum
+  equation:
+    id: simplex-lower-bound
+    revision: '1'
+  subject: reduced-melt-20261124
+  source: src/exoeos/magma_water_interval.py
+  symbol: reduced_two_power_melt_bound
+  arguments:
+    reference_composition:
+      symbol: xref
+    local_margin:
+      symbol: eta
+    curvature_floor:
+      symbol: kappa
+    max_boxes:
+      symbol: Nbox
+  constants: {}
+  note: Returns a dictionary. complete and unresolved_boxes determine whether lower_rt_per_dry_mole is
+    available. The remaining coefficients follow reduced-scalar and the documented trailing endpoint axes.
+    The binding declares static source correspondence, not executable dataflow.
+assessments:
+- id: reduced-simplex-review
+  kind: evidence_support
+  subject: reduced-melt-20261124
+  context: continuous-dry11-simplex
+  claim: reduced-simplex-bound
+  claim_revision: '1'
+  method:
+    id: independent-math-source-review
+    revision: '1'
+    description: Review the mathematical bounds and implementation, then retain actual independent regression
+      results without extending their scope.
+  evidence:
+  - derivation
+  - implementation
+  - regressions
+  reasons:
+  - The mathematical proof, source correspondence and actual independent regression controls support the
+    declared reduced-scalar result.
+  status: supported
+  origin: reviewed
+  equation_pins:
+  - id: reduced-scalar
+    revision: '1'
+    sha256: d87fb5cd4583f348007c14d19fa2e297653ac1955ac01707972abe081313735c
+  - id: simplex-lower-bound
+    revision: '1'
+    sha256: ea8b5dbab1b1a490cbcef49c2003b5e68752f6282ab945be8fa794f9330d2f24
+  binding_pins:
+  - id: reduced-melt-coefficients
+    sha256: 85997ae9f693ea2e5c7f0776679f72bda4d9ecf3cb7a704279079bc56e2c6a18
+  - id: reduced-melt-minimum
+    sha256: 06bd6d97cd48f990e318a9f596471a4e3d3e1388b764fb56dc7509d9d594dc2e
+- id: complete-backend-review
+  kind: evidence_support
+  subject: reduced-melt-20261124
+  context: continuous-dry11-simplex
+  claim: complete-backend
+  claim_revision: '1'
+  method:
+    id: independent-math-source-review
+    revision: '1'
+    description: Review the mathematical bounds and implementation, then retain actual independent regression
+      results without extending their scope.
+  evidence:
+  - derivation
+  reasons:
+  - Coefficient construction and complete backend scalar errors require additional uniform evidence.
+  status: unknown
+  origin: reviewed
+- id: empirical-material-review
+  kind: evidence_support
+  subject: reduced-melt-20261124
+  context: continuous-dry11-simplex
+  claim: empirical-material
+  claim_revision: '1'
+  method:
+    id: independent-math-source-review
+    revision: '1'
+    description: Review the mathematical bounds and implementation, then retain actual independent regression
+      results without extending their scope.
+  evidence:
+  - derivation
+  reasons:
+  - No empirical material data or complete multi-phase planetary proof is supplied by this API.
+  status: unknown
+  origin: reviewed

@@ -6,6 +6,20 @@ applicability, claims and scoped evidence. The
 with a lossless import of its original v0.1 declarations. MCEG is not an ExoEOS
 runtime or test dependency.
 
+The [two-power water quadrature contract](contracts/water_interval.yaml) adds
+versioned mathematical definitions and a code binding using schema `0.4`.
+The uniform real-arithmetic integration bound has a scoped reviewed Assessment;
+complete backend-scalar error and empirical water accuracy remain unknown.
+Use MCEG `ecbc2cc4352188f9c2779274205b788bf54545ca` or a compatible reader.
+Its numerical regression receipt is local under
+`results/mceg/20261124_water_interval/`; no numerical artifact is added to Git.
+
+The [reduced melt contract](contracts/magma_water_interval.yaml) records the
+continuous dry11 scalar and its whole-simplex lower bound. Its mathematical
+Assessment includes the interval curvature and exterior-box arguments;
+originating backend and empirical support remain separate unknown Claims.
+Its regression receipt stays local in `results/mceg/20261124_magma_water_interval/`.
+
 The [2026-10-20 model inventory](model_inventory.md) adds v0.2 contracts for the
 solubility/magma survey, with separate numerical and physical Assessments and
 fresh receipts. The new records use the companion MCEG volatile-quantity
@@ -27,7 +41,7 @@ identify downloaded bytes; offline MCEG checks do not verify those URLs.
 ## Installed-package discovery
 
 The packaged [evidence catalog](../src/exoeos/data/mceg/index.json) uses MCEG's
-catalog format `1`. It contains the ten registered model contracts and explicit
+catalog format `1`. It contains the registered model contracts and explicit
 assessment selections, including their historical source reviews. With a version
 of MCEG that supports package catalogs:
 

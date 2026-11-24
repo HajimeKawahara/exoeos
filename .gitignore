@@ -223,3 +223,7 @@ __marimo__/
 
 # MCEG-generated documentation sources and assets.
 /documents/mceg/_generated/
+
+# New numerical review receipts remain local; preserve tracked historical evidence.
+/results/mceg/20261124_water_interval/
+/results/mceg/20261124_magma_water_interval/

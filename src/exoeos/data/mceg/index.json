@@ -1,8 +1,48 @@
 {
   "schema_version": "1",
   "provider": "exoeos",
-  "record_version": "2026-11-01",
+  "record_version": "2026-11-24",
   "models": [
+    {
+      "id": "exoeos.reduced_two_power_melt_bound.v1",
+      "label": "Reduced two-power dry11 simplex bound",
+      "species": [],
+      "records": [
+        {
+          "id": "magma_water_interval",
+          "path": "contracts/magma_water_interval.yaml",
+          "sha256": "f01278c46c21216c864c8055e88cea045edcca9e81e6018540b7261c6be35b0a",
+          "species": [
+            "*"
+          ],
+          "assessments": [
+            "reduced-simplex-review",
+            "complete-backend-review",
+            "empirical-material-review"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exoeos.two_power_water_quadrature_bound.v1",
+      "label": "Uniform two-power water quadrature bound",
+      "species": [],
+      "records": [
+        {
+          "id": "water_interval",
+          "path": "contracts/water_interval.yaml",
+          "sha256": "fdd3fb850d7f70a514615a6f1c388f3e38e5620b5921aba3f3d956e4a516777d",
+          "species": [
+            "*"
+          ],
+          "assessments": [
+            "uniform-quadrature-error-review",
+            "complete-scalar-error-review",
+            "empirical-water-review"
+          ]
+        }
+      ]
+    },
     {
       "id": "exoeos.ma_fe_si_o.v1",
       "label": "Ma Fe-Si-O liquid with printed Young coefficients",
