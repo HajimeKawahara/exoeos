@@ -29,7 +29,8 @@ copyright = "2026, ExoEOS contributors"
 author = "ExoEOS contributors"
 release = exoeos.__version__
 
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon", "sphinx.ext.graphviz"]
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon", "sphinx.ext.graphviz",
+              "sphinx.ext.mathjax"]
 templates_path = []
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 

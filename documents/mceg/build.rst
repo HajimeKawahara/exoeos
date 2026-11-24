@@ -31,7 +31,7 @@ owned pages. Edit the configuration or original records instead of generated RST
 Installed evidence catalog
 --------------------------
 
-The wheel includes ``exoeos/data/mceg/index.json`` and copies of the nine
+The wheel includes ``exoeos/data/mceg/index.json`` and copies of the
 registered contracts. MCEG versions with catalog support can inspect an installed
 distribution without importing ExoEOS:
 

@@ -11,11 +11,19 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "src/exoeos/data/mceg"
-RECORD_VERSION = "2026-11-01"
+RECORD_VERSION = "2026-11-24"
 
 # Explicit model-level selections preserve the complete recorded history.
 # They do not choose a current or most favorable scientific assessment.
 MODELS = [
+    ("magma_water_interval", "exoeos.reduced_two_power_melt_bound.v1",
+     "Reduced two-power dry11 simplex bound", [
+         "reduced-simplex-review", "complete-backend-review", "empirical-material-review",
+     ]),
+    ("water_interval", "exoeos.two_power_water_quadrature_bound.v1",
+     "Uniform two-power water quadrature bound", [
+         "uniform-quadrature-error-review", "complete-scalar-error-review", "empirical-water-review",
+     ]),
     ("ma_fe_si_o", "exoeos.ma_fe_si_o.v1", "Ma Fe-Si-O liquid with printed Young coefficients", [
         "numerical_review", "physical_review", "physical_review_20261021",
         "physical_review_20261029", "physical_primary_review_20261029", "physical_badro_review_20261029",

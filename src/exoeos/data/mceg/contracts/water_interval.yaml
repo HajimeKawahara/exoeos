@@ -1,0 +1,378 @@
+schema_version: '0.4'
+model:
+  id: exoeos.two_power_water_quadrature_bound.v1
+  name: Uniform two-power water quadrature bound
+  description: Material-owned mathematical post-evaluation bound, preserving the existing Gibbs scalar
+    and derivative implementation.
+  implementation: &id001
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: source-review:20261124-water-quadrature-v1
+    entry_points:
+    - src/exoeos/water_interval.py:two_power_water_quadrature_bound
+assumptions:
+- statement: Bounds the stored rule at a common driving pressure over nonnegative capacity mixtures with
+    actual water sum at most one half.
+  evidence:
+  - derivation
+domains:
+- kind: scientific_applicability
+  status: unknown
+  description: This mathematical certificate does not establish empirical solubility accuracy.
+  conditions: []
+  evidence:
+  - derivation
+claims:
+- id: uniform-quadrature-error
+  revision: '1'
+  kind: theoretical
+  statement: The returned bound encloses the real-arithmetic stored-rule error over the declared continuous
+    mixture domain.
+  scope: Three recorded definitions and the stated outward-arithmetic construction; excludes pressure
+    inversion and full backend scalar errors.
+  equations:
+  - id: positive-series
+    revision: '1'
+  - id: moment-error
+    revision: '1'
+  - id: uniform-error
+    revision: '1'
+- id: complete-scalar-error
+  revision: '1'
+  kind: numerical_verification
+  statement: All errors of the complete water scalar and its derivatives are enclosed.
+  scope: Requires additional pressure inversion, capacity, backend arithmetic and derivative bounds.
+- id: empirical-water
+  revision: '1'
+  kind: physical_validation
+  statement: The conditional water law is empirically accurate throughout its target planetary composition
+    and temperature range.
+  scope: Material calibration and transfer are independent of quadrature arithmetic.
+evidence:
+- id: derivation
+  kind: theory
+  summary: Positive-series mixture bound, moment enclosure and separate nonnegative tails.
+  sources:
+  - documents/water_interval.rst
+  scope: Independent algebraic inspection of the stated bound and its exclusions.
+  provenance:
+    role: primary
+    location: Derivation and Scope of the certificate
+    inspection: inspected
+    note: Reviewed mathematical construction and implementation; physical material accuracy is separate.
+  artifacts:
+  - source: documents/water_interval.rst
+    sha256: a5610daead7acc89a64eeb07885605a5b60999bd7e6277b8109255ab2a1c3b7e
+- id: implementation
+  kind: implementation
+  summary: Inspected eager interval implementation and provider quadrature constants.
+  sources:
+  - src/exoeos/water_interval.py
+  - src/exoeos/_water_isotherm.py
+  - src/exoeos/ma_interval.py
+  - tests/unittests/water_interval_test.py
+  - tests/unittests/two_power_water_test.py
+  - tests/unittests/ma_interval_test.py
+  scope: Selected source definitions; no mutation of the material model.
+  provenance:
+    role: primary
+    location: water_interval.py and its explicit dependencies
+    inspection: inspected
+    note: Reviewed mathematical construction and implementation; physical material accuracy is separate.
+  subject: water-quadrature-20261124
+- id: regressions
+  kind: numerical_test
+  summary: 61 targeted interval and existing water tests passed, including independent Decimal moment/tail
+    checks.
+  sources:
+  - results/mceg/20261124_water_interval/validation.json
+  scope: Regression evidence for the stated numerical construction; finite comparisons are not used to
+    assert uniform coverage.
+  result: passed
+  provenance:
+    role: primary
+    location: Observed pytest execution receipt
+    inspection: inspected
+    note: Reviewed mathematical construction and implementation; physical material accuracy is separate.
+  subject: water-quadrature-20261124
+  context: uniform-positive-capacity-mixture
+  artifacts:
+  - source: results/mceg/20261124_water_interval/validation.json
+    sha256: 34bafef83d5a3837eb463e841f218e8f9d0d36672ded69cd4814cd86ee9747d7
+limitations:
+- statement: This is neither a complete Gibbs-scalar certificate nor a global phase-stability or empirical-accuracy
+    result.
+  evidence:
+  - derivation
+subjects:
+- id: water-quadrature-20261124
+  implementation: *id001
+  selected_files:
+    src/exoeos/water_interval.py: 71ced18775a71b4653140f513068b6e96192079b84f05ecbff373f312543535c
+    src/exoeos/_water_isotherm.py: 432f52b3ecae370b35b6775d1199f38f17dc2bb601e5617f5e158af03141c5fa
+    src/exoeos/ma_interval.py: 01529ac84b6318b27e905be8e8cd0dd3d11ba7f05f05de6e67450429714a5b68
+    tests/unittests/water_interval_test.py: 67812c84835256cea1e0eb1b53c96d7ae29da8497f61a785ab9697ac9f399998
+    tests/unittests/two_power_water_test.py: afe5b8ee2807567c5ff7945b21326bf8d49b50d7d4a25d752a829c4ac5183971
+    tests/unittests/ma_interval_test.py: b789b034f34f03ca2e87433e9e68bb7c90f4c5e6d2473c8ef02f9044463827b6
+contexts:
+- id: uniform-positive-capacity-mixture
+  scope: Two-power integral at common driving pressure; all nonnegative capacity splits and actual water
+    sum <=0.5.
+  settings:
+    max_water_fraction: 0.5
+    default_series_orders: 64
+    new_planetary_solve: false
+equations:
+- id: positive-series
+  revision: '1'
+  latex: t_i=C_i p^{a_i},\quad w=t_1+t_2\leq w_{\max}\leq\tfrac12,\\ I=\int_{-\infty}^{\log p}\frac{w(e^z)}{1-w(e^z)}\,dz,\qquad
+    Q=s\sum_jq_j\frac{t_1u_j^{\beta_1}+t_2u_j^{\beta_2}}{u_j(1-t_1u_j^{\beta_1}-t_2u_j^{\beta_2})}
+  description: Continuous water integral and the stored rule at the same driving pressure.
+  scope: Nonnegative capacity terms; 0.25 <= a_i <= 1. Zero capacity terms are admitted as limiting mixtures.
+  symbols:
+    p:
+      latex: p
+      description: Driving pressure divided by one bar
+      unit: dimensionless
+    C:
+      latex: C_i
+      description: Positive capacity coefficient in this pressure convention
+      unit: dimensionless
+    a:
+      latex: a_i
+      description: Two power exponents
+      unit: dimensionless
+    t:
+      latex: t_i
+      description: Two nonnegative capacity terms
+      unit: dimensionless
+    w:
+      latex: w
+      description: Their sum at the common driving pressure
+      unit: dimensionless
+    wmax:
+      latex: w_{\max}
+      description: Supplied upper bound on the actual positive-term sum
+      unit: dimensionless
+    s:
+      latex: s
+      description: Stored binary64 transformation scale
+      unit: dimensionless
+    beta:
+      latex: \beta_i
+      description: Stored binary64 transformed exponents
+      unit: dimensionless
+    u:
+      latex: u_j
+      description: Provider quadrature nodes in (0,1)
+      unit: dimensionless
+    q:
+      latex: q_j
+      description: Positive provider quadrature weights
+      unit: dimensionless
+    I:
+      latex: I
+      description: Continuous integral
+      unit: dimensionless
+    Q:
+      latex: Q
+      description: Real-arithmetic stored-rule value
+      unit: dimensionless
+  assumptions:
+  - Both definitions use the same driving pressure; pressure inversion error is excluded.
+  - Stored nodes, weights, transformation scale and transformed exponents are exact constants of this
+    comparison.
+  - No exact-Gauss or integer-power identity is assumed.
+  evidence:
+  - derivation
+- id: moment-error
+  revision: '1'
+  latex: E_m\geq\max_{0\leq k\leq m}\left|s\sum_jq_j u_j^{k\beta_1+(m-k)\beta_2-1}-\frac{1}{ka_1+(m-k)a_2}\right|
+  description: Outward bound on each mixture moment error.
+  scope: Every binomial mixture moment through the declared positive series order.
+  symbols:
+    E:
+      latex: E_m
+      description: Maximum enclosed absolute moment error
+      unit: dimensionless
+    m:
+      latex: m
+      description: Positive series order
+      unit: integer
+    k:
+      latex: k
+      description: Number of contributions from the first capacity term
+      unit: integer
+    s:
+      latex: s
+      description: Stored transformation scale
+      unit: dimensionless
+    u:
+      latex: u_j
+      description: Stored quadrature nodes
+      unit: dimensionless
+    q:
+      latex: q_j
+      description: Stored positive quadrature weights
+      unit: dimensionless
+    a:
+      latex: a_i
+      description: Original exponents
+      unit: dimensionless
+    beta:
+      latex: \beta_i
+      description: Stored transformed exponents
+      unit: dimensionless
+  assumptions:
+  - All arithmetic encloses the real value outwards.
+  - Logarithm and exponential evaluations use explicit convergent-series remainder bounds.
+  evidence:
+  - derivation
+- id: uniform-error
+  revision: '1'
+  latex: '|Q-I|\leq U_M&=\sum_{m=1}^{M}E_m w_{\max}^m+\frac{w_{\max}^{M+1}}{(M+1)a_{\min}(1-w_{\max})}\\
+    &\quad+\frac{s w_{\max}^{M+1}}{1-w_{\max}}\sum_jq_j u_j^{(M+1)\beta_{\min}-1}'
+  description: Uniform error over every admissible positive capacity split, including the two endpoint
+    limits.
+  scope: 'One contribution to the real-arithmetic water scalar: multiplying outwards by dry mass divided
+    by water molar mass gives the extensive Gibbs/RT integration error.'
+  symbols:
+    Q:
+      latex: Q
+      description: Stored-rule integral
+      unit: dimensionless
+    I:
+      latex: I
+      description: Continuous integral
+      unit: dimensionless
+    U:
+      latex: U_M
+      description: Reported integral_error_upper
+      unit: dimensionless
+    M:
+      latex: M
+      description: Number of enclosed moment orders
+      unit: integer
+    E:
+      latex: E_m
+      description: Enclosed moment error
+      unit: dimensionless
+    wmax:
+      latex: w_{\max}
+      description: Upper bound on actual positive-term sum
+      unit: dimensionless
+    amin:
+      latex: a_{\min}
+      description: Smallest original exponent
+      unit: dimensionless
+    s:
+      latex: s
+      description: Stored transformation scale
+      unit: dimensionless
+    q:
+      latex: q_j
+      description: Stored positive quadrature weights
+      unit: dimensionless
+    u:
+      latex: u_j
+      description: Stored quadrature nodes
+      unit: dimensionless
+    betamin:
+      latex: \beta_{\min}
+      description: Smallest stored transformed exponent
+      unit: dimensionless
+  assumptions:
+  - Nonnegative binomial weights at order m sum to w^m.
+  - Continuous and quadrature tails are bounded separately using positive geometric-series terms.
+  - Pressure inversion, computed capacities, backend scalar roundoff, derivatives and minimization over
+    dry composition are excluded.
+  evidence:
+  - derivation
+bindings:
+- id: water-quadrature-upper
+  equation:
+    id: uniform-error
+    revision: '1'
+  subject: water-quadrature-20261124
+  source: src/exoeos/water_interval.py
+  symbol: two_power_water_quadrature_bound
+  arguments:
+    water_fraction_max:
+      symbol: wmax
+    series_orders:
+      symbol: M
+  constants:
+    amin: min(exponents)
+    u: _water_isotherm._U
+    q: _water_isotherm._Q
+    s: returned transform_scale
+    betamin: min(returned transformed_exponents)
+  note: Returns WaterQuadratureBound; integral_error_upper is U_M. No scalar result mapping is declared.
+    exponents are two original powers and are not replaced by transformed powers.
+assessments:
+- id: uniform-quadrature-error-review
+  kind: evidence_support
+  subject: water-quadrature-20261124
+  context: uniform-positive-capacity-mixture
+  claim: uniform-quadrature-error
+  claim_revision: '1'
+  method:
+    id: math-source-and-independent-regression
+    revision: '1'
+    description: Inspect the mathematical reduction and interval algorithm; retain finite Decimal checks
+      as regression evidence.
+  evidence:
+  - derivation
+  - implementation
+  - regressions
+  reasons:
+  - The real-arithmetic quadrature theorem has been reviewed; the excluded complete-scalar and empirical
+    propositions are not established.
+  status: supported
+  origin: reviewed
+  equation_pins:
+  - id: positive-series
+    revision: '1'
+    sha256: d404857a826d4f8fd770c07e70975d963a27cb6a0059c40f3912675c6bc226c8
+  - id: moment-error
+    revision: '1'
+    sha256: a84ad94624c0d6cc483f186f86942a362fbf4dbaa9aa5802fc73730aefa5e97d
+  - id: uniform-error
+    revision: '1'
+    sha256: ab78b654b9a718ceff2f2c2d36a196bd75ba0fcdf39df13d68360fc6d740bcce
+  binding_pins:
+  - id: water-quadrature-upper
+    sha256: 5e1aebb6e47e5149040bd334d4c268f67239d02cafb74c3091fe0b11a33d396a
+- id: complete-scalar-error-review
+  kind: evidence_support
+  subject: water-quadrature-20261124
+  context: uniform-positive-capacity-mixture
+  claim: complete-scalar-error
+  claim_revision: '1'
+  method:
+    id: math-source-and-independent-regression
+    revision: '1'
+    description: Inspect the mathematical reduction and interval algorithm; retain finite Decimal checks
+      as regression evidence.
+  evidence:
+  - derivation
+  reasons:
+  - This proposition lies outside the quadrature certificate and remains unestablished.
+  status: unknown
+  origin: reviewed
+- id: empirical-water-review
+  kind: evidence_support
+  subject: water-quadrature-20261124
+  context: uniform-positive-capacity-mixture
+  claim: empirical-water
+  claim_revision: '1'
+  method:
+    id: math-source-and-independent-regression
+    revision: '1'
+    description: Inspect the mathematical reduction and interval algorithm; retain finite Decimal checks
+      as regression evidence.
+  evidence:
+  - derivation
+  reasons:
+  - This proposition lies outside the quadrature certificate and remains unestablished.
+  status: unknown
+  origin: reviewed
