@@ -1,0 +1,371 @@
+schema_version: '0.6'
+model:
+  id: exoeos.planetlib.adoption
+  name: ExoEOS adoption of pinned Planetlib partial models
+  description: Provider-owned correspondence declarations for four shared partial models; historical model
+    surveys remain separate.
+  implementation: &id001
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 1032f58872bdef9d48c8b1ce2a16a473ced97f3c
+    entry_points:
+    - src/exoeos/solution_gibbs.py:total_solution_gibbs_RT
+    - src/exoeos/mass_fraction_solute.py:mass_fraction_solute_state
+    - src/exoeos/thermodynamics.py:thermodynamic_state_trho
+    - src/exoeos/magma_volatiles.py:gibbs_j
+assumptions:
+- statement: Use the explicit specializations and output mappings in each Claim and Binding; a selected
+    partial model does not describe every provider option.
+  evidence:
+  - exoeos.planetlib.source
+domains:
+- kind: scientific_applicability
+  status: unknown
+  description: No new empirical validation or automatic transfer of Planetlib or historical provider support.
+  conditions: []
+  evidence:
+  - exoeos.planetlib.source
+limitations:
+- statement: Bindings declare correspondence. Native structural and source checks, and selected numerical
+    comparisons, do not establish a proof or broad physical accuracy.
+  evidence:
+  - exoeos.planetlib.source
+- statement: The selected source manifest is a bounded identity check, not an exhaustive transitive dependency
+    audit.
+  evidence:
+  - exoeos.planetlib.source
+subjects:
+- id: exoeos.planetlib.source
+  implementation: *id001
+  selected_files:
+    src/exoeos/solution_gibbs.py: 6894b0821ab2955add1c85aa9087766d430b8bb2585b73aa1fe5c97ad463b693
+    src/exoeos/ideal_solution.py: b581faffae27988866fa88e0d2031413a81a0f1da33ceee9f524d663a758e4d0
+    src/exoeos/mass_fraction_solute.py: d49c698a2814c62b73f128ef8e87a869e940f180334e7ae7b95b994df919830b
+    src/exoeos/thermodynamics.py: a0331639a4d5bd73c362c4bcbc3e7ddded3e50e4a518c85d7637e3d8eec3cf58
+    src/exoeos/state.py: 5f09f413c898daee8f250b3ee80a28213acbf183cd5df02ce31c05c26add9733
+    src/exoeos/constants.py: 69e57fe70ad4ea775f2d97722548276c87d3a91c76eb6be8f1be43ac30f83fa4
+    src/exoeos/_arrays.py: 020679ce40515c27ce0bf31f5b71b1f737737d4a5ebc0301198a9e2bcbedf507
+    src/exoeos/contracts.py: ba1052326b066d7d3e5a57b5e63ac3dba5cc388e7d0bb9d2bf38431fe996d580
+    src/exoeos/gibbs_excess.py: c3354acd4f79940cee2723ec3d2c5500751c767666d295f8c04c3c97b8cfc7b3
+    src/exoeos/magma_volatiles.py: eeda6b0c67dd2186221c6ba5426823903b82a0fadee2ba5a4b617c9bd2591494
+    src/exoeos/_conditional_data.py: cfbd50ec42685cbb61f547f6d3778c41ff1afae4459347b62b008cfe53da231e
+    src/exoeos/data/conditional_materials.json: 4c3b4417e5378f377df08a0e50e2f1971449b9bc4b407f4d767dcf3fa182b4a4
+    src/exoeos/magma.py: 4f085ac25f3781cc4120ac7b56c67446668d1911d8cdaeeef077ff9e529807ed
+    src/exoeos/_water_isotherm.py: 432f52b3ecae370b35b6775d1199f38f17dc2bb601e5617f5e158af03141c5fa
+contexts:
+- id: exoeos.planetlib.adoption
+  scope: Initial provider adoption review, independently of historical source and applicability assessments.
+  settings:
+    planetlib_revision: a83b3fb255c7a383c6a8ef502328266f4dd16bff
+    mceg_revision: 4034c9259c9c2e7d55243d69f3ab2f22c9cc7d88
+evidence:
+- id: exoeos.planetlib.source
+  kind: implementation
+  summary: Inspected provider interfaces and conventions at the selected source revision.
+  sources:
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/solution_gibbs.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/ideal_solution.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/mass_fraction_solute.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/thermodynamics.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/state.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/constants.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/_arrays.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/contracts.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/gibbs_excess.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/magma_volatiles.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/_conditional_data.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/data/conditional_materials.json
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/magma.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/_water_isotherm.py
+  scope: Source and declaration identity only. Numerical sample tests are not automatically promoted into
+    an Assessment.
+  subject: exoeos.planetlib.source
+  context: exoeos.planetlib.adoption
+- id: exoeos.planetlib.selection
+  kind: implementation
+  summary: Immutable shared definition selection and reproducible materialization.
+  sources:
+  - https://github.com/HajimeKawahara/planetlib/tree/a83b3fb255c7a383c6a8ef502328266f4dd16bff/catalog
+  - mceg/planetlib/imports.lock.json
+  - mceg/planetlib/README.md
+  scope: Only selected definition and equation-provenance closure is imported; no Planetlib judgments
+    are adopted.
+claims:
+- id: exoeos.planetlib.ideal_mixing
+  revision: '1'
+  kind: theoretical
+  statement: The binary IdealSolution specialization implements the adopted reduced Gibbs energy and chemical
+    potentials.
+  scope: Two strictly positive component amounts; supplied symmetric standards already refer to the selected
+    temperature and pressure. Zero excess energy only; nonideal and boundary behavior are outside this
+    adoption.
+  equations:
+  - id: planetlib.thermodynamics.ideal_mixing.gibbs
+    revision: '1'
+  mathematical_models:
+  - id: planetlib.thermodynamics.ideal_mixing.model
+    revision: '1'
+- id: exoeos.planetlib.mass_fraction_solute
+  revision: '1'
+  kind: theoretical
+  statement: The two-host specialization supplies the adopted mass-fraction Gibbs increment and its solute
+    and host derivatives.
+  scope: Positive amounts and masses, a composition-independent solute standard and a consistent supplied
+    host. F is the returned Gibbs energy minus supplied host energy; host responses are increments, not
+    full potentials. No empirical calibration or nonlinear Sun-Yao continuation.
+  equations:
+  - id: planetlib.thermodynamics.mass_fraction_solute.gibbs_increment
+    revision: '1'
+  mathematical_models:
+  - id: planetlib.thermodynamics.mass_fraction_solute.model
+    revision: '1'
+- id: exoeos.planetlib.helmholtz
+  revision: '1'
+  kind: theoretical
+  statement: The fixed-composition molar Helmholtz state implements the adopted pressure, entropy, heat
+    capacities and frozen-composition sound speed.
+  scope: Smooth total molar potential, positive T and molar density, positive cv and pressure-density
+    derivative. Outputs are named fields/properties of the state; no equilibrium-composition or multiphase
+    response is asserted.
+  equations:
+  - id: planetlib.thermodynamics.helmholtz.pressure
+    revision: '1'
+  mathematical_models:
+  - id: planetlib.thermodynamics.helmholtz.model
+    revision: '1'
+- id: exoeos.planetlib.hirschmann
+  revision: '1'
+  kind: theoretical
+  statement: The zero-offset hydrogen Gibbs contribution yields the adopted MELTS-endmember concentration
+    regression at chemical equilibrium.
+  scope: X is n_H2/(sum(n_dry_endmembers)+n_H2O+n_H2); f is H2 fugacity divided by one bar, and P is melt
+    pressure in GPa. Requires the same supplied gas standard and h2_offset_rt=0. This is an implicit derivative
+    relation, not the full Gibbs scalar or an oxide-basis law.
+  equations:
+  - id: planetlib.solubility.hirschmann2012.endmember_regression
+    revision: '2'
+  mathematical_models:
+  - id: planetlib.solubility.hirschmann2012.endmember_model
+    revision: '2'
+- id: exoeos.planetlib.applicability
+  revision: '1'
+  kind: physical_validation
+  statement: The adopted partial models have established physical accuracy for a specified target material
+    and conditions.
+  scope: Requires independent empirical comparison and a declared material, phase, standards and concentration
+    basis.
+  mathematical_models:
+  - id: planetlib.thermodynamics.ideal_mixing.model
+    revision: '1'
+  - id: planetlib.thermodynamics.mass_fraction_solute.model
+    revision: '1'
+  - id: planetlib.thermodynamics.helmholtz.model
+    revision: '1'
+  - id: planetlib.solubility.hirschmann2012.endmember_model
+    revision: '2'
+bindings:
+- id: exoeos.planetlib.ideal_mixing.binding
+  equation:
+    id: planetlib.thermodynamics.ideal_mixing.gibbs
+    revision: '1'
+  subject: exoeos.planetlib.source
+  source: src/exoeos/solution_gibbs.py
+  symbol: total_solution_gibbs_RT
+  note: Two strictly positive component amounts; supplied symmetric standards already refer to the selected
+    temperature and pressure. Zero excess energy only; nonideal and boundary behavior are outside this
+    adoption.
+  result: G
+  constants:
+    n1: n[0]
+    n2: n[1]
+    u01: mu0_RT[0]
+    u02: mu0_RT[1]
+- id: exoeos.planetlib.mass_fraction_solute.binding
+  equation:
+    id: planetlib.thermodynamics.mass_fraction_solute.gibbs_increment
+    revision: '1'
+  subject: exoeos.planetlib.source
+  source: src/exoeos/mass_fraction_solute.py
+  symbol: mass_fraction_solute_state
+  note: Positive amounts and masses, a composition-independent solute standard and a consistent supplied
+    host. F is the returned Gibbs energy minus supplied host energy; host responses are increments, not
+    full potentials. No empirical calibration or nonlinear Sun-Yao continuation. The tuple return has
+    no direct scalar result binding; compare state.gibbs_RT - host_gibbs_RT to F.
+  arguments:
+    solute_amount_mol:
+      symbol: ns
+    solute_standard_RT:
+      symbol: u0
+- id: exoeos.planetlib.helmholtz.binding
+  equation:
+    id: planetlib.thermodynamics.helmholtz.pressure
+    revision: '1'
+  subject: exoeos.planetlib.source
+  source: src/exoeos/thermodynamics.py
+  symbol: thermodynamic_state_trho
+  note: Smooth total molar potential, positive T and molar density, positive cv and pressure-density derivative.
+    Outputs are named fields/properties of the state; no equilibrium-composition or multiphase response
+    is asserted. The returned state is not scalar P; its pressure field is the mapped output.
+  arguments:
+    T:
+      symbol: T
+    rho:
+      symbol: rho
+- id: exoeos.planetlib.hirschmann.binding
+  equation:
+    id: planetlib.solubility.hirschmann2012.endmember_regression
+    revision: '2'
+  subject: exoeos.planetlib.source
+  source: src/exoeos/magma_volatiles.py
+  symbol: gibbs_j
+  note: X is n_H2/(sum(n_dry_endmembers)+n_H2O+n_H2); f is H2 fugacity divided by one bar, and P is melt
+    pressure in GPa. Requires the same supplied gas standard and h2_offset_rt=0. This is an implicit derivative
+    relation, not the full Gibbs scalar or an oxide-basis law. The returned total G is not X or log(X/f),
+    so no scalar result binding is declared.
+  arguments:
+    pressure_pa:
+      symbol: P
+      scale: 1.0e-09
+assessments:
+- id: exoeos.planetlib.ideal_mixing.pending
+  kind: evidence_support
+  claim: exoeos.planetlib.ideal_mixing
+  claim_revision: '1'
+  subject: exoeos.planetlib.source
+  context: exoeos.planetlib.adoption
+  method:
+    id: exoeos.planetlib.initial_adoption
+    revision: '1'
+    description: Record an explicit correspondence and leave its evidence review pending.
+  status: unknown
+  origin: reviewed
+  evidence:
+  - exoeos.planetlib.source
+  - exoeos.planetlib.selection
+  reasons:
+  - Historical assessments and catalog mathematical checks did not assess this new provider correspondence.
+  mathematical_model_pins:
+  - id: planetlib.thermodynamics.ideal_mixing.model
+    revision: '1'
+    sha256: ff4484ea799cc1bcce2f2e4873a3aab634d3ea9632e9da2daef0e541b46f0320
+  equation_pins:
+  - id: planetlib.thermodynamics.ideal_mixing.gibbs
+    revision: '1'
+    sha256: 3c9b5e912b335f2bc78d3a2653268858344096730a9e4117a48ff7d3b35e8e62
+  binding_pins:
+  - id: exoeos.planetlib.ideal_mixing.binding
+    sha256: e6638cc74feca2984a41b2b24e721bec681d0eeb72095f463e7d7e4aa8f46057
+- id: exoeos.planetlib.mass_fraction_solute.pending
+  kind: evidence_support
+  claim: exoeos.planetlib.mass_fraction_solute
+  claim_revision: '1'
+  subject: exoeos.planetlib.source
+  context: exoeos.planetlib.adoption
+  method:
+    id: exoeos.planetlib.initial_adoption
+    revision: '1'
+    description: Record an explicit correspondence and leave its evidence review pending.
+  status: unknown
+  origin: reviewed
+  evidence:
+  - exoeos.planetlib.source
+  - exoeos.planetlib.selection
+  reasons:
+  - Historical assessments and catalog mathematical checks did not assess this new provider correspondence.
+  mathematical_model_pins:
+  - id: planetlib.thermodynamics.mass_fraction_solute.model
+    revision: '1'
+    sha256: fd447925af53057283ebcbddf73442d5c014c1c75ccdc551fa2cd530024776e4
+  equation_pins:
+  - id: planetlib.thermodynamics.mass_fraction_solute.gibbs_increment
+    revision: '1'
+    sha256: a1ecce196a47d74e7e2a68170efbd97c8f828b5d5d42646ac4a46354d93bbf98
+  binding_pins:
+  - id: exoeos.planetlib.mass_fraction_solute.binding
+    sha256: 6f5f78231abde2e2e54e794931a25e12d7608ebc7fd708dc1490c2eb78ec8146
+- id: exoeos.planetlib.helmholtz.pending
+  kind: evidence_support
+  claim: exoeos.planetlib.helmholtz
+  claim_revision: '1'
+  subject: exoeos.planetlib.source
+  context: exoeos.planetlib.adoption
+  method:
+    id: exoeos.planetlib.initial_adoption
+    revision: '1'
+    description: Record an explicit correspondence and leave its evidence review pending.
+  status: unknown
+  origin: reviewed
+  evidence:
+  - exoeos.planetlib.source
+  - exoeos.planetlib.selection
+  reasons:
+  - Historical assessments and catalog mathematical checks did not assess this new provider correspondence.
+  mathematical_model_pins:
+  - id: planetlib.thermodynamics.helmholtz.model
+    revision: '1'
+    sha256: 283dee30acfbac4b6b9126dd617a0f4279576c7eaba4832827af06ac5f47e87f
+  equation_pins:
+  - id: planetlib.thermodynamics.helmholtz.pressure
+    revision: '1'
+    sha256: 764b057eb256c0e92cf8be9e8c762907cedb045a7271c153e845886f7885abf7
+  binding_pins:
+  - id: exoeos.planetlib.helmholtz.binding
+    sha256: 5c8ccf0da5b4729aab33ac4a57a78fdb309fcd96116450e81aff00361e2a2f04
+- id: exoeos.planetlib.hirschmann.pending
+  kind: evidence_support
+  claim: exoeos.planetlib.hirschmann
+  claim_revision: '1'
+  subject: exoeos.planetlib.source
+  context: exoeos.planetlib.adoption
+  method:
+    id: exoeos.planetlib.initial_adoption
+    revision: '1'
+    description: Record an explicit correspondence and leave its evidence review pending.
+  status: unknown
+  origin: reviewed
+  evidence:
+  - exoeos.planetlib.source
+  - exoeos.planetlib.selection
+  reasons:
+  - Historical assessments and catalog mathematical checks did not assess this new provider correspondence.
+  mathematical_model_pins:
+  - id: planetlib.solubility.hirschmann2012.endmember_model
+    revision: '2'
+    sha256: 8cb09569c08d63cf0ef1375eea98f82d648c59abfb805cb811f994a023b61e0e
+  equation_pins:
+  - id: planetlib.solubility.hirschmann2012.endmember_regression
+    revision: '2'
+    sha256: 8f2b15a8403b322a737f2f4832b2c1937d066dce02f2dd79b223d2689f855ce9
+  binding_pins:
+  - id: exoeos.planetlib.hirschmann.binding
+    sha256: 39140678504fde4f15a8c57635ed2ae247e3d922cf21e275904755c14322d1ac
+- id: exoeos.planetlib.applicability.pending
+  kind: evidence_support
+  claim: exoeos.planetlib.applicability
+  claim_revision: '1'
+  subject: exoeos.planetlib.source
+  context: exoeos.planetlib.adoption
+  method:
+    id: exoeos.planetlib.initial_adoption
+    revision: '1'
+    description: Record an explicit correspondence and leave its evidence review pending.
+  status: unknown
+  origin: reviewed
+  evidence:
+  - exoeos.planetlib.source
+  reasons:
+  - Adoption and numerical consistency checks supply no new empirical validation.
+  mathematical_model_pins:
+  - id: planetlib.thermodynamics.ideal_mixing.model
+    revision: '1'
+    sha256: ff4484ea799cc1bcce2f2e4873a3aab634d3ea9632e9da2daef0e541b46f0320
+  - id: planetlib.thermodynamics.mass_fraction_solute.model
+    revision: '1'
+    sha256: fd447925af53057283ebcbddf73442d5c014c1c75ccdc551fa2cd530024776e4
+  - id: planetlib.thermodynamics.helmholtz.model
+    revision: '1'
+    sha256: 283dee30acfbac4b6b9126dd617a0f4279576c7eaba4832827af06ac5f47e87f
+  - id: planetlib.solubility.hirschmann2012.endmember_model
+    revision: '2'
+    sha256: 8cb09569c08d63cf0ef1375eea98f82d648c59abfb805cb811f994a023b61e0e
+  equation_pins: []
+  binding_pins: []

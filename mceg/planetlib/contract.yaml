@@ -1,0 +1,1857 @@
+schema_version: '0.6'
+model:
+  id: exoeos.planetlib.adoption
+  name: ExoEOS adoption of pinned Planetlib partial models
+  description: Provider-owned correspondence declarations for four shared partial
+    models; historical model surveys remain separate.
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 1032f58872bdef9d48c8b1ce2a16a473ced97f3c
+    entry_points:
+    - src/exoeos/solution_gibbs.py:total_solution_gibbs_RT
+    - src/exoeos/mass_fraction_solute.py:mass_fraction_solute_state
+    - src/exoeos/thermodynamics.py:thermodynamic_state_trho
+    - src/exoeos/magma_volatiles.py:gibbs_j
+assumptions:
+- statement: Use the explicit specializations and output mappings in each Claim and
+    Binding; a selected partial model does not describe every provider option.
+  evidence:
+  - exoeos.planetlib.source
+domains:
+- kind: scientific_applicability
+  status: unknown
+  description: No new empirical validation or automatic transfer of Planetlib or historical
+    provider support.
+  conditions: []
+  evidence:
+  - exoeos.planetlib.source
+claims:
+- id: exoeos.planetlib.ideal_mixing
+  revision: '1'
+  statement: The binary IdealSolution specialization implements the adopted reduced
+    Gibbs energy and chemical potentials.
+  kind: theoretical
+  scope: Two strictly positive component amounts; supplied symmetric standards already
+    refer to the selected temperature and pressure. Zero excess energy only; nonideal
+    and boundary behavior are outside this adoption.
+  equations:
+  - id: planetlib.thermodynamics.ideal_mixing.gibbs
+    revision: '1'
+  mathematical_models:
+  - id: planetlib.thermodynamics.ideal_mixing.model
+    revision: '1'
+- id: exoeos.planetlib.mass_fraction_solute
+  revision: '1'
+  statement: The two-host specialization supplies the adopted mass-fraction Gibbs
+    increment and its solute and host derivatives.
+  kind: theoretical
+  scope: Positive amounts and masses, a composition-independent solute standard and
+    a consistent supplied host. F is the returned Gibbs energy minus supplied host
+    energy; host responses are increments, not full potentials. No empirical calibration
+    or nonlinear Sun-Yao continuation.
+  equations:
+  - id: planetlib.thermodynamics.mass_fraction_solute.gibbs_increment
+    revision: '1'
+  mathematical_models:
+  - id: planetlib.thermodynamics.mass_fraction_solute.model
+    revision: '1'
+- id: exoeos.planetlib.helmholtz
+  revision: '1'
+  statement: The fixed-composition molar Helmholtz state implements the adopted pressure,
+    entropy, heat capacities and frozen-composition sound speed.
+  kind: theoretical
+  scope: Smooth total molar potential, positive T and molar density, positive cv and
+    pressure-density derivative. Outputs are named fields/properties of the state;
+    no equilibrium-composition or multiphase response is asserted.
+  equations:
+  - id: planetlib.thermodynamics.helmholtz.pressure
+    revision: '1'
+  mathematical_models:
+  - id: planetlib.thermodynamics.helmholtz.model
+    revision: '1'
+- id: exoeos.planetlib.hirschmann
+  revision: '1'
+  statement: The zero-offset hydrogen Gibbs contribution yields the adopted MELTS-endmember
+    concentration regression at chemical equilibrium.
+  kind: theoretical
+  scope: X is n_H2/(sum(n_dry_endmembers)+n_H2O+n_H2); f is H2 fugacity divided by
+    one bar, and P is melt pressure in GPa. Requires the same supplied gas standard
+    and h2_offset_rt=0. This is an implicit derivative relation, not the full Gibbs
+    scalar or an oxide-basis law.
+  equations:
+  - id: planetlib.solubility.hirschmann2012.endmember_regression
+    revision: '2'
+  mathematical_models:
+  - id: planetlib.solubility.hirschmann2012.endmember_model
+    revision: '2'
+- id: exoeos.planetlib.applicability
+  revision: '1'
+  statement: The adopted partial models have established physical accuracy for a specified
+    target material and conditions.
+  kind: physical_validation
+  scope: Requires independent empirical comparison and a declared material, phase,
+    standards and concentration basis.
+  equations: []
+  mathematical_models:
+  - id: planetlib.thermodynamics.ideal_mixing.model
+    revision: '1'
+  - id: planetlib.thermodynamics.mass_fraction_solute.model
+    revision: '1'
+  - id: planetlib.thermodynamics.helmholtz.model
+    revision: '1'
+  - id: planetlib.solubility.hirschmann2012.endmember_model
+    revision: '2'
+evidence:
+- id: exoeos.planetlib.source
+  kind: implementation
+  summary: Inspected provider interfaces and conventions at the selected source revision.
+  sources:
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/solution_gibbs.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/ideal_solution.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/mass_fraction_solute.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/thermodynamics.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/state.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/constants.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/_arrays.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/contracts.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/gibbs_excess.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/magma_volatiles.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/_conditional_data.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/data/conditional_materials.json
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/magma.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/_water_isotherm.py
+  scope: Source and declaration identity only. Numerical sample tests are not automatically
+    promoted into an Assessment.
+  result: null
+  provenance: null
+  subject: exoeos.planetlib.source
+  context: exoeos.planetlib.adoption
+  artifacts: []
+- id: exoeos.planetlib.selection
+  kind: implementation
+  summary: Immutable shared definition selection and reproducible materialization.
+  sources:
+  - https://github.com/HajimeKawahara/planetlib/tree/a83b3fb255c7a383c6a8ef502328266f4dd16bff/catalog
+  - mceg/planetlib/imports.lock.json
+  - mceg/planetlib/README.md
+  scope: Only selected definition and equation-provenance closure is imported; no
+    Planetlib judgments are adopted.
+  result: null
+  provenance: null
+  subject: null
+  context: null
+  artifacts: []
+- id: planetlib.thermodynamics.ideal_mixing.source
+  kind: implementation
+  summary: Pinned provider formulas and quantity conventions inspected for extraction.
+  sources:
+  - https://github.com/HajimeKawahara/exogibbs/blob/08d3d85a6680eb81c4057bf584530d269de88253/src/exogibbs/thermo/ideal_gibbs.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/solution_gibbs.py
+  scope: Selected source files match their recorded commits. ExoGibbs adds an explicit
+    one-bar gas-pressure term; the shared mixing definition instead receives standards
+    at the selected pressure, as in ExoEOS. No provider code was executed.
+  result: null
+  provenance:
+    role: implementation
+    location: The source functions identified by the immutable URLs.
+    inspection: inspected
+    note: Source inspection identifies conventions; no provider support is transferred.
+    derived_from: []
+  subject: null
+  context: null
+  artifacts: []
+- id: planetlib.thermodynamics.mass_fraction_solute.source
+  kind: implementation
+  summary: Pinned provider formulas and quantity conventions inspected for extraction.
+  sources:
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/mass_fraction_solute.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/mceg/contracts/mass_fraction_solute.yaml
+  scope: The source and contract identify a mathematical construction on a total-liquid
+    mass denominator. Its historical numerical assessments remain upstream; no physical
+    solubility calibration is inherited.
+  result: null
+  provenance:
+    role: implementation
+    location: The source functions identified by the immutable URLs.
+    inspection: inspected
+    note: Source inspection identifies conventions; no provider support is transferred.
+    derived_from: []
+  subject: null
+  context: null
+  artifacts: []
+- id: planetlib.thermodynamics.helmholtz.source
+  kind: implementation
+  summary: Pinned provider formulas and quantity conventions inspected for extraction.
+  sources:
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/thermodynamics.py
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/state.py
+  scope: thermodynamic_state_trho and HelmholtzThermodynamicState define molar, fixed-composition
+    derivatives and response functions at this commit. Their provider implementation,
+    root selection and numerical checks remain upstream.
+  result: null
+  provenance:
+    role: implementation
+    location: The source functions identified by the immutable URLs.
+    inspection: inspected
+    note: Source inspection identifies conventions; no provider support is transferred.
+    derived_from: []
+  subject: null
+  context: null
+  artifacts: []
+- id: planetlib.solubility.hirschmann2012.provider
+  kind: implementation
+  summary: ExoEOS adds molecular-H2 dilution to a dry MELTS endmember plus water host.
+  sources:
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/src/exoeos/magma_volatiles.py
+  scope: gibbs_j uses host=sum(dry)+water and an H2 standard offset 11.403+0.76*P_Pa/1e9+h2_offset_rt.
+    Differentiating its H2 dilution contribution yields ln(n_H2/(host+n_H2)). The
+    recorded regression variant selects h2_offset_rt=0 and a common one-bar gas standard.
+  result: null
+  provenance:
+    role: implementation
+    location: src/exoeos/magma_volatiles.py, gibbs_j, H2 contribution.
+    inspection: inspected
+    note: Code inspection only; no provider execution, empirical replay or new EquationBinding
+      validation.
+    derived_from: []
+  subject: null
+  context: null
+  artifacts: []
+- id: planetlib.solubility.hirschmann2012.upstream_review
+  kind: literature
+  summary: Pinned ExoEOS coefficient, concentration-basis and supplementary-data reviews.
+  sources:
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/mceg/contracts/magma_volatiles.yaml
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/results/mceg/20261029_source_review/review.json
+  - https://github.com/HajimeKawahara/exoeos/blob/1032f58872bdef9d48c8b1ce2a16a473ced97f3c/results/mceg/20261029_remaining_source_review/review.json
+  scope: The review records -11.403 and -0.76 per GPa for basalt, fugacity in bar,
+    and oxide versus MELTS endmember counting. Its five matched-run oxide reconstructions
+    leave ln K residuals from -0.091864 to +0.018066. Supplement B808 is not silently
+    identified with main-paper A808. Historical physical assessments remain unknown.
+    Basalt experiment bounds of 1673.15 to 1723.15 K and 0.7 to 3 GPa are marginal
+    ranges, not a joint validation rectangle; the fit has no calibrated temperature
+    law.
+  result: null
+  provenance:
+    role: secondary
+    location: hirschmann2012_20261029, h2_basis_comparison_20261029, hirschmann_supplement_20261029
+      and the associated review JSON records.
+    inspection: inspected
+    note: Local files at the pinned clean checkout were read; historical source inspections
+      and assessments are not reassigned to Planetlib.
+    derived_from:
+    - evidence: planetlib.solubility.hirschmann2012.paper
+      comparison: not_checked
+      note: The original PDF and supplementary document were not re-inspected here.
+  subject: null
+  context: null
+  artifacts: []
+- id: planetlib.solubility.hirschmann2012.paper
+  kind: literature
+  summary: Hirschmann et al. (2012), molecular hydrogen solubility in silicate melts.
+  sources:
+  - https://doi.org/10.1016/j.epsl.2012.06.031
+  scope: Bibliographic origin recorded by ExoEOS; the original paper was not inspected
+    anew for this extraction.
+  result: null
+  provenance:
+    role: primary
+    location: Fig. 4 basalt regression, Table 2 concentration convention and Eq. 6.
+    inspection: not_inspected
+    note: Original-source review remains attributed to the dated ExoEOS records below.
+    derived_from: []
+  subject: null
+  context: null
+  artifacts: []
+limitations:
+- statement: Bindings declare correspondence. Native structural and source checks,
+    and selected numerical comparisons, do not establish a proof or broad physical
+    accuracy.
+  evidence:
+  - exoeos.planetlib.source
+- statement: The selected source manifest is a bounded identity check, not an exhaustive
+    transitive dependency audit.
+  evidence:
+  - exoeos.planetlib.source
+subjects:
+- id: exoeos.planetlib.source
+  implementation:
+    repository: https://github.com/HajimeKawahara/exoeos
+    revision: 1032f58872bdef9d48c8b1ce2a16a473ced97f3c
+    entry_points:
+    - src/exoeos/solution_gibbs.py:total_solution_gibbs_RT
+    - src/exoeos/mass_fraction_solute.py:mass_fraction_solute_state
+    - src/exoeos/thermodynamics.py:thermodynamic_state_trho
+    - src/exoeos/magma_volatiles.py:gibbs_j
+  selected_files:
+    src/exoeos/solution_gibbs.py: 6894b0821ab2955add1c85aa9087766d430b8bb2585b73aa1fe5c97ad463b693
+    src/exoeos/ideal_solution.py: b581faffae27988866fa88e0d2031413a81a0f1da33ceee9f524d663a758e4d0
+    src/exoeos/mass_fraction_solute.py: d49c698a2814c62b73f128ef8e87a869e940f180334e7ae7b95b994df919830b
+    src/exoeos/thermodynamics.py: a0331639a4d5bd73c362c4bcbc3e7ddded3e50e4a518c85d7637e3d8eec3cf58
+    src/exoeos/state.py: 5f09f413c898daee8f250b3ee80a28213acbf183cd5df02ce31c05c26add9733
+    src/exoeos/constants.py: 69e57fe70ad4ea775f2d97722548276c87d3a91c76eb6be8f1be43ac30f83fa4
+    src/exoeos/_arrays.py: 020679ce40515c27ce0bf31f5b71b1f737737d4a5ebc0301198a9e2bcbedf507
+    src/exoeos/contracts.py: ba1052326b066d7d3e5a57b5e63ac3dba5cc388e7d0bb9d2bf38431fe996d580
+    src/exoeos/gibbs_excess.py: c3354acd4f79940cee2723ec3d2c5500751c767666d295f8c04c3c97b8cfc7b3
+    src/exoeos/magma_volatiles.py: eeda6b0c67dd2186221c6ba5426823903b82a0fadee2ba5a4b617c9bd2591494
+    src/exoeos/_conditional_data.py: cfbd50ec42685cbb61f547f6d3778c41ff1afae4459347b62b008cfe53da231e
+    src/exoeos/data/conditional_materials.json: 4c3b4417e5378f377df08a0e50e2f1971449b9bc4b407f4d767dcf3fa182b4a4
+    src/exoeos/magma.py: 4f085ac25f3781cc4120ac7b56c67446668d1911d8cdaeeef077ff9e529807ed
+    src/exoeos/_water_isotherm.py: 432f52b3ecae370b35b6775d1199f38f17dc2bb601e5617f5e158af03141c5fa
+contexts:
+- id: exoeos.planetlib.adoption
+  scope: Initial provider adoption review, independently of historical source and
+    applicability assessments.
+  quantities: {}
+  settings:
+    planetlib_revision: a83b3fb255c7a383c6a8ef502328266f4dd16bff
+    mceg_revision: 4034c9259c9c2e7d55243d69f3ab2f22c9cc7d88
+conditions: []
+assessments:
+- id: exoeos.planetlib.ideal_mixing.pending
+  subject: exoeos.planetlib.source
+  context: exoeos.planetlib.adoption
+  method:
+    id: exoeos.planetlib.initial_adoption
+    revision: '1'
+    description: Record an explicit correspondence and leave its evidence review pending.
+  evidence:
+  - exoeos.planetlib.source
+  - exoeos.planetlib.selection
+  reasons:
+  - Historical assessments and catalog mathematical checks did not assess this new
+    provider correspondence.
+  kind: evidence_support
+  claim: exoeos.planetlib.ideal_mixing
+  claim_revision: '1'
+  status: unknown
+  origin: reviewed
+  equation_pins:
+  - id: planetlib.thermodynamics.ideal_mixing.gibbs
+    revision: '1'
+    sha256: 3c9b5e912b335f2bc78d3a2653268858344096730a9e4117a48ff7d3b35e8e62
+  binding_pins:
+  - id: exoeos.planetlib.ideal_mixing.binding
+    sha256: e6638cc74feca2984a41b2b24e721bec681d0eeb72095f463e7d7e4aa8f46057
+  mathematical_model_pins:
+  - id: planetlib.thermodynamics.ideal_mixing.model
+    revision: '1'
+    sha256: ff4484ea799cc1bcce2f2e4873a3aab634d3ea9632e9da2daef0e541b46f0320
+- id: exoeos.planetlib.mass_fraction_solute.pending
+  subject: exoeos.planetlib.source
+  context: exoeos.planetlib.adoption
+  method:
+    id: exoeos.planetlib.initial_adoption
+    revision: '1'
+    description: Record an explicit correspondence and leave its evidence review pending.
+  evidence:
+  - exoeos.planetlib.source
+  - exoeos.planetlib.selection
+  reasons:
+  - Historical assessments and catalog mathematical checks did not assess this new
+    provider correspondence.
+  kind: evidence_support
+  claim: exoeos.planetlib.mass_fraction_solute
+  claim_revision: '1'
+  status: unknown
+  origin: reviewed
+  equation_pins:
+  - id: planetlib.thermodynamics.mass_fraction_solute.gibbs_increment
+    revision: '1'
+    sha256: a1ecce196a47d74e7e2a68170efbd97c8f828b5d5d42646ac4a46354d93bbf98
+  binding_pins:
+  - id: exoeos.planetlib.mass_fraction_solute.binding
+    sha256: 6f5f78231abde2e2e54e794931a25e12d7608ebc7fd708dc1490c2eb78ec8146
+  mathematical_model_pins:
+  - id: planetlib.thermodynamics.mass_fraction_solute.model
+    revision: '1'
+    sha256: fd447925af53057283ebcbddf73442d5c014c1c75ccdc551fa2cd530024776e4
+- id: exoeos.planetlib.helmholtz.pending
+  subject: exoeos.planetlib.source
+  context: exoeos.planetlib.adoption
+  method:
+    id: exoeos.planetlib.initial_adoption
+    revision: '1'
+    description: Record an explicit correspondence and leave its evidence review pending.
+  evidence:
+  - exoeos.planetlib.source
+  - exoeos.planetlib.selection
+  reasons:
+  - Historical assessments and catalog mathematical checks did not assess this new
+    provider correspondence.
+  kind: evidence_support
+  claim: exoeos.planetlib.helmholtz
+  claim_revision: '1'
+  status: unknown
+  origin: reviewed
+  equation_pins:
+  - id: planetlib.thermodynamics.helmholtz.pressure
+    revision: '1'
+    sha256: 764b057eb256c0e92cf8be9e8c762907cedb045a7271c153e845886f7885abf7
+  binding_pins:
+  - id: exoeos.planetlib.helmholtz.binding
+    sha256: 5c8ccf0da5b4729aab33ac4a57a78fdb309fcd96116450e81aff00361e2a2f04
+  mathematical_model_pins:
+  - id: planetlib.thermodynamics.helmholtz.model
+    revision: '1'
+    sha256: 283dee30acfbac4b6b9126dd617a0f4279576c7eaba4832827af06ac5f47e87f
+- id: exoeos.planetlib.hirschmann.pending
+  subject: exoeos.planetlib.source
+  context: exoeos.planetlib.adoption
+  method:
+    id: exoeos.planetlib.initial_adoption
+    revision: '1'
+    description: Record an explicit correspondence and leave its evidence review pending.
+  evidence:
+  - exoeos.planetlib.source
+  - exoeos.planetlib.selection
+  reasons:
+  - Historical assessments and catalog mathematical checks did not assess this new
+    provider correspondence.
+  kind: evidence_support
+  claim: exoeos.planetlib.hirschmann
+  claim_revision: '1'
+  status: unknown
+  origin: reviewed
+  equation_pins:
+  - id: planetlib.solubility.hirschmann2012.endmember_regression
+    revision: '2'
+    sha256: 8f2b15a8403b322a737f2f4832b2c1937d066dce02f2dd79b223d2689f855ce9
+  binding_pins:
+  - id: exoeos.planetlib.hirschmann.binding
+    sha256: 39140678504fde4f15a8c57635ed2ae247e3d922cf21e275904755c14322d1ac
+  mathematical_model_pins:
+  - id: planetlib.solubility.hirschmann2012.endmember_model
+    revision: '2'
+    sha256: 8cb09569c08d63cf0ef1375eea98f82d648c59abfb805cb811f994a023b61e0e
+- id: exoeos.planetlib.applicability.pending
+  subject: exoeos.planetlib.source
+  context: exoeos.planetlib.adoption
+  method:
+    id: exoeos.planetlib.initial_adoption
+    revision: '1'
+    description: Record an explicit correspondence and leave its evidence review pending.
+  evidence:
+  - exoeos.planetlib.source
+  reasons:
+  - Adoption and numerical consistency checks supply no new empirical validation.
+  kind: evidence_support
+  claim: exoeos.planetlib.applicability
+  claim_revision: '1'
+  status: unknown
+  origin: reviewed
+  equation_pins: []
+  binding_pins: []
+  mathematical_model_pins:
+  - id: planetlib.thermodynamics.ideal_mixing.model
+    revision: '1'
+    sha256: ff4484ea799cc1bcce2f2e4873a3aab634d3ea9632e9da2daef0e541b46f0320
+  - id: planetlib.thermodynamics.mass_fraction_solute.model
+    revision: '1'
+    sha256: fd447925af53057283ebcbddf73442d5c014c1c75ccdc551fa2cd530024776e4
+  - id: planetlib.thermodynamics.helmholtz.model
+    revision: '1'
+    sha256: 283dee30acfbac4b6b9126dd617a0f4279576c7eaba4832827af06ac5f47e87f
+  - id: planetlib.solubility.hirschmann2012.endmember_model
+    revision: '2'
+    sha256: 8cb09569c08d63cf0ef1375eea98f82d648c59abfb805cb811f994a023b61e0e
+follow_ups: []
+follow_up_resolutions: []
+migration: null
+equations:
+- id: planetlib.thermodynamics.ideal_mixing.euler
+  revision: '1'
+  description: Euler consistency relation.
+  scope: 'Two components at fixed temperature and pressure, with composition-independent
+    supplied standards. The finite two-component model is a minimal reusable instance,
+    not an arbitrary-species solver. Pressure contributions belong to the supplied
+    standards: one-bar ideal-gas standards require a separate ln(P/P0) addition exactly
+    once. No gas law, activity correction, phase equilibrium or boundary derivative
+    is selected.'
+  symbols:
+    G:
+      latex: G/(RT)
+      description: Total extensive Gibbs energy divided by R T; this is not molar
+        Gibbs energy.
+      unit: mol
+    n1:
+      latex: n_1
+      description: Amount of host component 1.
+      unit: mol
+    n2:
+      latex: n_2
+      description: Amount of host component 2.
+      unit: mol
+    u1:
+      latex: u_1
+      description: Component 1 chemical potential divided by R T.
+      unit: '1'
+    u2:
+      latex: u_2
+      description: Component 2 chemical potential divided by R T.
+      unit: '1'
+  assumptions:
+  - Amounts are positive for chemical-potential derivatives; the zero-amount energy
+    limit does not define a finite insertion potential.
+  - The scalar G/(R T) has units of mol, whereas each chemical potential divided by
+    R T is dimensionless.
+  - The selected standards already refer to the fixed pressure; ideal mixing is counted
+    exactly once.
+  evidence:
+  - planetlib.thermodynamics.ideal_mixing.source
+  sympy:
+    format: sympy-srepr-v1
+    expression: Equality(Symbol('G'), Add(Mul(Symbol('n1', positive=True), Symbol('u1')),
+      Mul(Symbol('n2', positive=True), Symbol('u2'))))
+- id: planetlib.thermodynamics.ideal_mixing.gibbs
+  revision: '1'
+  description: Extensive scalar.
+  scope: 'Two components at fixed temperature and pressure, with composition-independent
+    supplied standards. The finite two-component model is a minimal reusable instance,
+    not an arbitrary-species solver. Pressure contributions belong to the supplied
+    standards: one-bar ideal-gas standards require a separate ln(P/P0) addition exactly
+    once. No gas law, activity correction, phase equilibrium or boundary derivative
+    is selected.'
+  symbols:
+    G:
+      latex: G/(RT)
+      description: Total extensive Gibbs energy divided by R T; this is not molar
+        Gibbs energy.
+      unit: mol
+    n1:
+      latex: n_1
+      description: Amount of host component 1.
+      unit: mol
+    n2:
+      latex: n_2
+      description: Amount of host component 2.
+      unit: mol
+    u01:
+      latex: u_1^0
+      description: Component 1 standard chemical potential divided by R T at the selected
+        fixed temperature and pressure.
+      unit: '1'
+    u02:
+      latex: u_2^0
+      description: Component 2 standard chemical potential divided by R T at the selected
+        fixed temperature and pressure.
+      unit: '1'
+  assumptions:
+  - Amounts are positive for chemical-potential derivatives; the zero-amount energy
+    limit does not define a finite insertion potential.
+  - The scalar G/(R T) has units of mol, whereas each chemical potential divided by
+    R T is dimensionless.
+  - The selected standards already refer to the fixed pressure; ideal mixing is counted
+    exactly once.
+  evidence:
+  - planetlib.thermodynamics.ideal_mixing.source
+  sympy:
+    format: sympy-srepr-v1
+    expression: Equality(Symbol('G'), Add(Mul(Symbol('n1', positive=True), Symbol('u01')),
+      Mul(Symbol('n1', positive=True), log(Mul(Symbol('n1', positive=True), Pow(Add(Symbol('n1',
+      positive=True), Symbol('n2', positive=True)), Integer(-1))))), Mul(Symbol('n2',
+      positive=True), Symbol('u02')), Mul(Symbol('n2', positive=True), log(Mul(Symbol('n2',
+      positive=True), Pow(Add(Symbol('n1', positive=True), Symbol('n2', positive=True)),
+      Integer(-1)))))))
+- id: planetlib.thermodynamics.ideal_mixing.potential_1
+  revision: '1'
+  description: First component chemical potential.
+  scope: 'Two components at fixed temperature and pressure, with composition-independent
+    supplied standards. The finite two-component model is a minimal reusable instance,
+    not an arbitrary-species solver. Pressure contributions belong to the supplied
+    standards: one-bar ideal-gas standards require a separate ln(P/P0) addition exactly
+    once. No gas law, activity correction, phase equilibrium or boundary derivative
+    is selected.'
+  symbols:
+    n1:
+      latex: n_1
+      description: Amount of host component 1.
+      unit: mol
+    n2:
+      latex: n_2
+      description: Amount of host component 2.
+      unit: mol
+    u01:
+      latex: u_1^0
+      description: Component 1 standard chemical potential divided by R T at the selected
+        fixed temperature and pressure.
+      unit: '1'
+    u1:
+      latex: u_1
+      description: Component 1 chemical potential divided by R T.
+      unit: '1'
+  assumptions:
+  - Amounts are positive for chemical-potential derivatives; the zero-amount energy
+    limit does not define a finite insertion potential.
+  - The scalar G/(R T) has units of mol, whereas each chemical potential divided by
+    R T is dimensionless.
+  - The selected standards already refer to the fixed pressure; ideal mixing is counted
+    exactly once.
+  evidence:
+  - planetlib.thermodynamics.ideal_mixing.source
+  sympy:
+    format: sympy-srepr-v1
+    expression: Equality(Symbol('u1'), Add(Symbol('u01'), log(Mul(Symbol('n1', positive=True),
+      Pow(Add(Symbol('n1', positive=True), Symbol('n2', positive=True)), Integer(-1))))))
+- id: planetlib.thermodynamics.ideal_mixing.potential_2
+  revision: '1'
+  description: Second component chemical potential.
+  scope: 'Two components at fixed temperature and pressure, with composition-independent
+    supplied standards. The finite two-component model is a minimal reusable instance,
+    not an arbitrary-species solver. Pressure contributions belong to the supplied
+    standards: one-bar ideal-gas standards require a separate ln(P/P0) addition exactly
+    once. No gas law, activity correction, phase equilibrium or boundary derivative
+    is selected.'
+  symbols:
+    n1:
+      latex: n_1
+      description: Amount of host component 1.
+      unit: mol
+    n2:
+      latex: n_2
+      description: Amount of host component 2.
+      unit: mol
+    u02:
+      latex: u_2^0
+      description: Component 2 standard chemical potential divided by R T at the selected
+        fixed temperature and pressure.
+      unit: '1'
+    u2:
+      latex: u_2
+      description: Component 2 chemical potential divided by R T.
+      unit: '1'
+  assumptions:
+  - Amounts are positive for chemical-potential derivatives; the zero-amount energy
+    limit does not define a finite insertion potential.
+  - The scalar G/(R T) has units of mol, whereas each chemical potential divided by
+    R T is dimensionless.
+  - The selected standards already refer to the fixed pressure; ideal mixing is counted
+    exactly once.
+  evidence:
+  - planetlib.thermodynamics.ideal_mixing.source
+  sympy:
+    format: sympy-srepr-v1
+    expression: Equality(Symbol('u2'), Add(Symbol('u02'), log(Mul(Symbol('n2', positive=True),
+      Pow(Add(Symbol('n1', positive=True), Symbol('n2', positive=True)), Integer(-1))))))
+- id: planetlib.thermodynamics.mass_fraction_solute.equivalent_host
+  revision: '1'
+  description: Convert host mass to solute-equivalent amount.
+  scope: One solute and a two-component host at fixed temperature and pressure. The
+    supplied host Gibbs energy and potentials must already be consistent. Solute standard
+    and molar masses are independent of all amounts. This increment supplies no Henry
+    coefficient, empirical fit, multisolute interaction or Sun-Yao Gibbs continuation.
+  symbols:
+    M1:
+      latex: M_1
+      description: Molar mass of host component 1 in the same formula-unit basis as
+        n1.
+      unit: kg mol^-1
+    M2:
+      latex: M_2
+      description: Molar mass of host component 2 in the same formula-unit basis as
+        n2.
+      unit: kg mol^-1
+    Ms:
+      latex: M_s
+      description: Molar mass of the counted solute species, including its atomic
+        or molecular convention.
+      unit: kg mol^-1
+    S:
+      latex: N_*
+      description: Total host mass divided by solute molar mass; a mass-equivalent
+        amount, not the host molecular count.
+      unit: mol
+    n1:
+      latex: n_1
+      description: Amount of dry host component 1.
+      unit: mol
+    n2:
+      latex: n_2
+      description: Amount of dry host component 2.
+      unit: mol
+  assumptions:
+  - 'The normalization counts mass: S=(M1*n1+M2*n2)/Ms; it is not a host mole sum.'
+  - Host mixing is included in the supplied host model only once; add this scalar
+    and both host responses consistently.
+  - Interior derivatives require positive host and solute; the zero-solute energy
+    limit is continuous but its insertion potential is minus infinity.
+  evidence:
+  - planetlib.thermodynamics.mass_fraction_solute.source
+  sympy:
+    format: sympy-srepr-v1
+    expression: Equality(Symbol('S', positive=True), Mul(Pow(Symbol('Ms', positive=True),
+      Integer(-1)), Add(Mul(Symbol('M1', positive=True), Symbol('n1', positive=True)),
+      Mul(Symbol('M2', positive=True), Symbol('n2', positive=True)))))
+- id: planetlib.thermodynamics.mass_fraction_solute.gibbs_increment
+  revision: '1'
+  description: Extensive increment to the host Gibbs energy.
+  scope: One solute and a two-component host at fixed temperature and pressure. The
+    supplied host Gibbs energy and potentials must already be consistent. Solute standard
+    and molar masses are independent of all amounts. This increment supplies no Henry
+    coefficient, empirical fit, multisolute interaction or Sun-Yao Gibbs continuation.
+  symbols:
+    F:
+      latex: \Delta G/(RT)
+      description: Added extensive Gibbs energy divided by R T, to be added to an
+        already mixed host energy.
+      unit: mol
+    S:
+      latex: N_*
+      description: Total host mass divided by solute molar mass; a mass-equivalent
+        amount, not the host molecular count.
+      unit: mol
+    ns:
+      latex: n_s
+      description: Amount of the solute species counted by Ms.
+      unit: mol
+    u0:
+      latex: u_s^0
+      description: Solute standard chemical potential divided by R T.
+      unit: '1'
+    w:
+      latex: w
+      description: Solute mass divided by host mass plus solute mass.
+      unit: '1'
+  assumptions:
+  - 'The normalization counts mass: S=(M1*n1+M2*n2)/Ms; it is not a host mole sum.'
+  - Host mixing is included in the supplied host model only once; add this scalar
+    and both host responses consistently.
+  - Interior derivatives require positive host and solute; the zero-solute energy
+    limit is continuous but its insertion potential is minus infinity.
+  evidence:
+  - planetlib.thermodynamics.mass_fraction_solute.source
+  sympy:
+    format: sympy-srepr-v1
+    expression: Equality(Symbol('F'), Add(Mul(Symbol('S', positive=True), log(Add(Integer(1),
+      Mul(Integer(-1), Symbol('w'))))), Mul(Symbol('ns', positive=True), Symbol('u0')),
+      Mul(Symbol('ns', positive=True), log(Symbol('w')))))
+- id: planetlib.thermodynamics.mass_fraction_solute.host_response_1
+  revision: '1'
+  description: Host component 1 derivative.
+  scope: One solute and a two-component host at fixed temperature and pressure. The
+    supplied host Gibbs energy and potentials must already be consistent. Solute standard
+    and molar masses are independent of all amounts. This increment supplies no Henry
+    coefficient, empirical fit, multisolute interaction or Sun-Yao Gibbs continuation.
+  symbols:
+    M1:
+      latex: M_1
+      description: Molar mass of host component 1 in the same formula-unit basis as
+        n1.
+      unit: kg mol^-1
+    Ms:
+      latex: M_s
+      description: Molar mass of the counted solute species, including its atomic
+        or molecular convention.
+      unit: kg mol^-1
+    du1:
+      latex: \Delta u_1
+      description: Increment to host component 1 chemical potential divided by R T.
+      unit: '1'
+    w:
+      latex: w
+      description: Solute mass divided by host mass plus solute mass.
+      unit: '1'
+  assumptions:
+  - 'The normalization counts mass: S=(M1*n1+M2*n2)/Ms; it is not a host mole sum.'
+  - Host mixing is included in the supplied host model only once; add this scalar
+    and both host responses consistently.
+  - Interior derivatives require positive host and solute; the zero-solute energy
+    limit is continuous but its insertion potential is minus infinity.
+  evidence:
+  - planetlib.thermodynamics.mass_fraction_solute.source
+  sympy:
+    format: sympy-srepr-v1
+    expression: Equality(Symbol('du1'), Mul(Symbol('M1', positive=True), Pow(Symbol('Ms',
+      positive=True), Integer(-1)), log(Add(Integer(1), Mul(Integer(-1), Symbol('w'))))))
+- id: planetlib.thermodynamics.mass_fraction_solute.host_response_2
+  revision: '1'
+  description: Host component 2 derivative.
+  scope: One solute and a two-component host at fixed temperature and pressure. The
+    supplied host Gibbs energy and potentials must already be consistent. Solute standard
+    and molar masses are independent of all amounts. This increment supplies no Henry
+    coefficient, empirical fit, multisolute interaction or Sun-Yao Gibbs continuation.
+  symbols:
+    M2:
+      latex: M_2
+      description: Molar mass of host component 2 in the same formula-unit basis as
+        n2.
+      unit: kg mol^-1
+    Ms:
+      latex: M_s
+      description: Molar mass of the counted solute species, including its atomic
+        or molecular convention.
+      unit: kg mol^-1
+    du2:
+      latex: \Delta u_2
+      description: Increment to host component 2 chemical potential divided by R T.
+      unit: '1'
+    w:
+      latex: w
+      description: Solute mass divided by host mass plus solute mass.
+      unit: '1'
+  assumptions:
+  - 'The normalization counts mass: S=(M1*n1+M2*n2)/Ms; it is not a host mole sum.'
+  - Host mixing is included in the supplied host model only once; add this scalar
+    and both host responses consistently.
+  - Interior derivatives require positive host and solute; the zero-solute energy
+    limit is continuous but its insertion potential is minus infinity.
+  evidence:
+  - planetlib.thermodynamics.mass_fraction_solute.source
+  sympy:
+    format: sympy-srepr-v1
+    expression: Equality(Symbol('du2'), Mul(Symbol('M2', positive=True), Pow(Symbol('Ms',
+      positive=True), Integer(-1)), log(Add(Integer(1), Mul(Integer(-1), Symbol('w'))))))
+- id: planetlib.thermodynamics.mass_fraction_solute.mass_fraction
+  revision: '1'
+  description: Total-liquid solute mass fraction.
+  scope: One solute and a two-component host at fixed temperature and pressure. The
+    supplied host Gibbs energy and potentials must already be consistent. Solute standard
+    and molar masses are independent of all amounts. This increment supplies no Henry
+    coefficient, empirical fit, multisolute interaction or Sun-Yao Gibbs continuation.
+  symbols:
+    S:
+      latex: N_*
+      description: Total host mass divided by solute molar mass; a mass-equivalent
+        amount, not the host molecular count.
+      unit: mol
+    ns:
+      latex: n_s
+      description: Amount of the solute species counted by Ms.
+      unit: mol
+    w:
+      latex: w
+      description: Solute mass divided by host mass plus solute mass.
+      unit: '1'
+  assumptions:
+  - 'The normalization counts mass: S=(M1*n1+M2*n2)/Ms; it is not a host mole sum.'
+  - Host mixing is included in the supplied host model only once; add this scalar
+    and both host responses consistently.
+  - Interior derivatives require positive host and solute; the zero-solute energy
+    limit is continuous but its insertion potential is minus infinity.
+  evidence:
+  - planetlib.thermodynamics.mass_fraction_solute.source
+  sympy:
+    format: sympy-srepr-v1
+    expression: Equality(Symbol('w'), Mul(Symbol('ns', positive=True), Pow(Add(Symbol('S',
+      positive=True), Symbol('ns', positive=True)), Integer(-1))))
+- id: planetlib.thermodynamics.mass_fraction_solute.solute_potential
+  revision: '1'
+  description: Solute derivative.
+  scope: One solute and a two-component host at fixed temperature and pressure. The
+    supplied host Gibbs energy and potentials must already be consistent. Solute standard
+    and molar masses are independent of all amounts. This increment supplies no Henry
+    coefficient, empirical fit, multisolute interaction or Sun-Yao Gibbs continuation.
+  symbols:
+    u0:
+      latex: u_s^0
+      description: Solute standard chemical potential divided by R T.
+      unit: '1'
+    us:
+      latex: u_s
+      description: Solute chemical potential divided by R T.
+      unit: '1'
+    w:
+      latex: w
+      description: Solute mass divided by host mass plus solute mass.
+      unit: '1'
+  assumptions:
+  - 'The normalization counts mass: S=(M1*n1+M2*n2)/Ms; it is not a host mole sum.'
+  - Host mixing is included in the supplied host model only once; add this scalar
+    and both host responses consistently.
+  - Interior derivatives require positive host and solute; the zero-solute energy
+    limit is continuous but its insertion potential is minus infinity.
+  evidence:
+  - planetlib.thermodynamics.mass_fraction_solute.source
+  sympy:
+    format: sympy-srepr-v1
+    expression: Equality(Symbol('us'), Add(Symbol('u0'), log(Symbol('w'))))
+- id: planetlib.thermodynamics.helmholtz.entropy
+  revision: '1'
+  description: Entropy derivative at fixed molar density.
+  scope: An open derivative model for a smooth complete molar Helmholtz potential
+    at fixed composition. Density is molar. The user supplies the potential, composition
+    and mean molar mass. The stable response domain has T>0, rho>0, cv>0 and partial
+    P/partial rho at fixed T positive. No phase selection, chemical equilibrium response,
+    EOS coefficients or numerical differentiation method is selected.
+  symbols:
+    T:
+      latex: T
+      description: Absolute temperature at fixed composition.
+      unit: K
+    a:
+      latex: a
+      description: Complete molar Helmholtz energy as a function of T and molar density,
+        including ideal mixing.
+      unit: J mol^-1
+    rho:
+      latex: \rho
+      description: Total molar density, not mass density.
+      unit: mol m^-3
+    s:
+      latex: s
+      description: Molar entropy derived from the same complete Helmholtz energy.
+      unit: J mol^-1 K^-1
+  assumptions:
+  - The potential is twice continuously differentiable on the selected single-phase
+    interior, allowing the mixed derivatives to commute.
+  - All T/rho partial derivatives hold composition fixed. Mean molar mass is constant
+    in these derivatives.
+  - cp and sound speed require nonzero cv and pressure-density derivative; singular
+    states and phase boundaries are outside this model.
+  - Every symbol denotes a numerical magnitude in its stated SI units; no automatic
+    unit conversion is implied.
+  evidence:
+  - planetlib.thermodynamics.helmholtz.source
+  sympy:
+    format: sympy-srepr-v1
+    expression: Equality(Function('s')(Symbol('T', positive=True), Symbol('rho', positive=True)),
+      Mul(Integer(-1), Derivative(Function('a')(Symbol('T', positive=True), Symbol('rho',
+      positive=True)), Tuple(Symbol('T', positive=True), Integer(1)))))
+- id: planetlib.thermodynamics.helmholtz.heat_capacity_cp
+  revision: '1'
+  description: Isobaric caloric response.
+  scope: An open derivative model for a smooth complete molar Helmholtz potential
+    at fixed composition. Density is molar. The user supplies the potential, composition
+    and mean molar mass. The stable response domain has T>0, rho>0, cv>0 and partial
+    P/partial rho at fixed T positive. No phase selection, chemical equilibrium response,
+    EOS coefficients or numerical differentiation method is selected.
+  symbols:
+    P:
+      latex: P
+      description: Pressure derived from the same complete molar Helmholtz energy.
+      unit: Pa
+    T:
+      latex: T
+      description: Absolute temperature at fixed composition.
+      unit: K
+    cp:
+      latex: c_p
+      description: Molar heat capacity at fixed pressure and composition.
+      unit: J mol^-1 K^-1
+    cv:
+      latex: c_v
+      description: Molar heat capacity at fixed molar density and composition.
+      unit: J mol^-1 K^-1
+    rho:
+      latex: \rho
+      description: Total molar density, not mass density.
+      unit: mol m^-3
+  assumptions:
+  - The potential is twice continuously differentiable on the selected single-phase
+    interior, allowing the mixed derivatives to commute.
+  - All T/rho partial derivatives hold composition fixed. Mean molar mass is constant
+    in these derivatives.
+  - cp and sound speed require nonzero cv and pressure-density derivative; singular
+    states and phase boundaries are outside this model.
+  - Every symbol denotes a numerical magnitude in its stated SI units; no automatic
+    unit conversion is implied.
+  evidence:
+  - planetlib.thermodynamics.helmholtz.source
+  sympy:
+    format: sympy-srepr-v1
+    expression: Equality(Function('cp')(Symbol('T', positive=True), Symbol('rho',
+      positive=True)), Add(Mul(Symbol('T', positive=True), Pow(Symbol('rho', positive=True),
+      Integer(-2)), Pow(Derivative(Function('P')(Symbol('T', positive=True), Symbol('rho',
+      positive=True)), Tuple(Symbol('T', positive=True), Integer(1))), Integer(2)),
+      Pow(Derivative(Function('P')(Symbol('T', positive=True), Symbol('rho', positive=True)),
+      Tuple(Symbol('rho', positive=True), Integer(1))), Integer(-1))), Function('cv')(Symbol('T',
+      positive=True), Symbol('rho', positive=True))))
+- id: planetlib.thermodynamics.helmholtz.heat_capacity_cv
+  revision: '1'
+  description: Isochoric caloric response.
+  scope: An open derivative model for a smooth complete molar Helmholtz potential
+    at fixed composition. Density is molar. The user supplies the potential, composition
+    and mean molar mass. The stable response domain has T>0, rho>0, cv>0 and partial
+    P/partial rho at fixed T positive. No phase selection, chemical equilibrium response,
+    EOS coefficients or numerical differentiation method is selected.
+  symbols:
+    T:
+      latex: T
+      description: Absolute temperature at fixed composition.
+      unit: K
+    a:
+      latex: a
+      description: Complete molar Helmholtz energy as a function of T and molar density,
+        including ideal mixing.
+      unit: J mol^-1
+    cv:
+      latex: c_v
+      description: Molar heat capacity at fixed molar density and composition.
+      unit: J mol^-1 K^-1
+    rho:
+      latex: \rho
+      description: Total molar density, not mass density.
+      unit: mol m^-3
+  assumptions:
+  - The potential is twice continuously differentiable on the selected single-phase
+    interior, allowing the mixed derivatives to commute.
+  - All T/rho partial derivatives hold composition fixed. Mean molar mass is constant
+    in these derivatives.
+  - cp and sound speed require nonzero cv and pressure-density derivative; singular
+    states and phase boundaries are outside this model.
+  - Every symbol denotes a numerical magnitude in its stated SI units; no automatic
+    unit conversion is implied.
+  evidence:
+  - planetlib.thermodynamics.helmholtz.source
+  sympy:
+    format: sympy-srepr-v1
+    expression: Equality(Function('cv')(Symbol('T', positive=True), Symbol('rho',
+      positive=True)), Mul(Integer(-1), Symbol('T', positive=True), Derivative(Function('a')(Symbol('T',
+      positive=True), Symbol('rho', positive=True)), Tuple(Symbol('T', positive=True),
+      Integer(2)))))
+- id: planetlib.thermodynamics.helmholtz.pressure
+  revision: '1'
+  description: Pressure derivative at fixed T.
+  scope: An open derivative model for a smooth complete molar Helmholtz potential
+    at fixed composition. Density is molar. The user supplies the potential, composition
+    and mean molar mass. The stable response domain has T>0, rho>0, cv>0 and partial
+    P/partial rho at fixed T positive. No phase selection, chemical equilibrium response,
+    EOS coefficients or numerical differentiation method is selected.
+  symbols:
+    P:
+      latex: P
+      description: Pressure derived from the same complete molar Helmholtz energy.
+      unit: Pa
+    T:
+      latex: T
+      description: Absolute temperature at fixed composition.
+      unit: K
+    a:
+      latex: a
+      description: Complete molar Helmholtz energy as a function of T and molar density,
+        including ideal mixing.
+      unit: J mol^-1
+    rho:
+      latex: \rho
+      description: Total molar density, not mass density.
+      unit: mol m^-3
+  assumptions:
+  - The potential is twice continuously differentiable on the selected single-phase
+    interior, allowing the mixed derivatives to commute.
+  - All T/rho partial derivatives hold composition fixed. Mean molar mass is constant
+    in these derivatives.
+  - cp and sound speed require nonzero cv and pressure-density derivative; singular
+    states and phase boundaries are outside this model.
+  - Every symbol denotes a numerical magnitude in its stated SI units; no automatic
+    unit conversion is implied.
+  evidence:
+  - planetlib.thermodynamics.helmholtz.source
+  sympy:
+    format: sympy-srepr-v1
+    expression: Equality(Function('P')(Symbol('T', positive=True), Symbol('rho', positive=True)),
+      Mul(Pow(Symbol('rho', positive=True), Integer(2)), Derivative(Function('a')(Symbol('T',
+      positive=True), Symbol('rho', positive=True)), Tuple(Symbol('rho', positive=True),
+      Integer(1)))))
+- id: planetlib.thermodynamics.helmholtz.sound_speed
+  revision: '1'
+  description: Frozen-composition isentropic response.
+  scope: An open derivative model for a smooth complete molar Helmholtz potential
+    at fixed composition. Density is molar. The user supplies the potential, composition
+    and mean molar mass. The stable response domain has T>0, rho>0, cv>0 and partial
+    P/partial rho at fixed T positive. No phase selection, chemical equilibrium response,
+    EOS coefficients or numerical differentiation method is selected.
+  symbols:
+    M:
+      latex: \overline M
+      description: Mean molar mass of the fixed composition.
+      unit: kg mol^-1
+    P:
+      latex: P
+      description: Pressure derived from the same complete molar Helmholtz energy.
+      unit: Pa
+    T:
+      latex: T
+      description: Absolute temperature at fixed composition.
+      unit: K
+    cs2:
+      latex: c_s^2
+      description: Squared isentropic sound speed at frozen composition.
+      unit: m^2 s^-2
+    cv:
+      latex: c_v
+      description: Molar heat capacity at fixed molar density and composition.
+      unit: J mol^-1 K^-1
+    rho:
+      latex: \rho
+      description: Total molar density, not mass density.
+      unit: mol m^-3
+  assumptions:
+  - The potential is twice continuously differentiable on the selected single-phase
+    interior, allowing the mixed derivatives to commute.
+  - All T/rho partial derivatives hold composition fixed. Mean molar mass is constant
+    in these derivatives.
+  - cp and sound speed require nonzero cv and pressure-density derivative; singular
+    states and phase boundaries are outside this model.
+  - Every symbol denotes a numerical magnitude in its stated SI units; no automatic
+    unit conversion is implied.
+  evidence:
+  - planetlib.thermodynamics.helmholtz.source
+  sympy:
+    format: sympy-srepr-v1
+    expression: Equality(Function('cs2')(Symbol('T', positive=True), Symbol('rho',
+      positive=True)), Mul(Pow(Symbol('M', positive=True), Integer(-1)), Add(Mul(Symbol('T',
+      positive=True), Pow(Symbol('rho', positive=True), Integer(-2)), Pow(Function('cv')(Symbol('T',
+      positive=True), Symbol('rho', positive=True)), Integer(-1)), Pow(Derivative(Function('P')(Symbol('T',
+      positive=True), Symbol('rho', positive=True)), Tuple(Symbol('T', positive=True),
+      Integer(1))), Integer(2))), Derivative(Function('P')(Symbol('T', positive=True),
+      Symbol('rho', positive=True)), Tuple(Symbol('rho', positive=True), Integer(1))))))
+- id: planetlib.solubility.hirschmann2012.endmember_regression
+  revision: '2'
+  description: ExoEOS conditional variant using the same fitted numbers on an endmember-based
+    concentration.
+  scope: Equilibrium H2 relation of the provider scalar with zero extra H2 offset;
+    not identified with the original oxide-based fit.
+  symbols:
+    X:
+      latex: X
+      description: Molecular H2 fraction on the dry MELTS endmember-plus-water-plus-H2
+        basis.
+      unit: '1'
+    f:
+      latex: f
+      description: Molecular hydrogen fugacity.
+      unit: bar
+    P:
+      latex: P
+      description: Melt total pressure.
+      unit: GPa
+  assumptions:
+  - The gas and dissolved H2 standards share a one-bar reference.
+  - The extra h2_offset_rt is zero.
+  - No oxide-basis correction or new empirical calibration is inferred.
+  - 'SymPy symbols are numerical magnitudes: P in GPa, f in bar, and X dimensionless;
+    log(X/f) uses fugacity divided by one bar.'
+  evidence:
+  - planetlib.solubility.hirschmann2012.provider
+  - planetlib.solubility.hirschmann2012.upstream_review
+  sympy:
+    format: sympy-srepr-v1
+    expression: Equality(log(Mul(Symbol('X'), Pow(Symbol('f'), Integer(-1)))), Add(Mul(Integer(-1),
+      Rational(19, 25), Symbol('P')), Rational(-11403, 1000)))
+bindings:
+- id: exoeos.planetlib.ideal_mixing.binding
+  equation:
+    id: planetlib.thermodynamics.ideal_mixing.gibbs
+    revision: '1'
+  subject: exoeos.planetlib.source
+  source: src/exoeos/solution_gibbs.py
+  symbol: total_solution_gibbs_RT
+  arguments: {}
+  result: G
+  constants:
+    n1: n[0]
+    n2: n[1]
+    u01: mu0_RT[0]
+    u02: mu0_RT[1]
+  note: Two strictly positive component amounts; supplied symmetric standards already
+    refer to the selected temperature and pressure. Zero excess energy only; nonideal
+    and boundary behavior are outside this adoption.
+- id: exoeos.planetlib.mass_fraction_solute.binding
+  equation:
+    id: planetlib.thermodynamics.mass_fraction_solute.gibbs_increment
+    revision: '1'
+  subject: exoeos.planetlib.source
+  source: src/exoeos/mass_fraction_solute.py
+  symbol: mass_fraction_solute_state
+  arguments:
+    solute_amount_mol:
+      symbol: ns
+      scale: 1.0
+      offset: 0.0
+    solute_standard_RT:
+      symbol: u0
+      scale: 1.0
+      offset: 0.0
+  result: null
+  constants: {}
+  note: Positive amounts and masses, a composition-independent solute standard and
+    a consistent supplied host. F is the returned Gibbs energy minus supplied host
+    energy; host responses are increments, not full potentials. No empirical calibration
+    or nonlinear Sun-Yao continuation. The tuple return has no direct scalar result
+    binding; compare state.gibbs_RT - host_gibbs_RT to F.
+- id: exoeos.planetlib.helmholtz.binding
+  equation:
+    id: planetlib.thermodynamics.helmholtz.pressure
+    revision: '1'
+  subject: exoeos.planetlib.source
+  source: src/exoeos/thermodynamics.py
+  symbol: thermodynamic_state_trho
+  arguments:
+    T:
+      symbol: T
+      scale: 1.0
+      offset: 0.0
+    rho:
+      symbol: rho
+      scale: 1.0
+      offset: 0.0
+  result: null
+  constants: {}
+  note: Smooth total molar potential, positive T and molar density, positive cv and
+    pressure-density derivative. Outputs are named fields/properties of the state;
+    no equilibrium-composition or multiphase response is asserted. The returned state
+    is not scalar P; its pressure field is the mapped output.
+- id: exoeos.planetlib.hirschmann.binding
+  equation:
+    id: planetlib.solubility.hirschmann2012.endmember_regression
+    revision: '2'
+  subject: exoeos.planetlib.source
+  source: src/exoeos/magma_volatiles.py
+  symbol: gibbs_j
+  arguments:
+    pressure_pa:
+      symbol: P
+      scale: 1.0e-09
+      offset: 0.0
+  result: null
+  constants: {}
+  note: X is n_H2/(sum(n_dry_endmembers)+n_H2O+n_H2); f is H2 fugacity divided by
+    one bar, and P is melt pressure in GPa. Requires the same supplied gas standard
+    and h2_offset_rt=0. This is an implicit derivative relation, not the full Gibbs
+    scalar or an oxide-basis law. The returned total G is not X or log(X/f), so no
+    scalar result binding is declared.
+decisions: []
+quantities:
+- id: planetlib.thermodynamics.ideal_mixing.G
+  revision: '1'
+  latex: G/(RT)
+  description: Total extensive Gibbs energy divided by R T; this is not molar Gibbs
+    energy.
+  unit: mol
+  domain: Positive total amount; temperature and pressure held fixed.
+  coordinates: []
+- id: planetlib.thermodynamics.ideal_mixing.n1
+  revision: '1'
+  latex: n_1
+  description: Amount of host component 1.
+  unit: mol
+  domain: Positive interior amount.
+  coordinates: []
+- id: planetlib.thermodynamics.ideal_mixing.n2
+  revision: '1'
+  latex: n_2
+  description: Amount of host component 2.
+  unit: mol
+  domain: Positive interior amount.
+  coordinates: []
+- id: planetlib.thermodynamics.ideal_mixing.u01
+  revision: '1'
+  latex: u_1^0
+  description: Component 1 standard chemical potential divided by R T at the selected
+    fixed temperature and pressure.
+  unit: '1'
+  domain: Finite and independent of composition.
+  coordinates: []
+- id: planetlib.thermodynamics.ideal_mixing.u02
+  revision: '1'
+  latex: u_2^0
+  description: Component 2 standard chemical potential divided by R T at the selected
+    fixed temperature and pressure.
+  unit: '1'
+  domain: Finite and independent of composition.
+  coordinates: []
+- id: planetlib.thermodynamics.ideal_mixing.u1
+  revision: '1'
+  latex: u_1
+  description: Component 1 chemical potential divided by R T.
+  unit: '1'
+  domain: Positive component amounts at fixed temperature and pressure.
+  coordinates: []
+- id: planetlib.thermodynamics.ideal_mixing.u2
+  revision: '1'
+  latex: u_2
+  description: Component 2 chemical potential divided by R T.
+  unit: '1'
+  domain: Positive component amounts at fixed temperature and pressure.
+  coordinates: []
+- id: planetlib.thermodynamics.mass_fraction_solute.F
+  revision: '1'
+  latex: \Delta G/(RT)
+  description: Added extensive Gibbs energy divided by R T, to be added to an already
+    mixed host energy.
+  unit: mol
+  domain: Same R and fixed T/P as the supplied host model; host mixing is not repeated.
+  coordinates: []
+- id: planetlib.thermodynamics.mass_fraction_solute.M1
+  revision: '1'
+  latex: M_1
+  description: Molar mass of host component 1 in the same formula-unit basis as n1.
+  unit: kg mol^-1
+  domain: Positive and composition independent.
+  coordinates: []
+- id: planetlib.thermodynamics.mass_fraction_solute.M2
+  revision: '1'
+  latex: M_2
+  description: Molar mass of host component 2 in the same formula-unit basis as n2.
+  unit: kg mol^-1
+  domain: Positive and composition independent.
+  coordinates: []
+- id: planetlib.thermodynamics.mass_fraction_solute.Ms
+  revision: '1'
+  latex: M_s
+  description: Molar mass of the counted solute species, including its atomic or molecular
+    convention.
+  unit: kg mol^-1
+  domain: Positive and composition independent.
+  coordinates: []
+- id: planetlib.thermodynamics.mass_fraction_solute.S
+  revision: '1'
+  latex: N_*
+  description: Total host mass divided by solute molar mass; a mass-equivalent amount,
+    not the host molecular count.
+  unit: mol
+  domain: Positive host mass; two-component host in this minimal model.
+  coordinates: []
+- id: planetlib.thermodynamics.mass_fraction_solute.du1
+  revision: '1'
+  latex: \Delta u_1
+  description: Increment to host component 1 chemical potential divided by R T.
+  unit: '1'
+  domain: Added to the corresponding derivative of the supplied host Gibbs energy.
+  coordinates: []
+- id: planetlib.thermodynamics.mass_fraction_solute.du2
+  revision: '1'
+  latex: \Delta u_2
+  description: Increment to host component 2 chemical potential divided by R T.
+  unit: '1'
+  domain: Added to the corresponding derivative of the supplied host Gibbs energy.
+  coordinates: []
+- id: planetlib.thermodynamics.mass_fraction_solute.n1
+  revision: '1'
+  latex: n_1
+  description: Amount of dry host component 1.
+  unit: mol
+  domain: Nonnegative amount with positive total host mass; interior derivatives use
+    positive amounts.
+  coordinates: []
+- id: planetlib.thermodynamics.mass_fraction_solute.n2
+  revision: '1'
+  latex: n_2
+  description: Amount of dry host component 2.
+  unit: mol
+  domain: Nonnegative amount with positive total host mass; interior derivatives use
+    positive amounts.
+  coordinates: []
+- id: planetlib.thermodynamics.mass_fraction_solute.ns
+  revision: '1'
+  latex: n_s
+  description: Amount of the solute species counted by Ms.
+  unit: mol
+  domain: Positive interior amount; zero solute is a separate continuous energy limit.
+  coordinates: []
+- id: planetlib.thermodynamics.mass_fraction_solute.u0
+  revision: '1'
+  latex: u_s^0
+  description: Solute standard chemical potential divided by R T.
+  unit: '1'
+  domain: Finite, fixed with respect to all component amounts.
+  coordinates: []
+- id: planetlib.thermodynamics.mass_fraction_solute.us
+  revision: '1'
+  latex: u_s
+  description: Solute chemical potential divided by R T.
+  unit: '1'
+  domain: Positive solute and host amounts.
+  coordinates: []
+- id: planetlib.thermodynamics.mass_fraction_solute.w
+  revision: '1'
+  latex: w
+  description: Solute mass divided by host mass plus solute mass.
+  unit: '1'
+  domain: Strictly between zero and one in the differentiable interior.
+  coordinates: []
+- id: planetlib.thermodynamics.helmholtz.M
+  revision: '1'
+  latex: \overline M
+  description: Mean molar mass of the fixed composition.
+  unit: kg mol^-1
+  domain: Positive and constant during the specified derivatives.
+  coordinates: []
+- id: planetlib.thermodynamics.helmholtz.P
+  revision: '1'
+  latex: P
+  description: Pressure derived from the same complete molar Helmholtz energy.
+  unit: Pa
+  domain: Pressure-density derivative is positive for the stable response domain.
+  coordinates:
+  - id: planetlib.thermodynamics.helmholtz.T
+    revision: '1'
+  - id: planetlib.thermodynamics.helmholtz.rho
+    revision: '1'
+- id: planetlib.thermodynamics.helmholtz.T
+  revision: '1'
+  latex: T
+  description: Absolute temperature at fixed composition.
+  unit: K
+  domain: Positive, within one smooth single-phase domain.
+  coordinates: []
+- id: planetlib.thermodynamics.helmholtz.a
+  revision: '1'
+  latex: a
+  description: Complete molar Helmholtz energy as a function of T and molar density,
+    including ideal mixing.
+  unit: J mol^-1
+  domain: Twice continuously differentiable in the chosen single phase; composition
+    is held fixed.
+  coordinates:
+  - id: planetlib.thermodynamics.helmholtz.T
+    revision: '1'
+  - id: planetlib.thermodynamics.helmholtz.rho
+    revision: '1'
+- id: planetlib.thermodynamics.helmholtz.cp
+  revision: '1'
+  latex: c_p
+  description: Molar heat capacity at fixed pressure and composition.
+  unit: J mol^-1 K^-1
+  domain: Requires a nonzero pressure-density derivative; stable branch has positive
+    derivative.
+  coordinates:
+  - id: planetlib.thermodynamics.helmholtz.T
+    revision: '1'
+  - id: planetlib.thermodynamics.helmholtz.rho
+    revision: '1'
+- id: planetlib.thermodynamics.helmholtz.cs2
+  revision: '1'
+  latex: c_s^2
+  description: Squared isentropic sound speed at frozen composition.
+  unit: m^2 s^-2
+  domain: Requires positive cv and pressure-density derivative; not a chemically equilibrating
+    sound speed.
+  coordinates:
+  - id: planetlib.thermodynamics.helmholtz.T
+    revision: '1'
+  - id: planetlib.thermodynamics.helmholtz.rho
+    revision: '1'
+- id: planetlib.thermodynamics.helmholtz.cv
+  revision: '1'
+  latex: c_v
+  description: Molar heat capacity at fixed molar density and composition.
+  unit: J mol^-1 K^-1
+  domain: Positive for the stable response domain.
+  coordinates:
+  - id: planetlib.thermodynamics.helmholtz.T
+    revision: '1'
+  - id: planetlib.thermodynamics.helmholtz.rho
+    revision: '1'
+- id: planetlib.thermodynamics.helmholtz.rho
+  revision: '1'
+  latex: \rho
+  description: Total molar density, not mass density.
+  unit: mol m^-3
+  domain: Positive, within the same single-phase domain.
+  coordinates: []
+- id: planetlib.thermodynamics.helmholtz.s
+  revision: '1'
+  latex: s
+  description: Molar entropy derived from the same complete Helmholtz energy.
+  unit: J mol^-1 K^-1
+  domain: All partial derivatives hold the declared composition fixed.
+  coordinates:
+  - id: planetlib.thermodynamics.helmholtz.T
+    revision: '1'
+  - id: planetlib.thermodynamics.helmholtz.rho
+    revision: '1'
+- id: planetlib.solubility.hirschmann2012.endmember_fraction
+  revision: '1'
+  latex: X_{\mathrm{H_2}}^{\mathrm{em}}=n_{\mathrm{H_2}}/(N_{\mathrm{dry,em}}+n_{\mathrm{H_2O}}+n_{\mathrm{H_2}})
+  description: Molecular H2 amount divided by total dry MELTS endmember, H2O and molecular
+    H2 amounts. The dry-host sum counts each MELTS endmember amount once, rather than
+    its oxide stoichiometric count.
+  unit: '1'
+  domain: The ExoEOS dry11 plus water host, excluding helium from this denominator;
+    fraction strictly between zero and one.
+  coordinates: []
+- id: planetlib.solubility.hirschmann2012.hydrogen_fugacity
+  revision: '1'
+  latex: f_{\mathrm{H_2}}
+  description: Molecular hydrogen gas fugacity, with the regression using f_H2 divided
+    by one bar.
+  unit: bar
+  domain: Positive fugacity supplied by a separately selected gas model.
+  coordinates: []
+- id: planetlib.solubility.hirschmann2012.melt_pressure
+  revision: '1'
+  latex: P
+  description: Total mechanical pressure of the melt; separate from hydrogen fugacity.
+  unit: GPa
+  domain: Positive melt pressure supplied by the consumer.
+  coordinates: []
+mathematical_models:
+- id: planetlib.thermodynamics.ideal_mixing.model
+  revision: '1'
+  description: Binary ideal mixing Gibbs energy and chemical potentials.
+  scope: 'Two components at fixed temperature and pressure, with composition-independent
+    supplied standards. The finite two-component model is a minimal reusable instance,
+    not an arbitrary-species solver. Pressure contributions belong to the supplied
+    standards: one-bar ideal-gas standards require a separate ln(P/P0) addition exactly
+    once. No gas law, activity correction, phase equilibrium or boundary derivative
+    is selected.'
+  quantities:
+    n1:
+      quantity:
+        id: planetlib.thermodynamics.ideal_mixing.n1
+        revision: '1'
+      role: input
+    n2:
+      quantity:
+        id: planetlib.thermodynamics.ideal_mixing.n2
+        revision: '1'
+      role: input
+    u01:
+      quantity:
+        id: planetlib.thermodynamics.ideal_mixing.u01
+        revision: '1'
+      role: input
+    u02:
+      quantity:
+        id: planetlib.thermodynamics.ideal_mixing.u02
+        revision: '1'
+      role: input
+    G:
+      quantity:
+        id: planetlib.thermodynamics.ideal_mixing.G
+        revision: '1'
+      role: derived
+    u1:
+      quantity:
+        id: planetlib.thermodynamics.ideal_mixing.u1
+        revision: '1'
+      role: derived
+    u2:
+      quantity:
+        id: planetlib.thermodynamics.ideal_mixing.u2
+        revision: '1'
+      role: derived
+  relations:
+  - id: planetlib.thermodynamics.ideal_mixing.gibbs_relation
+    equation:
+      id: planetlib.thermodynamics.ideal_mixing.gibbs
+      revision: '1'
+    kind: equation
+    role: Extensive scalar
+    quantities:
+      G: G
+      n1: n1
+      n2: n2
+      u01: u01
+      u02: u02
+  - id: planetlib.thermodynamics.ideal_mixing.potential_1_relation
+    equation:
+      id: planetlib.thermodynamics.ideal_mixing.potential_1
+      revision: '1'
+    kind: equation
+    role: First component chemical potential
+    quantities:
+      n1: n1
+      n2: n2
+      u01: u01
+      u1: u1
+  - id: planetlib.thermodynamics.ideal_mixing.potential_2_relation
+    equation:
+      id: planetlib.thermodynamics.ideal_mixing.potential_2
+      revision: '1'
+    kind: equation
+    role: Second component chemical potential
+    quantities:
+      n1: n1
+      n2: n2
+      u02: u02
+      u2: u2
+  - id: planetlib.thermodynamics.ideal_mixing.euler_relation
+    equation:
+      id: planetlib.thermodynamics.ideal_mixing.euler
+      revision: '1'
+    kind: equation
+    role: Euler consistency relation
+    quantities:
+      G: G
+      n1: n1
+      n2: n2
+      u1: u1
+      u2: u2
+- id: planetlib.thermodynamics.mass_fraction_solute.model
+  revision: '1'
+  description: Mass-fraction solute Gibbs increment and host response.
+  scope: One solute and a two-component host at fixed temperature and pressure. The
+    supplied host Gibbs energy and potentials must already be consistent. Solute standard
+    and molar masses are independent of all amounts. This increment supplies no Henry
+    coefficient, empirical fit, multisolute interaction or Sun-Yao Gibbs continuation.
+  quantities:
+    n1:
+      quantity:
+        id: planetlib.thermodynamics.mass_fraction_solute.n1
+        revision: '1'
+      role: input
+    n2:
+      quantity:
+        id: planetlib.thermodynamics.mass_fraction_solute.n2
+        revision: '1'
+      role: input
+    M1:
+      quantity:
+        id: planetlib.thermodynamics.mass_fraction_solute.M1
+        revision: '1'
+      role: parameter
+    M2:
+      quantity:
+        id: planetlib.thermodynamics.mass_fraction_solute.M2
+        revision: '1'
+      role: parameter
+    Ms:
+      quantity:
+        id: planetlib.thermodynamics.mass_fraction_solute.Ms
+        revision: '1'
+      role: parameter
+    ns:
+      quantity:
+        id: planetlib.thermodynamics.mass_fraction_solute.ns
+        revision: '1'
+      role: input
+    S:
+      quantity:
+        id: planetlib.thermodynamics.mass_fraction_solute.S
+        revision: '1'
+      role: derived
+    w:
+      quantity:
+        id: planetlib.thermodynamics.mass_fraction_solute.w
+        revision: '1'
+      role: derived
+    u0:
+      quantity:
+        id: planetlib.thermodynamics.mass_fraction_solute.u0
+        revision: '1'
+      role: input
+    F:
+      quantity:
+        id: planetlib.thermodynamics.mass_fraction_solute.F
+        revision: '1'
+      role: derived
+    us:
+      quantity:
+        id: planetlib.thermodynamics.mass_fraction_solute.us
+        revision: '1'
+      role: derived
+    du1:
+      quantity:
+        id: planetlib.thermodynamics.mass_fraction_solute.du1
+        revision: '1'
+      role: derived
+    du2:
+      quantity:
+        id: planetlib.thermodynamics.mass_fraction_solute.du2
+        revision: '1'
+      role: derived
+  relations:
+  - id: planetlib.thermodynamics.mass_fraction_solute.equivalent_host_relation
+    equation:
+      id: planetlib.thermodynamics.mass_fraction_solute.equivalent_host
+      revision: '1'
+    kind: equation
+    role: Convert host mass to solute-equivalent amount
+    quantities:
+      M1: M1
+      M2: M2
+      Ms: Ms
+      S: S
+      n1: n1
+      n2: n2
+  - id: planetlib.thermodynamics.mass_fraction_solute.mass_fraction_relation
+    equation:
+      id: planetlib.thermodynamics.mass_fraction_solute.mass_fraction
+      revision: '1'
+    kind: equation
+    role: Total-liquid solute mass fraction
+    quantities:
+      S: S
+      ns: ns
+      w: w
+  - id: planetlib.thermodynamics.mass_fraction_solute.gibbs_increment_relation
+    equation:
+      id: planetlib.thermodynamics.mass_fraction_solute.gibbs_increment
+      revision: '1'
+    kind: equation
+    role: Extensive increment to the host Gibbs energy
+    quantities:
+      F: F
+      S: S
+      ns: ns
+      u0: u0
+      w: w
+  - id: planetlib.thermodynamics.mass_fraction_solute.solute_potential_relation
+    equation:
+      id: planetlib.thermodynamics.mass_fraction_solute.solute_potential
+      revision: '1'
+    kind: equation
+    role: Solute derivative
+    quantities:
+      u0: u0
+      us: us
+      w: w
+  - id: planetlib.thermodynamics.mass_fraction_solute.host_response_1_relation
+    equation:
+      id: planetlib.thermodynamics.mass_fraction_solute.host_response_1
+      revision: '1'
+    kind: equation
+    role: Host component 1 derivative
+    quantities:
+      M1: M1
+      Ms: Ms
+      du1: du1
+      w: w
+  - id: planetlib.thermodynamics.mass_fraction_solute.host_response_2_relation
+    equation:
+      id: planetlib.thermodynamics.mass_fraction_solute.host_response_2
+      revision: '1'
+    kind: equation
+    role: Host component 2 derivative
+    quantities:
+      M2: M2
+      Ms: Ms
+      du2: du2
+      w: w
+- id: planetlib.thermodynamics.helmholtz.model
+  revision: '1'
+  description: Fixed-composition molar Helmholtz response relations.
+  scope: An open derivative model for a smooth complete molar Helmholtz potential
+    at fixed composition. Density is molar. The user supplies the potential, composition
+    and mean molar mass. The stable response domain has T>0, rho>0, cv>0 and partial
+    P/partial rho at fixed T positive. No phase selection, chemical equilibrium response,
+    EOS coefficients or numerical differentiation method is selected.
+  quantities:
+    T:
+      quantity:
+        id: planetlib.thermodynamics.helmholtz.T
+        revision: '1'
+      role: coordinate
+    rho:
+      quantity:
+        id: planetlib.thermodynamics.helmholtz.rho
+        revision: '1'
+      role: coordinate
+    M:
+      quantity:
+        id: planetlib.thermodynamics.helmholtz.M
+        revision: '1'
+      role: parameter
+    a:
+      quantity:
+        id: planetlib.thermodynamics.helmholtz.a
+        revision: '1'
+      role: input
+    P:
+      quantity:
+        id: planetlib.thermodynamics.helmholtz.P
+        revision: '1'
+      role: derived
+    s:
+      quantity:
+        id: planetlib.thermodynamics.helmholtz.s
+        revision: '1'
+      role: derived
+    cv:
+      quantity:
+        id: planetlib.thermodynamics.helmholtz.cv
+        revision: '1'
+      role: derived
+    cp:
+      quantity:
+        id: planetlib.thermodynamics.helmholtz.cp
+        revision: '1'
+      role: derived
+    cs2:
+      quantity:
+        id: planetlib.thermodynamics.helmholtz.cs2
+        revision: '1'
+      role: derived
+  relations:
+  - id: planetlib.thermodynamics.helmholtz.pressure_relation
+    equation:
+      id: planetlib.thermodynamics.helmholtz.pressure
+      revision: '1'
+    kind: equation
+    role: Pressure derivative at fixed T
+    quantities:
+      P: P
+      T: T
+      a: a
+      rho: rho
+  - id: planetlib.thermodynamics.helmholtz.entropy_relation
+    equation:
+      id: planetlib.thermodynamics.helmholtz.entropy
+      revision: '1'
+    kind: equation
+    role: Entropy derivative at fixed molar density
+    quantities:
+      T: T
+      a: a
+      rho: rho
+      s: s
+  - id: planetlib.thermodynamics.helmholtz.heat_capacity_cv_relation
+    equation:
+      id: planetlib.thermodynamics.helmholtz.heat_capacity_cv
+      revision: '1'
+    kind: equation
+    role: Isochoric caloric response
+    quantities:
+      T: T
+      a: a
+      cv: cv
+      rho: rho
+  - id: planetlib.thermodynamics.helmholtz.heat_capacity_cp_relation
+    equation:
+      id: planetlib.thermodynamics.helmholtz.heat_capacity_cp
+      revision: '1'
+    kind: equation
+    role: Isobaric caloric response
+    quantities:
+      P: P
+      T: T
+      cp: cp
+      cv: cv
+      rho: rho
+  - id: planetlib.thermodynamics.helmholtz.sound_speed_relation
+    equation:
+      id: planetlib.thermodynamics.helmholtz.sound_speed
+      revision: '1'
+    kind: equation
+    role: Frozen-composition isentropic response
+    quantities:
+      M: M
+      P: P
+      T: T
+      cs2: cs2
+      cv: cv
+      rho: rho
+- id: planetlib.solubility.hirschmann2012.endmember_model
+  revision: '2'
+  description: Conditional ExoEOS variant on a dry MELTS endmember concentration basis.
+  scope: The consumer supplies melt pressure and gas fugacity; the full Gibbs scalar,
+    host derivatives and nonzero offsets are outside this partial model.
+  quantities:
+    pressure:
+      quantity:
+        id: planetlib.solubility.hirschmann2012.melt_pressure
+        revision: '1'
+      role: input
+    fugacity:
+      quantity:
+        id: planetlib.solubility.hirschmann2012.hydrogen_fugacity
+        revision: '1'
+      role: input
+    fraction:
+      quantity:
+        id: planetlib.solubility.hirschmann2012.endmember_fraction
+        revision: '1'
+      role: unknown
+  relations:
+  - id: planetlib.solubility.hirschmann2012.endmember_relation
+    equation:
+      id: planetlib.solubility.hirschmann2012.endmember_regression
+      revision: '2'
+    kind: equation
+    role: Adopt the coefficient values with the distinct endmember fraction meaning.
+    quantities:
+      P: pressure
+      f: fugacity
+      X: fraction

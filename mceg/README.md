@@ -4,7 +4,13 @@
 applicability, claims and scoped evidence. The
 [pure-H2 Zhang-Duan](contracts/zhang_duan_h2.yaml) contract now uses v0.2,
 with a lossless import of its original v0.1 declarations. MCEG is not an ExoEOS
-runtime or test dependency.
+runtime or ordinary unit-test dependency.
+
+The optional [Planetlib adoption](planetlib/README.md) adds a schema-0.6
+companion record for ideal mixing, mass-fraction solutes, molar Helmholtz
+responses and the Hirschmann endmember variant. It pins shared symbolic
+definitions and declares provider correspondences while preserving the
+historical records below. Its separate development checks use pinned MCEG.
 
 The [2026-10-20 model inventory](model_inventory.md) adds v0.2 contracts for the
 solubility/magma survey, with separate numerical and physical Assessments and
