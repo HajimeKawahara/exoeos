@@ -1,0 +1,41 @@
+{
+  "format": "planetlib.imports.v1",
+  "imports": [
+    {
+      "path": "catalog/thermodynamics/ideal_mixing.yaml",
+      "sha256": "0fbbdf423426ff88c114f734ea11073f71f8daf1118a82351cdc59707dce0fb7",
+      "model": {
+        "id": "planetlib.thermodynamics.ideal_mixing.model",
+        "revision": "1",
+        "sha256": "ff4484ea799cc1bcce2f2e4873a3aab634d3ea9632e9da2daef0e541b46f0320"
+      }
+    },
+    {
+      "path": "catalog/thermodynamics/mass_fraction_solute.yaml",
+      "sha256": "ac4347300e5282b02d3b65110a126989b9d1133b0be33d36c8c2de071bb751ca",
+      "model": {
+        "id": "planetlib.thermodynamics.mass_fraction_solute.model",
+        "revision": "1",
+        "sha256": "fd447925af53057283ebcbddf73442d5c014c1c75ccdc551fa2cd530024776e4"
+      }
+    },
+    {
+      "path": "catalog/thermodynamics/helmholtz.yaml",
+      "sha256": "62f3fc9dc1565f7e4574444a872222f5769e6e4a482401d3cdccbf4c0f4b7dec",
+      "model": {
+        "id": "planetlib.thermodynamics.helmholtz.model",
+        "revision": "1",
+        "sha256": "283dee30acfbac4b6b9126dd617a0f4279576c7eaba4832827af06ac5f47e87f"
+      }
+    },
+    {
+      "path": "catalog/solubility/hirschmann2012.yaml",
+      "sha256": "d8d936719011230434a240d753dedb1aa069483111c8f80b393df07312877398",
+      "model": {
+        "id": "planetlib.solubility.hirschmann2012.endmember_model",
+        "revision": "2",
+        "sha256": "8cb09569c08d63cf0ef1375eea98f82d648c59abfb805cb811f994a023b61e0e"
+      }
+    }
+  ]
+}
